@@ -63,5 +63,22 @@ def launch_holos(
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True)
-    process.communicate('\n')
+
+    for msg in _get_cli_messages(p=process):
+        # print(msg)
+        if msg.startswith("Do you have farms that you would like to import from the Holos GUI? (yes/no)"):
+            process.stdin.write('no\n')
+            process.stdin.flush()
+        if "press enter to exit" in msg:
+            process.stdin.write('\n')
+            process.stdin.flush()
     pass
+
+
+def _get_cli_messages(p: subprocess.Popen) -> str:
+    while True:
+        # returns None while subprocess is running
+        return_code = p.poll()
+        yield p.stdout.readline()
+        if return_code is not None:
+            break
