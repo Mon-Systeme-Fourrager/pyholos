@@ -9,7 +9,6 @@ class TestLaunching(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.path_sources = Path(__file__).parent / 'sources/launching_holos'
-        cls.path_holos_cli = cls.path_sources / 'holos_cli.lnk'
         cls.path_dir_farms = cls.path_sources / 'farms'
         cls.path_dir_outputs = cls.path_sources / 'outputs'
         cls.name_farm_json = 'farm.json'
@@ -65,7 +64,6 @@ class TestLaunching(unittest.TestCase):
     def test_create_farm_files_from_json_with_complete_inputs(self):
         path_dir_outputs = self.path_dir_outputs / 'complete_inputs'
         launching.launch_holos(
-            path_holos_cli=self.path_holos_cli,
             path_dir_farms=self.path_dir_farms,
             name_farm_json=self.name_farm_json,
             name_dir_farms_json=self.name_dir_farms_json,
@@ -80,7 +78,6 @@ class TestLaunching(unittest.TestCase):
 
     def test_run_on_existing_farm_data(self):
         launching.launch_holos(
-            path_holos_cli=self.path_holos_cli,
             path_dir_farms=self.path_dir_farms,
             name_farm_json=None,
             name_dir_farms_json=None,

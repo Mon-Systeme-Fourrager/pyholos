@@ -1,9 +1,9 @@
 import subprocess
 from pathlib import Path, PureWindowsPath
 
+from holos_service.config import PATH_HOLOS_CLI
 
 def set_cmd(
-        path_holos_cli: Path,
         path_dir_farms: Path,
         path_dir_outputs: Path = None,
         name_farm_json: str = None,
@@ -13,7 +13,7 @@ def set_cmd(
 ) -> list[str]:
     cmd = [
         'cmd', '/c',
-        str(PureWindowsPath(path_holos_cli)),
+        str(PureWindowsPath(PATH_HOLOS_CLI)),
         str(PureWindowsPath(path_dir_farms)),
         '-u',
         'metric'
@@ -39,7 +39,6 @@ def set_cmd(
 
 
 def launch_holos(
-        path_holos_cli: Path,
         path_dir_farms: Path,
         path_dir_outputs: Path = None,
         name_farm_json: str = None,
@@ -48,7 +47,6 @@ def launch_holos(
         id_slc_polygon: int = None
 ) -> None:
     cmd = set_cmd(
-        path_holos_cli=path_holos_cli,
         path_dir_farms=path_dir_farms,
         path_dir_outputs=path_dir_outputs,
         name_farm_json=name_farm_json,
