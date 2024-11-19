@@ -1,12 +1,17 @@
 import unittest
+from pathlib import Path
+
+from geojson import load
 
 from holos_service import django_stuff
-
 
 class TestIdentifySlcPolygonId(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.geojson_data = django_stuff.load_slc_data()
+        path_geojson = Path(__file__).parent / 'sources/geojson_example/example.geojson'
+        with path_geojson.open(mode='r') as f:
+            cls.geojson_data = load(f)
+        django_stuff.PATH_SLC_GEOJSON_FILE = path_geojson
 
     def test_identify_slc_polygon_id_works_with_default_slc_data(self):
         self.assertEqual(
