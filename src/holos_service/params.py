@@ -247,7 +247,7 @@ class ParamsIcbm(ParamGeneric):
             humification_coefficient_below_ground: float = 0.3,
             humification_coefficient_manure: float = 0.31,
             climate_filename: str = "climate.csv",
-            climate_data_acquisition: str = "nasa",
+            climate_data_acquisition: str = "NASA",
             enable_carbon_modelling: bool = True,
             **kwargs
     ):
@@ -403,7 +403,7 @@ class ParamsFarmSettings:
             humification_coefficient_below_ground: float = 0.3,
             humification_coefficient_manure: float = 0.31,
             climate_filename: str = "climate.csv",
-            climate_data_acquisition: str = "nasa",
+            climate_data_acquisition: str = "NASA",
             enable_carbon_modelling: bool = True,
     ):
         """

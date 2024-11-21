@@ -120,7 +120,7 @@ class TestParamsFarmSettings(unittest.TestCase):
             'Humification Coefficient Below Ground = 0.3',
             'Humification Coefficient Manure = 0.31',
             'Climate filename = climate.csv',
-            'Climate Data Acquisition = nasa',
+            'Climate Data Acquisition = NASA',
             'Use climate parameter instead of management factor = True',
             'Enable Carbon Modelling = True',
             '',
