@@ -248,7 +248,6 @@ class ParamsIcbm(ParamGeneric):
             humification_coefficient_manure: float = 0.31,
             climate_filename: str = "climate.csv",
             climate_data_acquisition: str = "nasa",
-            use_climate_parameter_instead_of_management_factor: bool = True,
             enable_carbon_modelling: bool = True,
             **kwargs
     ):
@@ -270,7 +269,7 @@ class ParamsIcbm(ParamGeneric):
             value=climate_data_acquisition)
         self.use_climate_parameter_instead_of_management_factor = FarmSettingsVar(
             name="Use climate parameter instead of management factor",
-            value=use_climate_parameter_instead_of_management_factor)
+            value=True)
         self.enable_carbon_modelling = FarmSettingsVar(
             name="Enable Carbon Modelling",
             value=enable_carbon_modelling)
@@ -405,14 +404,11 @@ class ParamsFarmSettings:
             humification_coefficient_manure: float = 0.31,
             climate_filename: str = "climate.csv",
             climate_data_acquisition: str = "nasa",
-            use_climate_parameter_instead_of_management_factor: bool = True,
             enable_carbon_modelling: bool = True,
     ):
         """
         Notes:
-            The carbon modelling strategy can be one of ["IPCCTier2", "ICBM"].
-            The choice of the modelling strategy changes the structure of Farms.settings.
-            In this first version, this parameter is forced to "IPCCTier2".
+            The carbon modelling strategy can be one of ["IPCCTier2", "ICBM"]. The choice of the modelling strategy changes the structure of Farms.settings. In this first version, this parameter is forced to "IPCCTier2".
 
         """
 
