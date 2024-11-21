@@ -196,7 +196,6 @@ class ParamsFodderCorn(ParamGeneric):
             fraction_of_n_lost_by_volatilization: float = 0.21,
             microbe_death: float = 0.2,
             denitrification: float = 0.5,
-            carbon_modelling_strategy: str = "ipcctier2",
             **kwargs
     ):
         super().__init__(title="Fodder Corn")
@@ -235,7 +234,7 @@ class ParamsFodderCorn(ParamGeneric):
             value=denitrification)
         self.carbon_modelling_strategy = FarmSettingsVar(
             name="Carbon modelling strategy",
-            value=carbon_modelling_strategy)
+            value="ipcctier2")
         self.run_in_period_years = FarmSettingsVar(
             name="Run In Period Years",
             value=run_in_period_years)
@@ -400,7 +399,6 @@ class ParamsFarmSettings:
             fraction_of_n_lost_by_volatilization: float = 0.21,
             microbe_death: float = 0.2,
             denitrification: float = 0.5,
-            carbon_modelling_strategy: str = "ipcctier2",
 
             humification_coefficient_above_ground: float = 0.125,
             humification_coefficient_below_ground: float = 0.3,
@@ -410,6 +408,14 @@ class ParamsFarmSettings:
             use_climate_parameter_instead_of_management_factor: bool = True,
             enable_carbon_modelling: bool = True,
     ):
+        """
+        Notes:
+            The carbon modelling strategy can be one of ["IPCCTier2", "ICBM"].
+            The choice of the modelling strategy changes the structure of Farms.settings.
+            In this first version, this parameter is forced to "IPCCTier2".
+
+        """
+
         kwargs = {k: v for k, v in locals().items() if all([not k.startswith(('_', '__', 'self')), not callable(k)])}
 
         self.params_general = ParamsGeneral(**kwargs)
