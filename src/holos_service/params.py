@@ -234,7 +234,7 @@ class ParamsFodderCorn(ParamGeneric):
             value=denitrification)
         self.carbon_modelling_strategy = FarmSettingsVar(
             name="Carbon modelling strategy",
-            value="ipcctier2")
+            value="ICBM")
         self.run_in_period_years = FarmSettingsVar(
             name="Run In Period Years",
             value=run_in_period_years)
@@ -408,7 +408,7 @@ class ParamsFarmSettings:
     ):
         """
         Notes:
-            The carbon modelling strategy can be one of ["IPCCTier2", "ICBM"]. The choice of the modelling strategy changes the structure of Farms.settings. In this first version, this parameter is forced to "IPCCTier2".
+            The carbon modelling strategy can be one of ["IPCCTier2", "ICBM"]. In this first version, this parameter is forced to "ICBM".
 
         """
 
