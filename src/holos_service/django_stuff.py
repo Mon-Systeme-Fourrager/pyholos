@@ -1,3 +1,4 @@
+from enum import Enum
 from pathlib import Path
 
 from geojson import load, FeatureCollection
@@ -7,7 +8,13 @@ from shapely.geometry import shape, Point
 from holos_service.config import PathsSlcData
 
 
-class MapProvinceNamesSlc(Enum):
+class MapNamesGeneric(Enum):
+    @classmethod
+    def get_value(cls, name: str) -> str:
+        return getattr(cls, name).value
+
+
+class MapProvinceNamesSlc(MapNamesGeneric):
     AB: int = 'Alberta'
     BC: int = 'British Columbia'
     MB: int = 'Manitoba'
@@ -22,12 +29,8 @@ class MapProvinceNamesSlc(Enum):
     SK: int = 'Saskatchewan'
     YT: int = 'Yukon'
 
-    @classmethod
-    def get_value(cls, province_abbreviation: str) -> str:
-        return getattr(cls, province_abbreviation).value
 
-
-class MapSoilGreatGroupNamesSlc(Enum):
+class MapSoilGreatGroupNamesSlc(MapNamesGeneric):
     MB: int = 'Melanic Brunisol'
     EB: int = 'Eutric Brunisol'
     SB: int = 'Sombric Brunisol'
@@ -60,12 +63,8 @@ class MapSoilGreatGroupNamesSlc(Enum):
     V: int = 'Vertisol'
     HV: int = 'Humic Vertisol'
 
-    @classmethod
-    def get_value(cls, province_abbreviation: str) -> str:
-        return getattr(cls, province_abbreviation).value
 
-
-class MapParentMaterialTextureNamesSlc(Enum):
+class MapParentMaterialTextureNamesSlc(MapNamesGeneric):
     VC: int = 'Very Coarse'
     C: int = 'Coarse'
     MC: int = 'Moderately Coarse'
@@ -83,16 +82,6 @@ class MapParentMaterialTextureNamesSlc(Enum):
     ME: int = 'Mesic'
     HU: int = 'Humic'
     UD: int = 'Undifferentiated'
-
-    @classmethod
-    def get_value(cls, province_abbreviation: str) -> str:
-        return getattr(cls, province_abbreviation).value
-
-
-
-    @classmethod
-    def get_value(cls, province_abbreviation: str) -> str:
-        return getattr(cls, province_abbreviation).value
 
 
 def read_slc_csv(
