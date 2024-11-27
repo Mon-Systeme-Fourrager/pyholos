@@ -146,16 +146,8 @@ def get_first_non_litter_layer(
     return soil_layer_table[soil_layer_table['UDEPTH'] >= 0].iloc[0].to_dict()
 
 
-def get_top_layer_depth(
-        first_non_litter_layer: dict
-) -> int:
-    """
-
-    Args:
-        first_non_litter_layer: first soil layer which is not a litter
-
-    Returns:
-        (mm) depth of the upper first non-litter layer
-
-    """
-    return first_non_litter_layer['LDEPTH'] * 10
+def get_soil_name_table(
+        soil_name_table: DataFrame,
+        id_soil: str
+) -> dict:
+    return soil_name_table.set_index('SOIL_ID').loc[id_soil].to_dict()
