@@ -52,5 +52,102 @@ class TestGetSlcPolygonProperties(unittest.TestCase):
             dict(longitude=-98.04, geojson_data=self.geojson_data))
 
 
+class TestGetDominantComponentProperties(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.cmp_data = django_stuff.read_slc_csv(
+            path_file=Path(__file__).parent / (
+                'sources/django_stuff/example_soil_landscapes_of_canada_v3r2/ca_all_slc_v3r2_cmp.csv'))
+
+    def test_get_dominant_component_properties_returns_component_with_highest_polygon_occupation_percentage(self):
+        self.assertEqual(
+            'MBLSL~~~~~A',
+            django_stuff.get_dominant_component_properties(
+                slc_components_table=self.cmp_data,
+                id_polygon=851003)['SOIL_ID'])
+
+        cmp_data = self.cmp_data.copy(deep=True)
+        cmp_data['PERCENT_'] = 0
+        cmp_data.loc[5, 'PERCENT_'] = 100
+        self.assertEqual(
+            'MBDGS~~~~~A',
+            django_stuff.get_dominant_component_properties(
+                slc_components_table=cmp_data,
+                id_polygon=851003)['SOIL_ID'])
+
+    def test_get_dominant_component_properties_returns_first_component_for_equally_occupied_polygon(self):
+        cmp_data = self.cmp_data.copy(deep=True)
+        cmp_data['PERCENT_'] = 0
+        self.assertEqual(
+            'MBLSL~~~~~A',
+            django_stuff.get_dominant_component_properties(
+                slc_components_table=cmp_data,
+                id_polygon=851003)['SOIL_ID'])
+
+        pass
+
+
+class TestSoilLayerTable(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.slt_data = django_stuff.read_slc_csv(
+            path_file=Path(__file__).parent / (
+                'sources/django_stuff/example_soil_landscapes_of_canada_v3r2/ca_all_slc_v3r2_slt.csv'))
+
+    def test_get_soil_layer_table_sorts_data_according_to_depth(self):
+        df = django_stuff.get_soil_layer_table(
+            id_soil='MBLSL~~~~~A',
+            slc_soil_layer_table=self.slt_data)
+
+        self.assertEqual(
+            df['UDEPTH'].to_list(),
+            sorted(df['UDEPTH']))
+
+    def test_get_soil_layer_table_includes_only_data_with_provided_soil_id(self):
+        id_soil = 'MBLSL~~~~~A'
+        df = django_stuff.get_soil_layer_table(
+            id_soil=id_soil,
+            slc_soil_layer_table=self.slt_data)
+
+        self.assertEqual(
+            len(df['SOIL_ID'].unique()),
+            1)
+
+        self.assertEqual(
+            df['SOIL_ID'].unique()[0],
+            id_soil)
+
+    def test_get_first_non_litter_layer_ignores_litter_layers(self):
+        self.assertEqual(
+            20,
+            django_stuff.get_first_non_litter_layer(soil_layer_table=self.slt_data)['LDEPTH'])
+
+        df = self.slt_data.copy(deep=True)
+        df.loc[0, 'UDEPTH'] = -1
+
+        self.assertEqual(
+            60,
+            django_stuff.get_first_non_litter_layer(soil_layer_table=df)['LDEPTH'])
+
+
+class TestGetSoilNameTable(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        snt_data = django_stuff.read_slc_csv(
+            path_file=Path(__file__).parent / (
+                'sources/django_stuff/example_soil_landscapes_of_canada_v3r2/ca_all_slc_v3r2_snt.csv'))
+        cls.soil_name_table = django_stuff.get_soil_name_table(
+            soil_name_table=snt_data,
+            id_soil='MBLSL~~~~~A')
+
+    def test_get_soil_name_table_returns_one_data_row(self):
+        self.assertTrue(all([not isinstance(v, list) == 1 for v in self.soil_name_table.values()]))
+
+    def test_get_soil_name_table_returns_expected_soil_name(self):
+        self.assertEqual(
+            ['MF', 'R', 'CU'],
+            [self.soil_name_table[s] for s in (['PMTEX1', 'G_GROUP3', 'S_GROUP3'])])
+
+
 if __name__ == '__main__':
     unittest.main()
