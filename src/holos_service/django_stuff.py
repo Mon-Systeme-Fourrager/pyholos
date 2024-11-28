@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import Enum, unique, StrEnum
 from pathlib import Path
 
 from geojson import load, FeatureCollection
@@ -10,78 +10,100 @@ from holos_service.config import PathsSlcData
 
 class MapNamesGeneric(Enum):
     @classmethod
-    def get_value(cls, name: str) -> str:
-        return getattr(cls, name).value
+    def _get_name(cls, abbreviation: str) -> str:
+        for member in cls:
+            if member.value.abbreviation == abbreviation:
+                return member.value.name
+
+    @classmethod
+    def get_name(cls, abbreviation: str) -> str:
+        res = cls._get_name(abbreviation=abbreviation)
+        return res if res is not None else "NotApplicable"
 
 
-class MapProvinceNamesSlc(MapNamesGeneric):
-    AB: int = 'Alberta'
-    BC: int = 'British Columbia'
-    MB: int = 'Manitoba'
-    NB: int = 'New Brunswick'
-    NL: int = 'Newfoundland and Labrador'
-    NT: int = 'Northwest Territories'
-    NS: int = 'Nova Scotia'
-    NU: int = 'Nunavut'
-    ON: int = 'Ontario'
-    PE: int = 'Prince Edward Island'
-    QC: int = 'Quebec'
-    SK: int = 'Saskatchewan'
-    YT: int = 'Yukon'
+
+class NameSlc:
+    def __init__(
+            self,
+            name: str,
+            abbreviation: str
+    ):
+        self.name = name
+        self.abbreviation = abbreviation
 
 
-class MapSoilGreatGroupNamesSlc(MapNamesGeneric):
-    MB: int = 'Melanic Brunisol'
-    EB: int = 'Eutric Brunisol'
-    SB: int = 'Sombric Brunisol'
-    DYB: int = 'Dystric Brunisol'
-    BC: int = 'Brown Chernozem'
-    DBC: int = 'Dark Brown Chernozem'
-    BLC: int = 'Black Chernozem'
-    DGC: int = 'Dark Gray Chernozem'
-    TC: int = 'Turbic Cryosol'
-    SC: int = 'Static Cryosol'
-    OC: int = 'Organic Cryosol'
-    HG: int = 'Humic Gleysol'
-    G: int = 'Gleysol'
-    LG: int = 'Luvic Gleysol'
-    GBL: int = 'Gray Brown Luvisol'
-    GL: int = 'Gray Luvisol'
-    F: int = 'Fibrisol'
-    M: int = 'Mesisol'
-    H: int = 'Humisol'
-    FO: int = 'Folisol'
-    HP: int = 'Humic Podzol'
-    FHP: int = 'Ferro-Humic Podzol'
-    HFP: int = 'Humo-Ferric Podzol'
-    R: int = 'Regosol'
-    HR: int = 'Humic Regosol'
-    SZ: int = 'Solonetz'
-    SS: int = 'Solodized Solonetz'
-    SO: int = 'Solod'
-    VSZ: int = 'Vertic Solonetz'
-    V: int = 'Vertisol'
-    HV: int = 'Humic Vertisol'
+class CanadianProvinces(MapNamesGeneric):
+    Alberta: NameSlc = NameSlc(name='Alberta', abbreviation='AB')
+    BritishColumbia: NameSlc = NameSlc(name='British Columbia', abbreviation="BC")
+    Manitoba: NameSlc = NameSlc(name='Manitoba', abbreviation="MB")
+    NewBrunswick: NameSlc = NameSlc(name='New Brunswick', abbreviation="NB")
+    NewfoundlandAndLabrador: NameSlc = NameSlc(name='Newfoundland and Labrador', abbreviation="NL")
+    NorthwestTerritories: NameSlc = NameSlc(name='Northwest Territories', abbreviation="NT")
+    NovaScotia: NameSlc = NameSlc(name='Nova Scotia', abbreviation="NS")
+    Nunavut: NameSlc = NameSlc(name='Nunavut', abbreviation="NU")
+    Ontario: NameSlc = NameSlc(name='Ontario', abbreviation="ON")
+    PrinceEdwardIsland: NameSlc = NameSlc(name='Prince Edward Island', abbreviation="PE")
+    Quebec: NameSlc = NameSlc(name='Quebec', abbreviation="QC")
+    Saskatchewan: NameSlc = NameSlc(name='Saskatchewan', abbreviation="SK")
+    Yukon: NameSlc = NameSlc(name='Yukon', abbreviation="YT")
 
 
-class MapParentMaterialTextureNamesSlc(MapNamesGeneric):
-    VC: int = 'Very Coarse'
-    C: int = 'Coarse'
-    MC: int = 'Moderately Coarse'
-    M: int = 'Medium'
-    MF: int = 'Moderately Fine'
-    F: int = 'Fine'
-    VF: int = 'Very Fine'
-    CS: int = 'Coarse Skeletal'
-    MS: int = 'Medium Skeletal'
-    FS: int = 'Fine Skeletal'
-    FR: int = 'Fragmental'
-    SM: int = 'Stratified (Mineral)'
-    SU: int = 'Stratified (Mineral and Organic)'
-    FI: int = 'Fibric'
-    ME: int = 'Mesic'
-    HU: int = 'Humic'
-    UD: int = 'Undifferentiated'
+class SoilGreatGroupNamesSlc(MapNamesGeneric):
+    MelanicBrunisol: NameSlc = NameSlc(name='Melanic Brunisol', abbreviation="MB")
+    EutricBrunisol: NameSlc = NameSlc(name='Eutric Brunisol', abbreviation="EB")
+    SombricBrunisol: NameSlc = NameSlc(name='Sombric Brunisol', abbreviation="SB")
+    DystricBrunisol: NameSlc = NameSlc(name='Dystric Brunisol', abbreviation="DYB")
+    BrownChernozem: NameSlc = NameSlc(name='Brown Chernozem', abbreviation="BC")
+    DarkBrownChernozem: NameSlc = NameSlc(name='Dark Brown Chernozem', abbreviation="DBC")
+    BlackChernozem: NameSlc = NameSlc(name='Black Chernozem', abbreviation="BLC")
+    DarkGrayChernozem: NameSlc = NameSlc(name='Dark Gray Chernozem', abbreviation="DGC")
+    TurbicCryosol: NameSlc = NameSlc(name='Turbic Cryosol', abbreviation="TC")
+    StaticCryosol: NameSlc = NameSlc(name='Static Cryosol', abbreviation="SC")
+    OrganicCryosol: NameSlc = NameSlc(name='Organic Cryosol', abbreviation="OC")
+    HumicGleysol: NameSlc = NameSlc(name='Humic Gleysol', abbreviation="HG")
+    Gleysol: NameSlc = NameSlc(name='Gleysol', abbreviation="G")
+    LuvicGleysol: NameSlc = NameSlc(name='Luvic Gleysol', abbreviation="LG")
+    GrayBrownLuvisol: NameSlc = NameSlc(name='Gray Brown Luvisol', abbreviation="GBL")
+    GrayLuvisol: NameSlc = NameSlc(name='Gray Luvisol', abbreviation="GL")
+    Fibrisol: NameSlc = NameSlc(name='Fibrisol', abbreviation="F")
+    Mesisol: NameSlc = NameSlc(name='Mesisol', abbreviation="M")
+    Humisol: NameSlc = NameSlc(name='Humisol', abbreviation="H")
+    Folisol: NameSlc = NameSlc(name='Folisol', abbreviation="FO")
+    HumicPodzol: NameSlc = NameSlc(name='Humic Podzol', abbreviation="HP")
+    FerroHumicPodzol: NameSlc = NameSlc(name='Ferro-Humic Podzol', abbreviation="FHP")
+    HumoFerricPodzol: NameSlc = NameSlc(name='Humo-Ferric Podzol', abbreviation="HFP")
+    Regosol: NameSlc = NameSlc(name='Regosol', abbreviation="R")
+    HumicRegosol: NameSlc = NameSlc(name='Humic Regosol', abbreviation="HR")
+    Solonetz: NameSlc = NameSlc(name='Solonetz', abbreviation="SZ")
+    SolodizedSolonetz: NameSlc = NameSlc(name='Solodized Solonetz', abbreviation="SS")
+    Solod: NameSlc = NameSlc(name='Solod', abbreviation="SO")
+    VerticSolonetz: NameSlc = NameSlc(name='Vertic Solonetz', abbreviation="VSZ")
+    Vertisol: NameSlc = NameSlc(name='Vertisol', abbreviation="V")
+    HumicVertisol: NameSlc = NameSlc(name='Humic Vertisol', abbreviation="HV")
+
+    NotApplicable: NameSlc = NameSlc(name="NotApplicable", abbreviation='NA')
+    Unknown: NameSlc = NameSlc(name="NotApplicable", abbreviation='NA')
+
+
+
+class ParentMaterialTextureNamesSlc(MapNamesGeneric):
+    VeryCoarse: NameSlc = NameSlc(name='Very Coarse', abbreviation="VC")
+    Coarse: NameSlc = NameSlc(name='Coarse', abbreviation="C")
+    ModeratelyCoarse: NameSlc = NameSlc(name='Moderately Coarse', abbreviation="MC")
+    Medium: NameSlc = NameSlc(name='Medium', abbreviation="M")
+    ModeratelyFine: NameSlc = NameSlc(name='Moderately Fine', abbreviation="MF")
+    Fine: NameSlc = NameSlc(name='Fine', abbreviation="F")
+    VeryFine: NameSlc = NameSlc(name='Very Fine', abbreviation="VF")
+    CoarseSkeletal: NameSlc = NameSlc(name='Coarse Skeletal', abbreviation="CS")
+    MediumSkeletal: NameSlc = NameSlc(name='Medium Skeletal', abbreviation="MS")
+    FineSkeletal: NameSlc = NameSlc(name='Fine Skeletal', abbreviation="FS")
+    Fragmental: NameSlc = NameSlc(name='Fragmental', abbreviation="FR")
+    StratifiedMineral: NameSlc = NameSlc(name='Stratified (Mineral)', abbreviation="SM")
+    StratifiedMineralAndOrganic: NameSlc = NameSlc(name='Stratified (Mineral and Organic)', abbreviation="SU")
+    Fibric: NameSlc = NameSlc(name='Fibric', abbreviation="FI")
+    Mesic: NameSlc = NameSlc(name='Mesic', abbreviation="ME")
+    Humic: NameSlc = NameSlc(name='Humic', abbreviation="HU")
+    Undifferentiated: NameSlc = NameSlc(name='Undifferentiated', abbreviation="UD")
 
 
 def read_slc_csv(
@@ -115,7 +137,7 @@ def get_slc_polygon_properties(
 
 
 def get_dominant_component_properties(
-        id_polygon: int,
+        id_polygon: str,
         slc_components_table: DataFrame
 ) -> dict[str, str | int]:
     return slc_components_table[slc_components_table['POLY_ID'] == id_polygon].sort_values(
