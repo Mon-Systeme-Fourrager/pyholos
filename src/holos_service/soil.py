@@ -297,6 +297,28 @@ def set_soil_properties(
         latitude: float,
         longitude: float
 ) -> dict:
+    """Calculates the soil properties required by Holos 4.0
+
+    Args:
+        latitude: (decimal degrees) latitude of the simulated site
+        longitude: (decimal degrees) longitude of the simulated site
+
+    Returns:
+        The following key-value pairs:
+            id_polygon (int): ID of the SLC polygon in which the site is located
+            province (str): The Canadian Province in which the site is located
+            ecodistrict_id (int): ID of the Ecodistrict within which the farm is located
+            soil_great_group (str): soil great group (e.g. "Regosol")
+            soil_functional_category (str): soil functional (e.g. "Black")
+            bulk_density (float): (g cm-3) soil bulk density
+            soil_texture (str): soil texture (e.g. "Fine")
+            soil_ph (float): (-) soil pH
+            top_layer_thickness (float): (mm) thickness of the soil top layer
+            sand_proportion (float): (between 0 and 1) fraction of sand in soil
+            clay_proportion (float): (between 0 and 1) fraction of clay in soil
+            organic_carbon_proportion (float): (between 0 and 100) percentage of soil organic carbon in soil
+
+    """
     polygon_properties = django_stuff.get_slc_polygon_properties(
         latitude=latitude,
         longitude=longitude,
