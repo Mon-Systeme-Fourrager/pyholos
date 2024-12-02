@@ -26,25 +26,13 @@ class TestParamsFarmSettings(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.params_farm_settings = params.ParamsFarmSettings(
-            province='toto',
             year=1,
-            polygon_id=1,
-            ecodistrict_id=1,
-            latitude=1.0,
-            longitude=1.0,
+            latitude=50,
+            longitude=-98,
             monthly_precipitation=list(range(12)),
             monthly_potential_evapotranspiration=list(range(12)),
             monthly_temperature=list(range(12)),
-            run_in_period_years=15,
-            soil_great_group='toto',
-            soil_functional_category='toto',
-            bulk_density=1.,
-            soil_texture='toto',
-            soil_ph=1.,
-            top_layer_thickness=1,
-            proportion_of_sand_in_soil=1,
-            proportion_of_clay_in_soil=1,
-            proportion_of_soil_organic_carbon=1)
+            run_in_period_years=15)
         cls.path_farm_settings = Path(__file__).parent / 'sources/Farm.settings'
 
     @classmethod
@@ -59,9 +47,9 @@ class TestParamsFarmSettings(unittest.TestCase):
         expected_output = [
             '# General',
             'Yield Assignment Method = SmallAreaData',
-            'Polygon Number = 1',
-            'Latitude = 1.0',
-            'Longitude = 1.0',
+            'Polygon Number = 851003',
+            'Latitude = 50',
+            'Longitude = -98',
             'Carbon Concentration  (kg kg^-1) = 0.45',
             'Emergence Day = 141',
             'Ripening Day = 197',
@@ -112,7 +100,7 @@ class TestParamsFarmSettings(unittest.TestCase):
             'Fraction Of N Lost By Volatilization = 0.21',
             'Microbe Death = 0.2',
             'Denitrification = 0.5',
-            'Carbon modelling strategy = ipcctier2',
+            'Carbon modelling strategy = ICBM',
             'Run In Period Years = 15',
             '',
             '# ICBM/Climate',
@@ -167,18 +155,18 @@ class TestParamsFarmSettings(unittest.TestCase):
             'December Mean Temperature = 11',
             '',
             '# Soil Data',
-            'Province = toto',
+            'Province = Manitoba',
             'Year Of Observation = 1',
-            'Ecodistrict ID = 1',
-            'Soil Great Group = toto',
-            'Soil functional category = toto',
-            'Bulk Density = 1.0',
-            'Soil Texture = toto',
-            'Soil Ph = 1.0',
-            'Top Layer Thickness  (mm) = 1',
-            'Proportion Of Sand In Soil = 1',
-            'Proportion Of Clay In Soil = 1',
-            'Proportion Of Soil Organic Carbon = 1'
+            'Ecodistrict ID = 851',
+            'Soil Great Group = Regosol',
+            'Soil functional category = Black',
+            'Bulk Density = 1.2',
+            'Soil Texture = Fine',
+            'Soil Ph = 7.8',
+            'Top Layer Thickness  (mm) = 200',
+            'Proportion Of Sand In Soil = 0.2',
+            'Proportion Of Clay In Soil = 0.3',
+            'Proportion Of Soil Organic Carbon = 3.1'
         ]
         with self.path_farm_settings.open(mode='r', encoding='utf-8') as f:
             output = f.readlines()

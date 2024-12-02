@@ -1,6 +1,8 @@
 from pathlib import Path
 from typing import Any
 
+from holos_service.soil import set_soil_properties
+
 
 class FarmSettingsVar:
     def __init__(
@@ -293,67 +295,44 @@ class MonthlyWeather(ParamGeneric):
 class ParamsSoil(ParamGeneric):
     def __init__(
             self,
-            province: str,
             year: int,
-            ecodistrict_id: int,
-            soil_great_group: str,
-            soil_functional_category: str,
-            bulk_density: float,
-            soil_texture: str,
-            soil_ph: float,
-            top_layer_thickness: int | float,
-            proportion_of_sand_in_soil: float,
-            proportion_of_clay_in_soil: float,
-            proportion_of_soil_organic_carbon: float,
             **kwargs
     ):
         super().__init__(title="Soil Data")
-        self.province = FarmSettingsVar(name="Province", value=province)
+
+        self.province = FarmSettingsVar(name="Province", value=kwargs['province'])
         self.year = FarmSettingsVar(name="Year Of Observation", value=year)
-        self.ecodistrict_id = FarmSettingsVar(name="Ecodistrict ID", value=ecodistrict_id)
+        self.ecodistrict_id = FarmSettingsVar(name="Ecodistrict ID", value=kwargs['ecodistrict_id'])
         self.soil_great_group = FarmSettingsVar(
-            name="Soil Great Group", value=soil_great_group)
+            name="Soil Great Group", value=kwargs['soil_great_group'])
         self.soil_functional_category = FarmSettingsVar(
-            name="Soil functional category", value=soil_functional_category)
+            name="Soil functional category", value=kwargs['soil_functional_category'])
         self.bulk_density = FarmSettingsVar(
-            name="Bulk Density", value=bulk_density)
+            name="Bulk Density", value=kwargs['bulk_density'])
         self.soil_texture = FarmSettingsVar(
-            name="Soil Texture", value=soil_texture)
+            name="Soil Texture", value=kwargs['soil_texture'])
         self.soil_ph = FarmSettingsVar(
-            name="Soil Ph", value=soil_ph)
+            name="Soil Ph", value=kwargs['soil_ph'])
         self.top_layer_thickness = FarmSettingsVar(
-            name="Top Layer Thickness  (mm)", value=top_layer_thickness)
+            name="Top Layer Thickness  (mm)", value=kwargs['top_layer_thickness'])
         self.proportion_of_sand_in_soil = FarmSettingsVar(
-            name="Proportion Of Sand In Soil", value=proportion_of_sand_in_soil)
+            name="Proportion Of Sand In Soil", value=kwargs['sand_proportion'])
         self.proportion_of_clay_in_soil = FarmSettingsVar(
-            name="Proportion Of Clay In Soil", value=proportion_of_clay_in_soil)
+            name="Proportion Of Clay In Soil", value=kwargs['clay_proportion'])
         self.proportion_of_soil_organic_carbon = FarmSettingsVar(
-            name="Proportion Of Soil Organic Carbon", value=proportion_of_soil_organic_carbon)
+            name="Proportion Of Soil Organic Carbon", value=kwargs['organic_carbon_proportion'])
 
 
 class ParamsFarmSettings:
     def __init__(
             self,
-            province: str,
             year: int,
-            polygon_id: int,
-            ecodistrict_id: int,
             latitude: float,
             longitude: float,
             monthly_precipitation: list,
             monthly_potential_evapotranspiration: list,
             monthly_temperature: list,
             run_in_period_years: int,
-
-            soil_great_group: str,
-            soil_functional_category: str,
-            bulk_density: float,
-            soil_texture: str,
-            soil_ph: float,
-            top_layer_thickness: int | float,
-            proportion_of_sand_in_soil: float,
-            proportion_of_clay_in_soil: float,
-            proportion_of_soil_organic_carbon: float,
 
             carbon_concentration: float = 0.45,
             emergence_day: int = 141,
@@ -414,7 +393,13 @@ class ParamsFarmSettings:
 
         kwargs = {k: v for k, v in locals().items() if all([not k.startswith(('_', '__', 'self')), not callable(k)])}
 
-        self.params_general = ParamsGeneral(**kwargs)
+        soil_properties = set_soil_properties(
+            latitude=latitude,
+            longitude=longitude)
+
+        self.params_general = ParamsGeneral(
+            polygon_id=soil_properties.pop('id_polygon'),
+            **kwargs)
 
         # Annual Crops
         self.params_annual_crops = ParamsAnnualCrops(**kwargs)
@@ -459,7 +444,9 @@ class ParamsFarmSettings:
             variable_monthly_values=monthly_potential_evapotranspiration)
 
         # Soil Data
-        self.params_soil = ParamsSoil(**kwargs)
+        self.params_soil = ParamsSoil(
+            year=year,
+            **soil_properties)
 
     def get_params(self) -> list[ParamGeneric]:
         return [getattr(self, v) for v in self.__dict__ if all([not v.startswith(('_', '__')), not callable(v)])]

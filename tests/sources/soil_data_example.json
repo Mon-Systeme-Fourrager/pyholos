@@ -6,6 +6,7 @@
         "Longitude": -100.96435546875
       },
       "outputs": {
+        "id_polygon": 717002,
         "province": "Manitoba",
         "ecodistrict_id": 717,
         "soil_great_group": "EutricBrunisol",
@@ -25,6 +26,7 @@
         "Longitude": -98.0433082580568
       },
       "outputs": {
+        "id_polygon": 851003,
         "province": "Manitoba",
         "ecodistrict_id": 851,
         "soil_great_group": "Regosol",
@@ -44,6 +46,7 @@
         "Longitude": -100.9423828125
       },
       "outputs": {
+        "id_polygon": 717002,
         "province": "Manitoba",
         "ecodistrict_id": 717,
         "soil_great_group": "EutricBrunisol",
@@ -63,6 +66,7 @@
         "Longitude": -115.916748046875
       },
       "outputs": {
+        "id_polygon": 607009,
         "province": "Alberta",
         "ecodistrict_id": 607,
         "soil_great_group": "GrayLuvisol",
