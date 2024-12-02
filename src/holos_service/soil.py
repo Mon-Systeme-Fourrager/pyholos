@@ -302,8 +302,9 @@ def set_soil_properties(
         longitude=longitude,
         geojson_data=django_stuff.load_slc_data(
             path_slc_geojson_file=PathsSlcData.geojson_file.value))
+    id_polygon = polygon_properties['POLY_ID']
     dominant_component_properties = django_stuff.get_dominant_component_properties(
-        id_polygon=polygon_properties['POLY_ID'],
+        id_polygon=id_polygon,
         slc_components_table=django_stuff.read_slc_csv(
             path_file=PathsSlcData.cmp_file.value,
             usecols=['POLY_ID', 'PROVINCE', 'PERCENT_', 'SOIL_ID']))
@@ -323,6 +324,7 @@ def set_soil_properties(
         abbreviation=soil_name_table['G_GROUP3']).replace(' ', '')
 
     return dict(
+        id_polygon=id_polygon,
         province=province,
         ecodistrict_id=polygon_properties['ECO_ID'],
         soil_great_group=soil_great_group,
