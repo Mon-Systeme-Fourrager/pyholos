@@ -386,6 +386,65 @@ class ParamsFarmSettings:
             enable_carbon_modelling: bool = True,
     ):
         """
+
+        Args:
+            year: year of observation
+            latitude: (decimal degrees) latitude of the farm centroid
+            longitude: (decimal degrees) longitude of the farm centroid
+            monthly_precipitation: (mm) precipitation sum for each month of the year
+            monthly_potential_evapotranspiration: (mm) potential precipitation sum for each month of the year
+            monthly_temperature: (mm) air temperature average for each month of the year
+            run_in_period_years: number of simulated years for carbon modelling
+            carbon_concentration: (kg kg-1) carbon concentration in soil
+
+            emergence_day:
+            ripening_day:
+            variance:
+            alfa:
+            decomposition_minimum_temperature:
+            decomposition_maximum_temperature:
+            moisture_response_function_at_saturation:
+            moisture_response_function_at_wilting_point:
+
+            percentage_of_product_returned_to_soil_for_annuals: [0, 100] product returned to soil for annuals
+            percentage_of_straw_returned_to_soil_for_annuals: [0, 100] straw returned to soil for annuals
+            percentage_of_roots_returned_to_soil_for_annuals: [0, 100] roots returned to soil for annuals
+            percentage_of_product_yield_returned_to_soil_for_silage_crops: [0, 100] product returned to soil for silage corn
+            percentage_of_roots_returned_to_soil_for_silage_crops: [0, 100] roots returned to soil for silage corn
+            percentage_of_product_yield_returned_to_soil_for_cover_crops: [0, 100] product returned to soil for cover crops
+            percentage_of_product_yield_returned_to_soil_for_cover_crops_forage: [0, 100] product returned to soil for cover crops forage
+            percentage_of_product_yield_returned_to_soil_for_cover_crops_produce: [0, 100] product returned to soil for cover crops produce
+            percentage_of_straw_returned_to_soil_for_cover_crops: [0, 100] straw returned to soil for cover crops
+            percentage_of_roots_returned_to_soil_for_cover_crops: [0, 100] roots returned to soil for cover crops
+            percentage_of_product_returned_to_soil_for_root_crops: [0, 100] product returned to soil for root crops
+            percentage_of_straw_returned_to_soil_for_root_crops: [0, 100] straw returned to soil for root crops
+            percentage_of_product_returned_to_soil_for_perennials: [0, 100] product returned to soil for perennials
+            percentage_of_roots_returned_to_soil_for_perennials: [0, 100] roots returned to soil for perennials
+            percentage_of_product_returned_to_soil_for_rangeland_due_to_harvest_loss: [0, 100] product returned to soil for rangeland
+            percentage_of_roots_returned_to_soil_for_rangeland: [0, 100] product returned to soil for rangeland
+            percentage_of_product_returned_to_soil_for_fodder_corn: [0, 100] product returned to soil for fodder corn
+            percentage_of_roots_returned_to_soil_for_fodder_corn: [0, 100] roots returned to soil for fodder corn
+
+            decomposition_rate_constant_young_pool: (?) Decomposition Rate Constant Young Pool
+            decomposition_rate_constant_old_pool:
+            old_pool_carbon_n:
+            no_ratio:
+
+            emission_factor_for_leaching_and_runoff: (kg(N2O-N) kg(N)-1) emission factor for leaching and runoff
+            emission_factor_for_volatilization: (kg(N2O-N) kg(N)-1) emission factor for volatilization
+
+            fraction_of_n_lost_by_volatilization: (?) Fraction Of N Lost By Volatilization
+            microbe_death:
+            denitrification:
+
+            humification_coefficient_above_ground:
+            humification_coefficient_below_ground:
+            humification_coefficient_manure:
+
+            climate_filename: name of the file containing the climate data (e.g. "climate.csv")
+            climate_data_acquisition: name of the provider of climate data (e.g. "NASA")
+            enable_carbon_modelling: whether to enable carbon modelling with ICBM (default to True)
+
         Notes:
             The carbon modelling strategy can be one of ["IPCCTier2", "ICBM"]. In this first version, this parameter is forced to "ICBM".
 
