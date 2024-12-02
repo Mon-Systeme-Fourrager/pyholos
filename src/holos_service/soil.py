@@ -295,8 +295,7 @@ def set_soil_texture_according_to_holos(
 
 def set_soil_properties(
         latitude: float,
-        longitude: float,
-        year_of_observation: int
+        longitude: float
 ) -> dict:
     polygon_properties = django_stuff.get_slc_polygon_properties(
         latitude=latitude,
@@ -322,22 +321,21 @@ def set_soil_properties(
     province = django_stuff.CanadianProvinces.get_name(abbreviation=dominant_component_properties['PROVINCE'])
     soil_great_group = django_stuff.SoilGreatGroupNamesSlc.get_name(
         abbreviation=soil_name_table['G_GROUP3']).replace(' ', '')
-    return {
-        'Province': province,
-        'Year Of Observation': year_of_observation,
-        'Ecodistrict ID': polygon_properties['ECO_ID'],
-        'Soil Great Group': soil_great_group,
-        'Soil functional category': get_soil_functional_category(
+
+    return dict(
+        province=province,
+        ecodistrict_id=polygon_properties['ECO_ID'],
+        soil_great_group=soil_great_group,
+        soil_functional_category=get_soil_functional_category(
             province=province,
             soil_great_group=soil_great_group),
-        'Bulk Density': first_non_litter_layer['BD'],
-        'Soil Texture': set_soil_texture_according_to_holos(
+        bulk_density=first_non_litter_layer['BD'],
+        soil_texture=set_soil_texture_according_to_holos(
             soil_texture_abbreviation_from_slc=soil_name_table['PMTEX1']),
-        'Soil Ph': round(first_non_litter_layer['PH2'], 1),
-        'Top Layer Thickness  (mm)': first_non_litter_layer['LDEPTH'] * 10,
-        'Proportion Of Sand In Soil': first_non_litter_layer['TSAND'] / 100.,
-        'Proportion Of Clay In Soil': first_non_litter_layer['TCLAY'] / 100.,
-        'Proportion Of Soil Organic Carbon': round(first_non_litter_layer['ORGCARB'], 2)
-    }
+        soil_ph=round(first_non_litter_layer['PH2'], 1),
+        top_layer_thickness=first_non_litter_layer['LDEPTH'] * 10,
+        sand_proportion=first_non_litter_layer['TSAND'] / 100.,
+        clay_proportion=first_non_litter_layer['TCLAY'] / 100.,
+        organic_carbon_proportion=round(first_non_litter_layer['ORGCARB'], 2))
 
     pass

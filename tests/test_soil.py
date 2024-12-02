@@ -50,8 +50,7 @@ class TestSetSoilProperties(unittest.TestCase):
             self.assertEqual(
                 soil.set_soil_properties(
                     latitude=example_inputs['Latitude'],
-                    longitude=example_inputs['Longitude'],
-                    year_of_observation=2024),
+                    longitude=example_inputs['Longitude']),
                 example_data['outputs'])
 
 if __name__ == '__main__':
