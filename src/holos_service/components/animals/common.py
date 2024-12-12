@@ -1,4 +1,7 @@
 from holos_service.common import EnumGeneric
+from holos_service.common import EnumGeneric, HolosVar
+from holos_service.config import PathsHolosResources
+from holos_service.utils import read_holos_resource_table
 
 
 class AnimalType(EnumGeneric):
@@ -189,3 +192,203 @@ class BeddingMaterialType(EnumGeneric):
     @classmethod
     def get_value(cls, name: str | None):
         return "None" if name is None else getattr(cls, name).value
+
+
+class Bedding:
+    def __init__(
+            self,
+            housing_type: HousingType,
+            bedding_material_type: BeddingMaterialType | None,
+            animal_type: AnimalType,
+            total_carbon_kilograms_dry_matter_for_bedding: float = None,
+            total_nitrogen_kilograms_dry_matter_for_bedding: float = None,
+            moisture_content_of_bedding_material: float = None
+    ):
+        default_bedding_material_composition = self.get_bedding_material_composition(
+            bedding_material_type=bedding_material_type,
+            animal_type=animal_type)
+
+        if total_carbon_kilograms_dry_matter_for_bedding is None:
+            total_carbon_kilograms_dry_matter_for_bedding = default_bedding_material_composition[
+                'TotalCarbonKilogramsDryMatter']
+        if total_nitrogen_kilograms_dry_matter_for_bedding is None:
+            total_nitrogen_kilograms_dry_matter_for_bedding = default_bedding_material_composition[
+                'TotalNitrogenKilogramsDryMatter']
+        if moisture_content_of_bedding_material is None:
+            moisture_content_of_bedding_material = default_bedding_material_composition['MoistureContent']
+
+        self.user_defined_bedding_rate = HolosVar(
+            name='User Defined Bedding Rate',
+            value=self.get_default_bedding_rate(
+                housing_type=housing_type,
+                bedding_material_type=bedding_material_type,
+                animal_type=animal_type))
+        self.total_carbon_kilograms_dry_matter_for_bedding = HolosVar(
+            name='Total Carbon Kilograms Dry Matter For Bedding',
+            value=total_carbon_kilograms_dry_matter_for_bedding)
+        self.total_nitrogen_kilograms_dry_matter_for_bedding = HolosVar(
+            name='Total Nitrogen Kilograms Dry Matter For Bedding',
+            value=total_nitrogen_kilograms_dry_matter_for_bedding)
+        self.moisture_content_of_bedding_material = HolosVar(
+            name='Moisture Content Of Bedding Material',
+            value=moisture_content_of_bedding_material)
+
+    @staticmethod
+    def get_default_bedding_rate(
+            housing_type: HousingType,
+            bedding_material_type: BeddingMaterialType,
+            animal_type: AnimalType
+    ) -> int | float:
+        # https://github.com/holos-aafc/Holos/blob/53f778f9bd4579d164de10f5b04db34d020b96a9/H.Core/Providers/Animals/Table_30_Default_Bedding_Material_Composition_Provider.cs#L301
+        _housing_type = HousingTypeExtensions(housing_type=housing_type)
+        _animal_type = AnimalTypeExtensions(animal_type=animal_type)
+
+
+        if _housing_type.is_pasture:
+            return 0
+
+        if _animal_type.is_young_type:
+            return 0
+
+        if _animal_type.is_beef_cattle_type:
+            if bedding_material_type == BeddingMaterialType.straw:
+                if _housing_type.is_feed_lot:
+                    return 1.5
+
+                if _housing_type.is_barn:
+                    return 3.5
+
+            if bedding_material_type == BeddingMaterialType.wood_chip:
+                if _housing_type.is_feed_lot:
+                    return 3.6
+
+                if _housing_type.is_barn:
+                    return 5.0
+
+        if _animal_type.is_dairy_cattle_type:
+            # Currently, all housing types have same rates for bedding types
+            if any([
+                _housing_type.is_tie_stall,
+                _housing_type.is_free_stall,
+                housing_type == HousingType.dry_lot]):
+                if bedding_material_type == BeddingMaterialType.sand:
+                    return 24.3
+
+                if bedding_material_type == BeddingMaterialType.separated_manure_solid:
+                    return 0
+
+                if bedding_material_type == BeddingMaterialType.straw_long:
+                    return 0.7
+
+                if bedding_material_type == BeddingMaterialType.straw_chopped:
+                    return 0.7
+
+                if bedding_material_type == BeddingMaterialType.shavings:
+                    return 2.1
+
+                if bedding_material_type == BeddingMaterialType.sawdust:
+                    return 2.1
+
+        # Footnote 8 for sheep value reference.
+        if _animal_type.is_sheep_type:
+            return 0.57
+
+        if _animal_type.is_swine_type:
+            if bedding_material_type == BeddingMaterialType.straw_long:
+                return 0.70
+            else:
+                return 0.79
+
+        if _animal_type.is_poultry_type:
+            if any([
+                bedding_material_type == BeddingMaterialType.sawdust,
+                bedding_material_type == BeddingMaterialType.straw,
+                bedding_material_type == BeddingMaterialType.shavings]):
+                if animal_type == AnimalType.broilers:
+                    return 0.0014
+
+                if animal_type == AnimalType.chicken_pullets:
+                    return 0.0014
+
+                if any([
+                    animal_type == AnimalType.layers,
+                    animal_type == AnimalType.chicken_hens]):
+                    return 0.0028
+
+                if _animal_type.is_turkey_type:
+                    return 0.011
+
+                else:
+                    return 0
+            else:
+                return 0
+
+        if _animal_type.is_other_animal_type:
+            # Footnote 11 for Other livestock value reference
+            match animal_type:
+                case AnimalType.llamas:
+                    return 0.57
+
+                case AnimalType.alpacas:
+                    return 0.57
+
+                case AnimalType.deer:
+                    return 1.5
+
+                case AnimalType.elk:
+                    return 1.5
+
+                case AnimalType.goats:
+                    return 0.57
+
+                case AnimalType.horses:
+                    return 1.5
+
+                case AnimalType.mules:
+                    return 1.5
+
+                case AnimalType.bison:
+                    return 1.5
+
+                # added here since the original case statement in C# does not cover all possibilities
+                case _:
+                    return 1
+        else:
+            return 1
+
+        pass
+
+    @staticmethod
+    def get_bedding_material_composition(
+            bedding_material_type: BeddingMaterialType,
+            animal_type: AnimalType
+    ) -> dict:
+        _animal_type = AnimalTypeExtensions(animal_type=animal_type)
+        if _animal_type.is_beef_cattle_type:
+            animal_lookup_type = AnimalType.beef
+        elif _animal_type.is_dairy_cattle_type:
+            animal_lookup_type = AnimalType.dairy
+        elif _animal_type.is_sheep_type:
+            animal_lookup_type = AnimalType.sheep
+        elif _animal_type.is_swine_type:
+            animal_lookup_type = AnimalType.swine
+        elif _animal_type.is_poultry_type:
+            animal_lookup_type = AnimalType.poultry
+        else:
+            # Other animals have a value for animal group (Horses, Goats, etc.)
+            animal_lookup_type = animal_type
+
+        df = read_holos_resource_table(
+            path_file=PathsHolosResources.Table_30_Default_Bedding_Material_Composition_Provider)
+
+        result = df[
+            (df['BeddingMaterial'] == bedding_material_type) &
+            (df['AnimalType'] == animal_lookup_type.value)]
+
+        if not result.empty:
+            return result.iloc[0].to_dict()
+        else:
+            # Trace.TraceError($"{nameof(Farm)}.{nameof(GetBeddingMaterialComposition)}: unable to return bedding material data for {animalType.GetDescription()}, and {beddingMaterialType.GetHashCode()}. Returning default value of 1.");
+
+            # return new Table_30_Default_Bedding_Material_Composition_Data();
+            return {k: None for k in result.columns}
