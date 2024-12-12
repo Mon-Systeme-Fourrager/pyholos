@@ -1,7 +1,52 @@
-from holos_service.common import EnumGeneric
 from holos_service.common import EnumGeneric, HolosVar
+from holos_service.components.common import ComponentCategory
 from holos_service.config import PathsHolosResources
 from holos_service.utils import read_holos_resource_table
+
+
+class DietAdditiveType(EnumGeneric):
+    two_percent_fat: str = "TwoPercentFat"
+    four_percent_fat: str = "FourPercentFat"
+    five_percent_fat: str = "FivePercentFat"
+    ionophore: str = "Inonophore"
+    ionophore_plus_two_percent_fat: str = "InonophorePlusTwoPercentFat"
+    ionophore_plus_four_percent_fat: str = "InonophorePlusFourPercentFat"
+    ionophore_plus_five_percent_fat: str = "IonophorePlusFivePercentFat"
+    custom: str = "Custom"
+
+    @classmethod
+    def get_value(cls, member: str | None):
+        return "None" if member is None else getattr(cls, member).value
+
+
+class ProductionStage(EnumGeneric):
+    gestating: str = "Gestating"
+    """Animals that are pregnant.
+    """
+
+    lactating: str = "Lactating"
+    """Animals that are lactating. Also known as farrowing in swine systems.
+    """
+
+    open: str = "Open"
+    """Animals that are neither lactating or pregnant.
+    """
+
+    weaning: str = "Weaning"
+    """Animals that have not been weaned yet.
+    """
+
+    growing_and_finishing: str = "GrowingAndFinishing"
+    """Animals that have not been weaned yet.
+    """
+
+    breeding_stock: str = "BreedingStock"
+    """Animals that are used for breeding (boars, bulls, etc.)
+    """
+
+    weaned: str = "Weaned"
+    """Animals that have been weaned and are no longer milk fed.
+    """
 
 
 class AnimalType(EnumGeneric):
