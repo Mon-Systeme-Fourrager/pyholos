@@ -1,6 +1,7 @@
 from holos_service import utils
 from holos_service.common import HolosVar, Component, EnumGeneric
-from holos_service.components.animals.common import (AnimalType)
+from holos_service.components.animals.common import (HousingType,
+                                                     AnimalType)
 from holos_service.config import PathsHolosResources
 
 
@@ -192,3 +193,20 @@ class Beef(Component):
         self.ammonia_emission_factor_for_manure_storage = HolosVar(
             name="Ammonia Emission Factor For Manure Storage",
             value=None)
+
+    def get_feeding_activity_coefficient(self):
+        match self.housing_type.value:
+            case HousingType.housed_in_barn | HousingType.confined | HousingType.confined_no_barn:
+                res = 0
+
+            case HousingType.pasture | HousingType.flat_pasture | HousingType.enclosed_pasture:
+                res = 0.17
+
+            case HousingType.open_range_or_hills:
+                res = 0.36
+
+            case _:
+                res = 0
+
+        self.activity_coefficient_of_feeding_situation.value = res
+        pass
