@@ -1,6 +1,83 @@
 from holos_service.common import EnumGeneric
 
 
+class AnimalType(EnumGeneric):
+    not_selected: str = "NotSelected"
+    alpacas: str = "Alpacas"
+    beef_backgrounder: str = "BeefBackgrounder"
+    beef_backgrounder_steer: str = "BeefBackgrounderSteer"
+    beef_backgrounder_heifer: str = "BeefBackgrounderHeifer"
+    beef_finishing_steer: str = "BeefFinishingSteer"
+    beef_finishing_heifer: str = "BeefFinishingHeifer"
+    beef: str = "Beef"
+    beef_bulls: str = "BeefBulls"
+    beef_calf: str = "BeefCalf"
+    beef_cow_lactating: str = "BeefCowLactating"  # This also means 'regular' cows (i.e. non-lactating)
+    beef_cow_dry: str = "BeefCowDry"
+    beef_finisher: str = "BeefFinisher"  # /// Also known as buffalo
+    bison: str = "Bison"
+    swine_boar: str = "SwineBoar"
+    broilers: str = "Broilers"
+    chicken: str = "Chicken"
+    cow_calf: str = "CowCalf"
+    beef_cow: str = "BeefCow"
+    calf: str = "Calf"
+    dairy: str = "Dairy"
+    dairy_bulls: str = "DairyBulls"
+    dairy_dry_cow: str = "DairyDryCow"
+    dairy_calves: str = "DairyCalves"
+    dairy_heifers: str = "DairyHeifers"
+    dairy_lactating_cow: str = "DairyLactatingCow"
+    deer: str = "Deer"
+    swine_dry_sow: str = "SwineDrySow"
+    ducks: str = "Ducks"
+    elk: str = "Elk"
+    ewes: str = "Ewes"  # Assumption is all ewes are pregnant
+    geese: str = "Geese"
+    goats: str = "Goats"
+    swine_grower: str = "SwineGrower"  # Also known as Hogs
+    horses: str = "Horses"
+    lambs: str = "Lambs"
+    lambs_and_ewes: str = "LambsAndEwes"
+    swine_lactating_sow: str = "SwineLactatingSow"
+    layers_dry_poultry: str = "LayersDryPoultry"
+    layers_wet_poultry: str = "LayersWetPoultry"
+    llamas: str = "Llamas"
+    mules: str = "Mules"
+    other_livestock: str = "OtherLivestock"
+    poultry: str = "Poultry"
+    beef_replacement_heifers: str = "BeefReplacementHeifers"
+    sheep: str = "Sheep"
+    ram: str = "Ram"
+    weaned_lamb: str = "WeanedLamb"
+    sheep_feedlot: str = "SheepFeedlot"
+    stockers: str = "Stockers"
+    stocker_steers: str = "StockerSteers"
+    stocker_heifers: str = "StockerHeifers"
+    swine: str = "Swine"
+    swine_starter: str = "SwineStarter"
+    swine_finisher: str = "SwineFinisher"
+    turkeys: str = "Turkeys"
+    young_bulls: str = "YoungBulls"
+    swine_gilts: str = "SwineGilts"  # Female pigs that have not farrowed a litter. Also known as maiden gilts.
+    swine_sows: str = "SwineSows"
+    swine_piglets: str = "SwinePiglets"
+    chicken_pullets: str = "ChickenPullets"  # Juvenile female
+    chicken_cockerels: str = "ChickenCockerels"  # Juvenile male
+    chicken_roosters: str = "ChickenRoosters"  # Adult male
+    chicken_hens: str = "ChickenHens"  # Adult female
+    young_tom: str = "YoungTom"  # Juvenile male turkey
+    tom: str = "Tom"  # Adult male turkey
+    young_turkey_hen: str = "YoungTurkeyHen"  # Young female turkey
+    turkey_hen: str = "TurkeyHen"  # Adult female turkey
+    chicken_eggs: str = "ChickenEggs"
+    turkey_eggs: str = "TurkeyEggs"
+    chicks: str = "Chicks"  # Newly hatched chicken
+    poults: str = "Poults"  # Newly hatched turkey
+    cattle: str = "Cattle"
+    layers: str = "Layers"
+
+
 class HousingType(EnumGeneric):
     not_selected: str = "NotSelected"
     confined_no_barn: str = "ConfinedNoBarn"
