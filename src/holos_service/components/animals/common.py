@@ -171,3 +171,21 @@ class HousingTypeExtensions:
             housing_type.hilly_pasture_or_open_range,
             housing_type.open_range_or_hills,
             housing_type.swath_grazing)])
+
+
+class BeddingMaterialType(EnumGeneric):
+    straw: str = 'Straw'
+    wood_chip: str = 'WoodChip'
+    separated_manure_solid: str = 'SeparatedManureSolid'
+    sand: str = 'Sand'
+    straw_long: str = 'StrawLong'
+    straw_chopped: str = 'StrawChopped'
+    shavings: str = 'Shavings'
+    sawdust: str = 'Sawdust'
+    paper_products: str = 'PaperProducts'
+    peat: str = 'Peat'
+    hemp: str = 'Hemp'
+
+    @classmethod
+    def get_value(cls, name: str | None):
+        return "None" if name is None else getattr(cls, name).value
