@@ -961,5 +961,122 @@ class TestBedding(unittest.TestCase):
                 bedding_material_type=BeddingMaterialType.straw.value))
 
 
+class TestGetMethaneProducingCapacityOfManure(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.animal_types = list(AnimalType)
+
+    def run_test(
+            self,
+            animal_type: AnimalType,
+            expected_value: float
+    ):
+        self.assertEqual(
+            expected_value,
+            get_methane_producing_capacity_of_manure(animal_type=animal_type))
+
+        self.animal_types.pop(self.animal_types.index(animal_type))
+        pass
+
+    def test_get_methane_producing_capacity_of_manure_returns_expected_values_when_is_beef_cattle_type(self):
+        for animal_type in [
+            common.AnimalType.beef,
+            common.AnimalType.beef_backgrounder,
+            common.AnimalType.beef_bulls,
+            common.AnimalType.beef_backgrounder_heifer,
+            common.AnimalType.beef_finishing_steer,
+            common.AnimalType.beef_finishing_heifer,
+            common.AnimalType.beef_replacement_heifers,
+            common.AnimalType.beef_finisher,
+            common.AnimalType.beef_backgrounder_steer,
+            common.AnimalType.beef_calf,
+            common.AnimalType.stockers,
+            common.AnimalType.stocker_heifers,
+            common.AnimalType.stocker_steers,
+            common.AnimalType.beef_cow_lactating,
+            common.AnimalType.beef_cow,
+            common.AnimalType.beef_cow_dry
+        ]:
+            self.run_test(animal_type=animal_type, expected_value=0.19)
+
+    def test_get_methane_producing_capacity_of_manure_returns_expected_values_when_is_dairy_cattle_type(self):
+        for animal_type in [
+            common.AnimalType.dairy,
+            common.AnimalType.dairy_lactating_cow,
+            common.AnimalType.dairy_bulls,
+            common.AnimalType.dairy_calves,
+            common.AnimalType.dairy_dry_cow,
+            common.AnimalType.dairy_heifers
+        ]:
+            self.run_test(animal_type=animal_type, expected_value=0.24)
+
+    def test_get_methane_producing_capacity_of_manure_returns_expected_values_when_is_swine_type(self):
+        for animal_type in [
+            common.AnimalType.swine,
+            common.AnimalType.swine_finisher,
+            common.AnimalType.swine_starter,
+            common.AnimalType.swine_lactating_sow,
+            common.AnimalType.swine_dry_sow,
+            common.AnimalType.swine_grower,
+            common.AnimalType.swine_sows,
+            common.AnimalType.swine_boar,
+            common.AnimalType.swine_gilts,
+            common.AnimalType.swine_piglets
+        ]:
+            self.run_test(animal_type=animal_type, expected_value=0.48)
+
+    def test_get_methane_producing_capacity_of_manure_returns_expected_values_when_is_sheep_type(self):
+        for animal_type in [
+            common.AnimalType.sheep,
+            common.AnimalType.lambs_and_ewes,
+            common.AnimalType.ram,
+            common.AnimalType.weaned_lamb,
+            common.AnimalType.lambs,
+            common.AnimalType.ewes,
+            common.AnimalType.sheep_feedlot
+        ]:
+            self.run_test(animal_type=animal_type, expected_value=0.19)
+
+    def test_get_methane_producing_capacity_of_manure_returns_expected_values_for_chicken_roosters_and_broilers(self):
+        for animal_type in [
+            common.AnimalType.chicken_roosters,
+            common.AnimalType.broilers
+        ]:
+            self.run_test(animal_type=animal_type, expected_value=0.36)
+
+    def test_get_methane_producing_capacity_of_manure_returns_expected_values_for_chicken_hens_pullets_cockerels_layers(
+            self):
+        for animal_type in [
+            common.AnimalType.chicken_hens,
+            common.AnimalType.chicken_pullets,
+            common.AnimalType.chicken_cockerels,
+            common.AnimalType.layers
+        ]:
+            self.run_test(animal_type=animal_type, expected_value=0.39)
+
+    def test_get_methane_producing_capacity_of_manure_returns_expected_values_for_goats(self):
+        self.run_test(animal_type=common.AnimalType.goats, expected_value=0.18)
+
+    def test_get_methane_producing_capacity_of_manure_returns_expected_values_for_horses(self):
+        self.run_test(animal_type=common.AnimalType.horses, expected_value=0.30)
+
+    def test_get_methane_producing_capacity_of_manure_returns_expected_values_for_mules(self):
+        self.run_test(animal_type=common.AnimalType.mules, expected_value=0.33)
+
+    def test_get_methane_producing_capacity_of_manure_returns_expected_values_for_llamas_and_alpacas(self):
+        for animal_type in [
+            common.AnimalType.llamas,
+            common.AnimalType.alpacas
+        ]:
+            self.run_test(animal_type=animal_type, expected_value=0.19)
+
+    def test_get_methane_producing_capacity_of_manure_returns_expected_values_for_bison(self):
+        self.run_test(animal_type=common.AnimalType.bison, expected_value=0.1)
+
+    def test_z_get_methane_producing_capacity_of_manure_returns_expected_default_value(self):
+        for animal_type in self.animal_types:
+            self.run_test(animal_type=animal_type, expected_value=0)
+
+
 if __name__ == '__main__':
     unittest.main()

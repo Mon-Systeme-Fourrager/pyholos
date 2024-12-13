@@ -759,3 +759,82 @@ class AnimalCoefficientData:
         self.gain_coefficient = gain_coefficient
         self.default_initial_weight = default_initial_weight
         self.default_final_weight = default_final_weight
+
+
+def get_methane_producing_capacity_of_manure(
+        animal_type: AnimalType
+) -> float:
+    """Returns the default methane producing capacity of manure as a function of the animal type
+
+    Args:
+        animal_type: animal type object
+
+    Returns:
+        (m^3 CH4 kg^-1 VS): Methane producing capacity of manure (B_o)
+
+    References:
+        https://github.com/holos-aafc/Holos/blob/396f1ab9bc7247e6d78766f9445c14d2eb7c0d9d/H.Core/Providers/Animals/Table_35_Methane_Producing_Capacity_Default_Values_Provider.cs#L15
+
+    """
+    _animal_type = AnimalTypeExtensions(animal_type=animal_type)
+
+    # Table 35. Default values for maximum methane producing capacity (Bo).
+    # <para>Source: IPCC (2019), Table 10.16</para>
+    # Footnote 3 : For Methane producing capacity (B0) value reference.
+
+    if _animal_type.is_beef_cattle_type:
+        res = 0.19
+
+    elif _animal_type.is_dairy_cattle_type:
+        res = 0.24
+
+    elif _animal_type.is_swine_type:
+        res = 0.48
+
+    elif _animal_type.is_sheep_type:
+        res = 0.19
+
+    elif any([
+        animal_type == AnimalType.chicken_roosters,
+        animal_type == AnimalType.broilers
+    ]):
+        # Used for broilers from algorithm document
+        res = 0.36
+
+    elif any((
+            animal_type == AnimalType.chicken_hens,
+            animal_type == AnimalType.chicken_pullets,
+            animal_type == AnimalType.chicken_cockerels,
+            animal_type == AnimalType.layers
+    )):
+        # Used for layers (wet/dry) from algorithm document
+        res = 0.39
+
+    elif animal_type == AnimalType.goats:
+        res = 0.18
+
+    elif animal_type == AnimalType.horses:
+        res = 0.30
+
+    elif animal_type == AnimalType.mules:
+        res = 0.33
+
+    # Footnote 2
+    elif any((
+            animal_type == AnimalType.llamas,
+            animal_type == AnimalType.alpacas
+    )):
+        res = 0.19
+
+    # Footnote 1
+    elif animal_type == AnimalType.bison:
+        res = 0.10
+
+    else:
+        res = 0
+
+    # Footnote 1: Value for non-dairy cattle used
+    # Footnote 2: Value for sheep used
+    # Footnote 3: For all animals on pasture, range or paddock, the Bo should be set to 0.19
+
+    return res
