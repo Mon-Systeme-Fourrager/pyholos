@@ -4,6 +4,7 @@ from pandas import DataFrame
 
 from holos_service.components.animals.common import AnimalType, BeddingMaterialType
 from holos_service.config import PathsHolosResources
+from holos_service.core_constants import CoreConstants
 
 
 class HolosTable:
@@ -34,6 +35,138 @@ class HolosTable:
             f.write('#\n')
 
             DataFrame.from_records(self.data).to_csv(f, sep=',', decimal='.', index=False)
+
+
+def set_table_16():
+    table_16 = HolosTable(
+        name='Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider',
+        data=[
+            # Beef Cattle Data Sources :
+
+            # BaselineMaintenanceCoefficient = IPCC (2019, Table 10.4)
+            # GainCoefficient = IPCC (2019, Eq. 10.6)
+            # DefaultInitialWeight = Sheppard et al. (2015) , A.Alemu(pers.comm, 2022)
+            # DefaultFinalWeight = Sheppard et al. (2015) , A.Alemu(pers.comm, 2022)
+
+            dict(
+                AnimalType=AnimalType.beef_calf.value,
+                BaselineMaintenanceCoefficient=CoreConstants.NotApplicable,
+                GainCoefficient=CoreConstants.NotApplicable,
+                DefaultInitialWeight=39,
+                DefaultFinalWeight=260
+            ),
+            dict(
+                AnimalType=AnimalType.beef_cow_lactating.value,
+                BaselineMaintenanceCoefficient=0.386,
+                GainCoefficient=0.8,
+                DefaultInitialWeight=610,
+                DefaultFinalWeight=610
+            ),
+            dict(
+                AnimalType=AnimalType.beef_cow_dry.value,
+                BaselineMaintenanceCoefficient=0.322,
+                GainCoefficient=0.8,
+                DefaultInitialWeight=610,
+                DefaultFinalWeight=610
+            ),
+            dict(
+                AnimalType=AnimalType.beef_bulls.value,
+                BaselineMaintenanceCoefficient=0.370,
+                GainCoefficient=1.2,
+                DefaultInitialWeight=900,
+                DefaultFinalWeight=900
+            ),
+            dict(
+                AnimalType=AnimalType.beef_backgrounder_steer.value,
+                BaselineMaintenanceCoefficient=0.322,
+                GainCoefficient=1,
+                DefaultInitialWeight=250,
+                DefaultFinalWeight=380
+            ),
+            # Aklilu says these two animal groups have the same values
+            dict(
+                AnimalType=AnimalType.beef_backgrounder_heifer.value,
+                BaselineMaintenanceCoefficient=0.322,
+                GainCoefficient=0.8,
+                DefaultInitialWeight=240,
+                DefaultFinalWeight=360
+            ),
+            dict(
+                AnimalType=AnimalType.beef_replacement_heifers.value,
+                BaselineMaintenanceCoefficient=0.322,
+                GainCoefficient=0.8,
+                DefaultInitialWeight=240,
+                DefaultFinalWeight=360
+            ),
+            dict(
+                AnimalType=AnimalType.beef_finishing_steer.value,
+                BaselineMaintenanceCoefficient=0.322,
+                GainCoefficient=1.0,
+                DefaultInitialWeight=310,
+                DefaultFinalWeight=610
+            ),
+            dict(
+                AnimalType=AnimalType.beef_finishing_heifer.value,
+                BaselineMaintenanceCoefficient=0.322,
+                GainCoefficient=0.8,
+                DefaultInitialWeight=300,
+                DefaultFinalWeight=580
+            ),
+
+            # """
+            # Dairy Cattle
+            # Footnote 1
+            # Dairy Cattle Data Sources :
+            # BaselineMaintenanceCoefficient = IPCC (2019, Table 10.4)
+            # GainCoefficient = IPCC (2019, Eq. 10.6)
+            # DefaultInitialWeight = Lactanet (2020)
+            # DefaultFinalWeight = Lactanet (2020)
+            # """
+
+            dict(
+                AnimalType=AnimalType.dairy_lactating_cow.value,
+                BaselineMaintenanceCoefficient=0.386,
+                GainCoefficient=0.8,
+                DefaultInitialWeight=687,
+                DefaultFinalWeight=687
+            ),
+            dict(
+                AnimalType=AnimalType.dairy_dry_cow.value,
+                BaselineMaintenanceCoefficient=0.322,
+                GainCoefficient=0.8,
+                DefaultInitialWeight=687,
+                DefaultFinalWeight=687
+            ),
+            dict(
+                AnimalType=AnimalType.dairy_heifers.value,
+                BaselineMaintenanceCoefficient=0.322,
+                GainCoefficient=0.8,
+                DefaultInitialWeight=637,
+                DefaultFinalWeight=687
+            ),
+            dict(
+                AnimalType=AnimalType.dairy_bulls.value,
+                BaselineMaintenanceCoefficient=0.37,
+                GainCoefficient=1.2,
+                DefaultInitialWeight=1200,
+                DefaultFinalWeight=1200
+            ),
+            dict(
+                AnimalType=AnimalType.dairy_calves.value,
+                BaselineMaintenanceCoefficient=0,
+                GainCoefficient=0,
+                DefaultInitialWeight=45,
+                DefaultFinalWeight=127
+            )
+        ],
+        path=PathsHolosResources.Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider
+    )
+
+    table_16.write_data_to_csv(
+        comments=[
+            'Table 16. Livestock coefficients for beef cattle and dairy cattle.',
+            'source: https://github.com/holos-aafc/Holos/blob/396f1ab9bc7247e6d78766f9445c14d2eb7c0d9d/H.Core/Providers/Animals/Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider.cs#L13'
+        ])
 
 
 def set_table_30():
@@ -253,11 +386,11 @@ def set_table_30():
     table_30.write_data_to_csv(
         comments=[
             'Table 30. Default bedding application rates and composition of bedding materials for all livestock groups.',
-            'source: https://github.com/holos-aafc/Holos/blob/396f1ab9bc7247e6d78766f9445c14d2eb7c0d9d'
-            '/H.Core/Providers/Animals/Table_30_Default_Bedding_Material_Composition_Provider.cs#L15'
+            'source: https://github.com/holos-aafc/Holos/blob/396f1ab9bc7247e6d78766f9445c14d2eb7c0d9d/H.Core/Providers/Animals/Table_30_Default_Bedding_Material_Composition_Provider.cs#L15'
         ])
     pass
 
 
 if __name__ == '__main__':
+    set_table_16()
     set_table_30()
