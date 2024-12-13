@@ -74,6 +74,13 @@ class TestBeef(unittest.TestCase):
             print(animal_type)
             self.run_gain_coefficient_test(animal_type=animal_type, expected_value=0)
 
+    def test_update_name(self):
+        old_name = self.beef.name.value
+        new_name = 'test_name'
+        self.beef.update_name(name=new_name)
+        self.assertEqual(
+            ' '.join((old_name, new_name)),
+            self.beef.name.value)
 
 if __name__ == '__main__':
     unittest.main()

@@ -187,6 +187,9 @@ class Beef(Component):
             name="Ammonia Emission Factor For Manure Storage",
             value=None)
 
+    def update_name(self, name: str):
+        self.name.value = ' '.join((self.name.value, name))
+
     def get_gain_coefficient(self):
         try:
             res = utils.read_holos_resource_table(
