@@ -588,7 +588,6 @@ class Bedding:
         _housing_type = HousingTypeExtensions(housing_type=housing_type)
         _animal_type = AnimalTypeExtensions(animal_type=animal_type)
 
-
         if _housing_type.is_pasture:
             return 0
 
@@ -838,3 +837,26 @@ def get_methane_producing_capacity_of_manure(
     # Footnote 3: For all animals on pasture, range or paddock, the Bo should be set to 0.19
 
     return res
+
+
+def get_default_methane_producing_capacity_of_manure(
+        is_pasture: bool,
+        animal_type: AnimalType
+) -> float:
+    """Returns the default methane producing capacity of manure.
+
+    Args:
+        is_pasture: True if the housing type is pasture, otherwise False
+        animal_type: animal type class
+
+    Returns:
+        (m^3 CH4 kg^-1 VS): Methane producing capacity of manure (B_o)
+
+    Notes:
+        When housed on pasture, this value should be set to a constant.
+        See table 38 "Default values (in Holos source code) for maximum methane producing capacity (Bo)" footnote 3.
+
+    References:
+        https://github.com/holos-aafc/Holos/blob/396f1ab9bc7247e6d78766f9445c14d2eb7c0d9d/H.Core/Services/Initialization/Animals/AnimalInitializationService.Methane.cs#L89
+    """
+    return 0.19 if is_pasture else get_methane_producing_capacity_of_manure(animal_type=animal_type)

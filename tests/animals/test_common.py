@@ -2,7 +2,9 @@ import unittest
 from itertools import product
 
 from holos_service.components.animals import common
-from holos_service.components.animals.common import Bedding, BeddingMaterialType, AnimalType
+from holos_service.components.animals.common import (Bedding, BeddingMaterialType, AnimalType,
+                                                     get_methane_producing_capacity_of_manure,
+                                                     get_default_methane_producing_capacity_of_manure)
 
 
 class TestAnimalTypeExtensions(unittest.TestCase):
@@ -1076,6 +1078,14 @@ class TestGetMethaneProducingCapacityOfManure(unittest.TestCase):
     def test_z_get_methane_producing_capacity_of_manure_returns_expected_default_value(self):
         for animal_type in self.animal_types:
             self.run_test(animal_type=animal_type, expected_value=0)
+
+
+class TestGetDefaultMethaneProducingCapacityOfManure(unittest.TestCase):
+    def test_get_default_methane_producing_capacity_of_manure_is_constant_for_pasture(self):
+        for animal_type in common.AnimalType:
+            self.assertEqual(
+                0.19,
+                get_default_methane_producing_capacity_of_manure(is_pasture=True, animal_type=animal_type))
 
 
 if __name__ == '__main__':
