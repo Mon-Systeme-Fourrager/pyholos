@@ -126,6 +126,16 @@ class AnimalType(EnumGeneric):
     layers: str = "Layers"
 
 
+class ManureAnimalSourceTypes(EnumGeneric):
+    not_selected: str = "NotSelected"
+    beef_manure: str = "BeefManure"
+    dairy_manure: str = "DairyManure"
+    swine_manure: str = "SwineManure"
+    poultry_manure: str = "PoultryManure"
+    sheep_manure: str = "SheepManure"
+    other_livestock_manure: str = "OtherLivestockManure"
+
+
 class HousingType(EnumGeneric):
     not_selected: str = "NotSelected"
     confined_no_barn: str = "ConfinedNoBarn"
