@@ -737,3 +737,25 @@ class Bedding:
 
             # return new Table_30_Default_Bedding_Material_Composition_Data();
             return {k: None for k in result.columns}
+
+
+class AnimalCoefficientData:
+    def __init__(
+            self,
+            baseline_maintenance_coefficient: float = 0,
+            gain_coefficient: float = 0,
+            default_initial_weight: float = 0,
+            default_final_weight: float = 0
+    ):
+        """Table 16. Livestock coefficients for beef cattle and dairy cattle.
+
+        Args:
+            baseline_maintenance_coefficient: (dimensionless?) baseline maintenance coefficient (C_f)
+            gain_coefficient: (dimensionless?) gain coefficient (C_d)
+            default_initial_weight: (kg) initial weight
+            default_final_weight: (kg) final weight
+        """
+        self.baseline_maintenance_coefficient = baseline_maintenance_coefficient
+        self.gain_coefficient = gain_coefficient
+        self.default_initial_weight = default_initial_weight
+        self.default_final_weight = default_final_weight

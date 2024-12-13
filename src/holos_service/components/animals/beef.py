@@ -1,6 +1,8 @@
-from holos_service.common import HolosVar, Component, EnumGeneric
-from holos_service.config import PathsHolosResources
 from holos_service import utils
+from holos_service.common import HolosVar, Component, EnumGeneric
+from holos_service.components.animals.common import (HousingType,
+                                                     AnimalType, AnimalCoefficientData)
+from holos_service.config import PathsHolosResources
 
 
 class GroupNames(EnumGeneric):
@@ -187,22 +189,29 @@ class Beef(Component):
             name="Ammonia Emission Factor For Manure Storage",
             value=None)
 
+        self._animal_coefficient_data: AnimalCoefficientData | None = None
+
+    def get_animal_coefficient_data(self):
+        df = utils.read_holos_resource_table(
+            path_file=PathsHolosResources.Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider,
+            index_col="AnimalType")
+
+        if self.group_type.value in df.index:
+            _df = df.loc[self.group_type.value]
+            self._animal_coefficient_data = AnimalCoefficientData(
+                baseline_maintenance_coefficient=_df['BaselineMaintenanceCoefficient'],
+                gain_coefficient=_df['GainCoefficient'],
+                default_initial_weight=_df['DefaultInitialWeight'],
+                default_final_weight=_df['DefaultFinalWeight'])
+        else:
+            self._animal_coefficient_data = AnimalCoefficientData()
+        pass
+
     def update_name(self, name: str):
         self.name.value = ' '.join((self.name.value, name))
 
     def update_component_type(self, component_type: str):
         self.component_type.value = '.'.join((self.component_type.value, component_type))
-
-    def get_gain_coefficient(self):
-        try:
-            res = utils.read_holos_resource_table(
-                path_file=PathsHolosResources.Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider,
-                index_col="AnimalType").loc[self.group_type.value, 'GainCoefficient']
-        except KeyError:
-            res = 0
-
-        self.gain_coefficient.value = float(res)
-        pass
 
     def get_feeding_activity_coefficient(self):
         match self.housing_type.value:
