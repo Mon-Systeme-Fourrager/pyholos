@@ -5,6 +5,240 @@ from holos_service.components.animals import common
 from holos_service.components.animals.common import Bedding, BeddingMaterialType, AnimalType
 
 
+class TestAnimalTypeExtensions(unittest.TestCase):
+    def test_is_young_type(self):
+        for animal_type in [
+            common.AnimalType.beef_calf,
+            common.AnimalType.dairy_calves,
+            common.AnimalType.swine_piglets,
+            common.AnimalType.weaned_lamb,
+            common.AnimalType.lambs
+        ]:
+            animal_type_extensions = common.AnimalTypeExtensions(animal_type=animal_type)
+            self.assertTrue(animal_type_extensions.is_young_type)
+
+    def test_is_beef_cattle_type(self):
+        for animal_type in [
+            common.AnimalType.beef,
+            common.AnimalType.beef_backgrounder,
+            common.AnimalType.beef_bulls,
+            common.AnimalType.beef_backgrounder_heifer,
+            common.AnimalType.beef_finishing_steer,
+            common.AnimalType.beef_finishing_heifer,
+            common.AnimalType.beef_replacement_heifers,
+            common.AnimalType.beef_finisher,
+            common.AnimalType.beef_backgrounder_steer,
+            common.AnimalType.beef_calf,
+            common.AnimalType.stockers,
+            common.AnimalType.stocker_heifers,
+            common.AnimalType.stocker_steers,
+            common.AnimalType.beef_cow_lactating,
+            common.AnimalType.beef_cow,
+            common.AnimalType.beef_cow_dry
+        ]:
+            animal_type_extensions = common.AnimalTypeExtensions(animal_type=animal_type)
+            self.assertTrue(animal_type_extensions.is_beef_cattle_type)
+
+    def test_is_dairy_cattle_type(self):
+        for animal_type in [
+            common.AnimalType.dairy,
+            common.AnimalType.dairy_lactating_cow,
+            common.AnimalType.dairy_bulls,
+            common.AnimalType.dairy_calves,
+            common.AnimalType.dairy_dry_cow,
+            common.AnimalType.dairy_heifers
+        ]:
+            animal_type_extensions = common.AnimalTypeExtensions(animal_type=animal_type)
+            self.assertTrue(animal_type_extensions.is_dairy_cattle_type)
+
+    def test_is_swine_type(self):
+        for animal_type in [
+            common.AnimalType.swine,
+            common.AnimalType.swine_finisher,
+            common.AnimalType.swine_starter,
+            common.AnimalType.swine_lactating_sow,
+            common.AnimalType.swine_dry_sow,
+            common.AnimalType.swine_grower,
+            common.AnimalType.swine_sows,
+            common.AnimalType.swine_boar,
+            common.AnimalType.swine_gilts,
+            common.AnimalType.swine_piglets
+        ]:
+            animal_type_extensions = common.AnimalTypeExtensions(animal_type=animal_type)
+            self.assertTrue(animal_type_extensions.is_swine_type)
+
+    def test_is_sheep_type(self):
+        for animal_type in [
+            common.AnimalType.sheep,
+            common.AnimalType.lambs_and_ewes,
+            common.AnimalType.ram,
+            common.AnimalType.weaned_lamb,
+            common.AnimalType.lambs,
+            common.AnimalType.ewes,
+            common.AnimalType.sheep_feedlot
+        ]:
+            animal_type_extensions = common.AnimalTypeExtensions(animal_type=animal_type)
+            self.assertTrue(animal_type_extensions.is_sheep_type)
+
+    def test_is_poultry_type(self):
+        for animal_type in [
+            common.AnimalType.poultry,
+            common.AnimalType.layers_wet_poultry,
+            common.AnimalType.layers_dry_poultry,
+            common.AnimalType.layers,
+            common.AnimalType.broilers,
+            common.AnimalType.turkeys,
+            common.AnimalType.ducks,
+            common.AnimalType.geese,
+            common.AnimalType.chicken_pullets,
+            common.AnimalType.chicken_cockerels,
+            common.AnimalType.chicken_roosters,
+            common.AnimalType.chicken_hens,
+            common.AnimalType.young_tom,
+            common.AnimalType.tom,
+            common.AnimalType.young_turkey_hen,
+            common.AnimalType.turkey_hen,
+            common.AnimalType.chicken_eggs,
+            common.AnimalType.turkey_eggs,
+            common.AnimalType.chicks,
+            common.AnimalType.poults
+        ]:
+            animal_type_extensions = common.AnimalTypeExtensions(animal_type=animal_type)
+            self.assertTrue(animal_type_extensions.is_poultry_type)
+
+    def test_is_other_animal_type(self):
+        for animal_type in [
+            common.AnimalType.other_livestock,
+            common.AnimalType.goats,
+            common.AnimalType.alpacas,
+            common.AnimalType.deer,
+            common.AnimalType.elk,
+            common.AnimalType.llamas,
+            common.AnimalType.horses,
+            common.AnimalType.mules,
+            common.AnimalType.bison
+        ]:
+            animal_type_extensions = common.AnimalTypeExtensions(animal_type=animal_type)
+            self.assertTrue(animal_type_extensions.is_other_animal_type)
+
+    def test_is_chicken_type(self):
+        for animal_type in [
+            common.AnimalType.chicken,
+            common.AnimalType.chicken_hens,
+            common.AnimalType.layers,
+            common.AnimalType.broilers,
+            common.AnimalType.chicken_roosters,
+            common.AnimalType.chicken_pullets,
+            common.AnimalType.chicken_cockerels,
+            common.AnimalType.chicken_eggs,
+            common.AnimalType.chicks
+        ]:
+            animal_type_extensions = common.AnimalTypeExtensions(animal_type=animal_type)
+            self.assertTrue(animal_type_extensions.is_chicken_type)
+
+    def test_is_turkey_type(self):
+        for animal_type in [
+            common.AnimalType.turkey_hen,
+            common.AnimalType.young_turkey_hen,
+            common.AnimalType.tom,
+            common.AnimalType.turkey_eggs,
+            common.AnimalType.young_tom,
+            common.AnimalType.poults
+        ]:
+            animal_type_extensions = common.AnimalTypeExtensions(animal_type=animal_type)
+            self.assertTrue(animal_type_extensions.is_turkey_type)
+
+    def test_is_layers_type(self):
+        for animal_type in [
+            common.AnimalType.layers,
+            common.AnimalType.layers_dry_poultry,
+            common.AnimalType.layers_wet_poultry
+        ]:
+            animal_type_extensions = common.AnimalTypeExtensions(animal_type=animal_type)
+            self.assertTrue(animal_type_extensions.is_layers_type)
+
+    def test_is_lactating_type(self):
+        for animal_type in [
+            common.AnimalType.beef_cow_lactating,
+            common.AnimalType.beef_cow,
+            common.AnimalType.dairy_lactating_cow,
+            common.AnimalType.ewes
+        ]:
+            animal_type_extensions = common.AnimalTypeExtensions(animal_type=animal_type)
+            self.assertTrue(animal_type_extensions.is_lactating_type)
+
+    def test_is_eggs(self):
+        for animal_type in [
+            common.AnimalType.chicken_eggs,
+            common.AnimalType.turkey_eggs
+        ]:
+            animal_type_extensions = common.AnimalTypeExtensions(animal_type=animal_type)
+            self.assertTrue(animal_type_extensions.is_eggs)
+
+    def test_is_newly_hatched_eggs(self):
+        for animal_type in [
+            common.AnimalType.poults,
+            common.AnimalType.chicks
+        ]:
+            animal_type_extensions = common.AnimalTypeExtensions(animal_type=animal_type)
+            self.assertTrue(animal_type_extensions.is_newly_hatched_eggs)
+
+    def test_is_pregnant_type(self):
+        for animal_type in [
+            common.AnimalType.beef_cow,
+            common.AnimalType.beef_cow_lactating,
+            common.AnimalType.dairy_lactating_cow,
+            common.AnimalType.dairy_dry_cow,
+            common.AnimalType.ewes
+        ]:
+            animal_type_extensions = common.AnimalTypeExtensions(animal_type=animal_type)
+            self.assertTrue(animal_type_extensions.is_pregnant_type)
+
+    def test_get_category_returns_expected_result_when_is_other_animal_type(self):
+        animal_type_extensions = common.AnimalTypeExtensions(animal_type=common.AnimalType.other_livestock)
+        self.assertEqual(
+            common.AnimalType.other_livestock,
+            animal_type_extensions.get_category())
+
+    def test_get_category_returns_expected_result_when_is_poultry_type(self):
+        animal_type_extensions = common.AnimalTypeExtensions(animal_type=common.AnimalType.poultry)
+        self.assertEqual(
+            common.AnimalType.poultry,
+            animal_type_extensions.get_category())
+
+    def test_get_category_returns_expected_result_when_is_sheep_type(self):
+        animal_type_extensions = common.AnimalTypeExtensions(animal_type=common.AnimalType.sheep)
+        self.assertEqual(
+            common.AnimalType.sheep,
+            animal_type_extensions.get_category())
+
+    def test_get_category_returns_expected_result_when_is_swine_type(self):
+        animal_type_extensions = common.AnimalTypeExtensions(animal_type=common.AnimalType.swine)
+        self.assertEqual(
+            common.AnimalType.swine,
+            animal_type_extensions.get_category())
+
+    def test_get_category_returns_expected_result_when_is_dairy_cattle_type(self):
+        animal_type_extensions = common.AnimalTypeExtensions(animal_type=common.AnimalType.dairy)
+        self.assertEqual(
+            common.AnimalType.dairy,
+            animal_type_extensions.get_category())
+
+    def test_get_category_returns_expected_result_when_is_beef_cattle_type(self):
+        for animal_type in [
+            common.AnimalType.calf,
+            common.AnimalType.cattle,
+            common.AnimalType.chicken,
+            common.AnimalType.cow_calf,
+            common.AnimalType.not_selected,
+            common.AnimalType.young_bulls
+        ]:
+            animal_type_extensions = common.AnimalTypeExtensions(animal_type=animal_type)
+            self.assertEqual(
+                common.AnimalType.not_selected,
+                animal_type_extensions.get_category())
+
+
 class TestHousingTypeExtensions(unittest.TestCase):
     def test_is_free_stall(self):
         housing_type = common.HousingType.small_free_stall
