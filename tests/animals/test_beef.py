@@ -82,5 +82,13 @@ class TestBeef(unittest.TestCase):
             ' '.join((old_name, new_name)),
             self.beef.name.value)
 
+    def test_update_component_type(self):
+        old_name = self.beef.component_type.value
+        new_name = 'test_name'
+        self.beef.update_component_type(component_type=new_name)
+        self.assertEqual(
+            '.'.join((old_name, new_name)),
+            self.beef.component_type.value)
+
 if __name__ == '__main__':
     unittest.main()

@@ -190,6 +190,9 @@ class Beef(Component):
     def update_name(self, name: str):
         self.name.value = ' '.join((self.name.value, name))
 
+    def update_component_type(self, component_type: str):
+        self.component_type.value = '.'.join((self.component_type.value, component_type))
+
     def get_gain_coefficient(self):
         try:
             res = utils.read_holos_resource_table(
