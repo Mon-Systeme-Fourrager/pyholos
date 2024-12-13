@@ -136,6 +136,296 @@ class ManureAnimalSourceTypes(EnumGeneric):
     other_livestock_manure: str = "OtherLivestockManure"
 
 
+class AnimalTypeExtensions:
+    def __init__(
+            self,
+            animal_type: AnimalType
+    ):
+        self.is_young_type = any([animal_type == v for v in (
+            animal_type.beef_calf,
+            animal_type.dairy_calves,
+            animal_type.swine_piglets,
+            animal_type.weaned_lamb,
+            animal_type.lambs)])
+
+        self.is_beef_cattle_type = any([animal_type == v for v in (
+            animal_type.beef,
+            animal_type.beef_backgrounder,
+            animal_type.beef_bulls,
+            animal_type.beef_backgrounder_heifer,
+            animal_type.beef_finishing_steer,
+            animal_type.beef_finishing_heifer,
+            animal_type.beef_replacement_heifers,
+            animal_type.beef_finisher,
+            animal_type.beef_backgrounder_steer,
+            animal_type.beef_calf,
+            animal_type.stockers,
+            animal_type.stocker_heifers,
+            animal_type.stocker_steers,
+            animal_type.beef_cow_lactating,
+            animal_type.beef_cow,
+            animal_type.beef_cow_dry)])
+
+        self.is_dairy_cattle_type = any([animal_type == v for v in (
+            animal_type.dairy,
+            animal_type.dairy_lactating_cow,
+            animal_type.dairy_bulls,
+            animal_type.dairy_calves,
+            animal_type.dairy_dry_cow,
+            animal_type.dairy_heifers)])
+
+        self.is_swine_type = any([animal_type == v for v in (
+            animal_type.swine,
+            animal_type.swine_finisher,
+            animal_type.swine_starter,
+            animal_type.swine_lactating_sow,
+            animal_type.swine_dry_sow,
+            animal_type.swine_grower,
+            animal_type.swine_sows,
+            animal_type.swine_boar,
+            animal_type.swine_gilts,
+            animal_type.swine_piglets)])
+
+        self.is_sheep_type = any([animal_type == v for v in (
+            animal_type.sheep,
+            animal_type.lambs_and_ewes,
+            animal_type.ram,
+            animal_type.weaned_lamb,
+            animal_type.lambs,
+            animal_type.ewes,
+            animal_type.sheep_feedlot)])
+
+        self.is_poultry_type = any([animal_type == v for v in (
+            animal_type.poultry,
+            animal_type.layers_wet_poultry,
+            animal_type.layers_dry_poultry,
+            animal_type.layers,
+            animal_type.broilers,
+            animal_type.turkeys,
+            animal_type.ducks,
+            animal_type.geese,
+            animal_type.chicken_pullets,
+            animal_type.chicken_cockerels,
+            animal_type.chicken_roosters,
+            animal_type.chicken_hens,
+            animal_type.young_tom,
+            animal_type.tom,
+            animal_type.young_turkey_hen,
+            animal_type.turkey_hen,
+            animal_type.chicken_eggs,
+            animal_type.turkey_eggs,
+            animal_type.chicks,
+            animal_type.poults)])
+
+        self.is_other_animal_type = any([animal_type == v for v in (
+            animal_type.other_livestock,
+            animal_type.goats,
+            animal_type.alpacas,
+            animal_type.deer,
+            animal_type.elk,
+            animal_type.llamas,
+            animal_type.horses,
+            animal_type.mules,
+            animal_type.bison)])
+
+        self.is_chicken_type = any([animal_type == v for v in (
+            animal_type.chicken,
+            animal_type.chicken_hens,
+            animal_type.layers,
+            animal_type.broilers,
+            animal_type.chicken_roosters,
+            animal_type.chicken_pullets,
+            animal_type.chicken_cockerels,
+            animal_type.chicken_eggs,
+            animal_type.chicks)])
+
+        self.is_turkey_type = any([animal_type == v for v in (
+            animal_type.turkey_hen,
+            animal_type.young_turkey_hen,
+            animal_type.tom,
+            animal_type.turkey_eggs,
+            animal_type.young_tom,
+            animal_type.poults)])
+
+        self.is_layers_type = any([animal_type == v for v in (
+            animal_type.layers,
+            animal_type.layers_dry_poultry,
+            animal_type.layers_wet_poultry)])
+
+        self.is_lactating_type = any([animal_type == v for v in (
+            animal_type.beef_cow_lactating,
+            animal_type.beef_cow,
+            animal_type.dairy_lactating_cow,
+            animal_type.ewes)])
+
+        self.is_eggs = any([animal_type == v for v in (
+            animal_type.chicken_eggs,
+            animal_type.turkey_eggs)])
+
+        self.is_newly_hatched_eggs = any([animal_type == v for v in (
+            animal_type.poults,
+            animal_type.chicks)])
+
+        self.is_pregnant_type = any([animal_type == v for v in (
+            animal_type.beef_cow,
+            animal_type.beef_cow_lactating,
+            animal_type.dairy_lactating_cow,
+            animal_type.dairy_dry_cow,
+            animal_type.ewes)])
+
+    def get_category(self):
+        if self.is_other_animal_type:
+            res = AnimalType.other_livestock
+
+        elif self.is_poultry_type:
+            res = AnimalType.poultry
+
+        elif self.is_sheep_type:
+            res = AnimalType.sheep
+
+        elif self.is_swine_type:
+            res = AnimalType.swine
+
+        elif self.is_dairy_cattle_type:
+            res = AnimalType.dairy
+
+        elif self.is_beef_cattle_type:
+            res = AnimalType.beef
+
+        else:
+            res = AnimalType.not_selected
+
+        return res
+
+    def get_component_category_from_animal_type(self):
+        if self.is_beef_cattle_type:
+            res = ComponentCategory.beef_production
+
+        elif self.is_dairy_cattle_type:
+            res = ComponentCategory.dairy
+
+        elif self.is_swine_type:
+            res = ComponentCategory.swine
+
+        elif self.is_poultry_type:
+            res = ComponentCategory.poultry
+
+        elif self.is_sheep_type:
+            res = ComponentCategory.sheep
+
+        else:
+            res = ComponentCategory.other_livestock
+
+        return res
+
+    def get_manure_animal_source(self):
+        if self.is_beef_cattle_type:
+            res = ManureAnimalSourceTypes.beef_manure
+
+        elif self.is_dairy_cattle_type:
+            res = ManureAnimalSourceTypes.dairy_manure
+
+        elif self.is_swine_type:
+            res = ManureAnimalSourceTypes.swine_manure
+
+        elif self.is_poultry_type:
+            res = ManureAnimalSourceTypes.poultry_manure
+
+        elif self.is_sheep_type:
+            res = ManureAnimalSourceTypes.sheep_manure
+
+        else:
+            res = ManureAnimalSourceTypes.other_livestock_manure
+
+        return res
+
+
+class Milk:
+    def __init__(
+            self,
+            production_amount: float = 0,
+            fat_content: float = 4,
+            protein_content_as_percentage: float = 3.5,
+    ):
+        """Milk production data
+
+        Args:
+            production_amount: (kg) average milk production value based on the province and year specified by user
+            fat_content: (%) fat content of milk
+            protein_content_as_percentage: (%) protein content of milk
+        """
+        self.production = production_amount
+        self.fat_content = fat_content
+        self.protein_content_as_percentage = protein_content_as_percentage
+
+
+class Diet:
+    def __init__(
+            self,
+            crude_protein_percentage: float,
+            forage_percentage: float,
+            total_digestible_nutrient_percentage: float,
+            ash_percentage: float,
+            starch_percentage: float,
+            fat_percentage: float,
+            neutral_detergent_fiber_percentage: float,
+            metabolizable_energy: float,
+            dietary_net_energy_concentration: float
+    ):
+        """Diet composition data
+
+        Args:
+            crude_protein_percentage: (-) percentage of crude protein in the diet dry matter (between 0 and 100)
+            forage_percentage: (-) percentage of forage in the diet dry matter (between 0 and 100)
+            total_digestible_nutrient_percentage: (-) percentage of total digestible nutrient in the diet dry matter (between 0 and 100)
+            ash_percentage: (-) percentage of ash in the diet dry matter (between 0 and 100)
+            starch_percentage: (-) percentage of starch in the diet dry matter (between 0 and 100)
+            fat_percentage: (-) percentage of fat in the diet dry matter (between 0 and 100)
+            neutral_detergent_fiber_percentage: (-) percentage of neutral detergent fiber in the diet dry matter (between 0 and 100)
+            metabolizable_energy: (Mcal kg-1) metabolizable energy of the diet
+            dietary_net_energy_concentration: (MJ (kg DM)^-1) dietary net energy concentration
+        """
+        self.crude_protein_percentage = crude_protein_percentage
+        self.forage_percentage = forage_percentage
+        self.total_digestible_nutrient_percentage = total_digestible_nutrient_percentage
+        self.ash_percentage = ash_percentage
+        self.starch_percentage = starch_percentage
+        self.fat_percentage = fat_percentage
+        self.neutral_detergent_fiber_percentage = neutral_detergent_fiber_percentage
+        self.metabolizable_energy = metabolizable_energy
+        self.dietary_net_energy_concentration = dietary_net_energy_concentration
+
+
+# class HousingSystem:
+#     def __init__(
+#             self,
+#             bedding_rate: float,
+#             total_carbon_kilograms_dry_matter_for_bedding: float
+#     ):
+#         """
+#
+#         Args:
+#             bedding_rate: (kg head-1 day-1) rate of bedding material added to the housing system
+#             total_carbon_kilograms_dry_matter_for_bedding: (kg(C) kg(DM)-1)
+#
+#         """
+#         self.user_defined_bedding_rate = bedding_rate
+#         self.total_carbon_kilograms_dry_matter_for_bedding = total_carbon_kilograms_dry_matter_for_bedding * bedding_rate
+
+
+# class Table_30_Default_Bedding_Material_Composition_Data(EnumGeneric):
+#     ComponentCategory = "ComponentCategory { get; set; }"
+#     AnimalType = " AnimalType { get; set; }"
+#     ComponentCategoryString: str = "ComponentCategory.GetDescription(); }"
+#     BeddingMaterialType = "BeddingMaterial { get; set; }"
+#     BeddingMaterialString: str = "BeddingMaterial.GetDescription()"
+#     MoistureContent: float  # %
+#     TotalNitrogenKilogramsDryMatter: float  # %(kg N/kg DM)
+#     TotalCarbonKilogramsDryMatter: float  # (kg C/kg DM)
+#     TotalPhosphorusKilogramsDryMatter: double
+#     CarbonToNitrogenRatio: float  # (unitless)
+
+
 class HousingType(EnumGeneric):
     not_selected: str = "NotSelected"
     confined_no_barn: str = "ConfinedNoBarn"
