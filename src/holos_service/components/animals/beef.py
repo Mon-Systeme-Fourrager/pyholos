@@ -1,8 +1,6 @@
-from holos_service import utils
 from holos_service.common import HolosVar, Component, EnumGeneric
-from holos_service.components.animals.common import (HousingType,
-                                                     AnimalType)
 from holos_service.config import PathsHolosResources
+from holos_service import utils
 
 
 class GroupNames(EnumGeneric):
@@ -31,11 +29,6 @@ class GroupTypes(EnumGeneric):
 class Beef(Component):
     def __init__(self):
         super().__init__()
-
-        self._livestock_coefficients = utils.read_holos_resource_table(
-            path_file=PathsHolosResources.Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider,
-            index_col="AnimalType"
-        )
 
         self.name = HolosVar(
             name="Name",
@@ -193,6 +186,17 @@ class Beef(Component):
         self.ammonia_emission_factor_for_manure_storage = HolosVar(
             name="Ammonia Emission Factor For Manure Storage",
             value=None)
+
+    def get_gain_coefficient(self):
+        try:
+            res = utils.read_holos_resource_table(
+                path_file=PathsHolosResources.Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider,
+                index_col="AnimalType").loc[self.group_type.value, 'GainCoefficient']
+        except KeyError:
+            res = 0
+
+        self.gain_coefficient.value = float(res)
+        pass
 
     def get_feeding_activity_coefficient(self):
         match self.housing_type.value:

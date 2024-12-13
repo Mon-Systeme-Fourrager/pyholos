@@ -1,6 +1,7 @@
 import unittest
 
 from holos_service.components.animals import beef, common
+from holos_service.core_constants import CoreConstants
 
 
 class TestBeef(unittest.TestCase):
@@ -36,6 +37,42 @@ class TestBeef(unittest.TestCase):
 
         for housing_type in housing_types:
             self.run_feeding_activity_test(housing_type=housing_type, expected_value=0)
+
+    def run_gain_coefficient_test(
+            self,
+            animal_type: common.AnimalType,
+            expected_value: float
+    ) -> None:
+        self.beef.group_type.value = animal_type.value
+        self.beef.get_gain_coefficient()
+        self.assertEqual(
+            expected_value,
+            self.beef.gain_coefficient.value)
+
+    def test_get_gain_coefficient_returns_expected(self):
+        animal_types = list(common.AnimalType)
+        for animal_type, expected_value in [
+            (common.AnimalType.beef_calf, CoreConstants.NotApplicable),
+            (common.AnimalType.beef_cow_lactating, 0.8),
+            (common.AnimalType.beef_cow_dry, 0.8),
+            (common.AnimalType.beef_bulls, 1.2),
+            (common.AnimalType.beef_backgrounder_steer, 1),
+            (common.AnimalType.beef_backgrounder_heifer, 0.8),
+            (common.AnimalType.beef_replacement_heifers, 0.8),
+            (common.AnimalType.beef_finishing_steer, 1),
+            (common.AnimalType.beef_finishing_heifer, 0.8),
+            (common.AnimalType.dairy_lactating_cow, 0.8),
+            (common.AnimalType.dairy_dry_cow, 0.8),
+            (common.AnimalType.dairy_heifers, 0.8),
+            (common.AnimalType.dairy_bulls, 1.2),
+            (common.AnimalType.dairy_calves, 0),
+        ]:
+            self.run_gain_coefficient_test(animal_type=animal_type, expected_value=expected_value)
+            animal_types.pop(animal_types.index(animal_type))
+
+        for animal_type in animal_types:
+            print(animal_type)
+            self.run_gain_coefficient_test(animal_type=animal_type, expected_value=0)
 
 
 if __name__ == '__main__':
