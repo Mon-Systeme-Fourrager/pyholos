@@ -224,68 +224,63 @@ class TestAnimalTypeExtensions(unittest.TestCase):
 class TestHousingTypeExtensions(unittest.TestCase):
     def test_is_free_stall(self):
         housing_type = common.HousingType.small_free_stall
-        ext = common.HousingTypeExtensions(housing_type)
 
-        self.assertTrue(ext.is_free_stall)
-        self.assertTrue(ext.is_electrical_consuming_housing_type)
+        self.assertTrue(housing_type.is_free_stall())
+        self.assertTrue(housing_type.is_electrical_consuming_housing_type())
 
-        self.assertFalse(ext.is_tie_stall)
-        self.assertFalse(ext.is_barn)
-        self.assertFalse(ext.is_feed_lot)
-        self.assertFalse(ext.is_indoor_housing)
-        self.assertFalse(ext.is_pasture)
+        self.assertFalse(housing_type.is_tie_stall())
+        self.assertFalse(housing_type.is_barn())
+        self.assertFalse(housing_type.is_feed_lot())
+        self.assertFalse(housing_type.is_indoor_housing())
+        self.assertFalse(housing_type.is_pasture())
 
     def test_is_tie_stall(self):
         housing_type = common.HousingType.tie_stall
-        ext = common.HousingTypeExtensions(housing_type)
 
-        self.assertTrue(ext.is_tie_stall)
-        self.assertTrue(ext.is_electrical_consuming_housing_type)
+        self.assertTrue(housing_type.is_tie_stall())
+        self.assertTrue(housing_type.is_electrical_consuming_housing_type())
 
-        self.assertFalse(ext.is_free_stall)
-        self.assertFalse(ext.is_barn)
-        self.assertFalse(ext.is_feed_lot)
-        self.assertFalse(ext.is_indoor_housing)
-        self.assertFalse(ext.is_pasture)
+        self.assertFalse(housing_type.is_free_stall())
+        self.assertFalse(housing_type.is_barn())
+        self.assertFalse(housing_type.is_feed_lot())
+        self.assertFalse(housing_type.is_indoor_housing())
+        self.assertFalse(housing_type.is_pasture())
 
     def test_is_barn(self):
         housing_type = common.HousingType.housed_in_barn
-        ext = common.HousingTypeExtensions(housing_type)
 
-        self.assertTrue(ext.is_barn)
-        self.assertTrue(ext.is_indoor_housing)
-        self.assertTrue(ext.is_electrical_consuming_housing_type)
+        self.assertTrue(housing_type.is_barn())
+        self.assertTrue(housing_type.is_indoor_housing())
+        self.assertTrue(housing_type.is_electrical_consuming_housing_type())
 
-        self.assertFalse(ext.is_free_stall)
-        self.assertFalse(ext.is_tie_stall)
-        self.assertFalse(ext.is_feed_lot)
-        self.assertFalse(ext.is_pasture)
+        self.assertFalse(housing_type.is_free_stall())
+        self.assertFalse(housing_type.is_tie_stall())
+        self.assertFalse(housing_type.is_feed_lot())
+        self.assertFalse(housing_type.is_pasture())
 
     def test_is_feed_lot(self):
         housing_type = common.HousingType.confined
-        ext = common.HousingTypeExtensions(housing_type)
 
-        self.assertTrue(ext.is_feed_lot)
-        self.assertTrue(ext.is_electrical_consuming_housing_type)
+        self.assertTrue(housing_type.is_feed_lot())
+        self.assertTrue(housing_type.is_electrical_consuming_housing_type())
 
-        self.assertFalse(ext.is_free_stall)
-        self.assertFalse(ext.is_tie_stall)
-        self.assertFalse(ext.is_barn)
-        self.assertFalse(ext.is_indoor_housing)
-        self.assertFalse(ext.is_pasture)
+        self.assertFalse(housing_type.is_free_stall())
+        self.assertFalse(housing_type.is_tie_stall())
+        self.assertFalse(housing_type.is_barn())
+        self.assertFalse(housing_type.is_indoor_housing())
+        self.assertFalse(housing_type.is_pasture())
 
     def test_is_pasture(self):
         housing_type = common.HousingType.pasture
-        ext = common.HousingTypeExtensions(housing_type)
 
-        self.assertTrue(ext.is_pasture)
+        self.assertTrue(housing_type.is_pasture())
 
-        self.assertFalse(ext.is_free_stall)
-        self.assertFalse(ext.is_tie_stall)
-        self.assertFalse(ext.is_barn)
-        self.assertFalse(ext.is_feed_lot)
-        self.assertFalse(ext.is_electrical_consuming_housing_type)
-        self.assertFalse(ext.is_indoor_housing)
+        self.assertFalse(housing_type.is_free_stall())
+        self.assertFalse(housing_type.is_tie_stall())
+        self.assertFalse(housing_type.is_barn())
+        self.assertFalse(housing_type.is_feed_lot())
+        self.assertFalse(housing_type.is_electrical_consuming_housing_type())
+        self.assertFalse(housing_type.is_indoor_housing())
 
 
 class TestBedding(unittest.TestCase):
@@ -434,7 +429,7 @@ class TestBedding(unittest.TestCase):
                         animal_type=animal_type).user_defined_bedding_rate.value)
 
     def test_get_default_bedding_rate_for_sheep_returns_expected_result(self):
-        housing_types = [v for v in common.HousingType if not common.HousingTypeExtensions(v).is_pasture]
+        housing_types = [v for v in common.HousingType if not v.is_pasture()]
         for animal_type in (
                 common.AnimalType.sheep,
                 common.AnimalType.lambs_and_ewes,
@@ -455,7 +450,7 @@ class TestBedding(unittest.TestCase):
                         animal_type=animal_type).user_defined_bedding_rate.value)
 
     def test_get_default_bedding_rate_for_swine_returns_expected_result(self):
-        housing_types = [v for v in common.HousingType if not common.HousingTypeExtensions(v).is_pasture]
+        housing_types = [v for v in common.HousingType if not v.is_pasture()]
         bedding_material_types = [v for v in common.BeddingMaterialType
                                   if not v == common.BeddingMaterialType.straw_long]
         animal_types = [v for v in (
@@ -491,7 +486,7 @@ class TestBedding(unittest.TestCase):
                         animal_type=animal_type).user_defined_bedding_rate.value)
 
     def test_get_default_bedding_rate_for_poultry_returns_expected_result(self):
-        housing_types = [v for v in common.HousingType if not common.HousingTypeExtensions(v).is_pasture]
+        housing_types = [v for v in common.HousingType if not v.is_pasture()]
         bedding_material_types = list(common.BeddingMaterialType)
         animal_types = [v for v in (
             common.AnimalType.poultry,
@@ -565,7 +560,7 @@ class TestBedding(unittest.TestCase):
             common.AnimalType.bison]
 
         for housing_type, bedding_material_type in product(
-                [v for v in common.HousingType if not common.HousingTypeExtensions(v).is_pasture],
+                [v for v in common.HousingType if not v.is_pasture()],
                 common.BeddingMaterialType):
             animal_types_to_exclude = []
             for animal_type, expected_value in (
@@ -610,7 +605,7 @@ class TestBedding(unittest.TestCase):
             ),
             Bedding.get_bedding_material_composition(
                 animal_type=AnimalType.beef,
-                bedding_material_type=BeddingMaterialType.straw.value))
+                bedding_material_type=BeddingMaterialType.straw))
 
     def test_get_bedding_material_composition_for_beef_and_wood_chip_returns_expected_results(self):
         self.assertEqual(
@@ -625,7 +620,7 @@ class TestBedding(unittest.TestCase):
             ),
             Bedding.get_bedding_material_composition(
                 animal_type=AnimalType.beef,
-                bedding_material_type=BeddingMaterialType.wood_chip.value))
+                bedding_material_type=BeddingMaterialType.wood_chip))
 
     def test_get_bedding_material_composition_for_dairy_and_sand_returns_expected_results(self):
 
@@ -641,7 +636,7 @@ class TestBedding(unittest.TestCase):
             ),
             Bedding.get_bedding_material_composition(
                 animal_type=AnimalType.dairy,
-                bedding_material_type=BeddingMaterialType.sand.value))
+                bedding_material_type=BeddingMaterialType.sand))
 
     def test_get_bedding_material_composition_for_dairy_and_separated_manure_solid_returns_expected_results(self):
         self.assertEqual(
@@ -656,7 +651,7 @@ class TestBedding(unittest.TestCase):
             ),
             Bedding.get_bedding_material_composition(
                 animal_type=AnimalType.dairy,
-                bedding_material_type=BeddingMaterialType.separated_manure_solid.value))
+                bedding_material_type=BeddingMaterialType.separated_manure_solid))
 
     def test_get_bedding_material_composition_for_dairy_and_straw_long_returns_expected_results(self):
         self.assertEqual(
@@ -671,7 +666,7 @@ class TestBedding(unittest.TestCase):
             ),
             Bedding.get_bedding_material_composition(
                 animal_type=AnimalType.dairy,
-                bedding_material_type=BeddingMaterialType.straw_long.value))
+                bedding_material_type=BeddingMaterialType.straw_long))
 
     def test_get_bedding_material_composition_for_dairy_and_straw_chopped_returns_expected_results(self):
         self.assertEqual(
@@ -686,7 +681,7 @@ class TestBedding(unittest.TestCase):
             ),
             Bedding.get_bedding_material_composition(
                 animal_type=AnimalType.dairy,
-                bedding_material_type=BeddingMaterialType.straw_chopped.value))
+                bedding_material_type=BeddingMaterialType.straw_chopped))
 
     def test_get_bedding_material_composition_for_dairy_and_shavings_returns_expected_results(self):
         self.assertEqual(
@@ -701,7 +696,7 @@ class TestBedding(unittest.TestCase):
             ),
             Bedding.get_bedding_material_composition(
                 animal_type=AnimalType.dairy,
-                bedding_material_type=BeddingMaterialType.shavings.value))
+                bedding_material_type=BeddingMaterialType.shavings))
 
     def test_get_bedding_material_composition_for_dairy_and_sawdust_returns_expected_results(self):
         self.assertEqual(
@@ -716,7 +711,7 @@ class TestBedding(unittest.TestCase):
             ),
             Bedding.get_bedding_material_composition(
                 animal_type=AnimalType.dairy,
-                bedding_material_type=BeddingMaterialType.sawdust.value))
+                bedding_material_type=BeddingMaterialType.sawdust))
 
     def test_get_bedding_material_composition_for_swine_and_straw_long_returns_expected_results(self):
         self.assertEqual(
@@ -731,7 +726,7 @@ class TestBedding(unittest.TestCase):
             ),
             Bedding.get_bedding_material_composition(
                 animal_type=AnimalType.swine,
-                bedding_material_type=BeddingMaterialType.straw_long.value))
+                bedding_material_type=BeddingMaterialType.straw_long))
 
     def test_get_bedding_material_composition_for_swine_and_straw_chopped_returns_expected_results(self):
         self.assertEqual(
@@ -746,7 +741,7 @@ class TestBedding(unittest.TestCase):
             ),
             Bedding.get_bedding_material_composition(
                 animal_type=AnimalType.swine,
-                bedding_material_type=BeddingMaterialType.straw_chopped.value))
+                bedding_material_type=BeddingMaterialType.straw_chopped))
 
     def test_get_bedding_material_composition_for_sheep_and_straw_returns_expected_results(self):
         self.assertEqual(
@@ -761,7 +756,7 @@ class TestBedding(unittest.TestCase):
             ),
             Bedding.get_bedding_material_composition(
                 animal_type=AnimalType.sheep,
-                bedding_material_type=BeddingMaterialType.straw.value))
+                bedding_material_type=BeddingMaterialType.straw))
 
     def test_get_bedding_material_composition_for_sheep_and_shavings_returns_expected_results(self):
         self.assertEqual(
@@ -776,7 +771,7 @@ class TestBedding(unittest.TestCase):
             ),
             Bedding.get_bedding_material_composition(
                 animal_type=AnimalType.sheep,
-                bedding_material_type=BeddingMaterialType.shavings.value))
+                bedding_material_type=BeddingMaterialType.shavings))
 
     def test_get_bedding_material_composition_for_poultry_and_straw_returns_expected_results(self):
         self.assertEqual(
@@ -791,7 +786,7 @@ class TestBedding(unittest.TestCase):
             ),
             Bedding.get_bedding_material_composition(
                 animal_type=AnimalType.poultry,
-                bedding_material_type=BeddingMaterialType.straw.value))
+                bedding_material_type=BeddingMaterialType.straw))
 
     def test_get_bedding_material_composition_for_poultry_and_shavings_returns_expected_results(self):
         self.assertEqual(
@@ -806,7 +801,7 @@ class TestBedding(unittest.TestCase):
             ),
             Bedding.get_bedding_material_composition(
                 animal_type=AnimalType.poultry,
-                bedding_material_type=BeddingMaterialType.shavings.value))
+                bedding_material_type=BeddingMaterialType.shavings))
 
     def test_get_bedding_material_composition_for_poultry_and_sawdust_returns_expected_results(self):
         self.assertEqual(
@@ -821,7 +816,7 @@ class TestBedding(unittest.TestCase):
             ),
             Bedding.get_bedding_material_composition(
                 animal_type=AnimalType.poultry,
-                bedding_material_type=BeddingMaterialType.sawdust.value))
+                bedding_material_type=BeddingMaterialType.sawdust))
 
     def test_get_bedding_material_composition_for_llamas_and_straw_returns_expected_results(self):
         self.assertEqual(
@@ -836,7 +831,7 @@ class TestBedding(unittest.TestCase):
             ),
             Bedding.get_bedding_material_composition(
                 animal_type=AnimalType.llamas,
-                bedding_material_type=BeddingMaterialType.straw.value))
+                bedding_material_type=BeddingMaterialType.straw))
 
     def test_get_bedding_material_composition_for_alpacas_and_straw_returns_expected_results(self):
         self.assertEqual(
@@ -851,7 +846,7 @@ class TestBedding(unittest.TestCase):
             ),
             Bedding.get_bedding_material_composition(
                 animal_type=AnimalType.alpacas,
-                bedding_material_type=BeddingMaterialType.straw.value))
+                bedding_material_type=BeddingMaterialType.straw))
 
     def test_get_bedding_material_composition_for_deer_and_straw_returns_expected_results(self):
         self.assertEqual(
@@ -866,7 +861,7 @@ class TestBedding(unittest.TestCase):
             ),
             Bedding.get_bedding_material_composition(
                 animal_type=AnimalType.deer,
-                bedding_material_type=BeddingMaterialType.straw.value))
+                bedding_material_type=BeddingMaterialType.straw))
 
     def test_get_bedding_material_composition_for_elk_and_straw_returns_expected_results(self):
         self.assertEqual(
@@ -881,7 +876,7 @@ class TestBedding(unittest.TestCase):
             ),
             Bedding.get_bedding_material_composition(
                 animal_type=AnimalType.elk,
-                bedding_material_type=BeddingMaterialType.straw.value))
+                bedding_material_type=BeddingMaterialType.straw))
 
     def test_get_bedding_material_composition_for_goats_and_straw_returns_expected_results(self):
         self.assertEqual(
@@ -896,7 +891,7 @@ class TestBedding(unittest.TestCase):
             ),
             Bedding.get_bedding_material_composition(
                 animal_type=AnimalType.goats,
-                bedding_material_type=BeddingMaterialType.straw.value))
+                bedding_material_type=BeddingMaterialType.straw))
 
     def test_get_bedding_material_composition_for_horses_and_straw_returns_expected_results(self):
         self.assertEqual(
@@ -911,7 +906,7 @@ class TestBedding(unittest.TestCase):
             ),
             Bedding.get_bedding_material_composition(
                 animal_type=AnimalType.horses,
-                bedding_material_type=BeddingMaterialType.straw.value))
+                bedding_material_type=BeddingMaterialType.straw))
 
     def test_get_bedding_material_composition_for_mules_and_straw_returns_expected_results(self):
         self.assertEqual(
@@ -926,7 +921,7 @@ class TestBedding(unittest.TestCase):
             ),
             Bedding.get_bedding_material_composition(
                 animal_type=AnimalType.mules,
-                bedding_material_type=BeddingMaterialType.straw.value))
+                bedding_material_type=BeddingMaterialType.straw))
 
     def test_get_bedding_material_composition_for_bison_and_straw_returns_expected_results(self):
         self.assertEqual(
@@ -941,7 +936,7 @@ class TestBedding(unittest.TestCase):
             ),
             Bedding.get_bedding_material_composition(
                 animal_type=AnimalType.bison,
-                bedding_material_type=BeddingMaterialType.straw.value))
+                bedding_material_type=BeddingMaterialType.straw))
 
 
 class TestGetMethaneProducingCapacityOfManure(unittest.TestCase):

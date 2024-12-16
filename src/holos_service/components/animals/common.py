@@ -446,59 +446,68 @@ class HousingType(EnumGeneric):
     """Also known as 'Tie-stall barn (slurry)'
     """
 
+    # This section corresponds to the HousingTypeExtensions class in the original holos source code
+    # https://github.com/holos-aafc/Holos/blob/53f778f9bd4579d164de10f5b04db34d020b96a9/H.Core/Enumerations/HousingTypeExtensions.cs#L10
 
-class HousingTypeExtensions:
-    def __init__(
-            self,
-            housing_type: HousingType
-    ):
-        # https://github.com/holos-aafc/Holos/blob/53f778f9bd4579d164de10f5b04db34d020b96a9/H.Core/Enumerations/HousingTypeExtensions.cs#L10
-        self.is_free_stall = any([housing_type == v for v in (
-            housing_type.small_free_stall,
-            housing_type.large_free_stall,
-            housing_type.free_stall_barn_flushing,
-            housing_type.free_stall_barn_milk_parlour_slurry_flushing,
-            housing_type.free_stall_barn_slurry_scraping,
-            housing_type.free_stall_barn_solid_litter)])
+    def is_free_stall(self):
+        return self in {
+            self.__class__.small_free_stall,
+            self.__class__.large_free_stall,
+            self.__class__.free_stall_barn_flushing,
+            self.__class__.free_stall_barn_milk_parlour_slurry_flushing,
+            self.__class__.free_stall_barn_slurry_scraping,
+            self.__class__.free_stall_barn_solid_litter
+        }
 
-        self.is_tie_stall = any([housing_type == v for v in (
-            housing_type.tie_stall,
-            housing_type.tie_stall_slurry,
-            housing_type.tie_stall_solid_litter)])
+    def is_tie_stall(self):
+        return self in {
+            self.__class__.tie_stall,
+            self.__class__.tie_stall_slurry,
+            self.__class__.tie_stall_solid_litter
+        }
 
-        self.is_barn = any([housing_type == v for v in (
-            housing_type.housed_in_barn,
-            housing_type.housed_in_barn_slurry,
-            housing_type.housed_in_barn_solid)])
+    def is_barn(self):
+        return self in {
+            self.__class__.housed_in_barn,
+            self.__class__.housed_in_barn_slurry,
+            self.__class__.housed_in_barn_solid
+        }
 
-        self.is_feed_lot = any([housing_type == v for v in (
-            housing_type.confined,
-            housing_type.confined_no_barn)])
+    def is_feed_lot(self):
+        return self in {
+            self.__class__.confined,
+            self.__class__.confined_no_barn
+        }
 
-        self.is_electrical_consuming_housing_type = any([
-            self.is_free_stall,
-            self.is_barn,
-            self.is_tie_stall,
-            self.is_feed_lot])
+    def is_electrical_consuming_housing_type(self):
+        return any([
+            self.is_free_stall(),
+            self.is_barn(),
+            self.is_tie_stall(),
+            self.is_feed_lot()])
 
-        self.is_indoor_housing = any([housing_type == v for v in (
-            housing_type.housed_in_barn,
-            housing_type.housed_in_barn_slurry,
-            housing_type.housed_in_barn_solid,
-            housing_type.free_stall_barn_flushing,
-            housing_type.free_stall_barn_solid_litter,
-            housing_type.free_stall_barn_slurry_scraping,
-            housing_type.free_stall_barn_milk_parlour_slurry_flushing)])
+    def is_indoor_housing(self):
+        return self in {
+            self.__class__.housed_in_barn,
+            self.__class__.housed_in_barn_slurry,
+            self.__class__.housed_in_barn_solid,
+            self.__class__.free_stall_barn_flushing,
+            self.__class__.free_stall_barn_solid_litter,
+            self.__class__.free_stall_barn_slurry_scraping,
+            self.__class__.free_stall_barn_milk_parlour_slurry_flushing
+        }
 
-        self.is_pasture = any([housing_type == v for v in (
-            housing_type.pasture,
-            housing_type.enclosed_pasture,
-            housing_type.flat_pasture,
-            housing_type.grazing_over3km,
-            housing_type.grazing_under3km,
-            housing_type.hilly_pasture_or_open_range,
-            housing_type.open_range_or_hills,
-            housing_type.swath_grazing)])
+    def is_pasture(self):
+        return self in {
+            self.__class__.pasture,
+            self.__class__.enclosed_pasture,
+            self.__class__.flat_pasture,
+            self.__class__.grazing_over3km,
+            self.__class__.grazing_under3km,
+            self.__class__.hilly_pasture_or_open_range,
+            self.__class__.open_range_or_hills,
+            self.__class__.swath_grazing
+        }
 
 
 class BeddingMaterialType(EnumGeneric):
@@ -565,9 +574,8 @@ class Bedding:
             animal_type: AnimalType
     ) -> int | float:
         # https://github.com/holos-aafc/Holos/blob/53f778f9bd4579d164de10f5b04db34d020b96a9/H.Core/Providers/Animals/Table_30_Default_Bedding_Material_Composition_Provider.cs#L301
-        _housing_type = HousingTypeExtensions(housing_type=housing_type)
 
-        if _housing_type.is_pasture:
+        if housing_type.is_pasture():
             return 0
 
         if animal_type.is_young_type():
@@ -575,24 +583,24 @@ class Bedding:
 
         if animal_type.is_beef_cattle_type():
             if bedding_material_type == BeddingMaterialType.straw:
-                if _housing_type.is_feed_lot:
+                if housing_type.is_feed_lot():
                     return 1.5
 
-                if _housing_type.is_barn:
+                if housing_type.is_barn():
                     return 3.5
 
             if bedding_material_type == BeddingMaterialType.wood_chip:
-                if _housing_type.is_feed_lot:
+                if housing_type.is_feed_lot():
                     return 3.6
 
-                if _housing_type.is_barn:
+                if housing_type.is_barn():
                     return 5.0
 
         if animal_type.is_dairy_cattle_type():
             # Currently, all housing types have same rates for bedding types
             if any([
-                _housing_type.is_tie_stall,
-                _housing_type.is_free_stall,
+                housing_type.is_tie_stall(),
+                housing_type.is_free_stall(),
                 housing_type == HousingType.dry_lot]):
                 if bedding_material_type == BeddingMaterialType.sand:
                     return 24.3
@@ -704,7 +712,7 @@ class Bedding:
             path_file=PathsHolosResources.Table_30_Default_Bedding_Material_Composition_Provider)
 
         result = df[
-            (df['BeddingMaterial'] == bedding_material_type) &
+            (df['BeddingMaterial'] == bedding_material_type.value) &
             (df['AnimalType'] == animal_lookup_type.value)]
 
         if not result.empty:
