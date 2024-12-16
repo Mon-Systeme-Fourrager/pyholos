@@ -125,6 +125,190 @@ class AnimalType(EnumGeneric):
     cattle: str = "Cattle"
     layers: str = "Layers"
 
+    def is_young_type(self):
+        return self in {
+            self.__class__.beef_calf,
+            self.__class__.dairy_calves,
+            self.__class__.swine_piglets,
+            self.__class__.weaned_lamb,
+            self.__class__.lambs
+        }
+
+    def is_beef_cattle_type(self):
+        return self in {
+            self.__class__.beef,
+            self.__class__.beef_backgrounder,
+            self.__class__.beef_bulls,
+            self.__class__.beef_backgrounder_heifer,
+            self.__class__.beef_finishing_steer,
+            self.__class__.beef_finishing_heifer,
+            self.__class__.beef_replacement_heifers,
+            self.__class__.beef_finisher,
+            self.__class__.beef_backgrounder_steer,
+            self.__class__.beef_calf,
+            self.__class__.stockers,
+            self.__class__.stocker_heifers,
+            self.__class__.stocker_steers,
+            self.__class__.beef_cow_lactating,
+            self.__class__.beef_cow,
+            self.__class__.beef_cow_dry
+        }
+
+    def is_dairy_cattle_type(self):
+        return self in {
+            self.__class__.dairy,
+            self.__class__.dairy_lactating_cow,
+            self.__class__.dairy_bulls,
+            self.__class__.dairy_calves,
+            self.__class__.dairy_dry_cow,
+            self.__class__.dairy_heifers
+        }
+
+    def is_swine_type(self):
+        return self in {
+            self.__class__.swine,
+            self.__class__.swine_finisher,
+            self.__class__.swine_starter,
+            self.__class__.swine_lactating_sow,
+            self.__class__.swine_dry_sow,
+            self.__class__.swine_grower,
+            self.__class__.swine_sows,
+            self.__class__.swine_boar,
+            self.__class__.swine_gilts,
+            self.__class__.swine_piglets
+        }
+
+    def is_sheep_type(self):
+        return self in {
+            self.__class__.sheep,
+            self.__class__.lambs_and_ewes,
+            self.__class__.ram,
+            self.__class__.weaned_lamb,
+            self.__class__.lambs,
+            self.__class__.ewes,
+            self.__class__.sheep_feedlot
+        }
+
+    def is_poultry_type(self):
+        return self in {
+            self.__class__.poultry,
+            self.__class__.layers_wet_poultry,
+            self.__class__.layers_dry_poultry,
+            self.__class__.layers,
+            self.__class__.broilers,
+            self.__class__.turkeys,
+            self.__class__.ducks,
+            self.__class__.geese,
+            self.__class__.chicken_pullets,
+            self.__class__.chicken_cockerels,
+            self.__class__.chicken_roosters,
+            self.__class__.chicken_hens,
+            self.__class__.young_tom,
+            self.__class__.tom,
+            self.__class__.young_turkey_hen,
+            self.__class__.turkey_hen,
+            self.__class__.chicken_eggs,
+            self.__class__.turkey_eggs,
+            self.__class__.chicks,
+            self.__class__.poults
+        }
+
+    def is_other_animal_type(self):
+        return self in {
+            self.__class__.other_livestock,
+            self.__class__.goats,
+            self.__class__.alpacas,
+            self.__class__.deer,
+            self.__class__.elk,
+            self.__class__.llamas,
+            self.__class__.horses,
+            self.__class__.mules,
+            self.__class__.bison
+        }
+
+    def is_chicken_type(self):
+        return self in {
+            self.__class__.chicken,
+            self.__class__.chicken_hens,
+            self.__class__.layers,
+            self.__class__.broilers,
+            self.__class__.chicken_roosters,
+            self.__class__.chicken_pullets,
+            self.__class__.chicken_cockerels,
+            self.__class__.chicken_eggs,
+            self.__class__.chicks
+        }
+
+    def is_turkey_type(self):
+        return self in {
+            self.__class__.turkey_hen,
+            self.__class__.young_turkey_hen,
+            self.__class__.tom,
+            self.__class__.turkey_eggs,
+            self.__class__.young_tom,
+            self.__class__.poults
+        }
+
+    def is_layers_type(self):
+        return self in {
+            self.__class__.layers,
+            self.__class__.layers_dry_poultry,
+            self.__class__.layers_wet_poultry
+        }
+
+    def is_lactating_type(self):
+        return self in {
+            self.__class__.beef_cow_lactating,
+            self.__class__.beef_cow,
+            self.__class__.dairy_lactating_cow,
+            self.__class__.ewes
+        }
+
+    def is_eggs(self):
+        return self in {
+            self.__class__.chicken_eggs,
+            self.__class__.turkey_eggs
+        }
+
+    def is_newly_hatched_eggs(self):
+        return self in {
+            self.__class__.poults,
+            self.__class__.chicks
+        }
+
+    def is_pregnant_type(self):
+        return self in {
+            self.__class__.beef_cow,
+            self.__class__.beef_cow_lactating,
+            self.__class__.dairy_lactating_cow,
+            self.__class__.dairy_dry_cow,
+            self.__class__.ewes
+        }
+
+    def get_category(self):
+        if self.is_other_animal_type():
+            res = self.other_livestock
+
+        elif self.is_poultry_type():
+            res = self.poultry
+
+        elif self.is_sheep_type():
+            res = self.sheep
+
+        elif self.is_swine_type():
+            res = self.swine
+
+        elif self.is_dairy_cattle_type():
+            res = self.dairy
+
+        elif self.is_beef_cattle_type():
+            res = self.beef
+
+        else:
+            res = self.not_selected
+
+        return res
+
 
 class ManureAnimalSourceTypes(EnumGeneric):
     not_selected: str = "NotSelected"
@@ -134,212 +318,6 @@ class ManureAnimalSourceTypes(EnumGeneric):
     poultry_manure: str = "PoultryManure"
     sheep_manure: str = "SheepManure"
     other_livestock_manure: str = "OtherLivestockManure"
-
-
-class AnimalTypeExtensions:
-    def __init__(
-            self,
-            animal_type: AnimalType
-    ):
-        self.enum: AnimalType = animal_type
-
-        self.is_young_type = any([animal_type == v for v in (
-            animal_type.beef_calf,
-            animal_type.dairy_calves,
-            animal_type.swine_piglets,
-            animal_type.weaned_lamb,
-            animal_type.lambs)])
-
-        self.is_beef_cattle_type = any([animal_type == v for v in (
-            animal_type.beef,
-            animal_type.beef_backgrounder,
-            animal_type.beef_bulls,
-            animal_type.beef_backgrounder_heifer,
-            animal_type.beef_finishing_steer,
-            animal_type.beef_finishing_heifer,
-            animal_type.beef_replacement_heifers,
-            animal_type.beef_finisher,
-            animal_type.beef_backgrounder_steer,
-            animal_type.beef_calf,
-            animal_type.stockers,
-            animal_type.stocker_heifers,
-            animal_type.stocker_steers,
-            animal_type.beef_cow_lactating,
-            animal_type.beef_cow,
-            animal_type.beef_cow_dry)])
-
-        self.is_dairy_cattle_type = any([animal_type == v for v in (
-            animal_type.dairy,
-            animal_type.dairy_lactating_cow,
-            animal_type.dairy_bulls,
-            animal_type.dairy_calves,
-            animal_type.dairy_dry_cow,
-            animal_type.dairy_heifers)])
-
-        self.is_swine_type = any([animal_type == v for v in (
-            animal_type.swine,
-            animal_type.swine_finisher,
-            animal_type.swine_starter,
-            animal_type.swine_lactating_sow,
-            animal_type.swine_dry_sow,
-            animal_type.swine_grower,
-            animal_type.swine_sows,
-            animal_type.swine_boar,
-            animal_type.swine_gilts,
-            animal_type.swine_piglets)])
-
-        self.is_sheep_type = any([animal_type == v for v in (
-            animal_type.sheep,
-            animal_type.lambs_and_ewes,
-            animal_type.ram,
-            animal_type.weaned_lamb,
-            animal_type.lambs,
-            animal_type.ewes,
-            animal_type.sheep_feedlot)])
-
-        self.is_poultry_type = any([animal_type == v for v in (
-            animal_type.poultry,
-            animal_type.layers_wet_poultry,
-            animal_type.layers_dry_poultry,
-            animal_type.layers,
-            animal_type.broilers,
-            animal_type.turkeys,
-            animal_type.ducks,
-            animal_type.geese,
-            animal_type.chicken_pullets,
-            animal_type.chicken_cockerels,
-            animal_type.chicken_roosters,
-            animal_type.chicken_hens,
-            animal_type.young_tom,
-            animal_type.tom,
-            animal_type.young_turkey_hen,
-            animal_type.turkey_hen,
-            animal_type.chicken_eggs,
-            animal_type.turkey_eggs,
-            animal_type.chicks,
-            animal_type.poults)])
-
-        self.is_other_animal_type = any([animal_type == v for v in (
-            animal_type.other_livestock,
-            animal_type.goats,
-            animal_type.alpacas,
-            animal_type.deer,
-            animal_type.elk,
-            animal_type.llamas,
-            animal_type.horses,
-            animal_type.mules,
-            animal_type.bison)])
-
-        self.is_chicken_type = any([animal_type == v for v in (
-            animal_type.chicken,
-            animal_type.chicken_hens,
-            animal_type.layers,
-            animal_type.broilers,
-            animal_type.chicken_roosters,
-            animal_type.chicken_pullets,
-            animal_type.chicken_cockerels,
-            animal_type.chicken_eggs,
-            animal_type.chicks)])
-
-        self.is_turkey_type = any([animal_type == v for v in (
-            animal_type.turkey_hen,
-            animal_type.young_turkey_hen,
-            animal_type.tom,
-            animal_type.turkey_eggs,
-            animal_type.young_tom,
-            animal_type.poults)])
-
-        self.is_layers_type = any([animal_type == v for v in (
-            animal_type.layers,
-            animal_type.layers_dry_poultry,
-            animal_type.layers_wet_poultry)])
-
-        self.is_lactating_type = any([animal_type == v for v in (
-            animal_type.beef_cow_lactating,
-            animal_type.beef_cow,
-            animal_type.dairy_lactating_cow,
-            animal_type.ewes)])
-
-        self.is_eggs = any([animal_type == v for v in (
-            animal_type.chicken_eggs,
-            animal_type.turkey_eggs)])
-
-        self.is_newly_hatched_eggs = any([animal_type == v for v in (
-            animal_type.poults,
-            animal_type.chicks)])
-
-        self.is_pregnant_type = any([animal_type == v for v in (
-            animal_type.beef_cow,
-            animal_type.beef_cow_lactating,
-            animal_type.dairy_lactating_cow,
-            animal_type.dairy_dry_cow,
-            animal_type.ewes)])
-
-    def get_category(self):
-        if self.is_other_animal_type:
-            res = AnimalType.other_livestock
-
-        elif self.is_poultry_type:
-            res = AnimalType.poultry
-
-        elif self.is_sheep_type:
-            res = AnimalType.sheep
-
-        elif self.is_swine_type:
-            res = AnimalType.swine
-
-        elif self.is_dairy_cattle_type:
-            res = AnimalType.dairy
-
-        elif self.is_beef_cattle_type:
-            res = AnimalType.beef
-
-        else:
-            res = AnimalType.not_selected
-
-        return res
-
-    # def get_component_category_from_animal_type(self):
-    #     if self.is_beef_cattle_type:
-    #         res = ComponentCategory.beef_production
-    #
-    #     elif self.is_dairy_cattle_type:
-    #         res = ComponentCategory.dairy
-    #
-    #     elif self.is_swine_type:
-    #         res = ComponentCategory.swine
-    #
-    #     elif self.is_poultry_type:
-    #         res = ComponentCategory.poultry
-    #
-    #     elif self.is_sheep_type:
-    #         res = ComponentCategory.sheep
-    #
-    #     else:
-    #         res = ComponentCategory.other_livestock
-    #
-    #     return res
-    #
-    # def get_manure_animal_source(self):
-    #     if self.is_beef_cattle_type:
-    #         res = ManureAnimalSourceTypes.beef_manure
-    #
-    #     elif self.is_dairy_cattle_type:
-    #         res = ManureAnimalSourceTypes.dairy_manure
-    #
-    #     elif self.is_swine_type:
-    #         res = ManureAnimalSourceTypes.swine_manure
-    #
-    #     elif self.is_poultry_type:
-    #         res = ManureAnimalSourceTypes.poultry_manure
-    #
-    #     elif self.is_sheep_type:
-    #         res = ManureAnimalSourceTypes.sheep_manure
-    #
-    #     else:
-    #         res = ManureAnimalSourceTypes.other_livestock_manure
-    #
-    #     return res
 
 
 class Milk:
@@ -546,7 +524,7 @@ class Bedding:
             self,
             housing_type: HousingType,
             bedding_material_type: BeddingMaterialType | None,
-            animal_type: AnimalTypeExtensions,
+            animal_type: AnimalType,
             total_carbon_kilograms_dry_matter_for_bedding: float = None,
             total_nitrogen_kilograms_dry_matter_for_bedding: float = None,
             moisture_content_of_bedding_material: float = None
@@ -584,7 +562,7 @@ class Bedding:
     def get_default_bedding_rate(
             housing_type: HousingType,
             bedding_material_type: BeddingMaterialType,
-            animal_type: AnimalTypeExtensions
+            animal_type: AnimalType
     ) -> int | float:
         # https://github.com/holos-aafc/Holos/blob/53f778f9bd4579d164de10f5b04db34d020b96a9/H.Core/Providers/Animals/Table_30_Default_Bedding_Material_Composition_Provider.cs#L301
         _housing_type = HousingTypeExtensions(housing_type=housing_type)
@@ -592,10 +570,10 @@ class Bedding:
         if _housing_type.is_pasture:
             return 0
 
-        if animal_type.is_young_type:
+        if animal_type.is_young_type():
             return 0
 
-        if animal_type.is_beef_cattle_type:
+        if animal_type.is_beef_cattle_type():
             if bedding_material_type == BeddingMaterialType.straw:
                 if _housing_type.is_feed_lot:
                     return 1.5
@@ -610,7 +588,7 @@ class Bedding:
                 if _housing_type.is_barn:
                     return 5.0
 
-        if animal_type.is_dairy_cattle_type:
+        if animal_type.is_dairy_cattle_type():
             # Currently, all housing types have same rates for bedding types
             if any([
                 _housing_type.is_tie_stall,
@@ -635,32 +613,32 @@ class Bedding:
                     return 2.1
 
         # Footnote 8 for sheep value reference.
-        if animal_type.is_sheep_type:
+        if animal_type.is_sheep_type():
             return 0.57
 
-        if animal_type.is_swine_type:
+        if animal_type.is_swine_type():
             if bedding_material_type == BeddingMaterialType.straw_long:
                 return 0.70
             else:
                 return 0.79
 
-        if animal_type.is_poultry_type:
+        if animal_type.is_poultry_type():
             if any([
                 bedding_material_type == BeddingMaterialType.sawdust,
                 bedding_material_type == BeddingMaterialType.straw,
                 bedding_material_type == BeddingMaterialType.shavings]):
-                if animal_type.enum == AnimalType.broilers:
+                if animal_type == AnimalType.broilers:
                     return 0.0014
 
-                if animal_type.enum == AnimalType.chicken_pullets:
+                if animal_type == AnimalType.chicken_pullets:
                     return 0.0014
 
                 if any([
-                    animal_type.enum == AnimalType.layers,
-                    animal_type.enum == AnimalType.chicken_hens]):
+                    animal_type == AnimalType.layers,
+                    animal_type == AnimalType.chicken_hens]):
                     return 0.0028
 
-                if animal_type.is_turkey_type:
+                if animal_type.is_turkey_type():
                     return 0.011
 
                 else:
@@ -670,7 +648,7 @@ class Bedding:
 
         if animal_type.is_other_animal_type:
             # Footnote 11 for Other livestock value reference
-            match animal_type.enum:
+            match animal_type:
                 case AnimalType.llamas:
                     return 0.57
 
@@ -706,21 +684,21 @@ class Bedding:
     @staticmethod
     def get_bedding_material_composition(
             bedding_material_type: BeddingMaterialType,
-            animal_type: AnimalTypeExtensions
+            animal_type: AnimalType
     ) -> dict:
-        if animal_type.is_beef_cattle_type:
+        if animal_type.is_beef_cattle_type():
             animal_lookup_type = AnimalType.beef
-        elif animal_type.is_dairy_cattle_type:
+        elif animal_type.is_dairy_cattle_type():
             animal_lookup_type = AnimalType.dairy
-        elif animal_type.is_sheep_type:
+        elif animal_type.is_sheep_type():
             animal_lookup_type = AnimalType.sheep
-        elif animal_type.is_swine_type:
+        elif animal_type.is_swine_type():
             animal_lookup_type = AnimalType.swine
-        elif animal_type.is_poultry_type:
+        elif animal_type.is_poultry_type():
             animal_lookup_type = AnimalType.poultry
         else:
             # Other animals have a value for animal group (Horses, Goats, etc.)
-            animal_lookup_type = animal_type.enum
+            animal_lookup_type = animal_type
 
         df = read_holos_resource_table(
             path_file=PathsHolosResources.Table_30_Default_Bedding_Material_Composition_Provider)
@@ -761,7 +739,7 @@ class AnimalCoefficientData:
 
 
 def get_methane_producing_capacity_of_manure(
-        animal_type: AnimalTypeExtensions
+        animal_type: AnimalType
 ) -> float:
     """Returns the default methane producing capacity of manure as a function of the animal type
 
@@ -779,54 +757,52 @@ def get_methane_producing_capacity_of_manure(
     # <para>Source: IPCC (2019), Table 10.16</para>
     # Footnote 3 : For Methane producing capacity (B0) value reference.
 
-    animal_type_enum = animal_type.enum
-
-    if animal_type.is_beef_cattle_type:
+    if animal_type.is_beef_cattle_type():
         res = 0.19
 
-    elif animal_type.is_dairy_cattle_type:
+    elif animal_type.is_dairy_cattle_type():
         res = 0.24
 
-    elif animal_type.is_swine_type:
+    elif animal_type.is_swine_type():
         res = 0.48
 
-    elif animal_type.is_sheep_type:
+    elif animal_type.is_sheep_type():
         res = 0.19
 
     elif any([
-        animal_type_enum == AnimalType.chicken_roosters,
-        animal_type_enum == AnimalType.broilers
+        animal_type == AnimalType.chicken_roosters,
+        animal_type == AnimalType.broilers
     ]):
         # Used for broilers from algorithm document
         res = 0.36
 
     elif any((
-            animal_type_enum == AnimalType.chicken_hens,
-            animal_type_enum == AnimalType.chicken_pullets,
-            animal_type_enum == AnimalType.chicken_cockerels,
-            animal_type_enum == AnimalType.layers
+            animal_type == AnimalType.chicken_hens,
+            animal_type == AnimalType.chicken_pullets,
+            animal_type == AnimalType.chicken_cockerels,
+            animal_type == AnimalType.layers
     )):
         # Used for layers (wet/dry) from algorithm document
         res = 0.39
 
-    elif animal_type_enum == AnimalType.goats:
+    elif animal_type == AnimalType.goats:
         res = 0.18
 
-    elif animal_type_enum == AnimalType.horses:
+    elif animal_type == AnimalType.horses:
         res = 0.30
 
-    elif animal_type_enum == AnimalType.mules:
+    elif animal_type == AnimalType.mules:
         res = 0.33
 
     # Footnote 2
     elif any((
-            animal_type_enum == AnimalType.llamas,
-            animal_type_enum == AnimalType.alpacas
+            animal_type == AnimalType.llamas,
+            animal_type == AnimalType.alpacas
     )):
         res = 0.19
 
     # Footnote 1
-    elif animal_type_enum == AnimalType.bison:
+    elif animal_type == AnimalType.bison:
         res = 0.10
 
     else:
@@ -841,7 +817,7 @@ def get_methane_producing_capacity_of_manure(
 
 def get_default_methane_producing_capacity_of_manure(
         is_pasture: bool,
-        animal_type: AnimalTypeExtensions
+        animal_type: AnimalType
 ) -> float:
     """Returns the default methane producing capacity of manure.
 
