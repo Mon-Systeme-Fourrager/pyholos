@@ -299,47 +299,47 @@ class AnimalTypeExtensions:
 
         return res
 
-    def get_component_category_from_animal_type(self):
-        if self.is_beef_cattle_type:
-            res = ComponentCategory.beef_production
-
-        elif self.is_dairy_cattle_type:
-            res = ComponentCategory.dairy
-
-        elif self.is_swine_type:
-            res = ComponentCategory.swine
-
-        elif self.is_poultry_type:
-            res = ComponentCategory.poultry
-
-        elif self.is_sheep_type:
-            res = ComponentCategory.sheep
-
-        else:
-            res = ComponentCategory.other_livestock
-
-        return res
-
-    def get_manure_animal_source(self):
-        if self.is_beef_cattle_type:
-            res = ManureAnimalSourceTypes.beef_manure
-
-        elif self.is_dairy_cattle_type:
-            res = ManureAnimalSourceTypes.dairy_manure
-
-        elif self.is_swine_type:
-            res = ManureAnimalSourceTypes.swine_manure
-
-        elif self.is_poultry_type:
-            res = ManureAnimalSourceTypes.poultry_manure
-
-        elif self.is_sheep_type:
-            res = ManureAnimalSourceTypes.sheep_manure
-
-        else:
-            res = ManureAnimalSourceTypes.other_livestock_manure
-
-        return res
+    # def get_component_category_from_animal_type(self):
+    #     if self.is_beef_cattle_type:
+    #         res = ComponentCategory.beef_production
+    #
+    #     elif self.is_dairy_cattle_type:
+    #         res = ComponentCategory.dairy
+    #
+    #     elif self.is_swine_type:
+    #         res = ComponentCategory.swine
+    #
+    #     elif self.is_poultry_type:
+    #         res = ComponentCategory.poultry
+    #
+    #     elif self.is_sheep_type:
+    #         res = ComponentCategory.sheep
+    #
+    #     else:
+    #         res = ComponentCategory.other_livestock
+    #
+    #     return res
+    #
+    # def get_manure_animal_source(self):
+    #     if self.is_beef_cattle_type:
+    #         res = ManureAnimalSourceTypes.beef_manure
+    #
+    #     elif self.is_dairy_cattle_type:
+    #         res = ManureAnimalSourceTypes.dairy_manure
+    #
+    #     elif self.is_swine_type:
+    #         res = ManureAnimalSourceTypes.swine_manure
+    #
+    #     elif self.is_poultry_type:
+    #         res = ManureAnimalSourceTypes.poultry_manure
+    #
+    #     elif self.is_sheep_type:
+    #         res = ManureAnimalSourceTypes.sheep_manure
+    #
+    #     else:
+    #         res = ManureAnimalSourceTypes.other_livestock_manure
+    #
+    #     return res
 
 
 class Milk:
