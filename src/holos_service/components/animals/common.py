@@ -1,5 +1,4 @@
 from holos_service.common import EnumGeneric, HolosVar
-from holos_service.components.common import ComponentCategory
 from holos_service.config import PathsHolosResources
 from holos_service.utils import read_holos_resource_table
 
