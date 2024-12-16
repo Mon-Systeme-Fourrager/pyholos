@@ -141,6 +141,8 @@ class AnimalTypeExtensions:
             self,
             animal_type: AnimalType
     ):
+        self.enum: AnimalType = animal_type
+
         self.is_young_type = any([animal_type == v for v in (
             animal_type.beef_calf,
             animal_type.dairy_calves,
@@ -544,7 +546,7 @@ class Bedding:
             self,
             housing_type: HousingType,
             bedding_material_type: BeddingMaterialType | None,
-            animal_type: AnimalType,
+            animal_type: AnimalTypeExtensions,
             total_carbon_kilograms_dry_matter_for_bedding: float = None,
             total_nitrogen_kilograms_dry_matter_for_bedding: float = None,
             moisture_content_of_bedding_material: float = None
@@ -582,19 +584,18 @@ class Bedding:
     def get_default_bedding_rate(
             housing_type: HousingType,
             bedding_material_type: BeddingMaterialType,
-            animal_type: AnimalType
+            animal_type: AnimalTypeExtensions
     ) -> int | float:
         # https://github.com/holos-aafc/Holos/blob/53f778f9bd4579d164de10f5b04db34d020b96a9/H.Core/Providers/Animals/Table_30_Default_Bedding_Material_Composition_Provider.cs#L301
         _housing_type = HousingTypeExtensions(housing_type=housing_type)
-        _animal_type = AnimalTypeExtensions(animal_type=animal_type)
 
         if _housing_type.is_pasture:
             return 0
 
-        if _animal_type.is_young_type:
+        if animal_type.is_young_type:
             return 0
 
-        if _animal_type.is_beef_cattle_type:
+        if animal_type.is_beef_cattle_type:
             if bedding_material_type == BeddingMaterialType.straw:
                 if _housing_type.is_feed_lot:
                     return 1.5
@@ -609,7 +610,7 @@ class Bedding:
                 if _housing_type.is_barn:
                     return 5.0
 
-        if _animal_type.is_dairy_cattle_type:
+        if animal_type.is_dairy_cattle_type:
             # Currently, all housing types have same rates for bedding types
             if any([
                 _housing_type.is_tie_stall,
@@ -634,32 +635,32 @@ class Bedding:
                     return 2.1
 
         # Footnote 8 for sheep value reference.
-        if _animal_type.is_sheep_type:
+        if animal_type.is_sheep_type:
             return 0.57
 
-        if _animal_type.is_swine_type:
+        if animal_type.is_swine_type:
             if bedding_material_type == BeddingMaterialType.straw_long:
                 return 0.70
             else:
                 return 0.79
 
-        if _animal_type.is_poultry_type:
+        if animal_type.is_poultry_type:
             if any([
                 bedding_material_type == BeddingMaterialType.sawdust,
                 bedding_material_type == BeddingMaterialType.straw,
                 bedding_material_type == BeddingMaterialType.shavings]):
-                if animal_type == AnimalType.broilers:
+                if animal_type.enum == AnimalType.broilers:
                     return 0.0014
 
-                if animal_type == AnimalType.chicken_pullets:
+                if animal_type.enum == AnimalType.chicken_pullets:
                     return 0.0014
 
                 if any([
-                    animal_type == AnimalType.layers,
-                    animal_type == AnimalType.chicken_hens]):
+                    animal_type.enum == AnimalType.layers,
+                    animal_type.enum == AnimalType.chicken_hens]):
                     return 0.0028
 
-                if _animal_type.is_turkey_type:
+                if animal_type.is_turkey_type:
                     return 0.011
 
                 else:
@@ -667,9 +668,9 @@ class Bedding:
             else:
                 return 0
 
-        if _animal_type.is_other_animal_type:
+        if animal_type.is_other_animal_type:
             # Footnote 11 for Other livestock value reference
-            match animal_type:
+            match animal_type.enum:
                 case AnimalType.llamas:
                     return 0.57
 
@@ -705,22 +706,21 @@ class Bedding:
     @staticmethod
     def get_bedding_material_composition(
             bedding_material_type: BeddingMaterialType,
-            animal_type: AnimalType
+            animal_type: AnimalTypeExtensions
     ) -> dict:
-        _animal_type = AnimalTypeExtensions(animal_type=animal_type)
-        if _animal_type.is_beef_cattle_type:
+        if animal_type.is_beef_cattle_type:
             animal_lookup_type = AnimalType.beef
-        elif _animal_type.is_dairy_cattle_type:
+        elif animal_type.is_dairy_cattle_type:
             animal_lookup_type = AnimalType.dairy
-        elif _animal_type.is_sheep_type:
+        elif animal_type.is_sheep_type:
             animal_lookup_type = AnimalType.sheep
-        elif _animal_type.is_swine_type:
+        elif animal_type.is_swine_type:
             animal_lookup_type = AnimalType.swine
-        elif _animal_type.is_poultry_type:
+        elif animal_type.is_poultry_type:
             animal_lookup_type = AnimalType.poultry
         else:
             # Other animals have a value for animal group (Horses, Goats, etc.)
-            animal_lookup_type = animal_type
+            animal_lookup_type = animal_type.enum
 
         df = read_holos_resource_table(
             path_file=PathsHolosResources.Table_30_Default_Bedding_Material_Composition_Provider)
@@ -761,7 +761,7 @@ class AnimalCoefficientData:
 
 
 def get_methane_producing_capacity_of_manure(
-        animal_type: AnimalType
+        animal_type: AnimalTypeExtensions
 ) -> float:
     """Returns the default methane producing capacity of manure as a function of the animal type
 
@@ -775,58 +775,58 @@ def get_methane_producing_capacity_of_manure(
         https://github.com/holos-aafc/Holos/blob/396f1ab9bc7247e6d78766f9445c14d2eb7c0d9d/H.Core/Providers/Animals/Table_35_Methane_Producing_Capacity_Default_Values_Provider.cs#L15
 
     """
-    _animal_type = AnimalTypeExtensions(animal_type=animal_type)
-
     # Table 35. Default values for maximum methane producing capacity (Bo).
     # <para>Source: IPCC (2019), Table 10.16</para>
     # Footnote 3 : For Methane producing capacity (B0) value reference.
 
-    if _animal_type.is_beef_cattle_type:
+    animal_type_enum = animal_type.enum
+
+    if animal_type.is_beef_cattle_type:
         res = 0.19
 
-    elif _animal_type.is_dairy_cattle_type:
+    elif animal_type.is_dairy_cattle_type:
         res = 0.24
 
-    elif _animal_type.is_swine_type:
+    elif animal_type.is_swine_type:
         res = 0.48
 
-    elif _animal_type.is_sheep_type:
+    elif animal_type.is_sheep_type:
         res = 0.19
 
     elif any([
-        animal_type == AnimalType.chicken_roosters,
-        animal_type == AnimalType.broilers
+        animal_type_enum == AnimalType.chicken_roosters,
+        animal_type_enum == AnimalType.broilers
     ]):
         # Used for broilers from algorithm document
         res = 0.36
 
     elif any((
-            animal_type == AnimalType.chicken_hens,
-            animal_type == AnimalType.chicken_pullets,
-            animal_type == AnimalType.chicken_cockerels,
-            animal_type == AnimalType.layers
+            animal_type_enum == AnimalType.chicken_hens,
+            animal_type_enum == AnimalType.chicken_pullets,
+            animal_type_enum == AnimalType.chicken_cockerels,
+            animal_type_enum == AnimalType.layers
     )):
         # Used for layers (wet/dry) from algorithm document
         res = 0.39
 
-    elif animal_type == AnimalType.goats:
+    elif animal_type_enum == AnimalType.goats:
         res = 0.18
 
-    elif animal_type == AnimalType.horses:
+    elif animal_type_enum == AnimalType.horses:
         res = 0.30
 
-    elif animal_type == AnimalType.mules:
+    elif animal_type_enum == AnimalType.mules:
         res = 0.33
 
     # Footnote 2
     elif any((
-            animal_type == AnimalType.llamas,
-            animal_type == AnimalType.alpacas
+            animal_type_enum == AnimalType.llamas,
+            animal_type_enum == AnimalType.alpacas
     )):
         res = 0.19
 
     # Footnote 1
-    elif animal_type == AnimalType.bison:
+    elif animal_type_enum == AnimalType.bison:
         res = 0.10
 
     else:
@@ -841,7 +841,7 @@ def get_methane_producing_capacity_of_manure(
 
 def get_default_methane_producing_capacity_of_manure(
         is_pasture: bool,
-        animal_type: AnimalType
+        animal_type: AnimalTypeExtensions
 ) -> float:
     """Returns the default methane producing capacity of manure.
 
