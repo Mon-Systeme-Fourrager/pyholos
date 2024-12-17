@@ -843,3 +843,41 @@ def get_default_methane_producing_capacity_of_manure(
         https://github.com/holos-aafc/Holos/blob/396f1ab9bc7247e6d78766f9445c14d2eb7c0d9d/H.Core/Services/Initialization/Animals/AnimalInitializationService.Methane.cs#L89
     """
     return 0.19 if is_pasture else get_methane_producing_capacity_of_manure(animal_type=animal_type)
+
+
+class FractionOfOrganicNitrogenMineralizedData:
+    def __init__(
+            self,
+            fraction_immobilized: float | None = None,
+            fraction_mineralized: float | None = None,
+            fraction_nitrified: float | None = None,
+            fraction_denitrified: float | None = None,
+            n2o_n: float | None = None,
+            no_n: float | None = None,
+            n2_n: float | None = None,
+            n_leached: float | None = None,
+    ):
+        """Mineralization of organic N (fecal N and bedding N)
+
+        Args:
+            fraction_mineralized: (dimensionless) fraction of nitrogen mineralized
+            fraction_immobilized: (dimensionless) fraction of nitrogen immobilized
+            fraction_nitrified: (dimensionless) fraction of nitrogen nitrified
+            fraction_denitrified: (dimensionless) fraction of nitrogen denitrified
+            n2o_n:
+            no_n:
+            n2_n:
+            n_leached:
+        """
+        self.fraction_mineralized = fraction_immobilized
+        self.fraction_immobilized = fraction_mineralized
+        self.fraction_nitrified = fraction_nitrified
+        self.fraction_denitrified = fraction_denitrified
+        self.n2o_n = n2o_n
+        self.no_n = no_n
+        self.n2_n = n2_n
+        self.n_leached = n_leached
+
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__ if isinstance(other, self.__class__) else False
+

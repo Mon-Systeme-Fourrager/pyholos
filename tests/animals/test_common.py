@@ -964,5 +964,13 @@ class TestGetDefaultMethaneProducingCapacityOfManure(unittest.TestCase):
                 common.get_default_methane_producing_capacity_of_manure(is_pasture=True, animal_type=animal_type))
 
 
+class TestFractionOfOrganicNitrogenMineralizedData(unittest.TestCase):
+    def testDefaultValues(self):
+        self.assertEqual(
+            {None},
+            set(common.FractionOfOrganicNitrogenMineralizedData().__dict__.values())
+        )
+
+
 if __name__ == '__main__':
     unittest.main()
