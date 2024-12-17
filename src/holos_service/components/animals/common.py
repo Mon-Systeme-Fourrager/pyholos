@@ -910,6 +910,50 @@ class ManureStateType(EnumGeneric):
     composted_in_vessel: str = "CompostedInVessel"  # (Swine system)
     solid_storage_with_or_without_litter: str = "SolidStorageWithOrWithoutLitter"  # (Poultry system) No different than 'Solid Storage' but poultry solid storage needs the term 'litter' which is incorrect to use in the case of cattle 'Solid Storage' since there is no 'litter' only 'bedding' when considering the cattle system
 
+    # These methods correspond to the ManureStateTypeExtensions
+    # https://github.com/holos-aafc/Holos/blob/396f1ab9bc7247e6d78766f9445c14d2eb7c0d9d/H.Core/Enumerations/ManureStateTypeExtensions.cs#L9
+    def is_grazing_area(self) -> bool:
+        return self in {
+            self.__class__.paddock,
+            self.__class__.range,
+            self.__class__.pasture
+        }
+
+    def is_liquid_manure(self) -> bool:
+        """Indicates if the storage type being used houses liquid manure.
+
+        Returns:
+            True if the storage type is for liquid manure, False otherwise
+        """
+        return self in {
+            self.__class__.liquid_no_crust,
+            self.__class__.liquid_with_natural_crust,
+            self.__class__.liquid_with_solid_cover,
+            self.__class__.deep_pit
+        }
+
+    def is_compost(self) -> bool:
+        return self in {
+            self.__class__.compost_intensive,
+            self.__class__.compost_passive,
+            self.__class__.composted
+        }
+
+    def is_solid_manure(self) -> bool:
+        """Indicates if the storage type being used houses solid manure.
+
+        Returns:
+            True if the storage type is for solid manure, False otherwise
+        """
+        return not self.is_liquid_manure()
+
+    def is_covered_system(self) -> bool:
+        # Dairy manure systems can be covered with a lid/cap etc.
+        return self in {
+            self.__class__.liquid_with_natural_crust,
+            self.__class__.liquid_with_solid_cover
+        }
+
 
 def get_fraction_of_organic_nitrogen_mineralized_data(
         state_type: ManureStateType,

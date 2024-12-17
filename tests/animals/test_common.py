@@ -1100,6 +1100,7 @@ class TestGetFractionOfOrganicNitrogenMineralizedData(unittest.TestCase):
                     state_type=manure_state,
                     animal_type=animal_type))
 
+
 class TestGetAmmoniaEmissionFactorForStorageOfPoultryManure(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -1107,14 +1108,14 @@ class TestGetAmmoniaEmissionFactorForStorageOfPoultryManure(unittest.TestCase):
 
     def test_values_for_chicken_hens_and_layers(self):
         for animal_type in ((
-            common.AnimalType.chicken_hens,
-            common.AnimalType.layers)):
+                common.AnimalType.chicken_hens,
+                common.AnimalType.layers)):
             self.assertEqual(
                 0.24,
                 common.get_ammonia_emission_factor_for_storage_of_poultry_manure(animal_type=animal_type))
 
     def test_default_values_for_chicken_type(self):
-        for animal_type in [v for v in self.animal_types.chicken_type if v not in(
+        for animal_type in [v for v in self.animal_types.chicken_type if v not in (
                 common.AnimalType.chicken_hens,
                 common.AnimalType.layers
         )]:
@@ -1127,6 +1128,45 @@ class TestGetAmmoniaEmissionFactorForStorageOfPoultryManure(unittest.TestCase):
             self.assertEqual(
                 0.24,
                 common.get_ammonia_emission_factor_for_storage_of_poultry_manure(animal_type=animal_type))
+
+
+class TestManureStateType(unittest.TestCase):
+    def test_is_grazing_area(self):
+        for handling_system in (
+                common.ManureStateType.paddock,
+                common.ManureStateType.range,
+                common.ManureStateType.pasture
+        ):
+            self.assertTrue(handling_system.is_grazing_area())
+
+    def test_is_liquid_manure(self):
+        for handling_system in (
+                common.ManureStateType.liquid_no_crust,
+                common.ManureStateType.liquid_with_natural_crust,
+                common.ManureStateType.liquid_with_solid_cover,
+                common.ManureStateType.deep_pit
+        ):
+            self.assertTrue(handling_system.is_liquid_manure())
+
+    def test_is_compost(self):
+        for handling_system in (
+                common.ManureStateType.compost_intensive,
+                common.ManureStateType.compost_passive,
+                common.ManureStateType.composted
+        ):
+            self.assertTrue(handling_system.is_compost())
+
+    def test_is_solid_manure(self):
+        for handling_system in common.ManureStateType:
+            if not handling_system.is_liquid_manure():
+                self.assertTrue(handling_system.is_solid_manure())
+
+    def test_is_covered_system(self):
+        for handling_system in (
+                common.ManureStateType.liquid_with_natural_crust,
+                common.ManureStateType.liquid_with_solid_cover
+        ):
+            self.assertTrue(handling_system.is_covered_system())
 
 
 if __name__ == '__main__':
