@@ -1073,7 +1073,7 @@ def get_fraction_of_organic_nitrogen_mineralized_data(
 def get_ammonia_emission_factor_for_storage_of_poultry_manure(
         animal_type: AnimalType
 ) -> float:
-    """Returns the default ammonia emission factor for housing (only for Poultry).
+    """Returns the default ammonia emission factor for housing manure of Poultry-type animals.
 
     Args:
         animal_type: animal type object
@@ -1095,5 +1095,42 @@ def get_ammonia_emission_factor_for_storage_of_poultry_manure(
     else:
         # Turkeys
         res = 0.24
+
+    return res
+
+
+def get_ammonia_emission_factor_for_storage_of_beef_and_dairy_cattle_manure(
+        storage_type: ManureStateType
+) -> float:
+    """Returns the default ammonia emission factor for housing of beef and dairy cattle manure.
+
+    Args:
+        storage_type: manure handling system type
+
+    Returns:
+        (kg NH3-N kg^-1 TAN): default ammonia emission factor for housing
+
+    References:
+        Holos source code: https://github.com/holos-aafc/Holos/blob/396f1ab9bc7247e6d78766f9445c14d2eb7c0d9d/H.Core/Providers/Animals/Table_43_Beef_Dairy_Default_Emission_Factors_Provider.cs#L77
+
+    """
+    # Footnote 1: Read for data reference information.
+
+    if any((
+            storage_type.is_liquid_manure(),
+            storage_type == ManureStateType.deep_pit
+    )):
+        res = 0.13
+
+    elif storage_type.is_compost():
+        res = 0.7
+
+    elif any((
+            storage_type == ManureStateType.solid_storage,
+            storage_type == ManureStateType.deep_bedding)):
+        res = 0.35
+
+    else:
+        res = 0
 
     return res

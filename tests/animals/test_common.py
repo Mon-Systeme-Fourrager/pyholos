@@ -1169,5 +1169,49 @@ class TestManureStateType(unittest.TestCase):
             self.assertTrue(handling_system.is_covered_system())
 
 
+class TestGetAmmoniaEmissionFactorForStorageOfBeefAndDairyCattleManure(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.handling_systems = list(common.ManureStateType)
+
+    def run_test(
+            self,
+            handling_system: common.ManureStateType,
+            expected_value: float
+    ):
+        self.assertEqual(
+            expected_value,
+            common.get_ammonia_emission_factor_for_storage_of_beef_and_dairy_cattle_manure(
+                storage_type=handling_system))
+        self.handling_systems.pop(self.handling_systems.index(handling_system))
+
+    def test_values_for_liquid_manure_and_deep_pit_handling_systems(self):
+        for handling_system in (
+                common.ManureStateType.liquid_no_crust,
+                common.ManureStateType.liquid_with_natural_crust,
+                common.ManureStateType.liquid_with_solid_cover,
+                common.ManureStateType.deep_pit
+        ):
+            self.run_test(handling_system=handling_system, expected_value=0.13)
+
+    def test_values_for_compost_handling_systems(self):
+        for handling_system in (
+                common.ManureStateType.compost_intensive,
+                common.ManureStateType.compost_passive,
+                common.ManureStateType.composted
+        ):
+            self.run_test(handling_system=handling_system, expected_value=0.7)
+
+    def test_values_for_solid_storage_and_deep_bedding_handling_systems(self):
+        for handling_system in (
+                common.ManureStateType.solid_storage,
+                common.ManureStateType.deep_bedding
+        ):
+            self.run_test(handling_system=handling_system, expected_value=0.35)
+
+    def test_z_default_values(self):
+        for handling_system in self.handling_systems:
+            self.run_test(handling_system=handling_system, expected_value=0.)
+
 if __name__ == '__main__':
     unittest.main()
