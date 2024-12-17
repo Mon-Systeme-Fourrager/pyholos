@@ -910,3 +910,117 @@ class ManureStateType(EnumGeneric):
     composted_in_vessel: str = "CompostedInVessel"  # (Swine system)
     solid_storage_with_or_without_litter: str = "SolidStorageWithOrWithoutLitter"  # (Poultry system) No different than 'Solid Storage' but poultry solid storage needs the term 'litter' which is incorrect to use in the case of cattle 'Solid Storage' since there is no 'litter' only 'bedding' when considering the cattle system
 
+
+def get_fraction_of_organic_nitrogen_mineralized_data(
+        state_type: ManureStateType,
+        animal_type: AnimalType,
+        fraction_of_tan_in_liquid_manure_storage_system: float = 1
+) -> FractionOfOrganicNitrogenMineralizedData:
+    """Table 44. Fraction of organic N mineralized as TAN and the fraction of TAN immobilized to organic N and nitrified
+    and denitrified during solid and liquid manure storage for beef and dairy cattle (based on TAN content)
+    (Chai et al., 2014,2016).
+
+    Args:
+        state_type: manure handling system type
+        animal_type: animal type
+        fraction_of_tan_in_liquid_manure_storage_system: (-) fraction of excreted N in animal urine (cf. Note 4)
+
+    Returns:
+
+
+    Notes:
+        1. Mineralization of organic N (fecal N and bedding N)
+        2. Solid manure composted for ≥ 10 months; data from Chai et al. (2014); these values are used for compost passive and compost intensive beef and dairy cattle manure
+        3. Solid manure stockpiled for ≥ 4 months; data from Chai et al. (2014); these values are also used for deep bedding beef and dairy cattle manure
+        4. FracurinaryN is the fraction of TAN in the liquid manure storage system (includes liquid/slurry with natural crust, liquid/slurry with no natural crust, liquid/slurry with solid cover and deep pit under barn).
+        5. Nitrification of TAN in liquid manure with natural crust (formed from manure, bedding, or waste forage) was considered since the natural crust can be assumed as similar to solid manure (stockpile) in terms of being aerobic. The N2O-N emission factor for liquid manure with a natural crust is 0.005 of total N IPCC (2006), which can be expressed as the TAN based EFs
+        6. Nitrification of TAN in liquid manure with no natural crust is assumed to be zero because of anaerobic conditions
+        7. All nitrified TAN (nitrate-N) was assumed to be denitrified (no leaching, runoff) in liquid systems.
+    """
+    if animal_type.is_beef_cattle_type():
+        # FracMineralized = Note 1.
+        match state_type:
+            # // Solid-compost - beef
+            # // Note 2
+            case ManureStateType.compost_intensive | ManureStateType.compost_passive:
+                return FractionOfOrganicNitrogenMineralizedData(
+                    fraction_immobilized=0,
+                    fraction_mineralized=0.46,
+                    fraction_nitrified=0.25,
+                    fraction_denitrified=0,
+                    n2o_n=0.033,
+                    no_n=0.0033,
+                    n2_n=0.099,
+                    n_leached=0.0575)
+
+            # // Solid-stockpiled - beef
+            # // Note 3
+            case ManureStateType.deep_bedding | ManureStateType.solid_storage:
+                return FractionOfOrganicNitrogenMineralizedData(
+                    fraction_immobilized=0,
+                    fraction_mineralized=0.28,
+                    fraction_nitrified=0.125,
+                    fraction_denitrified=0,
+                    n2o_n=0.033,
+                    no_n=0.0033,
+                    n2_n=0.099,
+                    n_leached=0.0575
+                )
+    elif animal_type.is_dairy_cattle_type():
+        match state_type:
+            # // Solid-compost - dairy
+            # // Note 2
+            case ManureStateType.compost_intensive | ManureStateType.compost_passive:
+                return FractionOfOrganicNitrogenMineralizedData(
+                    fraction_immobilized=0,
+                    fraction_mineralized=0.46,
+                    fraction_nitrified=0.282,
+                    fraction_denitrified=0.152,
+                    n2o_n=0.037,
+                    no_n=0.0037,
+                    n2_n=0.111,
+                    n_leached=0.13)
+
+            # // Solid-stockpiled - dairy
+            # // Note 3
+            case ManureStateType.deep_bedding | ManureStateType.solid_storage:
+                return FractionOfOrganicNitrogenMineralizedData(
+                    fraction_immobilized=0,
+                    fraction_mineralized=0.28,
+                    fraction_nitrified=0.141,
+                    fraction_denitrified=0.076,
+                    n2o_n=0.0185,
+                    no_n=0.0019,
+                    n2_n=0.0555,
+                    n_leached=0.065)
+
+    # // Liquid systems for both beef and dairy
+    match state_type:
+        # // Liquid with natural crust
+        # // Note 5, 7
+        case ManureStateType.liquid_with_natural_crust | ManureStateType.liquid_with_solid_cover | ManureStateType.deep_pit:
+            return FractionOfOrganicNitrogenMineralizedData(
+                fraction_immobilized=0,
+                fraction_mineralized=0.1,
+                fraction_nitrified=0.021 / min(1., fraction_of_tan_in_liquid_manure_storage_system),
+                fraction_denitrified=0.021 / min(1., fraction_of_tan_in_liquid_manure_storage_system),
+                n2o_n=0.005 / min(1., fraction_of_tan_in_liquid_manure_storage_system),
+                no_n=0.0005 / min(1., fraction_of_tan_in_liquid_manure_storage_system),
+                n2_n=0.015 / min(1., fraction_of_tan_in_liquid_manure_storage_system),
+                n_leached=0)
+
+        # // Liquid without natural crust
+        # // Note 6, 7
+        case ManureStateType.liquid_no_crust:
+            return FractionOfOrganicNitrogenMineralizedData(
+                fraction_immobilized=0,
+                fraction_mineralized=0.1,
+                fraction_nitrified=0.0,
+                fraction_denitrified=0,
+                n2o_n=0,
+                no_n=0,
+                n2_n=0,
+                n_leached=0
+            )
+
+    return FractionOfOrganicNitrogenMineralizedData()

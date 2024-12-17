@@ -972,5 +972,134 @@ class TestFractionOfOrganicNitrogenMineralizedData(unittest.TestCase):
         )
 
 
+class TestGetFractionOfOrganicNitrogenMineralizedData(unittest.TestCase):
+    @classmethod
+    def setUp(cls):
+        cls.animal_types = _AnimalGroups
+        cls.animal_types_not_beef_or_dairy = [v for v in common.AnimalType if
+                                              not any([v.is_beef_cattle_type(), v.is_dairy_cattle_type()])]
+        cls.manure_state_type_for_default_values = [v for v in common.ManureStateType if v not in (
+            common.ManureStateType.liquid_with_natural_crust,
+            common.ManureStateType.liquid_with_solid_cover,
+            common.ManureStateType.deep_pit,
+            common.ManureStateType.liquid_no_crust)]
+
+    def test_values_when_is_beef_cattle_type_and_manure_handling_is_compost(self):
+        for animal_type in self.animal_types.beef_cattle_type:
+            for manure_state in (common.ManureStateType.compost_intensive,
+                                 common.ManureStateType.compost_passive):
+                self.assertEqual(
+                    common.FractionOfOrganicNitrogenMineralizedData(
+                        fraction_immobilized=0,
+                        fraction_mineralized=0.46,
+                        fraction_nitrified=0.25,
+                        fraction_denitrified=0,
+                        n2o_n=0.033,
+                        no_n=0.0033,
+                        n2_n=0.099,
+                        n_leached=0.0575),
+                    common.get_fraction_of_organic_nitrogen_mineralized_data(
+                        state_type=manure_state,
+                        animal_type=animal_type))
+
+    def test_function_values_when_is_beef_cattle_type_and_manure_handling_is_deep_bedding_or_solid_storage(self):
+        for animal_type in self.animal_types.beef_cattle_type:
+            for manure_state in (common.ManureStateType.deep_bedding,
+                                 common.ManureStateType.solid_storage):
+                self.assertEqual(
+                    common.FractionOfOrganicNitrogenMineralizedData(
+                        fraction_immobilized=0,
+                        fraction_mineralized=0.28,
+                        fraction_nitrified=0.125,
+                        fraction_denitrified=0,
+                        n2o_n=0.033,
+                        no_n=0.0033,
+                        n2_n=0.099,
+                        n_leached=0.0575),
+                    common.get_fraction_of_organic_nitrogen_mineralized_data(
+                        state_type=manure_state,
+                        animal_type=animal_type))
+
+    def test_values_when_is_dairy_cattle_type_and_manure_handling_is_compost(self):
+        for animal_type in self.animal_types.dairy_cattle_type:
+            for manure_state in (common.ManureStateType.compost_intensive,
+                                 common.ManureStateType.compost_passive):
+                self.assertEqual(
+                    common.FractionOfOrganicNitrogenMineralizedData(
+                        fraction_immobilized=0,
+                        fraction_mineralized=0.46,
+                        fraction_nitrified=0.282,
+                        fraction_denitrified=0.152,
+                        n2o_n=0.037,
+                        no_n=0.0037,
+                        n2_n=0.111,
+                        n_leached=0.13),
+                    common.get_fraction_of_organic_nitrogen_mineralized_data(
+                        state_type=manure_state,
+                        animal_type=animal_type))
+
+    def test_values_when_is_dairy_cattle_type_and_manure_handling_is_deep_bedding_or_solid_storage(self):
+        for animal_type in self.animal_types.dairy_cattle_type:
+            for manure_state in (common.ManureStateType.deep_bedding,
+                                 common.ManureStateType.solid_storage):
+                self.assertEqual(
+                    common.FractionOfOrganicNitrogenMineralizedData(
+                        fraction_immobilized=0,
+                        fraction_mineralized=0.28,
+                        fraction_nitrified=0.141,
+                        fraction_denitrified=0.076,
+                        n2o_n=0.0185,
+                        no_n=0.0019,
+                        n2_n=0.0555,
+                        n_leached=0.065),
+                    common.get_fraction_of_organic_nitrogen_mineralized_data(
+                        state_type=manure_state,
+                        animal_type=animal_type))
+
+    def test_values_when_animal_type_is_not_beef_or_dairy_cattle_type_and_manure_handling_is_case_1(self):
+        for animal_type in self.animal_types_not_beef_or_dairy:
+            for manure_state in (common.ManureStateType.liquid_with_natural_crust,
+                                 common.ManureStateType.liquid_with_solid_cover,
+                                 common.ManureStateType.deep_pit):
+                self.assertEqual(
+                    common.FractionOfOrganicNitrogenMineralizedData(
+                        fraction_immobilized=0,
+                        fraction_mineralized=0.1,
+                        fraction_nitrified=0.021,
+                        fraction_denitrified=0.021,
+                        n2o_n=0.005,
+                        no_n=0.0005,
+                        n2_n=0.015,
+                        n_leached=0),
+                    common.get_fraction_of_organic_nitrogen_mineralized_data(
+                        state_type=manure_state,
+                        animal_type=animal_type))
+
+    def test_values_when_animal_type_is_not_beef_or_dairy_cattle_type_and_manure_handling_is_case_2(self):
+        for animal_type in self.animal_types_not_beef_or_dairy:
+            self.assertEqual(
+                common.FractionOfOrganicNitrogenMineralizedData(
+                    fraction_immobilized=0,
+                    fraction_mineralized=0.1,
+                    fraction_nitrified=0.0,
+                    fraction_denitrified=0,
+                    n2o_n=0,
+                    no_n=0,
+                    n2_n=0,
+                    n_leached=0),
+                common.get_fraction_of_organic_nitrogen_mineralized_data(
+                    state_type=common.ManureStateType.liquid_no_crust,
+                    animal_type=animal_type))
+
+    def test_default_value(self):
+        for animal_type, manure_state in product(self.animal_types_not_beef_or_dairy,
+                                                 self.manure_state_type_for_default_values):
+            self.assertEqual(
+                common.FractionOfOrganicNitrogenMineralizedData(),
+                common.get_fraction_of_organic_nitrogen_mineralized_data(
+                    state_type=manure_state,
+                    animal_type=animal_type))
+
+
 if __name__ == '__main__':
     unittest.main()
