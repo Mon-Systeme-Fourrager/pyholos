@@ -2,9 +2,6 @@ import unittest
 from itertools import product
 
 from holos_service.components.animals import common
-from holos_service.components.animals.common import (Bedding, BeddingMaterialType, AnimalType,
-                                                     get_methane_producing_capacity_of_manure,
-                                                     get_default_methane_producing_capacity_of_manure)
 
 
 class _AnimalGroups:
@@ -537,354 +534,354 @@ class TestBedding(unittest.TestCase):
     def test_get_bedding_material_composition_for_beef_and_straw_returns_expected_results(self):
         self.assertEqual(
             dict(
-                AnimalType=AnimalType.beef.value,
-                BeddingMaterial=BeddingMaterialType.straw.value,
+                AnimalType=common.AnimalType.beef.value,
+                BeddingMaterial=common.BeddingMaterialType.straw.value,
                 TotalNitrogenKilogramsDryMatter=0.0057,
                 TotalCarbonKilogramsDryMatter=0.447,
                 TotalPhosphorusKilogramsDryMatter=0.000635,
                 CarbonToNitrogenRatio=90.5,
                 MoistureContent=9.57
             ),
-            Bedding.get_bedding_material_composition(
-                animal_type=AnimalType.beef,
-                bedding_material_type=BeddingMaterialType.straw))
+            common.Bedding.get_bedding_material_composition(
+                animal_type=common.AnimalType.beef,
+                bedding_material_type=common.BeddingMaterialType.straw))
 
     def test_get_bedding_material_composition_for_beef_and_wood_chip_returns_expected_results(self):
         self.assertEqual(
             dict(
-                AnimalType=AnimalType.beef.value,
-                BeddingMaterial=BeddingMaterialType.wood_chip.value,
+                AnimalType=common.AnimalType.beef.value,
+                BeddingMaterial=common.BeddingMaterialType.wood_chip.value,
                 TotalNitrogenKilogramsDryMatter=0.00185,
                 TotalCarbonKilogramsDryMatter=0.506,
                 TotalPhosphorusKilogramsDryMatter=0.000275,
                 CarbonToNitrogenRatio=329.5,
                 MoistureContent=12.82
             ),
-            Bedding.get_bedding_material_composition(
-                animal_type=AnimalType.beef,
-                bedding_material_type=BeddingMaterialType.wood_chip))
+            common.Bedding.get_bedding_material_composition(
+                animal_type=common.AnimalType.beef,
+                bedding_material_type=common.BeddingMaterialType.wood_chip))
 
     def test_get_bedding_material_composition_for_dairy_and_sand_returns_expected_results(self):
 
         self.assertEqual(
             dict(
-                AnimalType=AnimalType.dairy.value,
-                BeddingMaterial=BeddingMaterialType.sand.value,
+                AnimalType=common.AnimalType.dairy.value,
+                BeddingMaterial=common.BeddingMaterialType.sand.value,
                 TotalNitrogenKilogramsDryMatter=None,
                 TotalCarbonKilogramsDryMatter=None,
                 TotalPhosphorusKilogramsDryMatter=None,
                 CarbonToNitrogenRatio=None,
                 MoistureContent=None
             ),
-            Bedding.get_bedding_material_composition(
-                animal_type=AnimalType.dairy,
-                bedding_material_type=BeddingMaterialType.sand))
+           common.Bedding.get_bedding_material_composition(
+                animal_type=common.AnimalType.dairy,
+                bedding_material_type=common.BeddingMaterialType.sand))
 
     def test_get_bedding_material_composition_for_dairy_and_separated_manure_solid_returns_expected_results(self):
         self.assertEqual(
             dict(
-                AnimalType=AnimalType.dairy.value,
-                BeddingMaterial=BeddingMaterialType.separated_manure_solid.value,
+                AnimalType=common.AnimalType.dairy.value,
+                BeddingMaterial=common.BeddingMaterialType.separated_manure_solid.value,
                 TotalNitrogenKilogramsDryMatter=0.033,
                 TotalCarbonKilogramsDryMatter=0.395,
                 TotalPhosphorusKilogramsDryMatter=0,
                 CarbonToNitrogenRatio=12,
                 MoistureContent=0
             ),
-            Bedding.get_bedding_material_composition(
-                animal_type=AnimalType.dairy,
-                bedding_material_type=BeddingMaterialType.separated_manure_solid))
+           common.Bedding.get_bedding_material_composition(
+                animal_type=common.AnimalType.dairy,
+                bedding_material_type=common.BeddingMaterialType.separated_manure_solid))
 
     def test_get_bedding_material_composition_for_dairy_and_straw_long_returns_expected_results(self):
         self.assertEqual(
             dict(
-                AnimalType=AnimalType.dairy.value,
-                BeddingMaterial=BeddingMaterialType.straw_long.value,
+                AnimalType=common.AnimalType.dairy.value,
+                BeddingMaterial=common.BeddingMaterialType.straw_long.value,
                 TotalNitrogenKilogramsDryMatter=0.0057,
                 TotalCarbonKilogramsDryMatter=0.447,
                 TotalPhosphorusKilogramsDryMatter=0.000635,
                 CarbonToNitrogenRatio=90.5,
                 MoistureContent=9.57
             ),
-            Bedding.get_bedding_material_composition(
-                animal_type=AnimalType.dairy,
-                bedding_material_type=BeddingMaterialType.straw_long))
+           common.Bedding.get_bedding_material_composition(
+                animal_type=common.AnimalType.dairy,
+                bedding_material_type=common.BeddingMaterialType.straw_long))
 
     def test_get_bedding_material_composition_for_dairy_and_straw_chopped_returns_expected_results(self):
         self.assertEqual(
             dict(
-                AnimalType=AnimalType.dairy.value,
-                BeddingMaterial=BeddingMaterialType.straw_chopped.value,
+                AnimalType=common.AnimalType.dairy.value,
+                BeddingMaterial=common.BeddingMaterialType.straw_chopped.value,
                 TotalNitrogenKilogramsDryMatter=0.0057,
                 TotalCarbonKilogramsDryMatter=0.447,
                 TotalPhosphorusKilogramsDryMatter=0.000635,
                 CarbonToNitrogenRatio=90.5,
                 MoistureContent=9.57
             ),
-            Bedding.get_bedding_material_composition(
-                animal_type=AnimalType.dairy,
-                bedding_material_type=BeddingMaterialType.straw_chopped))
+           common.Bedding.get_bedding_material_composition(
+                animal_type=common.AnimalType.dairy,
+                bedding_material_type=common.BeddingMaterialType.straw_chopped))
 
     def test_get_bedding_material_composition_for_dairy_and_shavings_returns_expected_results(self):
         self.assertEqual(
             dict(
-                AnimalType=AnimalType.dairy.value,
-                BeddingMaterial=BeddingMaterialType.shavings.value,
+                AnimalType=common.AnimalType.dairy.value,
+                BeddingMaterial=common.BeddingMaterialType.shavings.value,
                 TotalNitrogenKilogramsDryMatter=0.00185,
                 TotalCarbonKilogramsDryMatter=0.506,
                 TotalPhosphorusKilogramsDryMatter=0.000275,
                 CarbonToNitrogenRatio=329.5,
                 MoistureContent=10.09
             ),
-            Bedding.get_bedding_material_composition(
-                animal_type=AnimalType.dairy,
-                bedding_material_type=BeddingMaterialType.shavings))
+           common.Bedding.get_bedding_material_composition(
+                animal_type=common.AnimalType.dairy,
+                bedding_material_type=common.BeddingMaterialType.shavings))
 
     def test_get_bedding_material_composition_for_dairy_and_sawdust_returns_expected_results(self):
         self.assertEqual(
             dict(
-                AnimalType=AnimalType.dairy.value,
-                BeddingMaterial=BeddingMaterialType.sawdust.value,
+                AnimalType=common.AnimalType.dairy.value,
+                BeddingMaterial=common.BeddingMaterialType.sawdust.value,
                 TotalNitrogenKilogramsDryMatter=0.00185,
                 TotalCarbonKilogramsDryMatter=0.506,
                 TotalPhosphorusKilogramsDryMatter=0.000275,
                 CarbonToNitrogenRatio=329.5,
                 MoistureContent=10.99
             ),
-            Bedding.get_bedding_material_composition(
-                animal_type=AnimalType.dairy,
-                bedding_material_type=BeddingMaterialType.sawdust))
+           common.Bedding.get_bedding_material_composition(
+                animal_type=common.AnimalType.dairy,
+                bedding_material_type=common.BeddingMaterialType.sawdust))
 
     def test_get_bedding_material_composition_for_swine_and_straw_long_returns_expected_results(self):
         self.assertEqual(
             dict(
-                AnimalType=AnimalType.swine.value,
-                BeddingMaterial=BeddingMaterialType.straw_long.value,
+                AnimalType=common.AnimalType.swine.value,
+                BeddingMaterial=common.BeddingMaterialType.straw_long.value,
                 TotalNitrogenKilogramsDryMatter=0.0057,
                 TotalCarbonKilogramsDryMatter=0.447,
                 TotalPhosphorusKilogramsDryMatter=0.000635,
                 CarbonToNitrogenRatio=90.5,
                 MoistureContent=9.57
             ),
-            Bedding.get_bedding_material_composition(
-                animal_type=AnimalType.swine,
-                bedding_material_type=BeddingMaterialType.straw_long))
+           common.Bedding.get_bedding_material_composition(
+                animal_type=common.AnimalType.swine,
+                bedding_material_type=common.BeddingMaterialType.straw_long))
 
     def test_get_bedding_material_composition_for_swine_and_straw_chopped_returns_expected_results(self):
         self.assertEqual(
             dict(
-                AnimalType=AnimalType.swine.value,
-                BeddingMaterial=BeddingMaterialType.straw_chopped.value,
+                AnimalType=common.AnimalType.swine.value,
+                BeddingMaterial=common.BeddingMaterialType.straw_chopped.value,
                 TotalNitrogenKilogramsDryMatter=0.0057,
                 TotalCarbonKilogramsDryMatter=0.447,
                 TotalPhosphorusKilogramsDryMatter=0.000635,
                 CarbonToNitrogenRatio=90.5,
                 MoistureContent=9.57
             ),
-            Bedding.get_bedding_material_composition(
-                animal_type=AnimalType.swine,
-                bedding_material_type=BeddingMaterialType.straw_chopped))
+           common.Bedding.get_bedding_material_composition(
+                animal_type=common.AnimalType.swine,
+                bedding_material_type=common.BeddingMaterialType.straw_chopped))
 
     def test_get_bedding_material_composition_for_sheep_and_straw_returns_expected_results(self):
         self.assertEqual(
             dict(
-                AnimalType=AnimalType.sheep.value,
-                BeddingMaterial=BeddingMaterialType.straw.value,
+                AnimalType=common.AnimalType.sheep.value,
+                BeddingMaterial=common.BeddingMaterialType.straw.value,
                 TotalNitrogenKilogramsDryMatter=0.0057,
                 TotalCarbonKilogramsDryMatter=0.447,
                 TotalPhosphorusKilogramsDryMatter=0.000635,
                 CarbonToNitrogenRatio=90.5,
                 MoistureContent=9.57
             ),
-            Bedding.get_bedding_material_composition(
-                animal_type=AnimalType.sheep,
-                bedding_material_type=BeddingMaterialType.straw))
+           common.Bedding.get_bedding_material_composition(
+                animal_type=common.AnimalType.sheep,
+                bedding_material_type=common.BeddingMaterialType.straw))
 
     def test_get_bedding_material_composition_for_sheep_and_shavings_returns_expected_results(self):
         self.assertEqual(
             dict(
-                AnimalType=AnimalType.sheep.value,
-                BeddingMaterial=BeddingMaterialType.shavings.value,
+                AnimalType=common.AnimalType.sheep.value,
+                BeddingMaterial=common.BeddingMaterialType.shavings.value,
                 TotalNitrogenKilogramsDryMatter=0.00185,
                 TotalCarbonKilogramsDryMatter=0.506,
                 TotalPhosphorusKilogramsDryMatter=0.000275,
                 CarbonToNitrogenRatio=329.5,
                 MoistureContent=10.09
             ),
-            Bedding.get_bedding_material_composition(
-                animal_type=AnimalType.sheep,
-                bedding_material_type=BeddingMaterialType.shavings))
+           common.Bedding.get_bedding_material_composition(
+                animal_type=common.AnimalType.sheep,
+                bedding_material_type=common.BeddingMaterialType.shavings))
 
     def test_get_bedding_material_composition_for_poultry_and_straw_returns_expected_results(self):
         self.assertEqual(
             dict(
-                AnimalType=AnimalType.poultry.value,
-                BeddingMaterial=BeddingMaterialType.straw.value,
+                AnimalType=common.AnimalType.poultry.value,
+                BeddingMaterial=common.BeddingMaterialType.straw.value,
                 TotalNitrogenKilogramsDryMatter=0.0057,
                 TotalCarbonKilogramsDryMatter=0.447,
                 TotalPhosphorusKilogramsDryMatter=0.000635,
                 CarbonToNitrogenRatio=90.5,
                 MoistureContent=9.57
             ),
-            Bedding.get_bedding_material_composition(
-                animal_type=AnimalType.poultry,
-                bedding_material_type=BeddingMaterialType.straw))
+           common.Bedding.get_bedding_material_composition(
+                animal_type=common.AnimalType.poultry,
+                bedding_material_type=common.BeddingMaterialType.straw))
 
     def test_get_bedding_material_composition_for_poultry_and_shavings_returns_expected_results(self):
         self.assertEqual(
             dict(
-                AnimalType=AnimalType.poultry.value,
-                BeddingMaterial=BeddingMaterialType.shavings.value,
+                AnimalType=common.AnimalType.poultry.value,
+                BeddingMaterial=common.BeddingMaterialType.shavings.value,
                 TotalNitrogenKilogramsDryMatter=0.00185,
                 TotalCarbonKilogramsDryMatter=0.506,
                 TotalPhosphorusKilogramsDryMatter=0.000275,
                 CarbonToNitrogenRatio=329.5,
                 MoistureContent=10.09
             ),
-            Bedding.get_bedding_material_composition(
-                animal_type=AnimalType.poultry,
-                bedding_material_type=BeddingMaterialType.shavings))
+           common.Bedding.get_bedding_material_composition(
+                animal_type=common.AnimalType.poultry,
+                bedding_material_type=common.BeddingMaterialType.shavings))
 
     def test_get_bedding_material_composition_for_poultry_and_sawdust_returns_expected_results(self):
         self.assertEqual(
             dict(
-                AnimalType=AnimalType.poultry.value,
-                BeddingMaterial=BeddingMaterialType.sawdust.value,
+                AnimalType=common.AnimalType.poultry.value,
+                BeddingMaterial=common.BeddingMaterialType.sawdust.value,
                 TotalNitrogenKilogramsDryMatter=0.00185,
                 TotalCarbonKilogramsDryMatter=0.506,
                 TotalPhosphorusKilogramsDryMatter=0.000275,
                 CarbonToNitrogenRatio=329.5,
                 MoistureContent=10.99
             ),
-            Bedding.get_bedding_material_composition(
-                animal_type=AnimalType.poultry,
-                bedding_material_type=BeddingMaterialType.sawdust))
+           common.Bedding.get_bedding_material_composition(
+                animal_type=common.AnimalType.poultry,
+                bedding_material_type=common.BeddingMaterialType.sawdust))
 
     def test_get_bedding_material_composition_for_llamas_and_straw_returns_expected_results(self):
         self.assertEqual(
             dict(
-                AnimalType=AnimalType.llamas.value,
-                BeddingMaterial=BeddingMaterialType.straw.value,
+                AnimalType=common.AnimalType.llamas.value,
+                BeddingMaterial=common.BeddingMaterialType.straw.value,
                 MoistureContent=9.57,
                 TotalNitrogenKilogramsDryMatter=0.0057,
                 TotalCarbonKilogramsDryMatter=0.447,
                 TotalPhosphorusKilogramsDryMatter=0.000635,
                 CarbonToNitrogenRatio=90.5
             ),
-            Bedding.get_bedding_material_composition(
-                animal_type=AnimalType.llamas,
-                bedding_material_type=BeddingMaterialType.straw))
+           common.Bedding.get_bedding_material_composition(
+                animal_type=common.AnimalType.llamas,
+                bedding_material_type=common.BeddingMaterialType.straw))
 
     def test_get_bedding_material_composition_for_alpacas_and_straw_returns_expected_results(self):
         self.assertEqual(
             dict(
-                AnimalType=AnimalType.alpacas.value,
-                BeddingMaterial=BeddingMaterialType.straw.value,
+                AnimalType=common.AnimalType.alpacas.value,
+                BeddingMaterial=common.BeddingMaterialType.straw.value,
                 MoistureContent=9.57,
                 TotalNitrogenKilogramsDryMatter=0.0057,
                 TotalCarbonKilogramsDryMatter=0.447,
                 TotalPhosphorusKilogramsDryMatter=0.000635,
                 CarbonToNitrogenRatio=90.5
             ),
-            Bedding.get_bedding_material_composition(
-                animal_type=AnimalType.alpacas,
-                bedding_material_type=BeddingMaterialType.straw))
+           common.Bedding.get_bedding_material_composition(
+                animal_type=common.AnimalType.alpacas,
+                bedding_material_type=common.BeddingMaterialType.straw))
 
     def test_get_bedding_material_composition_for_deer_and_straw_returns_expected_results(self):
         self.assertEqual(
             dict(
-                AnimalType=AnimalType.deer.value,
-                BeddingMaterial=BeddingMaterialType.straw.value,
+                AnimalType=common.AnimalType.deer.value,
+                BeddingMaterial=common.BeddingMaterialType.straw.value,
                 MoistureContent=9.57,
                 TotalNitrogenKilogramsDryMatter=0.0057,
                 TotalCarbonKilogramsDryMatter=0.447,
                 TotalPhosphorusKilogramsDryMatter=0.000635,
                 CarbonToNitrogenRatio=90.5
             ),
-            Bedding.get_bedding_material_composition(
-                animal_type=AnimalType.deer,
-                bedding_material_type=BeddingMaterialType.straw))
+           common.Bedding.get_bedding_material_composition(
+                animal_type=common.AnimalType.deer,
+                bedding_material_type=common.BeddingMaterialType.straw))
 
     def test_get_bedding_material_composition_for_elk_and_straw_returns_expected_results(self):
         self.assertEqual(
             dict(
-                AnimalType=AnimalType.elk.value,
-                BeddingMaterial=BeddingMaterialType.straw.value,
+                AnimalType=common.AnimalType.elk.value,
+                BeddingMaterial=common.BeddingMaterialType.straw.value,
                 MoistureContent=9.57,
                 TotalNitrogenKilogramsDryMatter=0.0057,
                 TotalCarbonKilogramsDryMatter=0.447,
                 TotalPhosphorusKilogramsDryMatter=0.000635,
                 CarbonToNitrogenRatio=90.5
             ),
-            Bedding.get_bedding_material_composition(
-                animal_type=AnimalType.elk,
-                bedding_material_type=BeddingMaterialType.straw))
+           common.Bedding.get_bedding_material_composition(
+                animal_type=common.AnimalType.elk,
+                bedding_material_type=common.BeddingMaterialType.straw))
 
     def test_get_bedding_material_composition_for_goats_and_straw_returns_expected_results(self):
         self.assertEqual(
             dict(
-                AnimalType=AnimalType.goats.value,
-                BeddingMaterial=BeddingMaterialType.straw.value,
+                AnimalType=common.AnimalType.goats.value,
+                BeddingMaterial=common.BeddingMaterialType.straw.value,
                 MoistureContent=9.57,
                 TotalNitrogenKilogramsDryMatter=0.0057,
                 TotalCarbonKilogramsDryMatter=0.447,
                 TotalPhosphorusKilogramsDryMatter=0.000635,
                 CarbonToNitrogenRatio=90.5
             ),
-            Bedding.get_bedding_material_composition(
-                animal_type=AnimalType.goats,
-                bedding_material_type=BeddingMaterialType.straw))
+           common.Bedding.get_bedding_material_composition(
+                animal_type=common.AnimalType.goats,
+                bedding_material_type=common.BeddingMaterialType.straw))
 
     def test_get_bedding_material_composition_for_horses_and_straw_returns_expected_results(self):
         self.assertEqual(
             dict(
-                AnimalType=AnimalType.horses.value,
-                BeddingMaterial=BeddingMaterialType.straw.value,
+                AnimalType=common.AnimalType.horses.value,
+                BeddingMaterial=common.BeddingMaterialType.straw.value,
                 MoistureContent=9.57,
                 TotalNitrogenKilogramsDryMatter=0.0057,
                 TotalCarbonKilogramsDryMatter=0.447,
                 TotalPhosphorusKilogramsDryMatter=0.000635,
                 CarbonToNitrogenRatio=90.5
             ),
-            Bedding.get_bedding_material_composition(
-                animal_type=AnimalType.horses,
-                bedding_material_type=BeddingMaterialType.straw))
+           common.Bedding.get_bedding_material_composition(
+                animal_type=common.AnimalType.horses,
+                bedding_material_type=common.BeddingMaterialType.straw))
 
     def test_get_bedding_material_composition_for_mules_and_straw_returns_expected_results(self):
         self.assertEqual(
             dict(
-                AnimalType=AnimalType.mules.value,
-                BeddingMaterial=BeddingMaterialType.straw.value,
+                AnimalType=common.AnimalType.mules.value,
+                BeddingMaterial=common.BeddingMaterialType.straw.value,
                 MoistureContent=9.57,
                 TotalNitrogenKilogramsDryMatter=0.0057,
                 TotalCarbonKilogramsDryMatter=0.447,
                 TotalPhosphorusKilogramsDryMatter=0.000635,
                 CarbonToNitrogenRatio=90.5
             ),
-            Bedding.get_bedding_material_composition(
-                animal_type=AnimalType.mules,
-                bedding_material_type=BeddingMaterialType.straw))
+           common.Bedding.get_bedding_material_composition(
+                animal_type=common.AnimalType.mules,
+                bedding_material_type=common.BeddingMaterialType.straw))
 
     def test_get_bedding_material_composition_for_bison_and_straw_returns_expected_results(self):
         self.assertEqual(
             dict(
-                AnimalType=AnimalType.bison.value,
-                BeddingMaterial=BeddingMaterialType.straw.value,
+                AnimalType=common.AnimalType.bison.value,
+                BeddingMaterial=common.BeddingMaterialType.straw.value,
                 MoistureContent=9.57,
                 TotalNitrogenKilogramsDryMatter=0.0057,
                 TotalCarbonKilogramsDryMatter=0.447,
                 TotalPhosphorusKilogramsDryMatter=0.000635,
                 CarbonToNitrogenRatio=90.5
             ),
-            Bedding.get_bedding_material_composition(
-                animal_type=AnimalType.bison,
-                bedding_material_type=BeddingMaterialType.straw))
+           common.Bedding.get_bedding_material_composition(
+                animal_type=common.AnimalType.bison,
+                bedding_material_type=common.BeddingMaterialType.straw))
 
 
 class TestGetMethaneProducingCapacityOfManure(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.animal_types_all = list(AnimalType)
+        cls.animal_types_all = list(common.AnimalType)
 
     def setUp(self):
         self.animal_types = _AnimalGroups
@@ -892,12 +889,12 @@ class TestGetMethaneProducingCapacityOfManure(unittest.TestCase):
 
     def run_test(
             self,
-            animal_type: AnimalType,
+            animal_type: common.AnimalType,
             expected_value: float
     ):
         self.assertEqual(
             expected_value,
-            get_methane_producing_capacity_of_manure(animal_type=animal_type))
+            common.get_methane_producing_capacity_of_manure(animal_type=animal_type))
 
         self.animal_types_all.pop(self.animal_types_all.index(animal_type))
         pass
@@ -964,7 +961,7 @@ class TestGetDefaultMethaneProducingCapacityOfManure(unittest.TestCase):
         for animal_type in common.AnimalType:
             self.assertEqual(
                 0.19,
-                get_default_methane_producing_capacity_of_manure(is_pasture=True, animal_type=animal_type))
+                common.get_default_methane_producing_capacity_of_manure(is_pasture=True, animal_type=animal_type))
 
 
 if __name__ == '__main__':
