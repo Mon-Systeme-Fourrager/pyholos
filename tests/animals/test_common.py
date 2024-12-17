@@ -7,179 +7,197 @@ from holos_service.components.animals.common import (Bedding, BeddingMaterialTyp
                                                      get_default_methane_producing_capacity_of_manure)
 
 
+class _AnimalGroups:
+    young_type: list[common.AnimalType] = [
+        common.AnimalType.beef_calf,
+        common.AnimalType.dairy_calves,
+        common.AnimalType.swine_piglets,
+        common.AnimalType.weaned_lamb,
+        common.AnimalType.lambs]
+
+    beef_cattle_type: list[common.AnimalType] = [
+        common.AnimalType.beef,
+        common.AnimalType.beef_backgrounder,
+        common.AnimalType.beef_bulls,
+        common.AnimalType.beef_backgrounder_heifer,
+        common.AnimalType.beef_finishing_steer,
+        common.AnimalType.beef_finishing_heifer,
+        common.AnimalType.beef_replacement_heifers,
+        common.AnimalType.beef_finisher,
+        common.AnimalType.beef_backgrounder_steer,
+        common.AnimalType.beef_calf,
+        common.AnimalType.stockers,
+        common.AnimalType.stocker_heifers,
+        common.AnimalType.stocker_steers,
+        common.AnimalType.beef_cow_lactating,
+        common.AnimalType.beef_cow,
+        common.AnimalType.beef_cow_dry]
+
+    dairy_cattle_type: list[common.AnimalType] = [
+        common.AnimalType.dairy,
+        common.AnimalType.dairy_lactating_cow,
+        common.AnimalType.dairy_bulls,
+        common.AnimalType.dairy_calves,
+        common.AnimalType.dairy_dry_cow,
+        common.AnimalType.dairy_heifers]
+
+    swine_type: list[common.AnimalType] = [
+        common.AnimalType.swine,
+        common.AnimalType.swine_finisher,
+        common.AnimalType.swine_starter,
+        common.AnimalType.swine_lactating_sow,
+        common.AnimalType.swine_dry_sow,
+        common.AnimalType.swine_grower,
+        common.AnimalType.swine_sows,
+        common.AnimalType.swine_boar,
+        common.AnimalType.swine_gilts,
+        common.AnimalType.swine_piglets]
+
+    sheep_type: list[common.AnimalType] = [
+        common.AnimalType.sheep,
+        common.AnimalType.lambs_and_ewes,
+        common.AnimalType.ram,
+        common.AnimalType.weaned_lamb,
+        common.AnimalType.lambs,
+        common.AnimalType.ewes,
+        common.AnimalType.sheep_feedlot]
+
+    poultry_type: list[common.AnimalType] = [
+        common.AnimalType.poultry,
+        common.AnimalType.layers_wet_poultry,
+        common.AnimalType.layers_dry_poultry,
+        common.AnimalType.layers,
+        common.AnimalType.broilers,
+        common.AnimalType.turkeys,
+        common.AnimalType.ducks,
+        common.AnimalType.geese,
+        common.AnimalType.chicken_pullets,
+        common.AnimalType.chicken_cockerels,
+        common.AnimalType.chicken_roosters,
+        common.AnimalType.chicken_hens,
+        common.AnimalType.young_tom,
+        common.AnimalType.tom,
+        common.AnimalType.young_turkey_hen,
+        common.AnimalType.turkey_hen,
+        common.AnimalType.chicken_eggs,
+        common.AnimalType.turkey_eggs,
+        common.AnimalType.chicks,
+        common.AnimalType.poults]
+
+    other_animal_type: list[common.AnimalType] = [
+        common.AnimalType.other_livestock,
+        common.AnimalType.goats,
+        common.AnimalType.alpacas,
+        common.AnimalType.deer,
+        common.AnimalType.elk,
+        common.AnimalType.llamas,
+        common.AnimalType.horses,
+        common.AnimalType.mules,
+        common.AnimalType.bison]
+
+    chicken_type: list[common.AnimalType] = [
+        common.AnimalType.chicken,
+        common.AnimalType.chicken_hens,
+        common.AnimalType.layers,
+        common.AnimalType.broilers,
+        common.AnimalType.chicken_roosters,
+        common.AnimalType.chicken_pullets,
+        common.AnimalType.chicken_cockerels,
+        common.AnimalType.chicken_eggs,
+        common.AnimalType.chicks]
+
+    turkey_type: list[common.AnimalType] = [
+        common.AnimalType.turkey_hen,
+        common.AnimalType.young_turkey_hen,
+        common.AnimalType.tom,
+        common.AnimalType.turkey_eggs,
+        common.AnimalType.young_tom,
+        common.AnimalType.poults]
+
+    layers_type: list[common.AnimalType] = [
+        common.AnimalType.layers,
+        common.AnimalType.layers_dry_poultry,
+        common.AnimalType.layers_wet_poultry]
+
+    lactating_type: list[common.AnimalType] = [
+        common.AnimalType.beef_cow_lactating,
+        common.AnimalType.beef_cow,
+        common.AnimalType.dairy_lactating_cow,
+        common.AnimalType.ewes]
+
+    eggs_type: list[common.AnimalType] = [
+        common.AnimalType.chicken_eggs,
+        common.AnimalType.turkey_eggs]
+
+    newly_hatched_type: list[common.AnimalType] = [
+        common.AnimalType.poults,
+        common.AnimalType.chicks]
+
+    pregnant_type: list[common.AnimalType] = [
+        common.AnimalType.beef_cow,
+        common.AnimalType.beef_cow_lactating,
+        common.AnimalType.dairy_lactating_cow,
+        common.AnimalType.dairy_dry_cow,
+        common.AnimalType.ewes]
+
+
 class TestAnimalTypeExtensions(unittest.TestCase):
+    def setUp(self):
+        self.animal_groups = _AnimalGroups
     def test_is_young_type(self):
-        for animal_type in [
-            common.AnimalType.beef_calf,
-            common.AnimalType.dairy_calves,
-            common.AnimalType.swine_piglets,
-            common.AnimalType.weaned_lamb,
-            common.AnimalType.lambs
-        ]:
+        for animal_type in self.animal_groups.young_type:
             self.assertTrue(animal_type.is_young_type)
 
     def test_is_beef_cattle_type(self):
-        for animal_type in [
-            common.AnimalType.beef,
-            common.AnimalType.beef_backgrounder,
-            common.AnimalType.beef_bulls,
-            common.AnimalType.beef_backgrounder_heifer,
-            common.AnimalType.beef_finishing_steer,
-            common.AnimalType.beef_finishing_heifer,
-            common.AnimalType.beef_replacement_heifers,
-            common.AnimalType.beef_finisher,
-            common.AnimalType.beef_backgrounder_steer,
-            common.AnimalType.beef_calf,
-            common.AnimalType.stockers,
-            common.AnimalType.stocker_heifers,
-            common.AnimalType.stocker_steers,
-            common.AnimalType.beef_cow_lactating,
-            common.AnimalType.beef_cow,
-            common.AnimalType.beef_cow_dry
-        ]:
+        for animal_type in self.animal_groups.beef_cattle_type:
             self.assertTrue(animal_type.is_beef_cattle_type())
 
     def test_is_dairy_cattle_type(self):
-        for animal_type in [
-            common.AnimalType.dairy,
-            common.AnimalType.dairy_lactating_cow,
-            common.AnimalType.dairy_bulls,
-            common.AnimalType.dairy_calves,
-            common.AnimalType.dairy_dry_cow,
-            common.AnimalType.dairy_heifers
-        ]:
+        for animal_type in self.animal_groups.dairy_cattle_type:
             self.assertTrue(animal_type.is_dairy_cattle_type())
 
     def test_is_swine_type(self):
-        for animal_type in [
-            common.AnimalType.swine,
-            common.AnimalType.swine_finisher,
-            common.AnimalType.swine_starter,
-            common.AnimalType.swine_lactating_sow,
-            common.AnimalType.swine_dry_sow,
-            common.AnimalType.swine_grower,
-            common.AnimalType.swine_sows,
-            common.AnimalType.swine_boar,
-            common.AnimalType.swine_gilts,
-            common.AnimalType.swine_piglets
-        ]:
+        for animal_type in self.animal_groups.swine_type:
             self.assertTrue(animal_type.is_swine_type())
 
     def test_is_sheep_type(self):
-        for animal_type in [
-            common.AnimalType.sheep,
-            common.AnimalType.lambs_and_ewes,
-            common.AnimalType.ram,
-            common.AnimalType.weaned_lamb,
-            common.AnimalType.lambs,
-            common.AnimalType.ewes,
-            common.AnimalType.sheep_feedlot
-        ]:
+        for animal_type in self.animal_groups.sheep_type:
             self.assertTrue(animal_type.is_sheep_type())
 
     def test_is_poultry_type(self):
-        for animal_type in [
-            common.AnimalType.poultry,
-            common.AnimalType.layers_wet_poultry,
-            common.AnimalType.layers_dry_poultry,
-            common.AnimalType.layers,
-            common.AnimalType.broilers,
-            common.AnimalType.turkeys,
-            common.AnimalType.ducks,
-            common.AnimalType.geese,
-            common.AnimalType.chicken_pullets,
-            common.AnimalType.chicken_cockerels,
-            common.AnimalType.chicken_roosters,
-            common.AnimalType.chicken_hens,
-            common.AnimalType.young_tom,
-            common.AnimalType.tom,
-            common.AnimalType.young_turkey_hen,
-            common.AnimalType.turkey_hen,
-            common.AnimalType.chicken_eggs,
-            common.AnimalType.turkey_eggs,
-            common.AnimalType.chicks,
-            common.AnimalType.poults
-        ]:
+        for animal_type in self.animal_groups.poultry_type:
             self.assertTrue(animal_type.is_poultry_type())
 
     def test_is_other_animal_type(self):
-        for animal_type in [
-            common.AnimalType.other_livestock,
-            common.AnimalType.goats,
-            common.AnimalType.alpacas,
-            common.AnimalType.deer,
-            common.AnimalType.elk,
-            common.AnimalType.llamas,
-            common.AnimalType.horses,
-            common.AnimalType.mules,
-            common.AnimalType.bison
-        ]:
+        for animal_type in self.animal_groups.other_animal_type:
             self.assertTrue(animal_type.is_other_animal_type())
 
     def test_is_chicken_type(self):
-        for animal_type in [
-            common.AnimalType.chicken,
-            common.AnimalType.chicken_hens,
-            common.AnimalType.layers,
-            common.AnimalType.broilers,
-            common.AnimalType.chicken_roosters,
-            common.AnimalType.chicken_pullets,
-            common.AnimalType.chicken_cockerels,
-            common.AnimalType.chicken_eggs,
-            common.AnimalType.chicks
-        ]:
+        for animal_type in self.animal_groups.chicken_type:
             self.assertTrue(animal_type.is_chicken_type())
 
     def test_is_turkey_type(self):
-        for animal_type in [
-            common.AnimalType.turkey_hen,
-            common.AnimalType.young_turkey_hen,
-            common.AnimalType.tom,
-            common.AnimalType.turkey_eggs,
-            common.AnimalType.young_tom,
-            common.AnimalType.poults
-        ]:
+        for animal_type in self.animal_groups.turkey_type:
             self.assertTrue(animal_type.is_turkey_type())
 
     def test_is_layers_type(self):
-        for animal_type in [
-            common.AnimalType.layers,
-            common.AnimalType.layers_dry_poultry,
-            common.AnimalType.layers_wet_poultry
-        ]:
+        for animal_type in self.animal_groups.layers_type:
             self.assertTrue(animal_type.is_layers_type())
 
     def test_is_lactating_type(self):
-        for animal_type in [
-            common.AnimalType.beef_cow_lactating,
-            common.AnimalType.beef_cow,
-            common.AnimalType.dairy_lactating_cow,
-            common.AnimalType.ewes
-        ]:
+        for animal_type in self.animal_groups.lactating_type:
             self.assertTrue(animal_type.is_lactating_type())
 
     def test_is_eggs(self):
-        for animal_type in [
-            common.AnimalType.chicken_eggs,
-            common.AnimalType.turkey_eggs
-        ]:
+        for animal_type in self.animal_groups.eggs_type:
             self.assertTrue(animal_type.is_eggs())
 
     def test_is_newly_hatched_eggs(self):
-        for animal_type in [
-            common.AnimalType.poults,
-            common.AnimalType.chicks
-        ]:
+        for animal_type in self.animal_groups.newly_hatched_type:
             self.assertTrue(animal_type.is_newly_hatched_eggs())
 
     def test_is_pregnant_type(self):
-        for animal_type in [
-            common.AnimalType.beef_cow,
-            common.AnimalType.beef_cow_lactating,
-            common.AnimalType.dairy_lactating_cow,
-            common.AnimalType.dairy_dry_cow,
-            common.AnimalType.ewes
-        ]:
+        for animal_type in self.animal_groups.pregnant_type:
             self.assertTrue(animal_type.is_pregnant_type())
 
     def test_get_category_returns_expected_result_when_is_other_animal_type(self):
@@ -284,6 +302,8 @@ class TestHousingTypeExtensions(unittest.TestCase):
 
 
 class TestBedding(unittest.TestCase):
+    def setUp(self):
+        self.animal_groups = _AnimalGroups
 
     def test_get_default_bedding_rate_for_pasture_rate_is_always_zero(self):
         for bedding_material_type, animal_type in product(common.BeddingMaterialType, common.AnimalType):
@@ -300,11 +320,7 @@ class TestBedding(unittest.TestCase):
         for housing_type, bedding_material_type, animal_type in product(
                 common.HousingType,
                 common.BeddingMaterialType,
-                [common.AnimalType.beef_calf,
-                 common.AnimalType.dairy_calves,
-                 common.AnimalType.swine_piglets,
-                 common.AnimalType.weaned_lamb,
-                 common.AnimalType.lambs]):
+                self.animal_groups.young_type):
             bedding = common.Bedding(
                 housing_type=housing_type,
                 bedding_material_type=bedding_material_type,
@@ -315,24 +331,7 @@ class TestBedding(unittest.TestCase):
                 bedding.user_defined_bedding_rate.value)
 
     def test_get_default_bedding_rate_for_beef_cattle_returns_expected_result(self):
-        for animal_type in (
-                common.AnimalType.beef,
-                common.AnimalType.beef_backgrounder,
-                common.AnimalType.beef_bulls,
-                common.AnimalType.beef_backgrounder_heifer,
-                common.AnimalType.beef_finishing_steer,
-                common.AnimalType.beef_finishing_heifer,
-                common.AnimalType.beef_replacement_heifers,
-                common.AnimalType.beef_finisher,
-                common.AnimalType.beef_backgrounder_steer,
-                # common.AnimalType.beef_calf,
-                common.AnimalType.stockers,
-                common.AnimalType.stocker_heifers,
-                common.AnimalType.stocker_steers,
-                common.AnimalType.beef_cow_lactating,
-                common.AnimalType.beef_cow,
-                common.AnimalType.beef_cow_dry):
-
+        for animal_type in [v for v in self.animal_groups.beef_cattle_type if not v.is_young_type()]:
             for housing_type in (
                     common.HousingType.confined,
                     common.HousingType.confined_no_barn):
@@ -367,13 +366,7 @@ class TestBedding(unittest.TestCase):
                         animal_type=animal_type).user_defined_bedding_rate.value)
 
     def test_get_default_bedding_rate_for_dairy_cattle_returns_expected_result(self):
-        for animal_type in (
-                common.AnimalType.dairy,
-                common.AnimalType.dairy_lactating_cow,
-                common.AnimalType.dairy_bulls,
-                # common.AnimalType.dairy_calves,
-                common.AnimalType.dairy_dry_cow,
-                common.AnimalType.dairy_heifers):
+        for animal_type in [v for v in self.animal_groups.dairy_cattle_type if not v.is_young_type()]:
 
             for housing_type in (
                     common.HousingType.tie_stall,
@@ -430,15 +423,7 @@ class TestBedding(unittest.TestCase):
 
     def test_get_default_bedding_rate_for_sheep_returns_expected_result(self):
         housing_types = [v for v in common.HousingType if not v.is_pasture()]
-        for animal_type in (
-                common.AnimalType.sheep,
-                common.AnimalType.lambs_and_ewes,
-                common.AnimalType.ram,
-                # common.AnimalType.weaned_lamb,
-                # common.AnimalType.lambs,
-                common.AnimalType.ewes,
-                common.AnimalType.sheep_feedlot):
-
+        for animal_type in [v for v in self.animal_groups.sheep_type if not v.is_young_type()]:
             for bedding_material_type, housing_type in product(
                     common.BeddingMaterialType,
                     housing_types):
@@ -453,18 +438,7 @@ class TestBedding(unittest.TestCase):
         housing_types = [v for v in common.HousingType if not v.is_pasture()]
         bedding_material_types = [v for v in common.BeddingMaterialType
                                   if not v == common.BeddingMaterialType.straw_long]
-        animal_types = [v for v in (
-            common.AnimalType.swine,
-            common.AnimalType.swine_finisher,
-            common.AnimalType.swine_starter,
-            common.AnimalType.swine_lactating_sow,
-            common.AnimalType.swine_dry_sow,
-            common.AnimalType.swine_grower,
-            common.AnimalType.swine_sows,
-            common.AnimalType.swine_boar,
-            common.AnimalType.swine_gilts,
-            common.AnimalType.swine_piglets)
-                        if not common.AnimalType(v).is_young_type()]
+        animal_types = [v for v in self.animal_groups.swine_type if not v.is_young_type()]
 
         for housing_type, animal_type in product(
                 housing_types,
@@ -488,28 +462,7 @@ class TestBedding(unittest.TestCase):
     def test_get_default_bedding_rate_for_poultry_returns_expected_result(self):
         housing_types = [v for v in common.HousingType if not v.is_pasture()]
         bedding_material_types = list(common.BeddingMaterialType)
-        animal_types = [v for v in (
-            common.AnimalType.poultry,
-            common.AnimalType.layers_wet_poultry,
-            common.AnimalType.layers_dry_poultry,
-            common.AnimalType.layers,
-            common.AnimalType.broilers,
-            common.AnimalType.turkeys,
-            common.AnimalType.ducks,
-            common.AnimalType.geese,
-            common.AnimalType.chicken_pullets,
-            common.AnimalType.chicken_cockerels,
-            common.AnimalType.chicken_roosters,
-            common.AnimalType.chicken_hens,
-            common.AnimalType.young_tom,
-            common.AnimalType.tom,
-            common.AnimalType.young_turkey_hen,
-            common.AnimalType.turkey_hen,
-            common.AnimalType.chicken_eggs,
-            common.AnimalType.turkey_eggs,
-            common.AnimalType.chicks,
-            common.AnimalType.poults)
-                        if not common.AnimalType(v).is_young_type()]
+        animal_types = [v for v in self.animal_groups.poultry_type if not v.is_young_type()]
 
         animal_types_to_exclude = []
         for housing_type in housing_types:
@@ -548,17 +501,6 @@ class TestBedding(unittest.TestCase):
                     animal_type=animal_type).user_defined_bedding_rate.value)
 
     def test_get_default_bedding_rate_for_other_animal_returns_expected_result(self):
-        animal_types = [
-            common.AnimalType.other_livestock,
-            common.AnimalType.goats,
-            common.AnimalType.alpacas,
-            common.AnimalType.deer,
-            common.AnimalType.elk,
-            common.AnimalType.llamas,
-            common.AnimalType.horses,
-            common.AnimalType.mules,
-            common.AnimalType.bison]
-
         for housing_type, bedding_material_type in product(
                 [v for v in common.HousingType if not v.is_pasture()],
                 common.BeddingMaterialType):
@@ -581,7 +523,7 @@ class TestBedding(unittest.TestCase):
 
                 animal_types_to_exclude.append(animal_type)
 
-            for animal_type in animal_types:
+            for animal_type in self.animal_groups.other_animal_type:
                 if all([
                     animal_type not in animal_types_to_exclude,
                     not animal_type.is_young_type()]):
@@ -942,7 +884,11 @@ class TestBedding(unittest.TestCase):
 class TestGetMethaneProducingCapacityOfManure(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.animal_types = list(AnimalType)
+        cls.animal_types_all = list(AnimalType)
+
+    def setUp(self):
+        self.animal_types = _AnimalGroups
+
 
     def run_test(
             self,
@@ -953,66 +899,23 @@ class TestGetMethaneProducingCapacityOfManure(unittest.TestCase):
             expected_value,
             get_methane_producing_capacity_of_manure(animal_type=animal_type))
 
-        self.animal_types.pop(self.animal_types.index(animal_type))
+        self.animal_types_all.pop(self.animal_types_all.index(animal_type))
         pass
 
     def test_get_methane_producing_capacity_of_manure_returns_expected_values_when_is_beef_cattle_type(self):
-        for animal_type in [
-            common.AnimalType.beef,
-            common.AnimalType.beef_backgrounder,
-            common.AnimalType.beef_bulls,
-            common.AnimalType.beef_backgrounder_heifer,
-            common.AnimalType.beef_finishing_steer,
-            common.AnimalType.beef_finishing_heifer,
-            common.AnimalType.beef_replacement_heifers,
-            common.AnimalType.beef_finisher,
-            common.AnimalType.beef_backgrounder_steer,
-            common.AnimalType.beef_calf,
-            common.AnimalType.stockers,
-            common.AnimalType.stocker_heifers,
-            common.AnimalType.stocker_steers,
-            common.AnimalType.beef_cow_lactating,
-            common.AnimalType.beef_cow,
-            common.AnimalType.beef_cow_dry
-        ]:
+        for animal_type in self.animal_types.beef_cattle_type:
             self.run_test(animal_type=animal_type, expected_value=0.19)
 
     def test_get_methane_producing_capacity_of_manure_returns_expected_values_when_is_dairy_cattle_type(self):
-        for animal_type in [
-            common.AnimalType.dairy,
-            common.AnimalType.dairy_lactating_cow,
-            common.AnimalType.dairy_bulls,
-            common.AnimalType.dairy_calves,
-            common.AnimalType.dairy_dry_cow,
-            common.AnimalType.dairy_heifers
-        ]:
+        for animal_type in self.animal_types.dairy_cattle_type:
             self.run_test(animal_type=animal_type, expected_value=0.24)
 
     def test_get_methane_producing_capacity_of_manure_returns_expected_values_when_is_swine_type(self):
-        for animal_type in [
-            common.AnimalType.swine,
-            common.AnimalType.swine_finisher,
-            common.AnimalType.swine_starter,
-            common.AnimalType.swine_lactating_sow,
-            common.AnimalType.swine_dry_sow,
-            common.AnimalType.swine_grower,
-            common.AnimalType.swine_sows,
-            common.AnimalType.swine_boar,
-            common.AnimalType.swine_gilts,
-            common.AnimalType.swine_piglets
-        ]:
+        for animal_type in self.animal_types.swine_type:
             self.run_test(animal_type=animal_type, expected_value=0.48)
 
     def test_get_methane_producing_capacity_of_manure_returns_expected_values_when_is_sheep_type(self):
-        for animal_type in [
-            common.AnimalType.sheep,
-            common.AnimalType.lambs_and_ewes,
-            common.AnimalType.ram,
-            common.AnimalType.weaned_lamb,
-            common.AnimalType.lambs,
-            common.AnimalType.ewes,
-            common.AnimalType.sheep_feedlot
-        ]:
+        for animal_type in self.animal_types.sheep_type:
             self.run_test(animal_type=animal_type, expected_value=0.19)
 
     def test_get_methane_producing_capacity_of_manure_returns_expected_values_for_chicken_roosters_and_broilers(self):
@@ -1052,7 +955,7 @@ class TestGetMethaneProducingCapacityOfManure(unittest.TestCase):
         self.run_test(animal_type=common.AnimalType.bison, expected_value=0.1)
 
     def test_z_get_methane_producing_capacity_of_manure_returns_expected_default_value(self):
-        for animal_type in self.animal_types:
+        for animal_type in self.animal_types_all:
             self.run_test(animal_type=animal_type, expected_value=0)
 
 
