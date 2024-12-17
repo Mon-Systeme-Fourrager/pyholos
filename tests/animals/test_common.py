@@ -141,6 +141,7 @@ class _AnimalGroups:
 class TestAnimalTypeExtensions(unittest.TestCase):
     def setUp(self):
         self.animal_groups = _AnimalGroups
+
     def test_is_young_type(self):
         for animal_type in self.animal_groups.young_type:
             self.assertTrue(animal_type.is_young_type)
@@ -573,7 +574,7 @@ class TestBedding(unittest.TestCase):
                 CarbonToNitrogenRatio=None,
                 MoistureContent=None
             ),
-           common.Bedding.get_bedding_material_composition(
+            common.Bedding.get_bedding_material_composition(
                 animal_type=common.AnimalType.dairy,
                 bedding_material_type=common.BeddingMaterialType.sand))
 
@@ -588,7 +589,7 @@ class TestBedding(unittest.TestCase):
                 CarbonToNitrogenRatio=12,
                 MoistureContent=0
             ),
-           common.Bedding.get_bedding_material_composition(
+            common.Bedding.get_bedding_material_composition(
                 animal_type=common.AnimalType.dairy,
                 bedding_material_type=common.BeddingMaterialType.separated_manure_solid))
 
@@ -603,7 +604,7 @@ class TestBedding(unittest.TestCase):
                 CarbonToNitrogenRatio=90.5,
                 MoistureContent=9.57
             ),
-           common.Bedding.get_bedding_material_composition(
+            common.Bedding.get_bedding_material_composition(
                 animal_type=common.AnimalType.dairy,
                 bedding_material_type=common.BeddingMaterialType.straw_long))
 
@@ -618,7 +619,7 @@ class TestBedding(unittest.TestCase):
                 CarbonToNitrogenRatio=90.5,
                 MoistureContent=9.57
             ),
-           common.Bedding.get_bedding_material_composition(
+            common.Bedding.get_bedding_material_composition(
                 animal_type=common.AnimalType.dairy,
                 bedding_material_type=common.BeddingMaterialType.straw_chopped))
 
@@ -633,7 +634,7 @@ class TestBedding(unittest.TestCase):
                 CarbonToNitrogenRatio=329.5,
                 MoistureContent=10.09
             ),
-           common.Bedding.get_bedding_material_composition(
+            common.Bedding.get_bedding_material_composition(
                 animal_type=common.AnimalType.dairy,
                 bedding_material_type=common.BeddingMaterialType.shavings))
 
@@ -648,7 +649,7 @@ class TestBedding(unittest.TestCase):
                 CarbonToNitrogenRatio=329.5,
                 MoistureContent=10.99
             ),
-           common.Bedding.get_bedding_material_composition(
+            common.Bedding.get_bedding_material_composition(
                 animal_type=common.AnimalType.dairy,
                 bedding_material_type=common.BeddingMaterialType.sawdust))
 
@@ -663,7 +664,7 @@ class TestBedding(unittest.TestCase):
                 CarbonToNitrogenRatio=90.5,
                 MoistureContent=9.57
             ),
-           common.Bedding.get_bedding_material_composition(
+            common.Bedding.get_bedding_material_composition(
                 animal_type=common.AnimalType.swine,
                 bedding_material_type=common.BeddingMaterialType.straw_long))
 
@@ -678,7 +679,7 @@ class TestBedding(unittest.TestCase):
                 CarbonToNitrogenRatio=90.5,
                 MoistureContent=9.57
             ),
-           common.Bedding.get_bedding_material_composition(
+            common.Bedding.get_bedding_material_composition(
                 animal_type=common.AnimalType.swine,
                 bedding_material_type=common.BeddingMaterialType.straw_chopped))
 
@@ -693,7 +694,7 @@ class TestBedding(unittest.TestCase):
                 CarbonToNitrogenRatio=90.5,
                 MoistureContent=9.57
             ),
-           common.Bedding.get_bedding_material_composition(
+            common.Bedding.get_bedding_material_composition(
                 animal_type=common.AnimalType.sheep,
                 bedding_material_type=common.BeddingMaterialType.straw))
 
@@ -708,7 +709,7 @@ class TestBedding(unittest.TestCase):
                 CarbonToNitrogenRatio=329.5,
                 MoistureContent=10.09
             ),
-           common.Bedding.get_bedding_material_composition(
+            common.Bedding.get_bedding_material_composition(
                 animal_type=common.AnimalType.sheep,
                 bedding_material_type=common.BeddingMaterialType.shavings))
 
@@ -723,7 +724,7 @@ class TestBedding(unittest.TestCase):
                 CarbonToNitrogenRatio=90.5,
                 MoistureContent=9.57
             ),
-           common.Bedding.get_bedding_material_composition(
+            common.Bedding.get_bedding_material_composition(
                 animal_type=common.AnimalType.poultry,
                 bedding_material_type=common.BeddingMaterialType.straw))
 
@@ -738,7 +739,7 @@ class TestBedding(unittest.TestCase):
                 CarbonToNitrogenRatio=329.5,
                 MoistureContent=10.09
             ),
-           common.Bedding.get_bedding_material_composition(
+            common.Bedding.get_bedding_material_composition(
                 animal_type=common.AnimalType.poultry,
                 bedding_material_type=common.BeddingMaterialType.shavings))
 
@@ -753,7 +754,7 @@ class TestBedding(unittest.TestCase):
                 CarbonToNitrogenRatio=329.5,
                 MoistureContent=10.99
             ),
-           common.Bedding.get_bedding_material_composition(
+            common.Bedding.get_bedding_material_composition(
                 animal_type=common.AnimalType.poultry,
                 bedding_material_type=common.BeddingMaterialType.sawdust))
 
@@ -768,7 +769,7 @@ class TestBedding(unittest.TestCase):
                 TotalPhosphorusKilogramsDryMatter=0.000635,
                 CarbonToNitrogenRatio=90.5
             ),
-           common.Bedding.get_bedding_material_composition(
+            common.Bedding.get_bedding_material_composition(
                 animal_type=common.AnimalType.llamas,
                 bedding_material_type=common.BeddingMaterialType.straw))
 
@@ -783,7 +784,7 @@ class TestBedding(unittest.TestCase):
                 TotalPhosphorusKilogramsDryMatter=0.000635,
                 CarbonToNitrogenRatio=90.5
             ),
-           common.Bedding.get_bedding_material_composition(
+            common.Bedding.get_bedding_material_composition(
                 animal_type=common.AnimalType.alpacas,
                 bedding_material_type=common.BeddingMaterialType.straw))
 
@@ -798,7 +799,7 @@ class TestBedding(unittest.TestCase):
                 TotalPhosphorusKilogramsDryMatter=0.000635,
                 CarbonToNitrogenRatio=90.5
             ),
-           common.Bedding.get_bedding_material_composition(
+            common.Bedding.get_bedding_material_composition(
                 animal_type=common.AnimalType.deer,
                 bedding_material_type=common.BeddingMaterialType.straw))
 
@@ -813,7 +814,7 @@ class TestBedding(unittest.TestCase):
                 TotalPhosphorusKilogramsDryMatter=0.000635,
                 CarbonToNitrogenRatio=90.5
             ),
-           common.Bedding.get_bedding_material_composition(
+            common.Bedding.get_bedding_material_composition(
                 animal_type=common.AnimalType.elk,
                 bedding_material_type=common.BeddingMaterialType.straw))
 
@@ -828,7 +829,7 @@ class TestBedding(unittest.TestCase):
                 TotalPhosphorusKilogramsDryMatter=0.000635,
                 CarbonToNitrogenRatio=90.5
             ),
-           common.Bedding.get_bedding_material_composition(
+            common.Bedding.get_bedding_material_composition(
                 animal_type=common.AnimalType.goats,
                 bedding_material_type=common.BeddingMaterialType.straw))
 
@@ -843,7 +844,7 @@ class TestBedding(unittest.TestCase):
                 TotalPhosphorusKilogramsDryMatter=0.000635,
                 CarbonToNitrogenRatio=90.5
             ),
-           common.Bedding.get_bedding_material_composition(
+            common.Bedding.get_bedding_material_composition(
                 animal_type=common.AnimalType.horses,
                 bedding_material_type=common.BeddingMaterialType.straw))
 
@@ -858,7 +859,7 @@ class TestBedding(unittest.TestCase):
                 TotalPhosphorusKilogramsDryMatter=0.000635,
                 CarbonToNitrogenRatio=90.5
             ),
-           common.Bedding.get_bedding_material_composition(
+            common.Bedding.get_bedding_material_composition(
                 animal_type=common.AnimalType.mules,
                 bedding_material_type=common.BeddingMaterialType.straw))
 
@@ -873,7 +874,7 @@ class TestBedding(unittest.TestCase):
                 TotalPhosphorusKilogramsDryMatter=0.000635,
                 CarbonToNitrogenRatio=90.5
             ),
-           common.Bedding.get_bedding_material_composition(
+            common.Bedding.get_bedding_material_composition(
                 animal_type=common.AnimalType.bison,
                 bedding_material_type=common.BeddingMaterialType.straw))
 
@@ -885,7 +886,6 @@ class TestGetMethaneProducingCapacityOfManure(unittest.TestCase):
 
     def setUp(self):
         self.animal_types = _AnimalGroups
-
 
     def run_test(
             self,
