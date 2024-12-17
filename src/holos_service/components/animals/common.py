@@ -881,3 +881,32 @@ class FractionOfOrganicNitrogenMineralizedData:
     def __eq__(self, other):
         return self.__dict__ == other.__dict__ if isinstance(other, self.__class__) else False
 
+
+class ManureStateType(EnumGeneric):
+    not_selected: str = "NotSelected"
+    anaerobic_digester: str = "AnaerobicDigester"
+    composted: str = "Composted"
+    compost_intensive: str = "CompostIntensive"  # Also known as 'compost - intensive windrow'
+    compost_passive: str = "CompostPassive"  # Also known as 'compost - passive windrow'
+    daily_spread: str = "DailySpread"
+    deep_bedding: str = "DeepBedding"
+    deep_pit: str = "DeepPit"  # Also known as 'Deep pit under barn'
+    liquid: str = "Liquid"
+    liquid_crust: str = "LiquidCrust"  # [Obsolete]
+    liquid_separated: str = "LiquidSeparated"  # [Obsolete]
+    liquid_no_crust: str = "LiquidNoCrust"  # Also known as 'Liquid/Slurry with no natural crust'
+    pasture: str = "Pasture"
+    range: str = "Range"
+    paddock: str = "Paddock"
+    solid: str = "Solid"
+    slurry: str = "Slurry"  # [Obsolete]
+    slurry_with_natural_crust: str = "SlurryWithNaturalCrust"  # [Obsolete]
+    slurry_without_natural_crust: str = "SlurryWithoutNaturalCrust"  # [Obsolete]
+    solid_storage: str = "SolidStorage"  # Also known as 'Solid storage (stockpiled)'
+    custom: str = "Custom"
+    pit_lagoon_no_cover: str = "PitLagoonNoCover"  # [Obsolete]
+    liquid_with_natural_crust: str = "LiquidWithNaturalCrust"  # Also known as 'Liquid/Slurry with natural crust'
+    liquid_with_solid_cover: str = "LiquidWithSolidCover"  # Also known as Liquid/Slurry with solid cover
+    composted_in_vessel: str = "CompostedInVessel"  # (Swine system)
+    solid_storage_with_or_without_litter: str = "SolidStorageWithOrWithoutLitter"  # (Poultry system) No different than 'Solid Storage' but poultry solid storage needs the term 'litter' which is incorrect to use in the case of cattle 'Solid Storage' since there is no 'litter' only 'bedding' when considering the cattle system
+
