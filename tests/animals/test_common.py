@@ -1100,6 +1100,34 @@ class TestGetFractionOfOrganicNitrogenMineralizedData(unittest.TestCase):
                     state_type=manure_state,
                     animal_type=animal_type))
 
+class TestGetAmmoniaEmissionFactorForStorageOfPoultryManure(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.animal_types = _AnimalGroups
+
+    def test_values_for_chicken_hens_and_layers(self):
+        for animal_type in ((
+            common.AnimalType.chicken_hens,
+            common.AnimalType.layers)):
+            self.assertEqual(
+                0.24,
+                common.get_ammonia_emission_factor_for_storage_of_poultry_manure(animal_type=animal_type))
+
+    def test_default_values_for_chicken_type(self):
+        for animal_type in [v for v in self.animal_types.chicken_type if v not in(
+                common.AnimalType.chicken_hens,
+                common.AnimalType.layers
+        )]:
+            self.assertEqual(
+                0.25,
+                common.get_ammonia_emission_factor_for_storage_of_poultry_manure(animal_type=animal_type))
+
+    def test_default_values_for_poultry_type(self):
+        for animal_type in [v for v in self.animal_types.poultry_type if not v.is_chicken_type()]:
+            self.assertEqual(
+                0.24,
+                common.get_ammonia_emission_factor_for_storage_of_poultry_manure(animal_type=animal_type))
+
 
 if __name__ == '__main__':
     unittest.main()
