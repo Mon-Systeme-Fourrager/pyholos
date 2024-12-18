@@ -1,8 +1,40 @@
+from pandas import DataFrame
+
 from holos_service import utils
 from holos_service.common import HolosVar, Component, EnumGeneric
-from holos_service.components.animals.common import (HousingType,
-                                                     AnimalType, AnimalCoefficientData)
+from holos_service.components.animals.common import (
+    HousingType,
+    AnimalCoefficientData)
 from holos_service.config import PathsHolosResources
+from holos_service.django_stuff import CanadianProvince
+
+
+def get_average_milk_production_for_dairy_cows_value(
+        year: int,
+        province: CanadianProvince
+):
+    """returns the average milk production value for a given Canadian Province.
+
+    Args:
+        year: year for which the average milk production will be returned
+        province: Canadian Province object
+
+    Returns:
+        (kg head-1 day-1): the average milk production value
+
+    References:
+        Holos source code: https://github.com/holos-aafc/Holos/blob/396f1ab9bc7247e6d78766f9445c14d2eb7c0d9d/H.Core/Providers/Animals/Table_21_Average_Milk_Production_Dairy_Cows_Provider.cs#L56
+    """
+    df = utils.read_holos_resource_table(
+        path_file=PathsHolosResources.Table_21_Average_Milk_Production_For_Dairy_Cows_By_Province,
+        index_col='Year')
+    year_min = min(df.index)
+    year_max = max(df.index)
+
+    df = df.merge(DataFrame(index=range(year_min, year_max + 1)), right_index=True, left_index=True, how="right")
+    df.interpolate(method="linear", inplace=True)
+
+    return df.loc[max(year_min, min(year_max, year)), province.value.abbreviation]
 
 
 class GroupNames(EnumGeneric):
