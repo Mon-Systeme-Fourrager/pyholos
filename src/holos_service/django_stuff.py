@@ -32,7 +32,7 @@ class NameSlc:
         self.abbreviation = abbreviation
 
 
-class CanadianProvinces(MapNamesGeneric):
+class CanadianProvince(MapNamesGeneric):
     Alberta: NameSlc = NameSlc(name='Alberta', abbreviation='AB')
     BritishColumbia: NameSlc = NameSlc(name='British Columbia', abbreviation="BC")
     Manitoba: NameSlc = NameSlc(name='Manitoba', abbreviation="MB")

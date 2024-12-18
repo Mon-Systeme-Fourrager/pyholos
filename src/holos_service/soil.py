@@ -11,12 +11,12 @@ def get_region(
         province: str
 ) -> str:
     if any([
-        province == django_stuff.CanadianProvinces.Alberta.name,
-        province == django_stuff.CanadianProvinces.BritishColumbia.name,
-        province == django_stuff.CanadianProvinces.Manitoba.name,
-        province == django_stuff.CanadianProvinces.Saskatchewan.name,
-        province == django_stuff.CanadianProvinces.NorthwestTerritories.name,
-        province == django_stuff.CanadianProvinces.Nunavut.name]):
+        province == django_stuff.CanadianProvince.Alberta.name,
+        province == django_stuff.CanadianProvince.BritishColumbia.name,
+        province == django_stuff.CanadianProvince.Manitoba.name,
+        province == django_stuff.CanadianProvince.Saskatchewan.name,
+        province == django_stuff.CanadianProvince.NorthwestTerritories.name,
+        province == django_stuff.CanadianProvince.Nunavut.name]):
 
         res = Region.WesternCanada
 
@@ -341,7 +341,7 @@ def set_soil_properties(
             path_file=PathsSlcData.snt_file.value, usecols=['SOIL_ID', 'PMTEX1', 'G_GROUP3']),
         id_soil=id_soil)
 
-    province = django_stuff.CanadianProvinces.get_name(abbreviation=dominant_component_properties['PROVINCE'])
+    province = django_stuff.CanadianProvince.get_name(abbreviation=dominant_component_properties['PROVINCE'])
     soil_great_group = django_stuff.SoilGreatGroupNamesSlc.get_name(
         abbreviation=soil_name_table['G_GROUP3']).replace(' ', '')
 
