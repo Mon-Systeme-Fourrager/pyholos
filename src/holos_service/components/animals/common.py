@@ -335,6 +335,9 @@ class Milk:
             production_amount: (kg) average milk production value based on the province and year specified by user
             fat_content: (%) fat content of milk
             protein_content_as_percentage: (%) protein content of milk
+
+        Notes:
+            arg 'protein_content_as_percentage' is deprecated and will be removed in future version.
         """
         self.production = production_amount
         self.fat_content = fat_content
@@ -352,7 +355,7 @@ class Diet:
             fat_percentage: float,
             neutral_detergent_fiber_percentage: float,
             metabolizable_energy: float,
-            dietary_net_energy_concentration: float
+            # dietary_net_energy_concentration: float
     ):
         """Diet composition data
 
@@ -365,7 +368,6 @@ class Diet:
             fat_percentage: (-) percentage of fat in the diet dry matter (between 0 and 100)
             neutral_detergent_fiber_percentage: (-) percentage of neutral detergent fiber in the diet dry matter (between 0 and 100)
             metabolizable_energy: (Mcal kg-1) metabolizable energy of the diet
-            dietary_net_energy_concentration: (MJ (kg DM)^-1) dietary net energy concentration
         """
         self.crude_protein_percentage = crude_protein_percentage
         self.forage_percentage = forage_percentage
