@@ -379,7 +379,6 @@ class Diet:
         self.metabolizable_energy = metabolizable_energy
         # self.dietary_net_energy_concentration = dietary_net_energy_concentration
 
-
     @staticmethod
     def calc_dietary_net_energy_concentration(
             net_energy_for_maintenance: float,
@@ -432,6 +431,55 @@ class Diet:
         return self.calc_dietary_net_energy_concentration(
             net_energy_for_maintenance=self.metabolizable_energy * 0.8134 - 0.3518,
             net_energy_for_growth=self.metabolizable_energy * 0.6299 - 0.5162)
+
+    def calc_methane_conversion_factor(
+            self,
+            animal_type: AnimalType
+    ) -> float:
+        # Assign a default ym so that if there are no cases that cover the diet below, there will be a value assigned
+        result = 0.4
+        total_digestible_nutrient = self.total_digestible_nutrient_percentage
+
+        if animal_type.is_dairy_cattle_type():
+            if total_digestible_nutrient >= 65:
+                result = 0.063
+            elif 55 <= total_digestible_nutrient < 65:
+                result = 0.065
+            else:
+                result = 0.07
+
+        if animal_type.is_beef_cattle_type():
+            if total_digestible_nutrient >= 65:
+                result = 0.065
+            elif 55 <= total_digestible_nutrient < 65:
+                result = 0.07
+            else:
+                result = 0.08
+
+        if animal_type == AnimalType.beef_finisher:
+            if total_digestible_nutrient >= 82:
+                result = 0.03
+            else:
+                result = 0.04
+            # The percentage threshold value of 82 is the rounded value of TDN for the basic diet CornGrainBasedDiet.
+            # This TDN value is the weighted average of the TDN values of all three ingredients of this diet, i.e.
+            # BarleySilage (% TDN = 60.6, % DM in diet=10) and BarleyGrain  (% TDN = 84.1, % DM in diet=90)
+            # The original code for this part of the function in commented below.
+            # if (string.IsNullOrWhiteSpace(this.Name) == false)
+            # {
+            #     if (this.Name.Equals(Resources.LabelCornGrainBasedDiet))
+            #     {
+            #         result = 0.03;
+            #     }
+            #
+            #     if (this.Name.Equals(Resources.LabelBarleyGrainBasedDiet))
+            #     {
+            #         result = 0.04;
+            #
+            #     }
+            # }
+
+        return result
 
 
 # class HousingSystem:

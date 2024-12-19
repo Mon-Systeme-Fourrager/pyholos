@@ -1216,6 +1216,10 @@ class TestGetAmmoniaEmissionFactorForStorageOfBeefAndDairyCattleManure(unittest.
 
 
 class TestDiet(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.animal_type = _AnimalGroups
+
     def setUp(self):
         self.diet = common.Diet(
             crude_protein_percentage=15.3,
@@ -1269,6 +1273,51 @@ class TestDiet(unittest.TestCase):
             values.append(self.diet.calc_dietary_net_energy_concentration_for_beef())
 
         self.assertTrue(utils.assert_is_ascending(values=values))
+
+    def test_calc_methane_conversion_factor_returns_expected_values_when_is_dairy_cattle_type(self):
+        for total_digestible_nutrient, expected_value in (
+                (65, 0.063),
+                (60, 0.065),
+                (50, 0.07)):
+            self.diet.total_digestible_nutrient_percentage = total_digestible_nutrient
+            for animal_type in self.animal_type.dairy_cattle_type:
+                self.assertEqual(
+                    expected_value,
+                    self.diet.calc_methane_conversion_factor(animal_type=animal_type))
+
+    def test_calc_methane_conversion_factor_returns_expected_values_when_is_beef_cattle_type(self):
+        for total_digestible_nutrient, expected_value in (
+                (65, 0.065),
+                (60, 0.07),
+                (50, 0.08)):
+            self.diet.total_digestible_nutrient_percentage = total_digestible_nutrient
+            for animal_type in self.animal_type.beef_cattle_type:
+                if animal_type != common.AnimalType.beef_finisher:
+                    self.assertEqual(
+                        expected_value,
+                        self.diet.calc_methane_conversion_factor(animal_type=animal_type))
+
+    def test_calc_methane_conversion_factor_returns_expected_values_for_beef_finisher(self):
+        for total_digestible_nutrient, expected_value in (
+                (85, 0.03),
+                (80, 0.04)):
+            self.diet.total_digestible_nutrient_percentage = total_digestible_nutrient
+            self.assertEqual(
+                expected_value,
+                self.diet.calc_methane_conversion_factor(animal_type=common.AnimalType.beef_finisher))
+
+    def test_calc_methane_conversion_factor_returns_expected_default_values(self):
+        for animal_type in common.AnimalType:
+            if not any([
+                animal_type.is_dairy_cattle_type(),
+                animal_type.is_beef_cattle_type(),
+                animal_type == common.AnimalType.beef_finisher
+            ]):
+                self.assertEqual(
+                    0.4,
+                    self.diet.calc_methane_conversion_factor(animal_type=animal_type))
+
+
 
 if __name__ == '__main__':
     unittest.main()
