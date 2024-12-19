@@ -4,6 +4,9 @@ from holos_service.utils import read_holos_resource_table
 
 
 class DietAdditiveType(EnumGeneric):
+    """Holos source code: https://github.com/holos-aafc/Holos/blob/396f1ab9bc7247e6d78766f9445c14d2eb7c0d9d/H.Core/Enumerations/DietAdditiveType.cs#L6
+
+    """
     two_percent_fat: str = "TwoPercentFat"
     four_percent_fat: str = "FourPercentFat"
     five_percent_fat: str = "FivePercentFat"
@@ -372,7 +375,7 @@ class Diet:
         self.fat_percentage = fat_percentage
         self.neutral_detergent_fiber_percentage = neutral_detergent_fiber_percentage
         self.metabolizable_energy = metabolizable_energy
-        self.dietary_net_energy_concentration = dietary_net_energy_concentration
+        # self.dietary_net_energy_concentration = dietary_net_energy_concentration
 
 
     @staticmethod
