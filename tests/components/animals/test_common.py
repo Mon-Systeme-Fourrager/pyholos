@@ -2,6 +2,7 @@ import unittest
 from itertools import product
 
 from holos_service.components.animals import common
+from tests.helpers import utils
 
 
 class _AnimalGroups:
@@ -1212,6 +1213,67 @@ class TestGetAmmoniaEmissionFactorForStorageOfBeefAndDairyCattleManure(unittest.
     def test_z_default_values(self):
         for handling_system in self.handling_systems:
             self.run_test(handling_system=handling_system, expected_value=0.)
+
+
+class TestDiet(unittest.TestCase):
+    def test_calc_dietary_net_energy_concentration(self):
+        self.assertEqual(
+            0,
+            common.Diet.calc_dietary_net_energy_concentration(
+                net_energy_for_maintenance=0,
+                net_energy_for_growth=0))
+
+        self.assertEqual(
+            0,
+            common.Diet.calc_dietary_net_energy_concentration(
+                net_energy_for_maintenance=1,
+                net_energy_for_growth=-1))
+
+    def test_calc_dietary_net_energy_concentration_for_beef(self):
+        diet = common.Diet(
+            crude_protein_percentage=15.3,
+            forage_percentage=100,
+            total_digestible_nutrient_percentage=57.7,
+            ash_percentage=10.15,
+            starch_percentage=4.35,
+            fat_percentage=1.95,
+            neutral_detergent_fiber_percentage=49.3,
+            metabolizable_energy=0)
+
+        self.assertAlmostEqual(
+            -6.4,
+            diet.calc_dietary_net_energy_concentration_for_beef(),
+            places=1)
+
+        values = []
+        for metabolizable_energy in range(0, 6):
+            diet.metabolizable_energy = metabolizable_energy
+            values.append(diet.calc_dietary_net_energy_concentration_for_beef())
+
+        self.assertTrue(utils.assert_is_ascending(values=values))
+
+    def test_calc_dietary_net_energy_concentration_for_dairy(self):
+        diet = common.Diet(
+            crude_protein_percentage=15.3,
+            forage_percentage=100,
+            total_digestible_nutrient_percentage=57.7,
+            ash_percentage=10.15,
+            starch_percentage=4.35,
+            fat_percentage=1.95,
+            neutral_detergent_fiber_percentage=49.3,
+            metabolizable_energy=0)
+
+        self.assertAlmostEqual(
+            -3.6,
+            diet.calc_dietary_net_energy_concentration_for_dairy(),
+            places=1)
+
+        values = []
+        for metabolizable_energy in range(0, 6):
+            diet.metabolizable_energy = metabolizable_energy
+            values.append(diet.calc_dietary_net_energy_concentration_for_beef())
+
+        self.assertTrue(utils.assert_is_ascending(values=values))
 
 if __name__ == '__main__':
     unittest.main()

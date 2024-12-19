@@ -375,6 +375,60 @@ class Diet:
         self.dietary_net_energy_concentration = dietary_net_energy_concentration
 
 
+    @staticmethod
+    def calc_dietary_net_energy_concentration(
+            net_energy_for_maintenance: float,
+            net_energy_for_growth: float
+    ) -> float:
+        """Calculates the dietary net energy concentration
+
+        Args:
+            net_energy_for_maintenance: (Mcal/kg DM) net energy for maintenance
+            net_energy_for_growth: (Mcal/kg DM) net energy for growth
+
+        Returns:
+            (MJ/kg DM): dietary net energy concentration
+
+        Notes:
+            NEmf (MJ/kg DM) = [NEma (Mcal/kg DM) + NEga (Mcal/kg DM)] * 4.184 (conversion factor for Mcal to MJ)
+
+        References:
+            Holos source code https://github.com/holos-aafc/Holos/blob/396f1ab9bc7247e6d78766f9445c14d2eb7c0d9d/H.Core/Providers/Feed/FeedIngredient.cs#L1319
+
+        """
+        return (net_energy_for_maintenance + net_energy_for_growth) * 4.184
+
+    def calc_dietary_net_energy_concentration_for_beef(self) -> float:
+        """Calculates the dietary net energy concentration of a beef cattle diet as a function of the metabolizable energy.
+
+        Returns:
+            (MJ (kg DM)^-1) dietary net energy concentration
+
+        Notes:
+            This relationship is deduced from deduced from the dairy cattle feed composition table provided in the Holos source code
+            'https://github.com/holos-aafc/Holos/blob/main/H.Content/Resources/dairy_feed_composition.csv
+
+        """
+        return self.calc_dietary_net_energy_concentration(
+            net_energy_for_maintenance=self.metabolizable_energy * 0.8756 - 0.5972,
+            net_energy_for_growth=self.metabolizable_energy * 0.7632 - 0.9276)
+
+    def calc_dietary_net_energy_concentration_for_dairy(self) -> float:
+        """Calculates the dietary net energy concentration of a dairy cattle diet as a function of the metabolizable energy.
+
+        Returns:
+            (MJ (kg DM)^-1) dietary net energy concentration
+
+        Notes:
+            This relationship is deduced from the feed composition table provided in the Holos source code
+            https://github.com/holos-aafc/Holos/blob/main/H.Content/Resources/feeds.csv
+
+        """
+        return self.calc_dietary_net_energy_concentration(
+            net_energy_for_maintenance=self.metabolizable_energy * 0.8134 - 0.3518,
+            net_energy_for_growth=self.metabolizable_energy * 0.6299 - 0.5162)
+
+
 # class HousingSystem:
 #     def __init__(
 #             self,
