@@ -108,9 +108,12 @@ class Beef(Component):
         self.methane_conversion_factor_of_diet = HolosVar(
             name="Methane Conversion Factor Of Diet",
             value=None)
+
         self.methane_conversion_factor_adjusted = HolosVar(
             name="Methane Conversion Factor Adjusted",
-            value=None)
+            value=0)
+        """deprecated"""
+
         self.feed_intake = HolosVar(
             name="Feed Intake",
             value=None)
