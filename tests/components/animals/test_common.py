@@ -1318,6 +1318,21 @@ class TestDiet(unittest.TestCase):
                     self.diet.calc_methane_conversion_factor(animal_type=animal_type))
 
 
+class TestGetEmissionFactorForVolatilizationBasedOnClimate(unittest.TestCase):
+    def test_function_returns_expected_value_for_wet_conditions(self):
+        self.assertEqual(
+            0.014,
+            common.get_emission_factor_for_volatilization_based_on_climate(
+                mean_annual_precipitation=1000,
+                mean_annual_potential_evapotranspiration=700))
+
+    def test_function_returns_expected_value_for_dry_conditions(self):
+        self.assertEqual(
+            0.005,
+            common.get_emission_factor_for_volatilization_based_on_climate(
+                mean_annual_precipitation=700,
+                mean_annual_potential_evapotranspiration=1000))
+
 
 if __name__ == '__main__':
     unittest.main()

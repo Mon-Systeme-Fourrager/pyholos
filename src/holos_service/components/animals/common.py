@@ -1235,3 +1235,27 @@ def get_ammonia_emission_factor_for_storage_of_beef_and_dairy_cattle_manure(
         res = 0
 
     return res
+
+
+def get_emission_factor_for_volatilization_based_on_climate(
+        mean_annual_precipitation: float,
+        mean_annual_potential_evapotranspiration: float
+) -> float:
+    """Returns emission factor for volatilization (EF_volatilization)
+
+    Args:
+        mean_annual_precipitation: (mm) mean annual precipitation
+        mean_annual_potential_evapotranspiration: (mm) mean annual potential evapotranspiration
+
+    Returns:
+        (kg(N2O-N) kg(N)-1): emission factor for volatilization
+
+    Notes:
+        In IPCC (2019), Table 11.3: Disaggregation by climate for EFvolatilization (based on long-term averages):
+        Wet climates occur in temperate and boreal zones where the ratio of annual precipitation (P) / potential evapotranspiration (PE) >1
+        Dry climates occur in temperate and boreal zones where the ratio of annual P/PE <1
+
+    Holos Source Code:
+        https://github.com/holos-aafc/Holos/blob/396f1ab9bc7247e6d78766f9445c14d2eb7c0d9d/H.Core/Providers/Animals/Table_36_Livestock_Emission_Conversion_Factors_Provider.cs#L515
+    """
+    return 0.014 if mean_annual_precipitation > mean_annual_potential_evapotranspiration else 0.005
