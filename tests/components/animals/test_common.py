@@ -237,6 +237,49 @@ class TestAnimalTypeExtensions(unittest.TestCase):
                 common.AnimalType.not_selected,
                 animal_type.get_category())
 
+    def test_get_component_category_from_animal_type_when_is_beef_cattle_type(self):
+        for animal_type in self.animal_groups.beef_cattle_type:
+            self.assertEqual(
+                common.ComponentCategory.BeefProduction,
+                animal_type.get_component_category_from_animal_type())
+
+    def test_get_component_category_from_animal_type_when_is_dairy_cattle_type(self):
+        for animal_type in self.animal_groups.dairy_cattle_type:
+            self.assertEqual(
+                common.ComponentCategory.Dairy,
+                animal_type.get_component_category_from_animal_type())
+
+    def test_get_component_category_from_animal_type_when_is_swine_type(self):
+        for animal_type in self.animal_groups.swine_type:
+            self.assertEqual(
+                common.ComponentCategory.Swine,
+                animal_type.get_component_category_from_animal_type())
+
+    def test_get_component_category_from_animal_type_when_is_poultry_type(self):
+        for animal_type in self.animal_groups.poultry_type:
+            self.assertEqual(
+                common.ComponentCategory.Poultry,
+                animal_type.get_component_category_from_animal_type())
+
+    def test_get_component_category_from_animal_type_when_is_sheep_type(self):
+        for animal_type in self.animal_groups.sheep_type:
+            self.assertEqual(
+                common.ComponentCategory.Sheep,
+                animal_type.get_component_category_from_animal_type())
+
+    def test_get_component_category_from_animal_type_default_values(self):
+        for animal_type in common.AnimalType:
+            if not any([
+               animal_type.is_beef_cattle_type(),
+               animal_type.is_dairy_cattle_type(),
+               animal_type.is_swine_type(),
+               animal_type.is_poultry_type(),
+               animal_type.is_sheep_type()
+            ]):
+                self.assertEqual(
+                    common.ComponentCategory.OtherLivestock,
+                    animal_type.get_component_category_from_animal_type())
+
 
 class TestHousingTypeExtensions(unittest.TestCase):
     def test_is_free_stall(self):

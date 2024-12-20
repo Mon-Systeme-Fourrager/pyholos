@@ -1,5 +1,5 @@
 from holos_service.common import EnumGeneric, HolosVar
-from holos_service.components.common import ClimateZones
+from holos_service.components.common import ClimateZones, ComponentCategory
 from holos_service.config import PathsHolosResources
 from holos_service.utils import read_holos_resource_table
 
@@ -306,6 +306,22 @@ class AnimalType(EnumGeneric):
 
         else:
             res = self.not_selected
+
+        return res
+
+    def get_component_category_from_animal_type(self):
+        if self.is_beef_cattle_type():
+            res = ComponentCategory.BeefProduction
+        elif self.is_dairy_cattle_type():
+            res = ComponentCategory.Dairy
+        elif self.is_swine_type():
+            res = ComponentCategory.Swine
+        elif self.is_poultry_type():
+            res = ComponentCategory.Poultry
+        elif self.is_sheep_type():
+            res = ComponentCategory.Sheep
+        else:
+            res = ComponentCategory.OtherLivestock
 
         return res
 
