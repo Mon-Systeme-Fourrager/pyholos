@@ -1,6 +1,19 @@
+from enum import StrEnum, unique, auto
+
 from holos_service import django_stuff
 from holos_service.common import Region, get_region
 from holos_service.config import PathsSlcData
+
+
+@unique
+class SoilTexture(StrEnum):
+    """Holos Source Code:
+    https://github.com/holos-aafc/Holos/blob/main/H.Core/Enumerations/SoilTexture.cs
+    """
+    Fine = auto()
+    Medium = auto()
+    Coarse = auto()
+    Unknown = auto()
 
 
 class SoilFunctionalCategory:
@@ -260,13 +273,13 @@ def set_soil_texture_according_to_holos(
 ) -> str:
     soil_name = django_stuff.ParentMaterialTextureNamesSlc.get_name(abbreviation=soil_texture_abbreviation_from_slc)
     if soil_name in ('Very Coarse', 'Coarse', 'Moderately Coarse'):
-        res = 'Coarse'
+        res = SoilTexture.Coarse.name
     elif soil_name in ('Medium', 'Medium Skeletal'):
-        res = 'Medium'
+        res = SoilTexture.Medium.name
     elif soil_name in ('Moderately Fine', 'Fine', 'Very Fine', 'Fine Skeletal'):
-        res = 'Fine'
+        res = SoilTexture.Fine.name
     else:
-        res = 'Medium'
+        res = SoilTexture.Medium.name
     return res
 
 
