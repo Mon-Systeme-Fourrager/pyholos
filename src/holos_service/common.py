@@ -1,6 +1,8 @@
 from enum import Enum
 from typing import Any
 
+from holos_service import django_stuff
+
 
 class EnumGeneric(Enum):
     @classmethod
@@ -28,3 +30,27 @@ class Component:
 
     def to_dict(self) -> dict:
         return {k: v.value for k, v in self.__dict__.items() if isinstance(v, HolosVar)}
+
+
+class Region:
+    EasternCanada: str = "EasternCanada"
+    WesternCanada: str = "WesternCanada"
+
+
+def get_region(
+        province: str
+) -> str:
+    if any([
+        province == django_stuff.CanadianProvince.Alberta.name,
+        province == django_stuff.CanadianProvince.BritishColumbia.name,
+        province == django_stuff.CanadianProvince.Manitoba.name,
+        province == django_stuff.CanadianProvince.Saskatchewan.name,
+        province == django_stuff.CanadianProvince.NorthwestTerritories.name,
+        province == django_stuff.CanadianProvince.Nunavut.name]):
+
+        res = Region.WesternCanada
+
+    else:
+        res = Region.EasternCanada
+
+    return res

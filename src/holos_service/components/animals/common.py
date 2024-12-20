@@ -1449,3 +1449,372 @@ def get_direct_emission_factor_based_on_climate(
     return 0.006 if mean_annual_precipitation > mean_annual_potential_evapotranspiration else 0.002
 
 
+
+def GetLandApplicationFactors(
+        farm: Farm,
+        meanAnnualPrecipitation: float,
+        meanAnnualEvapotranspiration: float,
+        animalType: AnimalType,
+        year: int,
+        region:
+) -> Table_36_Livestock_Emission_Conversion_Factors_Data:
+    climateDependentEmissionFactorForVolatilization = get_emission_factor_for_volatilization_based_on_climate(
+        mean_annual_precipitation= meanAnnualPrecipitation,
+        mean_annual_potential_evapotranspiration= meanAnnualEvapotranspiration)
+
+    climateDependentDirectEmissionFactor = get_direct_emission_factor_based_on_climate(
+        mean_annual_precipitation=meanAnnualPrecipitation,
+        mean_annual_potential_evapotranspiration= meanAnnualEvapotranspiration)
+
+    var region = farm.Province.GetRegion();
+    var soilTexture = farm.DefaultSoilData.SoilTexture;
+
+    var factors = new Table_36_Livestock_Emission_Conversion_Factors_Data
+    {
+        MethaneConversionFactor = 0.0047,
+        N20DirectEmissionFactor = climateDependentDirectEmissionFactor,
+        VolatilizationFraction = 0.21,
+        EmissionFactorVolatilization = climateDependentEmissionFactorForVolatilization,
+    };
+
+    factors.EmissionFactorLeach = farm.Defaults.EmissionFactorForLeachingAndRunoff;
+
+    if (region == Region.WesternCanada)
+    {
+        factors.N20DirectEmissionFactor = 0.00043;
+    }
+    else
+    {
+        if (soilTexture == SoilTexture.Fine)
+        {
+            factors.N20DirectEmissionFactor = 0.0078;
+        }
+        else if (soilTexture == SoilTexture.Medium)
+        {
+            factors.N20DirectEmissionFactor = 0.0062;
+        }
+        else
+        {
+            // SoilTexture = Coarse
+            // Footnote 1
+            factors.N20DirectEmissionFactor = 0.0047;
+        }
+    }
+
+    factors.VolatilizationFraction = this.GetVolatilizationFractionForLandApplication(animalType, farm.Province, year);
+
+    return factors;
+}
+
+
+
+
+
+
+
+
+def GetFactors(
+        manure_state_type: ManureStateType,
+        mean_annual_precipitation: float,
+        mean_annual_temperature: float,
+        mean_annual_evapotranspiration: float,
+        bedding_rate: float,
+        animal_type: AnimalType,
+        # farm: Farm,
+        year: int
+):
+    climate_dependent_methane_conversion_factor = get_methane_conversion_factor(
+        manure_state_type=manure_state_type,
+        climate_zone=get_climate_zone(
+            mean_annual_temperature=mean_annual_temperature,
+            mean_annual_precipitation=mean_annual_precipitation,
+            mean_annual_potential_evapotranspiration=mean_annual_evapotranspiration))
+
+    climate_dependent_emission_factor_for_volatilization = get_emission_factor_for_volatilization_based_on_climate(
+        mean_annual_precipitation=mean_annual_precipitation,
+        mean_annual_potential_evapotranspiration=mean_annual_evapotranspiration)
+
+    # All factors are the same when considering any manure on pasture
+    if any([
+        manure_state_type == ManureStateType.pasture,
+        manure_state_type == ManureStateType.paddock,
+        manure_state_type == ManureStateType.range
+    ]):
+        # return this.GetLandApplicationFactors(farm, meanAnnualPrecipitation, meanAnnualEvapotranspiration, animalType, year);
+        pass
+
+    # The following factors are for animals not on pasture.
+    category = animal_type.get_component_category_from_animal_type()
+
+    match category:
+        case ComponentCategory.BeefProduction:
+            match manure_state_type:
+                case ManureStateType.solid_storage:
+                    return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                        MethaneConversionFactor=climate_dependent_methane_conversion_factor,
+                        N20DirectEmissionFactor=0.01,
+                        VolatilizationFraction=0.45,
+                        EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                        LeachingFraction=0.02,
+                        EmissionFactorLeach=0.011)
+
+                case ManureStateType.compost_intensive:
+                    return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                        MethaneConversionFactor=climate_dependent_methane_conversion_factor,
+                        N20DirectEmissionFactor=0.005,
+                        VolatilizationFraction=0.65,
+                        EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                        LeachingFraction=0.06,
+                        EmissionFactorLeach=0.011)
+
+                case ManureStateType.compost_passive:
+                    return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                        MethaneConversionFactor=climate_dependent_methane_conversion_factor,
+                        N20DirectEmissionFactor=0.005,
+                        VolatilizationFraction=0.60,
+                        EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                        LeachingFraction=0.04,
+                        EmissionFactorLeach=0.011)
+
+                case ManureStateType.deep_bedding:
+                    return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                        MethaneConversionFactor=climate_dependent_methane_conversion_factor,
+                        N20DirectEmissionFactor=0.01,
+                        VolatilizationFraction=0.25,
+                        EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                        LeachingFraction=0.035,
+                        EmissionFactorLeach=0.011)
+
+                case ManureStateType.anaerobic_digester:
+                    return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                        MethaneConversionFactor=0.01,  # Footnote 4
+                        N20DirectEmissionFactor=0.0006,
+                        VolatilizationFraction=0.1,
+                        EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                        LeachingFraction=0.0,
+                        EmissionFactorLeach=0.011)
+
+                case _:
+                    raise ValueError(
+                        f"Unable to get data for manure state type: {manure_state_type}. Returning default value.")
+                    # return Table_36_Livestock_Emission_Conversion_Factors_Data()
+
+        case ComponentCategory.Dairy:
+            match manure_state_type:
+                case ManureStateType.daily_spread:
+                    return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                        MethaneConversionFactor=climate_dependent_methane_conversion_factor,
+                        N20DirectEmissionFactor=0.0,
+                        VolatilizationFraction=0.07,
+                        EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                        LeachingFraction=0,
+                        EmissionFactorLeach=0.011)
+
+                case ManureStateType.solid_storage:
+                    return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                        MethaneConversionFactor=climate_dependent_methane_conversion_factor,
+                        N20DirectEmissionFactor=0.01,
+                        VolatilizationFraction=0.3,
+                        EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                        LeachingFraction=0.02,
+                        EmissionFactorLeach=0.011)
+
+                case ManureStateType.compost_intensive:
+                    return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                        MethaneConversionFactor=climate_dependent_methane_conversion_factor,
+                        N20DirectEmissionFactor=0.005,
+                        VolatilizationFraction=0.5,
+                        EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                        LeachingFraction=0.06,
+                        EmissionFactorLeach=0.011)
+
+                case ManureStateType.compost_passive:
+                    return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                        MethaneConversionFactor=climate_dependent_methane_conversion_factor,
+                        N20DirectEmissionFactor=0.005,
+                        VolatilizationFraction=0.45,
+                        EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                        LeachingFraction=0.04,
+                        EmissionFactorLeach=0.011)
+
+                case ManureStateType.deep_bedding:
+                    return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                        MethaneConversionFactor=climate_dependent_methane_conversion_factor,
+                        N20DirectEmissionFactor=0.01,
+                        VolatilizationFraction=0.25,
+                        EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                        LeachingFraction=0.035,
+                        EmissionFactorLeach=0.011)
+
+                case ManureStateType.liquid_with_natural_crust:
+                    return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                        N20DirectEmissionFactor=0.005,
+                        VolatilizationFraction=0.3,
+                        EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                        LeachingFraction=0,
+                        EmissionFactorLeach=0.011)
+
+                case ManureStateType.liquid_no_crust:
+                    return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                        N20DirectEmissionFactor=0.0,
+                        VolatilizationFraction=0.48,
+                        EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                        LeachingFraction=0,
+                        EmissionFactorLeach=0.011)
+
+                case ManureStateType.liquid_with_solid_cover:
+                    return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                        N20DirectEmissionFactor=0.005,
+                        VolatilizationFraction=0.1,
+                        EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                        LeachingFraction=0,
+                        EmissionFactorLeach=0.011)
+
+                case ManureStateType.deep_pit:
+                    return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                        MethaneConversionFactor=climate_dependent_methane_conversion_factor,
+                        N20DirectEmissionFactor=0.002,
+                        VolatilizationFraction=0.28,
+                        EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                        LeachingFraction=0,
+                        EmissionFactorLeach=0.011)
+
+                case ManureStateType.anaerobic_digester:
+                    return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                        MethaneConversionFactor=0.01,  # Footnote 4
+                        N20DirectEmissionFactor=0.0006,
+                        VolatilizationFraction=0.1,
+                        EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                        EmissionFactorLeach=0.011)
+
+                case _:
+                    raise ValueError(
+                        f": Unable to get data for manure state type: {manure_state_type}. Returning default value.")
+
+                    # return Table_36_Livestock_Emission_Conversion_Factors_Data()
+
+        case ComponentCategory.Swine:
+            match manure_state_type:
+                case ManureStateType.composted_in_vessel:
+                    return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                        MethaneConversionFactor=0.005,
+                        N20DirectEmissionFactor=0.006,
+                        VolatilizationFraction=0.6,
+                        EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                        LeachingFraction=0,
+                        EmissionFactorLeach=0.011)
+
+                case ManureStateType.liquid_with_natural_crust:
+                    return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                        MethaneConversionFactor=0.0,
+                        N20DirectEmissionFactor=0.005,
+                        VolatilizationFraction=0.3,
+                        EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                        LeachingFraction=0,
+                        EmissionFactorLeach=0.011)
+
+                case ManureStateType.liquid_no_crust:
+                    return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                        MethaneConversionFactor=0.0,
+                        N20DirectEmissionFactor=0.0,
+                        VolatilizationFraction=0.48,
+                        EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                        LeachingFraction=0,
+                        EmissionFactorLeach=0.011)
+
+                case ManureStateType.liquid_with_solid_cover:
+                    return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                        MethaneConversionFactor=0.0,
+                        N20DirectEmissionFactor=0.005,
+                        VolatilizationFraction=0.1,
+                        EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                        LeachingFraction=0,
+                        EmissionFactorLeach=0.011)
+
+                case ManureStateType.deep_pit:
+                    return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                        MethaneConversionFactor=climate_dependent_methane_conversion_factor,
+                        N20DirectEmissionFactor=0.002,
+                        VolatilizationFraction=0.25,
+                        EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                        EmissionFactorLeach=0.011)
+
+                case ManureStateType.anaerobic_digester:
+                    return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                        MethaneConversionFactor=0.01,  # Footnote 4
+                        N20DirectEmissionFactor=0.0006,
+                        VolatilizationFraction=0.1,  # Footnote 5
+                        EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                        EmissionFactorLeach=0.011)
+
+                case _:
+                    raise ValueError(
+                        f"Unable to get data for manure state type: {manure_state_type}. Returning default value.")
+                    # return Table_36_Livestock_Emission_Conversion_Factors_Data()
+
+        case ComponentCategory.Sheep:
+            match manure_state_type:
+                case ManureStateType.solid_storage:
+                    return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                        MethaneConversionFactor=climate_dependent_methane_conversion_factor,
+                        N20DirectEmissionFactor=0.01,
+                        VolatilizationFraction=0.12,
+                        EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                        LeachingFraction=0.02,
+                        EmissionFactorLeach=0.011)
+
+                case _:
+                    raise ValueError(
+                        f"Unable to get data for manure state type: {manure_state_type}. Returning default value.")
+                    # return Table_36_Livestock_Emission_Conversion_Factors_Data();
+
+        case ComponentCategory.Poultry:
+            if manure_state_type == ManureStateType.anaerobic_digester:
+                return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                    MethaneConversionFactor=0.01,  # Footnote 7
+                    N20DirectEmissionFactor=0.0006,
+                    VolatilizationFraction=0.1,
+                    EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                    LeachingFraction=0,
+                    EmissionFactorLeach=0.011)
+
+            if manure_state_type == ManureStateType.solid_storage_with_or_without_litter:
+                # Bedding with litter
+                return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                    MethaneConversionFactor=0.015,  # Footnote 7
+                    N20DirectEmissionFactor=0.001,  # Footnote 7
+                    VolatilizationFraction=0.4,
+                    EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                    LeachingFraction=0,
+                    EmissionFactorLeach=0.011)
+
+            raise ValueError(
+                f"Unable to get data for manure state type: {manure_state_type}. Returning default value.")
+
+            # return Table_36_Livestock_Emission_Conversion_Factors_Data()
+
+        case ComponentCategory.OtherLivestock:
+            match manure_state_type:
+                case ManureStateType.solid_storage:
+                    return Table_36_Livestock_Emission_Conversion_Factors_Data(
+                        MethaneConversionFactor=climate_dependent_methane_conversion_factor,
+                        N20DirectEmissionFactor=0.01,
+                        VolatilizationFraction=0.12,
+                        EmissionFactorVolatilization=climate_dependent_emission_factor_for_volatilization,
+                        LeachingFraction=0.02,
+                        EmissionFactorLeach=0.011)
+
+                case _:
+                    raise ValueError(
+                        f"Unable to get data for manure state type: {manure_state_type}. Returning default value.")
+                    # return Table_36_Livestock_Emission_Conversion_Factors_Data();
+
+        # Unknown component category (or no values for category yet)
+        case _:
+            raise ValueError(
+                ' '.join([
+                    f"Unable to get data for manure state type '{manure_state_type}'",
+                    f"and component category '{category}'.",
+                    "Returning default value."
+                ]))
+            # return Table_36_Livestock_Emission_Conversion_Factors_Data();

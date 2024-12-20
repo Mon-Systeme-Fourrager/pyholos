@@ -1,29 +1,6 @@
 from holos_service import django_stuff
+from holos_service.common import Region, get_region
 from holos_service.config import PathsSlcData
-
-
-class Region:
-    EasternCanada: str = "EasternCanada"
-    WesternCanada: str = "WesternCanada"
-
-
-def get_region(
-        province: str
-) -> str:
-    if any([
-        province == django_stuff.CanadianProvince.Alberta.name,
-        province == django_stuff.CanadianProvince.BritishColumbia.name,
-        province == django_stuff.CanadianProvince.Manitoba.name,
-        province == django_stuff.CanadianProvince.Saskatchewan.name,
-        province == django_stuff.CanadianProvince.NorthwestTerritories.name,
-        province == django_stuff.CanadianProvince.Nunavut.name]):
-
-        res = Region.WesternCanada
-
-    else:
-        res = Region.EasternCanada
-
-    return res
 
 
 class SoilFunctionalCategory:
