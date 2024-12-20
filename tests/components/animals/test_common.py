@@ -1245,7 +1245,7 @@ class TestDiet(unittest.TestCase):
                 net_energy_for_growth=-1))
 
     def test_calc_dietary_net_energy_concentration_for_beef(self):
-        self.diet.metabolizable_energy=0
+        self.diet.metabolizable_energy = 0
 
         self.assertAlmostEqual(
             -6.4,
@@ -1260,7 +1260,7 @@ class TestDiet(unittest.TestCase):
         self.assertTrue(utils.assert_is_ascending(values=values))
 
     def test_calc_dietary_net_energy_concentration_for_dairy(self):
-        self.diet.metabolizable_energy=0
+        self.diet.metabolizable_energy = 0
 
         self.assertAlmostEqual(
             -3.6,
@@ -1383,6 +1383,147 @@ class TestGetClimateZone(unittest.TestCase):
                 mean_annual_precipitation=700,
                 mean_annual_potential_evapotranspiration=1000))
 
+
+class TestGetMethaneConversionFactor(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.cool_climate_zones = [
+            common.ClimateZones.CoolTemperateMoist,
+            common.ClimateZones.CoolTemperateDry,
+            common.ClimateZones.BorealDry,
+            common.ClimateZones.BorealMoist]
+
+        cls.warm_climate_zones = [
+            common.ClimateZones.WarmTemperateDry,
+            common.ClimateZones.WarmTemperateMoist]
+
+    def test_values_for_solid_and_solid_storage_manure_under_cool_climates(self):
+        for manure_state_type in [
+            common.ManureStateType.solid,
+            common.ManureStateType.solid_storage
+        ]:
+            for climate_zone in self.cool_climate_zones:
+                self.assertEqual(
+                    0.02,
+                    common.get_methane_conversion_factor(
+                        manure_state_type=manure_state_type,
+                        climate_zone=climate_zone))
+
+    def test_values_for_solid_and_solid_storage_manure_under_warm_climates(self):
+        for manure_state_type in [
+            common.ManureStateType.solid,
+            common.ManureStateType.solid_storage
+        ]:
+            for climate_zone in self.warm_climate_zones:
+                self.assertEqual(
+                    0.04,
+                    common.get_methane_conversion_factor(
+                        manure_state_type=manure_state_type,
+                        climate_zone=climate_zone))
+
+    def test_values_for_compost_intensive_under_cool_climates(self):
+        for climate_zone in self.cool_climate_zones:
+            self.assertEqual(
+                0.005,
+                common.get_methane_conversion_factor(
+                    manure_state_type=common.ManureStateType.compost_intensive,
+                    climate_zone=climate_zone))
+
+    def test_values_for_compost_intensive_under_warm_climates(self):
+        for climate_zone in self.warm_climate_zones:
+            self.assertEqual(
+                0.01,
+                common.get_methane_conversion_factor(
+                    manure_state_type=common.ManureStateType.compost_intensive,
+                    climate_zone=climate_zone))
+
+    def test_values_for_compost_passive_under_cool_climates(self):
+        for climate_zone in self.cool_climate_zones:
+            self.assertEqual(
+                0.01,
+                common.get_methane_conversion_factor(
+                    manure_state_type=common.ManureStateType.compost_passive,
+                    climate_zone=climate_zone))
+
+    def test_values_for_compost_passive_under_warm_climates(self):
+        for climate_zone in self.warm_climate_zones:
+            self.assertEqual(
+                0.02,
+                common.get_methane_conversion_factor(
+                    manure_state_type=common.ManureStateType.compost_passive,
+                    climate_zone=climate_zone))
+
+    def test_values_for_deep_bedding(self):
+        for climate_zone, expected_value in [
+            (common.ClimateZones.CoolTemperateMoist, 0.21),
+            (common.ClimateZones.CoolTemperateDry, 0.26),
+            (common.ClimateZones.BorealDry, 0.14),
+            (common.ClimateZones.BorealMoist, 0.14),
+            (common.ClimateZones.WarmTemperateDry, 0.37),
+            (common.ClimateZones.WarmTemperateMoist, 0.41)
+        ]:
+            self.assertEqual(
+                expected_value,
+                common.get_methane_conversion_factor(
+                    manure_state_type=common.ManureStateType.deep_bedding,
+                    climate_zone=climate_zone))
+
+    def test_values_for_compost_in_vessel(self):
+        for climate_zone in common.ClimateZones:
+            self.assertEqual(
+                0.005,
+                common.get_methane_conversion_factor(
+                    manure_state_type=common.ManureStateType.composted_in_vessel,
+                    climate_zone=climate_zone))
+
+    def test_values_for_daily_spread_under_cool_climates(self):
+        for climate_zone in self.cool_climate_zones:
+            self.assertEqual(
+                0.001,
+                common.get_methane_conversion_factor(
+                    manure_state_type=common.ManureStateType.daily_spread,
+                    climate_zone=climate_zone))
+
+    def test_values_for_daily_spread_under_warm_climates(self):
+        for climate_zone in self.warm_climate_zones:
+            self.assertEqual(
+                0.005,
+                common.get_methane_conversion_factor(
+                    manure_state_type=common.ManureStateType.daily_spread,
+                    climate_zone=climate_zone))
+
+    def test_values_for_deep_pit(self):
+        for climate_zone, expected_value in [
+            (common.ClimateZones.CoolTemperateMoist, 0.06),
+            (common.ClimateZones.CoolTemperateDry, 0.08),
+            (common.ClimateZones.BorealDry, 0.04),
+            (common.ClimateZones.BorealMoist, 0.04),
+            (common.ClimateZones.WarmTemperateDry, 0.15),
+            (common.ClimateZones.WarmTemperateMoist, 0.13)
+        ]:
+            self.assertEqual(
+                expected_value,
+                common.get_methane_conversion_factor(
+                    manure_state_type=common.ManureStateType.deep_pit,
+                    climate_zone=climate_zone))
+
+    def test_default_values(self):
+        for climate_zone, manure_state_type in product(common.ClimateZones, common.ManureStateType):
+            if manure_state_type not in [
+                common.ManureStateType.solid_storage,
+                common.ManureStateType.solid,
+                common.ManureStateType.compost_intensive,
+                common.ManureStateType.compost_passive,
+                common.ManureStateType.deep_bedding,
+                common.ManureStateType.composted_in_vessel,
+                common.ManureStateType.daily_spread,
+                common.ManureStateType.deep_pit
+            ]:
+                self.assertEqual(
+                    0,
+                    common.get_methane_conversion_factor(
+                        manure_state_type=manure_state_type,
+                        climate_zone=climate_zone))
 
 
 if __name__ == '__main__':

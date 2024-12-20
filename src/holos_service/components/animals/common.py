@@ -1325,3 +1325,92 @@ def get_climate_zone(
         raise ValueError("Unable to get data for methane conversion factor since climate zone is unknown")
 
     return climate_zone
+
+
+def get_methane_conversion_factor(
+        manure_state_type: ManureStateType,
+        climate_zone: ClimateZones,
+) -> float:
+    """Returns the methane conversion factor by climate zone (kg kg-1)
+
+    Args:
+        manure_state_type:
+        climate_zone:
+
+    Returns:
+        (kg kg-1) methane conversion factor
+
+    Holos Source Code:
+        https://github.com/holos-aafc/Holos/blob/396f1ab9bc7247e6d78766f9445c14d2eb7c0d9d/H.Core/Providers/Animals/Table_37_MCF_By_Climate_Livestock_MansureSystem_Provider.cs#L16
+    """
+    if any([
+        manure_state_type == ManureStateType.solid_storage,
+        manure_state_type == ManureStateType.solid
+    ]):
+        match climate_zone:
+            case ClimateZones.CoolTemperateMoist | ClimateZones.CoolTemperateDry | ClimateZones.BorealDry | ClimateZones.BorealMoist:
+                return 0.02
+
+            case ClimateZones.WarmTemperateDry | ClimateZones.WarmTemperateMoist:
+                return 0.04
+
+    if manure_state_type == ManureStateType.compost_intensive:
+        match climate_zone:
+            case ClimateZones.CoolTemperateMoist | ClimateZones.CoolTemperateDry | ClimateZones.BorealDry | ClimateZones.BorealMoist:
+                return 0.005
+
+            case ClimateZones.WarmTemperateDry | ClimateZones.WarmTemperateMoist:
+                return 0.01
+
+    if manure_state_type == ManureStateType.compost_passive:
+        match climate_zone:
+            case ClimateZones.CoolTemperateMoist | ClimateZones.CoolTemperateDry | ClimateZones.BorealDry | ClimateZones.BorealMoist:
+                return 0.01
+
+            case ClimateZones.WarmTemperateDry | ClimateZones.WarmTemperateMoist:
+                return 0.02
+
+    if manure_state_type == ManureStateType.deep_bedding:
+        match climate_zone:
+            case ClimateZones.CoolTemperateMoist:
+                return 0.21
+            case ClimateZones.CoolTemperateDry:
+                return 0.26
+            case ClimateZones.BorealDry | ClimateZones.BorealMoist:
+                return 0.14
+            case ClimateZones.WarmTemperateDry:
+                return 0.37
+            case ClimateZones.WarmTemperateMoist:
+                return 0.41
+
+    if manure_state_type == ManureStateType.composted_in_vessel:
+        match climate_zone:
+            case ClimateZones.CoolTemperateMoist | ClimateZones.CoolTemperateDry | ClimateZones.BorealDry | ClimateZones.BorealMoist | ClimateZones.WarmTemperateDry | ClimateZones.WarmTemperateMoist:
+                return 0.005
+
+    if manure_state_type == ManureStateType.daily_spread:
+        match climate_zone:
+            case ClimateZones.CoolTemperateMoist | ClimateZones.CoolTemperateDry | ClimateZones.BorealDry | ClimateZones.BorealMoist:
+                return 0.001
+
+            case ClimateZones.WarmTemperateDry | ClimateZones.WarmTemperateMoist:
+                return 0.005
+
+    if manure_state_type == ManureStateType.deep_pit:
+        match climate_zone:
+            case ClimateZones.CoolTemperateMoist:
+                return 0.06
+            case ClimateZones.CoolTemperateDry:
+                return 0.08
+            case ClimateZones.BorealDry:
+                return 0.04
+            case ClimateZones.BorealMoist:
+                return 0.04
+            case ClimateZones.WarmTemperateDry:
+                return 0.15
+            case ClimateZones.WarmTemperateMoist:
+                return 0.13
+
+    # Pasture, etc. have non-temperature dependent values
+    return 0
+
