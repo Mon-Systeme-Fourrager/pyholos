@@ -1650,5 +1650,51 @@ class TestGetVolatilizationFractionsFromLandAppliedManureDataForDairyCattleManur
                         year=year))
 
 
+class TestGetVolatilizationFractionForLandApplication(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.df_dairy = read_holos_resource_table(
+            path_file=PathsHolosResources.Table_61_Fractions_of_dairy_cattle_N_volatilized,
+            index_col="Year")
+        cls.df_swine = read_holos_resource_table(
+            path_file=PathsHolosResources.Table_62_Fractions_of_swine_N_volatilized,
+            index_col="Year")
+        cls.provinces = [v for v in CanadianProvince if v.value.abbreviation not in ('NT', 'NU', 'YT')]
+
+    def test_expected_values_for_swine_type(self):
+        for animal_type in _AnimalGroups.swine_type:
+            for province, year in product(self.provinces, self.df_swine.index):
+                self.assertEqual(
+                    self.df_swine.loc[year, province.value.abbreviation],
+                    common.get_volatilization_fraction_for_land_application(
+                        animal_type=animal_type,
+                        province=province,
+                        year=year))
+
+    def test_expected_values_for_dairy_cattle_type(self):
+        for animal_type in _AnimalGroups.dairy_cattle_type:
+            for province, year in product(self.provinces, self.df_dairy.index):
+                self.assertEqual(
+                    self.df_dairy.loc[year, province.value.abbreviation],
+                    common.get_volatilization_fraction_for_land_application(
+                        animal_type=animal_type,
+                        province=province,
+                        year=year))
+
+    def test_default_values(self):
+        for animal_type in common.AnimalType:
+            if not any([
+                animal_type.is_swine_type(),
+                animal_type.is_dairy_cattle_type()
+            ]):
+                for province, year in product(self.provinces, self.df_dairy.index):
+                    self.assertEqual(
+                        0.21,
+                        common.get_volatilization_fraction_for_land_application(
+                            animal_type=animal_type,
+                            province=province,
+                            year=year))
+
+
 if __name__ == '__main__':
     unittest.main()

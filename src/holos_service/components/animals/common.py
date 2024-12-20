@@ -1489,6 +1489,42 @@ def get_volatilization_fractions_from_land_applied_manure_data_for_dairy_cattle_
     return df.iloc[(df['Year'] - year).abs().idxmin()][province.value.abbreviation]
 
 
+def get_volatilization_fraction_for_land_application(
+        animal_type: AnimalType,
+        province: CanadianProvince,
+        year: int
+) -> float:
+    """Returns the average volatilization fraction of applied manure
+
+    Args:
+        animal_type: animal type class
+        province: Canadian Province class
+        year: year
+
+        (kg NH3-N volatilized kg-1 manure N applied)
+
+    Holos Source Code:
+        https://github.com/holos-aafc/Holos/blob/396f1ab9bc7247e6d78766f9445c14d2eb7c0d9d/H.Core/Providers/Animals/Table_36_Livestock_Emission_Conversion_Factors_Provider.cs#L96
+    """
+    # Swine and dairy have more accurate volatilization fractions based on province and year
+    if animal_type.is_swine_type():
+        volatilization_fraction = get_volatilization_fractions_from_land_applied_manure_data_for_swine_type(
+            province=province,
+            year=year)
+
+        # return volatilizationFraction.ImpliedEmissionFactor;
+    elif animal_type.is_dairy_cattle_type():
+        volatilization_fraction = get_volatilization_fractions_from_land_applied_manure_data_for_dairy_cattle_type(
+            province=province,
+            year=year)
+
+        # return volatilizationFraction.ImpliedEmissionFactor;
+
+    else:
+        volatilization_fraction = 0.21
+
+    return volatilization_fraction
+
 def GetLandApplicationFactors(
         farm: Farm,
         meanAnnualPrecipitation: float,
