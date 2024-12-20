@@ -1,3 +1,5 @@
+from enum import StrEnum, unique, auto
+
 from holos_service.common import EnumGeneric
 
 
@@ -75,3 +77,13 @@ class ComponentType(EnumGeneric):
 
     def to_str(self):
         return f'{self.value}Component'
+
+
+@unique
+class ClimateZones(StrEnum):
+    CoolTemperateMoist = auto()
+    CoolTemperateDry = auto()
+    BorealMoist = auto()
+    BorealDry = auto()
+    WarmTemperateMoist = auto()
+    WarmTemperateDry = auto()
