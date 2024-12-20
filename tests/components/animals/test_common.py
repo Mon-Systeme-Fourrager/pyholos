@@ -2,6 +2,9 @@ import unittest
 from itertools import product
 
 from holos_service.components.animals import common
+from holos_service.config import PathsHolosResources
+from holos_service.django_stuff import CanadianProvince
+from holos_service.utils import read_holos_resource_table
 from tests.helpers import utils
 
 
@@ -1583,6 +1586,68 @@ class TestGetDirectEmissionFactorBasedOnClimate(unittest.TestCase):
             common.get_direct_emission_factor_based_on_climate(
                 mean_annual_precipitation=700,
                 mean_annual_potential_evapotranspiration=1000))
+
+
+class TestGetVolatilizationFractionsFromLandAppliedManureDataForSwineType(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.df = read_holos_resource_table(
+            path_file=PathsHolosResources.Table_62_Fractions_of_swine_N_volatilized,
+            index_col="Year")
+        cls.provinces = [v for v in CanadianProvince if v.value.abbreviation not in ('NT', 'NU', 'YT')]
+
+    def test_func_returns_expected_values(self):
+        for province, year in product(self.provinces, self.df.index):
+            self.assertEqual(
+                self.df.loc[year, province.value.abbreviation],
+                common.get_volatilization_fractions_from_land_applied_manure_data_for_swine_type(
+                    province=province,
+                    year=year))
+
+    def test_func_returns_closest_values(self):
+        for province in self.provinces:
+            for year, closest_year in [
+                (1980, 1990),
+                (1994, 1995),
+                (2009, 2010),
+                (2025, 2020),
+            ]:
+                self.assertEqual(
+                    self.df.loc[closest_year, province.value.abbreviation],
+                    common.get_volatilization_fractions_from_land_applied_manure_data_for_swine_type(
+                        province=province,
+                        year=year))
+
+
+class TestGetVolatilizationFractionsFromLandAppliedManureDataForDairyCattleManure(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.df = read_holos_resource_table(
+            path_file=PathsHolosResources.Table_61_Fractions_of_dairy_cattle_N_volatilized,
+            index_col="Year")
+        cls.provinces = [v for v in CanadianProvince if v.value.abbreviation not in ('NT', 'NU', 'YT')]
+
+    def test_func_returns_expected_values(self):
+        for province, year in product(self.provinces, self.df.index):
+            self.assertEqual(
+                self.df.loc[year, province.value.abbreviation],
+                common.get_volatilization_fractions_from_land_applied_manure_data_for_dairy_cattle_type(
+                    province=province,
+                    year=year))
+
+    def test_func_returns_closest_values(self):
+        for province in self.provinces:
+            for year, closest_year in [
+                (1980, 1990),
+                (1994, 1995),
+                (2009, 2010),
+                (2025, 2020),
+            ]:
+                self.assertEqual(
+                    self.df.loc[closest_year, province.value.abbreviation],
+                    common.get_volatilization_fractions_from_land_applied_manure_data_for_dairy_cattle_type(
+                        province=province,
+                        year=year))
 
 
 if __name__ == '__main__':

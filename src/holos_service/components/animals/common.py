@@ -1449,6 +1449,45 @@ def get_direct_emission_factor_based_on_climate(
     return 0.006 if mean_annual_precipitation > mean_annual_potential_evapotranspiration else 0.002
 
 
+def get_volatilization_fractions_from_land_applied_manure_data_for_swine_type(
+        province: CanadianProvince,
+        year: int
+) -> float:
+    """Returns the average volatilization fraction of applied swine manure
+
+    Args:
+        province: Canadian Province class
+        year: year
+
+    Returns:
+        (kg NH3-N volatilized kg-1 manure N applied)
+
+    Holos Source Code:
+        https://github.com/holos-aafc/Holos/blob/396f1ab9bc7247e6d78766f9445c14d2eb7c0d9d/H.Core/Providers/Animals/Table%2070/Table_62_Volatilization_Fractions_From_Land_Applied_Swine_Manure_Provider.cs#L23
+    """
+    df = read_holos_resource_table(path_file=PathsHolosResources.Table_62_Fractions_of_swine_N_volatilized)
+    return df.iloc[(df['Year'] - year).abs().idxmin()][province.value.abbreviation]
+
+
+def get_volatilization_fractions_from_land_applied_manure_data_for_dairy_cattle_type(
+        province: CanadianProvince,
+        year: int
+) -> float:
+    """Returns the average volatilization fraction of applied dairy cattle manure
+
+    Args:
+        province: Canadian Province class
+        year: year
+
+    Returns:
+        (kg NH3-N volatilized kg-1 manure N applied)
+
+    Holos Source Code:
+        https://github.com/holos-aafc/Holos/blob/396f1ab9bc7247e6d78766f9445c14d2eb7c0d9d/H.Core/Providers/Animals/Table%2069/Table_61_Volatilization_Fractions_From_Land_Applied_Dairy_Manure_Provider.cs#L48
+    """
+    df = read_holos_resource_table(path_file=PathsHolosResources.Table_61_Fractions_of_dairy_cattle_N_volatilized)
+    return df.iloc[(df['Year'] - year).abs().idxmin()][province.value.abbreviation]
+
 
 def GetLandApplicationFactors(
         farm: Farm,
