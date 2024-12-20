@@ -15,10 +15,7 @@ class DietAdditiveType(EnumGeneric):
     ionophore_plus_four_percent_fat: str = "InonophorePlusFourPercentFat"
     ionophore_plus_five_percent_fat: str = "IonophorePlusFivePercentFat"
     custom: str = "Custom"
-
-    @classmethod
-    def get_value(cls, member: str | None):
-        return "None" if member is None else getattr(cls, member).value
+    NONE = None
 
 
 class ProductionStage(EnumGeneric):
@@ -628,10 +625,7 @@ class BeddingMaterialType(EnumGeneric):
     paper_products: str = 'PaperProducts'
     peat: str = 'Peat'
     hemp: str = 'Hemp'
-
-    @classmethod
-    def get_value(cls, name: str | None):
-        return "None" if name is None else getattr(cls, name).value
+    NONE = None
 
 
 class Bedding:
