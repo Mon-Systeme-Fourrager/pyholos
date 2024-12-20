@@ -270,11 +270,11 @@ class TestAnimalTypeExtensions(unittest.TestCase):
     def test_get_component_category_from_animal_type_default_values(self):
         for animal_type in common.AnimalType:
             if not any([
-               animal_type.is_beef_cattle_type(),
-               animal_type.is_dairy_cattle_type(),
-               animal_type.is_swine_type(),
-               animal_type.is_poultry_type(),
-               animal_type.is_sheep_type()
+                animal_type.is_beef_cattle_type(),
+                animal_type.is_dairy_cattle_type(),
+                animal_type.is_swine_type(),
+                animal_type.is_poultry_type(),
+                animal_type.is_sheep_type()
             ]):
                 self.assertEqual(
                     common.ComponentCategory.OtherLivestock,
@@ -1567,6 +1567,22 @@ class TestGetMethaneConversionFactor(unittest.TestCase):
                     common.get_methane_conversion_factor(
                         manure_state_type=manure_state_type,
                         climate_zone=climate_zone))
+
+
+class TestGetDirectEmissionFactorBasedOnClimate(unittest.TestCase):
+    def test_function_returns_expected_value_for_wet_conditions(self):
+        self.assertEqual(
+            0.006,
+            common.get_direct_emission_factor_based_on_climate(
+                mean_annual_precipitation=1000,
+                mean_annual_potential_evapotranspiration=700))
+
+    def test_function_returns_expected_value_for_dry_conditions(self):
+        self.assertEqual(
+            0.002,
+            common.get_direct_emission_factor_based_on_climate(
+                mean_annual_precipitation=700,
+                mean_annual_potential_evapotranspiration=1000))
 
 
 if __name__ == '__main__':

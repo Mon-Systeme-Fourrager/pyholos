@@ -1430,3 +1430,22 @@ def get_methane_conversion_factor(
     # Pasture, etc. have non-temperature dependent values
     return 0
 
+def get_direct_emission_factor_based_on_climate(
+    mean_annual_precipitation: float,
+    mean_annual_potential_evapotranspiration: float
+) -> float:
+    """Returns the default N2O direct emission factor
+
+    Args:
+        mean_annual_precipitation: (mm) mean annual precipitation
+        mean_annual_potential_evapotranspiration: (mm) mean annual potential evapotranspiration
+
+    Returns:
+        (kg(N2O-N) kg (N)-1) Direct N2O emission factor (EF_direct)
+
+    Holos Source Code:
+        https://github.com/holos-aafc/Holos/blob/396f1ab9bc7247e6d78766f9445c14d2eb7c0d9d/H.Core/Providers/Animals/Table_36_Livestock_Emission_Conversion_Factors_Provider.cs#L534
+    """
+    return 0.006 if mean_annual_precipitation > mean_annual_potential_evapotranspiration else 0.002
+
+
