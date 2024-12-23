@@ -3,15 +3,16 @@ from enum import StrEnum, unique, auto
 from holos_service.common import EnumGeneric
 
 
-class ComponentCategory(EnumGeneric):
-    land_management: str = "LandManagement"
-    beef_production: str = "BeefProduction"
-    dairy: str = "Dairy"
-    swine: str = "Swine"
-    poultry: str = "Poultry"
-    other_livestock: str = "OtherLivestock"
-    sheep: str = "Sheep"
-    infrastructure: str = "Infrastructure"
+@unique
+class ComponentCategory(StrEnum):
+    LandManagement = auto()
+    BeefProduction = auto()
+    Dairy = auto()
+    Swine = auto()
+    Poultry = auto()
+    OtherLivestock = auto()
+    Sheep = auto()
+    Infrastructure = auto()
 
 
 class ComponentType(EnumGeneric):
