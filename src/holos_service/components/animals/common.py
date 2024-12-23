@@ -1354,21 +1354,21 @@ def get_climate_zone(
     is_high_ratio_precipitation_to_potential_evapotranspiration = (
             (mean_annual_precipitation / mean_annual_potential_evapotranspiration) >= 1)
 
-    if (mean_annual_temperature > 10) and is_high_ratio_precipitation_to_potential_evapotranspiration:
+    if (mean_annual_temperature >= 10) and is_high_ratio_precipitation_to_potential_evapotranspiration:
         climate_zone = ClimateZones.WarmTemperateMoist
 
-    elif (mean_annual_temperature > 10) and not is_high_ratio_precipitation_to_potential_evapotranspiration:
+    elif (mean_annual_temperature >= 10) and not is_high_ratio_precipitation_to_potential_evapotranspiration:
         climate_zone = ClimateZones.WarmTemperateDry
 
     elif all([
-        mean_annual_temperature > 0,
+        mean_annual_temperature >= 0,
         mean_annual_temperature < 10,
         is_high_ratio_precipitation_to_potential_evapotranspiration
     ]):
         climate_zone = ClimateZones.CoolTemperateMoist
 
     elif all([
-        mean_annual_temperature > 0,
+        mean_annual_temperature >= 0,
         mean_annual_temperature < 10,
         not is_high_ratio_precipitation_to_potential_evapotranspiration
     ]):
