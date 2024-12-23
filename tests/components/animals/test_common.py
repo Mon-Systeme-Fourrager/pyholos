@@ -1,7 +1,10 @@
+import random
 import unittest
 from itertools import product
+from unittest.mock import patch
 
 from holos_service.components.animals import common
+from holos_service.components.common import ComponentCategory
 from holos_service.config import PathsHolosResources
 from holos_service.defaults import Defaults
 from holos_service.django_stuff import CanadianProvince
@@ -2069,6 +2072,788 @@ class TestGetLandApplicationFactors(unittest.TestCase):
             self.assertEqual(
                 expected.__dict__,
                 actual.__dict__)
+
+
+class TestGetManureEmissionFactors(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.climate_dependent_methane_conversion_factor = 1
+
+        cls.provinces = [v for v in CanadianProvince if v.value.abbreviation not in ('NT', 'NU', 'YT')]
+
+        cls.year = 1990
+        cls.mean_annual_precipitation = 1000
+        cls.mean_annual_evapotranspiration = 700
+        cls.mean_annual_temperature = 10
+
+        cls.animal_types = list(common.AnimalType)
+        cls.soil_texture = list(common.SoilTexture)
+
+        cls.beef_production_category = [
+            v for v in common.AnimalType
+            if v.get_component_category_from_animal_type() == ComponentCategory.BeefProduction]
+        cls.dairy_production_category = [
+            v for v in common.AnimalType
+            if v.get_component_category_from_animal_type() == ComponentCategory.Dairy]
+        cls.swine_production_category = [
+            v for v in common.AnimalType
+            if v.get_component_category_from_animal_type() == ComponentCategory.Swine]
+        cls.sheep_production_category = [
+            v for v in common.AnimalType
+            if v.get_component_category_from_animal_type() == ComponentCategory.Sheep]
+        cls.poultry_production_category = [
+            v for v in common.AnimalType
+            if v.get_component_category_from_animal_type() == ComponentCategory.Poultry]
+        cls.other_production_category = [
+            v for v in common.AnimalType
+            if v.get_component_category_from_animal_type() == ComponentCategory.OtherLivestock]
+
+    @patch("holos_service.components.animals.common.get_land_application_factors")
+    def test_get_manure_emission_factors_call_same_function_for_pasture_manure_holding_system(self, mocker):
+        mocker.return_value = {'foo': 'dummy'}
+        res = []
+        for manure_state_type, province, animal_type, soil_texture in product(
+                [
+                    common.ManureStateType.pasture,
+                    common.ManureStateType.paddock,
+                    common.ManureStateType.range,
+                ],
+                self.provinces,
+                common.AnimalType,
+                SoilTexture
+        ):
+            res.append(
+                common.get_land_application_factors(
+                    province=province,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    year=self.year,
+                    soil_texture=soil_texture)
+            )
+        for v in res[1:]:
+            self.assertEqual(
+                res[0],
+                v
+            )
+
+    def run_test(
+            self,
+            expected_value: common.LivestockEmissionConversionFactorsData,
+            actual_value: common.LivestockEmissionConversionFactorsData,
+            look_at_attributes: list[str]
+    ):
+        expected_value = expected_value.__dict__
+        actual_value = actual_value.__dict__
+        for s in look_at_attributes:
+            self.assertEqual(
+                expected_value[s],
+                actual_value[s])
+
+    def test_category_beef_production_solid_storage_manure_state(self):
+        for animal_type in self.beef_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    n2o_direct_emission_factor=0.01,
+                    volatilization_fraction=0.45,
+                    leaching_fraction=0.02,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.solid_storage,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "LeachingFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_beef_production_compost_intensive_manure_state(self):
+        for animal_type in self.beef_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    n2o_direct_emission_factor=0.005,
+                    volatilization_fraction=0.65,
+                    leaching_fraction=0.06,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.compost_intensive,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "LeachingFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_beef_production_compost_passive_manure_state(self):
+        for animal_type in self.beef_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    n2o_direct_emission_factor=0.005,
+                    volatilization_fraction=0.6,
+                    leaching_fraction=0.04,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.compost_passive,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "LeachingFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_beef_production_deep_bedding_manure_state(self):
+        for animal_type in self.beef_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    n2o_direct_emission_factor=0.01,
+                    volatilization_fraction=0.25,
+                    leaching_fraction=0.035,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.deep_bedding,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "LeachingFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_beef_production_anaerobic_digester_manure_state(self):
+        for animal_type in self.beef_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    methane_conversion_factor=0.01,
+                    n2o_direct_emission_factor=0.0006,
+                    volatilization_fraction=0.1,
+                    leaching_fraction=0,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.anaerobic_digester,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "MethaneConversionFactor",
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "LeachingFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_beef_production_error_case(self):
+        with self.assertRaises(ValueError):
+            common.get_manure_emission_factors(
+                manure_state_type=common.ManureStateType.daily_spread,
+                mean_annual_precipitation=self.mean_annual_precipitation,
+                mean_annual_temperature=self.mean_annual_temperature,
+                mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                animal_type=common.AnimalType.beef,
+                province=random.choice(self.provinces),
+                year=self.year,
+                soil_texture=random.choice(self.soil_texture))
+
+    def test_category_dairy_production_daily_spread_manure_state(self):
+        for animal_type in self.dairy_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    n2o_direct_emission_factor=0,
+                    volatilization_fraction=0.07,
+                    leaching_fraction=0,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.daily_spread,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "LeachingFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_dairy_production_daily_solid_storage_manure_state(self):
+        for animal_type in self.dairy_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    n2o_direct_emission_factor=0.01,
+                    volatilization_fraction=0.3,
+                    leaching_fraction=0.02,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.solid_storage,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "LeachingFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_dairy_production_compost_intensive_manure_state(self):
+        for animal_type in self.dairy_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    n2o_direct_emission_factor=0.005,
+                    volatilization_fraction=0.5,
+                    leaching_fraction=0.06,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.compost_intensive,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "LeachingFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_dairy_production_compost_passive_manure_state(self):
+        for animal_type in self.dairy_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    n2o_direct_emission_factor=0.005,
+                    volatilization_fraction=0.45,
+                    leaching_fraction=0.04,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.compost_passive,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "LeachingFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_dairy_production_deep_bedding_manure_state(self):
+        for animal_type in self.dairy_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    n2o_direct_emission_factor=0.01,
+                    volatilization_fraction=0.25,
+                    leaching_fraction=0.035,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.deep_bedding,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "LeachingFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_dairy_production_liquid_with_natural_crust_manure_state(self):
+        for animal_type in self.dairy_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    n2o_direct_emission_factor=0.005,
+                    volatilization_fraction=0.3,
+                    leaching_fraction=0.0,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.liquid_with_natural_crust,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "LeachingFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_dairy_production_liquid_no_crust_manure_state(self):
+        for animal_type in self.dairy_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    n2o_direct_emission_factor=0,
+                    volatilization_fraction=0.48,
+                    leaching_fraction=0.0,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.liquid_no_crust,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "LeachingFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_dairy_production_liquid_with_solid_cover_manure_state(self):
+        for animal_type in self.dairy_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    n2o_direct_emission_factor=0.005,
+                    volatilization_fraction=0.1,
+                    leaching_fraction=0.0,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.liquid_with_solid_cover,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "LeachingFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_dairy_production_deep_pit_manure_state(self):
+        for animal_type in self.dairy_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    n2o_direct_emission_factor=0.002,
+                    volatilization_fraction=0.28,
+                    leaching_fraction=0.0,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.deep_pit,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "LeachingFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_dairy_production_anaerobic_digester_manure_state(self):
+        for animal_type in self.dairy_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    methane_conversion_factor=0.01,
+                    n2o_direct_emission_factor=0.0006,
+                    volatilization_fraction=0.1,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.anaerobic_digester,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "MethaneConversionFactor",
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_dairy_production_error_case(self):
+        with self.assertRaises(ValueError):
+            common.get_manure_emission_factors(
+                manure_state_type=common.ManureStateType.pit_lagoon_no_cover,
+                mean_annual_precipitation=self.mean_annual_precipitation,
+                mean_annual_temperature=self.mean_annual_temperature,
+                mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                animal_type=common.AnimalType.dairy,
+                province=random.choice(self.provinces),
+                year=self.year,
+                soil_texture=random.choice(self.soil_texture))
+
+    def test_category_swine_production_composted_in_vessel_manure_state(self):
+        for animal_type in self.swine_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    methane_conversion_factor=0.005,
+                    n2o_direct_emission_factor=0.006,
+                    volatilization_fraction=0.6,
+                    leaching_fraction=0.0,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.composted_in_vessel,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "MethaneConversionFactor",
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "LeachingFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_swine_production_liquid_with_natural_crust_manure_state(self):
+        for animal_type in self.swine_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    methane_conversion_factor=0,
+                    n2o_direct_emission_factor=0.005,
+                    volatilization_fraction=0.3,
+                    leaching_fraction=0.0,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.liquid_with_natural_crust,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "MethaneConversionFactor",
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "LeachingFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_swine_production_liquid_no_crust_manure_state(self):
+        for animal_type in self.swine_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    methane_conversion_factor=0,
+                    n2o_direct_emission_factor=0,
+                    volatilization_fraction=0.48,
+                    leaching_fraction=0.0,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.liquid_no_crust,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "MethaneConversionFactor",
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "LeachingFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_swine_production_liquid_with_solid_cover_manure_state(self):
+        for animal_type in self.swine_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    methane_conversion_factor=0,
+                    n2o_direct_emission_factor=0.005,
+                    volatilization_fraction=0.1,
+                    leaching_fraction=0.0,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.liquid_with_solid_cover,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "MethaneConversionFactor",
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "LeachingFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_swine_production_deep_pit_manure_state(self):
+        for animal_type in self.swine_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    n2o_direct_emission_factor=0.002,
+                    volatilization_fraction=0.25,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.deep_pit,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_swine_production_anaerobic_digester_manure_state(self):
+        for animal_type in self.swine_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    methane_conversion_factor=0.01,
+                    n2o_direct_emission_factor=0.0006,
+                    volatilization_fraction=0.1,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.anaerobic_digester,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "MethaneConversionFactor",
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_swine_production_error_case(self):
+        with self.assertRaises(ValueError):
+            common.get_manure_emission_factors(
+                manure_state_type=common.ManureStateType.pit_lagoon_no_cover,
+                mean_annual_precipitation=self.mean_annual_precipitation,
+                mean_annual_temperature=self.mean_annual_temperature,
+                mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                animal_type=common.AnimalType.swine,
+                province=random.choice(self.provinces),
+                year=self.year,
+                soil_texture=random.choice(self.soil_texture))
+
+    def test_category_sheep_production_solid_storage_manure_state(self):
+        for animal_type in self.sheep_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    n2o_direct_emission_factor=0.01,
+                    volatilization_fraction=0.12,
+                    leaching_fraction=0.02,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.solid_storage,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "LeachingFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_sheep_production_error_case(self):
+        with self.assertRaises(ValueError):
+            common.get_manure_emission_factors(
+                manure_state_type=common.ManureStateType.pit_lagoon_no_cover,
+                mean_annual_precipitation=self.mean_annual_precipitation,
+                mean_annual_temperature=self.mean_annual_temperature,
+                mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                animal_type=common.AnimalType.sheep,
+                province=random.choice(self.provinces),
+                year=self.year,
+                soil_texture=random.choice(self.soil_texture))
+
+    def test_category_poultry_production_anaerobic_digester_manure_state(self):
+        for animal_type in self.poultry_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    methane_conversion_factor=0.01,
+                    n2o_direct_emission_factor=0.0006,
+                    volatilization_fraction=0.1,
+                    leaching_fraction=0.0,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.anaerobic_digester,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "MethaneConversionFactor",
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "LeachingFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_poultry_production_solid_storage_with_or_without_litter_manure_state(self):
+        for animal_type in self.poultry_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    methane_conversion_factor=0.015,
+                    n2o_direct_emission_factor=0.001,
+                    volatilization_fraction=0.4,
+                    leaching_fraction=0.0,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.solid_storage_with_or_without_litter,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "MethaneConversionFactor",
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "LeachingFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_poultry_production_error_case(self):
+        with self.assertRaises(ValueError):
+            common.get_manure_emission_factors(
+                manure_state_type=common.ManureStateType.compost_intensive,
+                mean_annual_precipitation=self.mean_annual_precipitation,
+                mean_annual_temperature=self.mean_annual_temperature,
+                mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                animal_type=common.AnimalType.poultry,
+                province=random.choice(self.provinces),
+                year=self.year,
+                soil_texture=random.choice(self.soil_texture)),
+
+    def test_category_other_livestock_solid_storage_manure_state(self):
+        for animal_type in self.other_production_category:
+            self.run_test(
+                expected_value=common.LivestockEmissionConversionFactorsData(
+                    n2o_direct_emission_factor=0.01,
+                    volatilization_fraction=0.12,
+                    leaching_fraction=0.02,
+                    emission_factor_leach=0.011),
+                actual_value=common.get_manure_emission_factors(
+                    manure_state_type=common.ManureStateType.solid_storage,
+                    mean_annual_precipitation=self.mean_annual_precipitation,
+                    mean_annual_temperature=self.mean_annual_temperature,
+                    mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    animal_type=animal_type,
+                    province=random.choice(self.provinces),
+                    year=self.year,
+                    soil_texture=random.choice(self.soil_texture)),
+                look_at_attributes=[
+                    "N2ODirectEmissionFactor",
+                    "VolatilizationFraction",
+                    "LeachingFraction",
+                    "EmissionFactorLeach"
+                ])
+
+    def test_category_other_livestock_error_case(self):
+        with self.assertRaises(ValueError):
+            common.get_manure_emission_factors(
+                manure_state_type=common.ManureStateType.pit_lagoon_no_cover,
+                mean_annual_precipitation=self.mean_annual_precipitation,
+                mean_annual_temperature=self.mean_annual_temperature,
+                mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                animal_type=common.AnimalType.other_livestock,
+                province=random.choice(self.provinces),
+                year=self.year,
+                soil_texture=random.choice(self.soil_texture))
+
+    def test_error_case(self):
+        for animal_type in common.AnimalType:
+            if animal_type.get_component_category_from_animal_type() not in [
+                ComponentCategory.BeefProduction,
+                ComponentCategory.Dairy,
+                ComponentCategory.Swine,
+                ComponentCategory.Sheep,
+                ComponentCategory.Poultry,
+                ComponentCategory.OtherLivestock,
+            ]:
+                with self.assertRaises(ValueError):
+                    common.get_manure_emission_factors(
+                        manure_state_type=common.ManureStateType.pit_lagoon_no_cover,
+                        mean_annual_precipitation=self.mean_annual_precipitation,
+                        mean_annual_temperature=self.mean_annual_temperature,
+                        mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                        animal_type=common.AnimalType.other_livestock,
+                        province=random.choice(self.provinces),
+                        year=self.year,
+                        soil_texture=random.choice(self.soil_texture))
 
 
 if __name__ == '__main__':
