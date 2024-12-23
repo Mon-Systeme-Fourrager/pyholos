@@ -29,7 +29,7 @@ class Component:
         pass
 
     def to_dict(self) -> dict:
-        return {k: v.value for k, v in self.__dict__.items() if isinstance(v, HolosVar)}
+        return {v.name: v.value for k, v in self.__dict__.items() if isinstance(v, HolosVar)}
 
 
 class Region:
