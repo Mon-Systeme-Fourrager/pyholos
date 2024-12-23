@@ -1311,7 +1311,7 @@ class LivestockEmissionConversionFactorsData:
         # public ManureStateType HandlingSystem { get; set; }
 
         self.MethaneConversionFactor = methane_conversion_factor
-        self.N20DirectEmissionFactor = n2o_direct_emission_factor
+        self.N2ODirectEmissionFactor = n2o_direct_emission_factor
         self.VolatilizationFraction = volatilization_fraction
         self.EmissionFactorVolatilization = emission_factor_volatilization
         self.LeachingFraction = leaching_fraction
@@ -1606,16 +1606,16 @@ def get_land_application_factors(
     factors.EmissionFactorLeach = Defaults.EmissionFactorForLeachingAndRunoff.value
 
     if region == Region.WesternCanada:
-        factors.N20DirectEmissionFactor = 0.00043
+        factors.N2ODirectEmissionFactor = 0.00043
     else:
         if soil_texture == SoilTexture.Fine:
-            factors.N20DirectEmissionFactor = 0.0078
+            factors.N2ODirectEmissionFactor = 0.0078
         elif soil_texture == SoilTexture.Medium:
-            factors.N20DirectEmissionFactor = 0.0062
+            factors.N2ODirectEmissionFactor = 0.0062
         else:
             # SoilTexture = Coarse
             # Footnote 1
-            factors.N20DirectEmissionFactor = 0.0047
+            factors.N2ODirectEmissionFactor = 0.0047
 
     factors.VolatilizationFraction = get_volatilization_fraction_for_land_application(
         animal_type=animal_type,
