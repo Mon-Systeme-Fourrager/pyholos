@@ -3,7 +3,9 @@ from itertools import product
 
 from holos_service.components.animals import common
 from holos_service.config import PathsHolosResources
+from holos_service.defaults import Defaults
 from holos_service.django_stuff import CanadianProvince
+from holos_service.soil import SoilTexture
 from holos_service.utils import read_holos_resource_table
 from tests.helpers import utils
 
@@ -1694,6 +1696,379 @@ class TestGetVolatilizationFractionForLandApplication(unittest.TestCase):
                             animal_type=animal_type,
                             province=province,
                             year=year))
+
+
+class TestGetLandApplicationFactors(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.west_region_provinces = (
+            CanadianProvince.Alberta,
+            CanadianProvince.BritishColumbia,
+            CanadianProvince.Manitoba,
+            CanadianProvince.Saskatchewan,
+            # CanadianProvince.NorthwestTerritories,
+            # CanadianProvince.Nunavut
+        )
+        cls.east_region_provinces = [v for v in CanadianProvince if all([
+            v not in cls.west_region_provinces,
+            v.value.abbreviation not in ('NT', 'NU', 'YT')
+        ])]
+
+        cls.other_animal_types = [v for v in common.AnimalType if not any([
+            v.is_swine_type(),
+            v.is_dairy_cattle_type()
+        ])]
+
+        cls.year = 1990
+
+        cls.mean_annual_precipitation = 1000
+        cls.mean_annual_evapotranspiration = 700
+
+        cls.emission_factor_volatilization = 0.014
+
+        cls.n2o_direct_emission_factor_west = 0.00043
+        cls.n2o_direct_emission_factor_east_fine_soil = 0.0078
+        cls.n2o_direct_emission_factor_east_medium_soil = 0.0062
+        cls.n2o_direct_emission_factor_east_coarse_soil = 0.0047
+
+        cls.volatilization_fraction_for_other_animal_types = 0.21
+
+        cls.methane_conversion_factor = 0.0047
+        cls.emission_factor_leaching = Defaults.EmissionFactorForLeachingAndRunoff.value
+
+        cls.df_dairy = read_holos_resource_table(
+            path_file=PathsHolosResources.Table_61_Fractions_of_dairy_cattle_N_volatilized,
+            index_col='Year')
+        cls.df_swine = read_holos_resource_table(
+            path_file=PathsHolosResources.Table_62_Fractions_of_swine_N_volatilized,
+            index_col='Year')
+
+    def test_western_regions_for_swine_animal_type(self):
+        for province, animal_type, soil_texture in product(
+                self.west_region_provinces,
+                _AnimalGroups.swine_type,
+                SoilTexture
+        ):
+            actual = common.get_land_application_factors(
+                province=province,
+                mean_annual_precipitation=self.mean_annual_precipitation,
+                mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                animal_type=animal_type,
+                year=self.year,
+                soil_texture=soil_texture)
+            expected = common.LivestockEmissionConversionFactorsData(
+                methane_conversion_factor=self.methane_conversion_factor,
+                n2o_direct_emission_factor=self.n2o_direct_emission_factor_west,
+                volatilization_fraction=self.df_swine.loc[self.year, province.value.abbreviation],
+                emission_factor_volatilization=self.emission_factor_volatilization,
+                leaching_fraction=0,
+                emission_factor_leach=self.emission_factor_leaching,
+                methane_enteric_rat=0,
+                methane_manure_rate=0,
+                nitrogen_excretion_rate=0)
+
+            self.assertEqual(
+                expected.__dict__,
+                actual.__dict__)
+
+    def test_western_regions_for_dairy_cattle_animal_type(self):
+        for province, animal_type, soil_texture in product(
+                self.west_region_provinces,
+                _AnimalGroups.dairy_cattle_type,
+                SoilTexture
+        ):
+            actual = common.get_land_application_factors(
+                province=province,
+                mean_annual_precipitation=self.mean_annual_precipitation,
+                mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                animal_type=animal_type,
+                year=self.year,
+                soil_texture=soil_texture)
+            expected = common.LivestockEmissionConversionFactorsData(
+                methane_conversion_factor=self.methane_conversion_factor,
+                n2o_direct_emission_factor=self.n2o_direct_emission_factor_west,
+                volatilization_fraction=self.df_dairy.loc[self.year, province.value.abbreviation],
+                emission_factor_volatilization=self.emission_factor_volatilization,
+                leaching_fraction=0,
+                emission_factor_leach=self.emission_factor_leaching,
+                methane_enteric_rat=0,
+                methane_manure_rate=0,
+                nitrogen_excretion_rate=0)
+
+            self.assertEqual(
+                expected.__dict__,
+                actual.__dict__)
+
+    def test_western_regions_for_other_animal_type(self):
+        for province, animal_type, soil_texture in product(
+                self.west_region_provinces,
+                self.other_animal_types,
+                SoilTexture
+        ):
+            actual = common.get_land_application_factors(
+                province=province,
+                mean_annual_precipitation=self.mean_annual_precipitation,
+                mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                animal_type=animal_type,
+                year=self.year,
+                soil_texture=soil_texture)
+            expected = common.LivestockEmissionConversionFactorsData(
+                methane_conversion_factor=self.methane_conversion_factor,
+                n2o_direct_emission_factor=self.n2o_direct_emission_factor_west,
+                volatilization_fraction=self.volatilization_fraction_for_other_animal_types,
+                emission_factor_volatilization=self.emission_factor_volatilization,
+                leaching_fraction=0,
+                emission_factor_leach=self.emission_factor_leaching,
+                methane_enteric_rat=0,
+                methane_manure_rate=0,
+                nitrogen_excretion_rate=0)
+
+            self.assertEqual(
+                expected.__dict__,
+                actual.__dict__)
+
+    def test_eastern_regions_for_swine_animal_type_and_fine_soil_texture(self):
+        for province, animal_type in product(
+                self.east_region_provinces,
+                _AnimalGroups.swine_type,
+        ):
+            actual = common.get_land_application_factors(
+                province=province,
+                mean_annual_precipitation=self.mean_annual_precipitation,
+                mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                animal_type=animal_type,
+                year=self.year,
+                soil_texture=SoilTexture.Fine)
+            expected = common.LivestockEmissionConversionFactorsData(
+                methane_conversion_factor=self.methane_conversion_factor,
+                n2o_direct_emission_factor=self.n2o_direct_emission_factor_east_fine_soil,
+                volatilization_fraction=self.df_swine.loc[self.year, province.value.abbreviation],
+                emission_factor_volatilization=self.emission_factor_volatilization,
+                leaching_fraction=0,
+                emission_factor_leach=self.emission_factor_leaching,
+                methane_enteric_rat=0,
+                methane_manure_rate=0,
+                nitrogen_excretion_rate=0)
+
+            self.assertEqual(
+                expected.__dict__,
+                actual.__dict__)
+
+    def test_eastern_regions_for_swine_animal_type_and_medium_soil_texture(self):
+        for province, animal_type in product(
+                self.east_region_provinces,
+                _AnimalGroups.swine_type,
+        ):
+            actual = common.get_land_application_factors(
+                province=province,
+                mean_annual_precipitation=self.mean_annual_precipitation,
+                mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                animal_type=animal_type,
+                year=self.year,
+                soil_texture=SoilTexture.Medium)
+            expected = common.LivestockEmissionConversionFactorsData(
+                methane_conversion_factor=self.methane_conversion_factor,
+                n2o_direct_emission_factor=self.n2o_direct_emission_factor_east_medium_soil,
+                volatilization_fraction=self.df_swine.loc[self.year, province.value.abbreviation],
+                emission_factor_volatilization=self.emission_factor_volatilization,
+                leaching_fraction=0,
+                emission_factor_leach=self.emission_factor_leaching,
+                methane_enteric_rat=0,
+                methane_manure_rate=0,
+                nitrogen_excretion_rate=0)
+
+            self.assertEqual(
+                expected.__dict__,
+                actual.__dict__)
+
+    def test_eastern_regions_for_swine_animal_type_and_coarse_soil_texture(self):
+        for province, animal_type in product(
+                self.east_region_provinces,
+                _AnimalGroups.swine_type,
+        ):
+            actual = common.get_land_application_factors(
+                province=province,
+                mean_annual_precipitation=self.mean_annual_precipitation,
+                mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                animal_type=animal_type,
+                year=self.year,
+                soil_texture=SoilTexture.Coarse)
+            expected = common.LivestockEmissionConversionFactorsData(
+                methane_conversion_factor=self.methane_conversion_factor,
+                n2o_direct_emission_factor=self.n2o_direct_emission_factor_east_coarse_soil,
+                volatilization_fraction=self.df_swine.loc[self.year, province.value.abbreviation],
+                emission_factor_volatilization=self.emission_factor_volatilization,
+                leaching_fraction=0,
+                emission_factor_leach=self.emission_factor_leaching,
+                methane_enteric_rat=0,
+                methane_manure_rate=0,
+                nitrogen_excretion_rate=0)
+
+            self.assertEqual(
+                expected.__dict__,
+                actual.__dict__)
+
+    def test_eastern_regions_for_dairy_animal_type_and_fine_soil_texture(self):
+        for province, animal_type in product(
+                self.east_region_provinces,
+                _AnimalGroups.dairy_cattle_type,
+        ):
+            actual = common.get_land_application_factors(
+                province=province,
+                mean_annual_precipitation=self.mean_annual_precipitation,
+                mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                animal_type=animal_type,
+                year=self.year,
+                soil_texture=SoilTexture.Fine)
+            expected = common.LivestockEmissionConversionFactorsData(
+                methane_conversion_factor=self.methane_conversion_factor,
+                n2o_direct_emission_factor=self.n2o_direct_emission_factor_east_fine_soil,
+                volatilization_fraction=self.df_dairy.loc[self.year, province.value.abbreviation],
+                emission_factor_volatilization=self.emission_factor_volatilization,
+                leaching_fraction=0,
+                emission_factor_leach=self.emission_factor_leaching,
+                methane_enteric_rat=0,
+                methane_manure_rate=0,
+                nitrogen_excretion_rate=0)
+
+            self.assertEqual(
+                expected.__dict__,
+                actual.__dict__)
+
+    def test_eastern_regions_for_dairy_animal_type_and_medium_soil_texture(self):
+        for province, animal_type in product(
+                self.east_region_provinces,
+                _AnimalGroups.dairy_cattle_type,
+        ):
+            actual = common.get_land_application_factors(
+                province=province,
+                mean_annual_precipitation=self.mean_annual_precipitation,
+                mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                animal_type=animal_type,
+                year=self.year,
+                soil_texture=SoilTexture.Medium)
+            expected = common.LivestockEmissionConversionFactorsData(
+                methane_conversion_factor=self.methane_conversion_factor,
+                n2o_direct_emission_factor=self.n2o_direct_emission_factor_east_medium_soil,
+                volatilization_fraction=self.df_dairy.loc[self.year, province.value.abbreviation],
+                emission_factor_volatilization=self.emission_factor_volatilization,
+                leaching_fraction=0,
+                emission_factor_leach=self.emission_factor_leaching,
+                methane_enteric_rat=0,
+                methane_manure_rate=0,
+                nitrogen_excretion_rate=0)
+
+            self.assertEqual(
+                expected.__dict__,
+                actual.__dict__)
+
+    def test_eastern_regions_for_dairy_animal_type_and_coarse_soil_texture(self):
+        for province, animal_type in product(
+                self.east_region_provinces,
+                _AnimalGroups.dairy_cattle_type,
+        ):
+            actual = common.get_land_application_factors(
+                province=province,
+                mean_annual_precipitation=self.mean_annual_precipitation,
+                mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                animal_type=animal_type,
+                year=self.year,
+                soil_texture=SoilTexture.Coarse)
+            expected = common.LivestockEmissionConversionFactorsData(
+                methane_conversion_factor=self.methane_conversion_factor,
+                n2o_direct_emission_factor=self.n2o_direct_emission_factor_east_coarse_soil,
+                volatilization_fraction=self.df_dairy.loc[self.year, province.value.abbreviation],
+                emission_factor_volatilization=self.emission_factor_volatilization,
+                leaching_fraction=0,
+                emission_factor_leach=self.emission_factor_leaching,
+                methane_enteric_rat=0,
+                methane_manure_rate=0,
+                nitrogen_excretion_rate=0)
+
+            self.assertEqual(
+                expected.__dict__,
+                actual.__dict__)
+
+    def test_eastern_regions_for_other_animal_types_and_fine_soil_texture(self):
+        for province, animal_type in product(
+                self.east_region_provinces,
+                self.other_animal_types,
+        ):
+            actual = common.get_land_application_factors(
+                province=province,
+                mean_annual_precipitation=self.mean_annual_precipitation,
+                mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                animal_type=animal_type,
+                year=self.year,
+                soil_texture=SoilTexture.Fine)
+            expected = common.LivestockEmissionConversionFactorsData(
+                methane_conversion_factor=self.methane_conversion_factor,
+                n2o_direct_emission_factor=self.n2o_direct_emission_factor_east_fine_soil,
+                volatilization_fraction=self.volatilization_fraction_for_other_animal_types,
+                emission_factor_volatilization=self.emission_factor_volatilization,
+                leaching_fraction=0,
+                emission_factor_leach=self.emission_factor_leaching,
+                methane_enteric_rat=0,
+                methane_manure_rate=0,
+                nitrogen_excretion_rate=0)
+
+            self.assertEqual(
+                expected.__dict__,
+                actual.__dict__)
+
+    def test_eastern_regions_for_other_animal_types_and_medium_soil_texture(self):
+        for province, animal_type in product(
+                self.east_region_provinces,
+                self.other_animal_types,
+        ):
+            actual = common.get_land_application_factors(
+                province=province,
+                mean_annual_precipitation=self.mean_annual_precipitation,
+                mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                animal_type=animal_type,
+                year=self.year,
+                soil_texture=SoilTexture.Medium)
+            expected = common.LivestockEmissionConversionFactorsData(
+                methane_conversion_factor=self.methane_conversion_factor,
+                n2o_direct_emission_factor=self.n2o_direct_emission_factor_east_medium_soil,
+                volatilization_fraction=self.volatilization_fraction_for_other_animal_types,
+                emission_factor_volatilization=self.emission_factor_volatilization,
+                leaching_fraction=0,
+                emission_factor_leach=self.emission_factor_leaching,
+                methane_enteric_rat=0,
+                methane_manure_rate=0,
+                nitrogen_excretion_rate=0)
+
+            self.assertEqual(
+                expected.__dict__,
+                actual.__dict__)
+
+    def test_eastern_regions_for_other_animal_types_and_coarse_soil_texture(self):
+        for province, animal_type in product(
+                self.east_region_provinces,
+                self.other_animal_types,
+        ):
+            actual = common.get_land_application_factors(
+                province=province,
+                mean_annual_precipitation=self.mean_annual_precipitation,
+                mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                animal_type=animal_type,
+                year=self.year,
+                soil_texture=SoilTexture.Coarse)
+            expected = common.LivestockEmissionConversionFactorsData(
+                methane_conversion_factor=self.methane_conversion_factor,
+                n2o_direct_emission_factor=self.n2o_direct_emission_factor_east_coarse_soil,
+                volatilization_fraction=self.volatilization_fraction_for_other_animal_types,
+                emission_factor_volatilization=self.emission_factor_volatilization,
+                leaching_fraction=0,
+                emission_factor_leach=self.emission_factor_leaching,
+                methane_enteric_rat=0,
+                methane_manure_rate=0,
+                nitrogen_excretion_rate=0)
+
+            self.assertEqual(
+                expected.__dict__,
+                actual.__dict__)
 
 
 if __name__ == '__main__':

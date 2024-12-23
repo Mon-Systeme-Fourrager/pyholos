@@ -16,6 +16,10 @@ class PathsHolosResources:
         'Table_21_Average_Milk_Production_For_Dairy_Cows_By_Province.csv')
     Table_30_Default_Bedding_Material_Composition_Provider = _path_root / (
         'Table_30_Default_Bedding_Material_Composition_Provider.csv')
+    Table_61_Fractions_of_dairy_cattle_N_volatilized = _path_root / (
+        'Table_61_Fractions_of_dairy_cattle_N_volatilized.csv')
+    Table_62_Fractions_of_swine_N_volatilized = _path_root / (
+        'Table_62_Fractions_of_swine_N_volatilized.csv')
 
 
 class PathsSlcData(Enum):
