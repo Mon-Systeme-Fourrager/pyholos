@@ -186,9 +186,12 @@ class Beef(Component):
         self.fraction_leaching = HolosVar(
             name="Fraction Leaching",
             value=None)
+
         self.ash_content = HolosVar(
             name="Ash Content",
-            value=None)
+            value=8.0)
+        """deprecated"""
+
         self.methane_producing_capacity_of_manure = HolosVar(
             name="Methane Producing Capacity Of Manure",
             value=None)
