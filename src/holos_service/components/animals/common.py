@@ -1634,7 +1634,7 @@ def get_manure_emission_factors(
         province: CanadianProvince,
         year: int,
         soil_texture: SoilTexture
-):
+) -> LivestockEmissionConversionFactorsData:
     climate_dependent_methane_conversion_factor = get_methane_conversion_factor(
         manure_state_type=manure_state_type,
         climate_zone=get_climate_zone(
