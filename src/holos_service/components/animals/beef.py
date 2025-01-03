@@ -165,18 +165,25 @@ class Beef(Component):
         self.activity_coefficient_of_feeding_situation = HolosVar(
             name="Activity Coefficient Of Feeding Situation",
             value=None)
+
         self.maintenance_coefficient = HolosVar(
             name="Maintenance Coefficient",
             value=None)
+        """(MJ day⁻¹ kg⁻¹) C_f_adjusted"""
+
         self.methane_conversion_factor_of_manure = HolosVar(
             name="Methane Conversion Factor Of Manure",
             value=None)
         self.n2o_direct_emission_factor = HolosVar(
             name="N2O Direct Emission Factor",
             value=None)
+
         self.emission_factor_volatilization = HolosVar(
             name="Emission Factor Volatilization",
             value=None)
+        """(kg N2O-N (kg N)^-1) EF_volatilization
+        """
+
         self.volatilization_fraction = HolosVar(
             name="Volatilization Fraction",
             value=None)
