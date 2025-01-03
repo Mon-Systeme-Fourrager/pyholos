@@ -344,7 +344,7 @@ class Milk:
             self,
             production_amount: float = 0,
             fat_content: float = 4,
-            protein_content_as_percentage: float = 3.5,
+            protein_content_as_percentage: float = 3.38,
     ):
         """Milk production data
 
