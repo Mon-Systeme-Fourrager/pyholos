@@ -1,9 +1,12 @@
 import unittest
+from datetime import date
+from pathlib import Path
 
 from holos_service.components.animals import beef, common
 from holos_service.config import PathsHolosResources
 from holos_service.core_constants import CoreConstants
 from holos_service.django_stuff import CanadianProvince
+from holos_service.soil import SoilTexture
 from holos_service.utils import read_holos_resource_table
 
 
@@ -99,7 +102,6 @@ class TestBeef(unittest.TestCase):
             animal_types.pop(animal_types.index(animal_type))
 
         for animal_type in animal_types:
-            print(animal_type)
             self.run_animal_coefficient_data_test(
                 animal_type=animal_type,
                 expected_baseline_maintenance_coefficient=0,
@@ -172,6 +174,61 @@ class TestGetAverageMilkProductionForDairyCowsValue(unittest.TestCase):
                 beef.get_average_milk_production_for_dairy_cows_value(
                     province=province,
                     year=year + 1))
+
+
+class TestCowCalfNoneRegression(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.non_regression_data = read_holos_resource_table(
+            path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_cow_calf.csv').loc[0].to_dict()
+        cls.non_regression_data.update(
+            {"Animals Are Milk Fed Only": str(cls.non_regression_data["Animals Are Milk Fed Only"]).upper()})
+        cls.manure_state_type = beef.ManureStateType.deep_bedding
+        cls.animal_type = beef.AnimalType.beef_bulls
+        cls.manure_emission_factors = common.get_manure_emission_factors(
+            manure_state_type=cls.manure_state_type,
+            mean_annual_precipitation=45.36,
+            mean_annual_temperature=3.72,
+            mean_annual_evapotranspiration=51.95,
+            animal_type=cls.animal_type,
+            province=CanadianProvince.Alberta,
+            year=2024,
+            soil_texture=SoilTexture.Fine)
+
+    def test_cow_calf(self):
+        cow_calf = beef.CowCalf(
+            group_name=beef.GroupNames.bulls,
+            animal_type=self.animal_type,
+            management_period_name='Winter feeding',
+            group_pairing_number=0,
+            management_period_start_date=date(2023, 1, 1),
+            management_period_days=120,
+            number_of_animals=150,
+            production_stage=beef.ProductionStage.gestating,
+            number_of_young_animals=0,
+            is_milk_fed_only=False,
+            milk_data=beef.Milk(),
+            diet=beef.Diet(
+                crude_protein_percentage=15.35,
+                forage_percentage=100,
+                total_digestible_nutrient_percentage=57.7,
+                ash_percentage=10.15,
+                starch_percentage=4.35,
+                fat_percentage=1.95,
+                neutral_detergent_fiber_percentage=49.3,
+                metabolizable_energy=2.1),
+            housing_type=beef.HousingType.confined_no_barn,
+            manure_handling_system=self.manure_state_type,
+            manure_emission_factors=self.manure_emission_factors,
+            bedding_material_type=common.BeddingMaterialType.straw
+        )
+        for k, v in self.non_regression_data.items():
+            self.assertAlmostEqual(
+                v,
+                cow_calf.to_dict()[k],
+                places=3)
+
+    pass
 
 
 if __name__ == '__main__':

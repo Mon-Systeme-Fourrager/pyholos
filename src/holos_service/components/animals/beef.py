@@ -1,11 +1,17 @@
+from datetime import date
+
 from pandas import DataFrame
 
 from holos_service import utils
 from holos_service.common import HolosVar, Component, EnumGeneric
 from holos_service.components.animals.common import (
-    HousingType,
-    AnimalCoefficientData)
-from holos_service.config import PathsHolosResources
+    ProductionStage, DietAdditiveType, Milk, Diet, HousingType,
+    Bedding, AnimalType, BeddingMaterialType, AnimalCoefficientData,
+    get_default_methane_producing_capacity_of_manure, ManureStateType,
+    get_fraction_of_organic_nitrogen_mineralized_data,
+    get_ammonia_emission_factor_for_storage_of_beef_and_dairy_cattle_manure, LivestockEmissionConversionFactorsData)
+from holos_service.components.common import ComponentType
+from holos_service.config import DATE_FMT, PathsHolosResources
 from holos_service.django_stuff import CanadianProvince
 
 
@@ -258,3 +264,128 @@ class Beef(Component):
 
         self.activity_coefficient_of_feeding_situation.value = res
         pass
+
+
+class CowCalf(Beef):
+    def __init__(
+            self,
+            group_name: GroupNames,
+            animal_type: AnimalType,
+            management_period_name: str,
+            group_pairing_number: int,
+            management_period_start_date: date,
+            management_period_days: int,
+            number_of_animals: int,
+            production_stage: ProductionStage,
+            number_of_young_animals: int,
+            is_milk_fed_only: bool,
+            milk_data: Milk,
+            diet: Diet,
+            housing_type: HousingType,
+            manure_handling_system: ManureStateType,
+            manure_emission_factors: LivestockEmissionConversionFactorsData,
+            start_weight: float = None,
+            end_weight: float = None,
+            diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
+            bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+    ):
+        """
+
+        Args:
+            group_name:
+            animal_type:
+            management_period_name:
+            group_pairing_number:
+            management_period_start_date:
+            management_period_days:
+            number_of_animals:
+            production_stage:
+            number_of_young_animals:
+            is_milk_fed_only: used to indicate when animals are not consuming forage but only milk (distinction needed for calculate enteric methane for beef calves)
+            start_weight: (kg) animal weight at the beginning of the management period
+            end_weight: (kg) animal weight at the end of the management period
+            milk_data: class object that contains all required milk production data
+            diet: class object that contains all required diet data
+            diet_additive_type: type of the diet additive
+            bedding_material_type: bedding material type
+        """
+        super().__init__()
+        self.update_name('Cow-Calf')
+        self.update_component_type(ComponentType.cow_calf.to_str())
+
+        self.group_name.value = group_name.value
+        self.group_type.value = animal_type.value
+        self.management_period_name.value = management_period_name
+        self.group_pairing_number.value = group_pairing_number
+        self.management_period_start_date.value = management_period_start_date.strftime(DATE_FMT)
+        self.management_period_days.value = management_period_days
+        self.number_of_animals.value = number_of_animals
+        self.production_stage.value = production_stage.value
+        self.number_of_young_animals.value = number_of_young_animals
+        self.animals_are_milk_fed_only.value = str(is_milk_fed_only).upper()
+
+        self.get_animal_coefficient_data()
+        self.maintenance_coefficient.value = self._animal_coefficient_data.baseline_maintenance_coefficient
+        self.gain_coefficient.value = self._animal_coefficient_data.gain_coefficient
+
+        self.start_weight.value = self._animal_coefficient_data.default_initial_weight if start_weight is None else start_weight
+        self.end_weight.value = self._animal_coefficient_data.default_final_weight if end_weight is None else end_weight
+
+        self.average_daily_gain.value = (self.end_weight.value - self.start_weight.value) / management_period_days
+        self.milk_production.value = milk_data.production
+        self.milk_fat_content.value = milk_data.fat_content
+        self.milk_protein_content_as_percentage.value = milk_data.protein_content_as_percentage
+
+        self.diet_additive_type.value = diet_additive_type.value
+        # self.methane_conversion_factor_adjusted.value = 0
+        self.feed_intake.value = 0
+
+        self.crude_protein.value = diet.crude_protein_percentage
+        self.forage.value = diet.forage_percentage
+        self.tdn.value = diet.total_digestible_nutrient_percentage
+        self.ash_content_of_diet.value = diet.ash_percentage
+        self.starch.value = diet.starch_percentage
+        self.fat.value = diet.fat_percentage
+        self.me.value = diet.metabolizable_energy
+        self.ndf.value = diet.neutral_detergent_fiber_percentage
+
+        self.dietary_net_energy_concentration.value = diet.calc_dietary_net_energy_concentration_for_beef()
+        self.methane_conversion_factor_of_diet.value = diet.calc_methane_conversion_factor(animal_type=animal_type)
+
+        self.housing_type.value = housing_type.value
+
+        bedding = Bedding(
+            housing_type=housing_type,
+            bedding_material_type=bedding_material_type,
+            animal_type=animal_type)
+
+        self.user_defined_bedding_rate.value = bedding.user_defined_bedding_rate.value
+        self.total_carbon_kilograms_dry_matter_for_bedding.value = bedding.total_carbon_kilograms_dry_matter_for_bedding.value
+        self.total_nitrogen_kilograms_dry_matter_for_bedding.value = bedding.total_nitrogen_kilograms_dry_matter_for_bedding.value
+        self.moisture_content_of_bedding_material.value = bedding.moisture_content_of_bedding_material.value
+
+        self.get_feeding_activity_coefficient()
+
+        self.methane_producing_capacity_of_manure.value = get_default_methane_producing_capacity_of_manure(
+            is_pasture=housing_type.is_pasture(),
+            animal_type=animal_type)
+
+        fraction_of_organic_nitrogen_mineralized_data = get_fraction_of_organic_nitrogen_mineralized_data(
+            state_type=manure_handling_system,
+            animal_type=animal_type)
+
+        self.manure_state_type.value = manure_handling_system.value
+        self.fraction_of_organic_nitrogen_immobilized.value = fraction_of_organic_nitrogen_mineralized_data.fraction_immobilized
+        self.fraction_of_organic_nitrogen_nitrified.value = fraction_of_organic_nitrogen_mineralized_data.fraction_nitrified
+        self.fraction_of_organic_nitrogen_mineralized.value = fraction_of_organic_nitrogen_mineralized_data.fraction_mineralized
+
+        self.ammonia_emission_factor_for_manure_storage.value = (
+            get_ammonia_emission_factor_for_storage_of_beef_and_dairy_cattle_manure(
+                storage_type=manure_handling_system))
+
+        self.methane_conversion_factor_of_manure.value = manure_emission_factors.MethaneConversionFactor
+        self.n2o_direct_emission_factor.value = manure_emission_factors.N2ODirectEmissionFactor
+        self.volatilization_fraction.value = manure_emission_factors.VolatilizationFraction
+        self.emission_factor_volatilization.value = manure_emission_factors.EmissionFactorVolatilization
+        self.fraction_leaching.value = manure_emission_factors.LeachingFraction
+        self.emission_factor_leaching.value = manure_emission_factors.EmissionFactorLeach
