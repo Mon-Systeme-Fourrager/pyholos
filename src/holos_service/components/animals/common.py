@@ -426,7 +426,7 @@ class Diet:
             (MJ (kg DM)^-1) dietary net energy concentration
 
         Notes:
-            This relationship is deduced from deduced from the dairy cattle feed composition table provided in the Holos source code
+            This relationship is deduced from the dairy cattle feed composition table provided in the Holos source code
             'https://github.com/holos-aafc/Holos/blob/main/H.Content/Resources/dairy_feed_composition.csv
 
         """
