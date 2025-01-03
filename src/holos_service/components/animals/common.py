@@ -774,7 +774,7 @@ class Bedding:
             else:
                 return 0
 
-        if animal_type.is_other_animal_type:
+        if animal_type.is_other_animal_type():
             # Footnote 11 for Other livestock value reference
             match animal_type:
                 case AnimalType.llamas:
@@ -990,8 +990,8 @@ class FractionOfOrganicNitrogenMineralizedData:
             n2_n:
             n_leached:
         """
-        self.fraction_mineralized = fraction_immobilized
-        self.fraction_immobilized = fraction_mineralized
+        self.fraction_mineralized = fraction_mineralized
+        self.fraction_immobilized = fraction_immobilized
         self.fraction_nitrified = fraction_nitrified
         self.fraction_denitrified = fraction_denitrified
         self.n2o_n = n2o_n
