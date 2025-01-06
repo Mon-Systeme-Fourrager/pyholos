@@ -115,11 +115,6 @@ class Beef(Component):
             name="Methane Conversion Factor Of Diet",
             value=None)
 
-        self.methane_conversion_factor_adjusted = HolosVar(
-            name="Methane Conversion Factor Adjusted",
-            value=0)
-        """deprecated"""
-
         self.feed_intake = HolosVar(
             name="Feed Intake",
             value=None)
@@ -200,11 +195,6 @@ class Beef(Component):
             name="Fraction Leaching",
             value=None)
 
-        self.ash_content = HolosVar(
-            name="Ash Content",
-            value=8.0)
-        """deprecated"""
-
         self.methane_producing_capacity_of_manure = HolosVar(
             name="Methane Producing Capacity Of Manure",
             value=None)
@@ -223,6 +213,16 @@ class Beef(Component):
         self.ammonia_emission_factor_for_manure_storage = HolosVar(
             name="Ammonia Emission Factor For Manure Storage",
             value=None)
+
+        self.methane_conversion_factor_adjusted = HolosVar(
+            name="Methane Conversion Factor Adjusted",
+            value=0)
+        """deprecated"""
+
+        self.ash_content = HolosVar(
+            name="Ash Content",
+            value=8.0)
+        """deprecated"""
 
         self._animal_coefficient_data: AnimalCoefficientData | None = None
 
