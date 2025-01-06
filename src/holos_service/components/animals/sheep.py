@@ -59,11 +59,25 @@ class Sheep(Component):
         self.start_weight = HolosVar(name="Start Weight", value=None)
         self.end_weight = HolosVar(name="End Weight", value=None)
         self.average_daily_gain = HolosVar(name="Average Daily Gain", value=None)
-        self.energy_required_to_produce_wool = HolosVar(name="Energy Required To Produce Wool", value=None)
+
+        self.energy_required_to_produce_wool = HolosVar(name="Energy Required To Produce Wool", value=24)
+        """(MJ kg-1)
+        Holos Source Code:
+        https://github.com/holos-aafc/Holos/blob/97331845af308fe8aab6267edad4bbda6f5938b6/H.Core/Services/Initialization/Animals/AnimalInitializationService.Sheep.cs#L28
+        """
+
+        self.energy_required_to_produce_milk = HolosVar(name="Energy Required To Produce Milk", value=4.6)
+        """(MJ kg-1)
+        Holos Source Code:
+        https://github.com/holos-aafc/Holos/blob/97331845af308fe8aab6267edad4bbda6f5938b6/H.Core/Services/Initialization/Animals/AnimalInitializationService.Sheep.cs#L28
+        """
+
         self.wool_production = HolosVar(name="Wool Production", value=None)
-        self.energy_required_to_produce_milk = HolosVar(name="Energy Required To Produce Milk", value=None)
         self.diet_additive_type = HolosVar(name="Diet Additive Type", value=None)
-        self.feed_intake = HolosVar(name="Feed Intake", value=None)
+
+        self.feed_intake = HolosVar(name="Feed Intake", value=0)
+        """only for swine"""
+
         self.crude_protein = HolosVar(name="Crude Protein", value=None)
         self.forage = HolosVar(name="Forage", value=None)
         self.tdn = HolosVar(name="TDN", value=None)
