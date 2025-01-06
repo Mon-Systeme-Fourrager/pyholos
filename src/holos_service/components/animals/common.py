@@ -855,7 +855,7 @@ class AnimalCoefficientData:
         """Table 16. Livestock coefficients for beef cattle and dairy cattle.
 
         Args:
-            baseline_maintenance_coefficient: (dimensionless?) baseline maintenance coefficient (C_f)
+            baseline_maintenance_coefficient: (MJ d-1 kg-1) baseline maintenance coefficient (C_f)
             gain_coefficient: (dimensionless?) gain coefficient (C_d)
             default_initial_weight: (kg) initial weight
             default_final_weight: (kg) final weight
