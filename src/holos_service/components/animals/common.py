@@ -329,6 +329,130 @@ class AnimalType(EnumGeneric):
         return res
 
 
+def convert_animal_type_name(name: str) -> AnimalType:
+    """Maps animal type name to its nearest AnimalType Enum.
+
+    Holos source code:
+        https://github.com/RamiALBASHA/Holos/blob/71638efd97c84c6ded45e342ce664477df6f803f/H.Core/Converters/AnimalTypeStringConverter.cs#L10
+
+    Notes:
+        lines followed by multiple '#' were modified from the original code
+    """
+    cleaned_input = name.lower().strip().replace(' ', '').replace('-', '')
+
+    match cleaned_input:
+        # Beef cattle
+        case "backgrounding" | "backgrounder":
+            return AnimalType.beef_backgrounder
+        case "backgroundingsteers":
+            return AnimalType.beef_backgrounder_steer
+        case "backgroundingheifers":
+            return AnimalType.beef_backgrounder_heifer
+        case "beef" | "nondairycattle" | "beefcattle":
+            return AnimalType.beef
+        case "beeffinisher" | "finisher":
+            return AnimalType.beef_finisher
+        case "cowcalf":
+            return AnimalType.cow_calf
+        case "stockers":
+            return AnimalType.stockers
+        case "beefcalves" | "beefcalf":
+            return AnimalType.beef_calf
+
+        # Dairy
+        case "dairy" | "dairycattle":
+            return AnimalType.dairy
+        case "dairybulls":
+            return AnimalType.dairy_bulls
+        case "dairydry" | "dairydrycow":
+            return AnimalType.dairy_dry_cow
+        case "dairyheifers":
+            return AnimalType.dairy_heifers
+        case "dairylactating":
+            return AnimalType.dairy_lactating_cow
+
+        # Swine
+        case "boar" | "swineboar":
+            return AnimalType.swine_boar
+        case "weaners" | "piglets":
+            return AnimalType.swine_piglets
+        case "drysow":
+            return AnimalType.swine_dry_sow
+        case "sow" | "sows":
+            return AnimalType.swine_sows
+        case "grower" | "hogs" | "swinegrower":
+            return AnimalType.swine_grower
+        case "lactatingsow":
+            return AnimalType.swine_lactating_sow
+        case "swine":
+            return AnimalType.swine
+        case "swinefinisher":
+            return AnimalType.swine_finisher
+
+        # Sheep
+        case "sheepfeedlot":
+            return AnimalType.sheep_feedlot
+        case "ewe" | "ewes":
+            return AnimalType.ewes
+        case "ram" | "rams":  ###################
+            return AnimalType.ram
+        case "sheep" | "sheepandlambs":
+            return AnimalType.sheep
+        case "weanedlambs" | "lambs":  ####################
+            return AnimalType.lambs
+
+        # Other livestock
+        case "horse" | "horses":
+            return AnimalType.horses
+        case "goat" | "goats":
+            return AnimalType.goats
+        case "mules" | "mule":
+            return AnimalType.mules
+        case "bull":
+            return AnimalType.beef_bulls
+        case "llamas":
+            return AnimalType.llamas
+        case "alpacas":
+            return AnimalType.alpacas
+        case "deer":
+            return AnimalType.deer
+        case "elk":
+            return AnimalType.elk
+        case "bison":
+            return AnimalType.bison
+
+        # Poultry
+        case "poultry":
+            return AnimalType.poultry
+        case "poultrypulletsbroilers" | "chickenbroilers" | "broilers":
+            return AnimalType.broilers
+        case "chickenpullets" | "pullets":
+            return AnimalType.chicken_pullets
+        case "chicken":
+            return AnimalType.chicken
+        case "chickencockerels" | "cockerels":
+            return AnimalType.chicken_cockerels
+        case "roasters" | "roosters" | "chickenroosters":  ####################
+            return AnimalType.chicken_roosters
+        case "hens":
+            return AnimalType.chicken_hens
+        case "poultryturkeys" | "turkey" | "ducks":
+            return AnimalType.ducks
+        case "geese":
+            return AnimalType.geese
+        case "turkeys":
+            return AnimalType.turkeys
+        case "layersdry" | "layersdrypoultry":  ################
+            return AnimalType.layers_dry_poultry
+        case "layerswet" | "layerswetpoultry":  ################
+            return AnimalType.layers_wet_poultry
+        case "poultrylayers" | "chickenlayers" | "layers":
+            return AnimalType.layers
+        case _:
+            raise ValueError(f"unknown animal type. Returning {AnimalType.beef_backgrounder}")
+            # return AnimalType.beef_backgrounder
+
+
 class ManureAnimalSourceTypes(EnumGeneric):
     not_selected: str = "NotSelected"
     beef_manure: str = "BeefManure"
