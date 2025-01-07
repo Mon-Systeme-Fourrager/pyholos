@@ -2,8 +2,49 @@ from enum import Enum
 
 from holos_service import utils
 from holos_service.common import Component, HolosVar
-from holos_service.components.animals.common import AnimalType, convert_animal_type_name
+from holos_service.components.animals.common import (AnimalType, convert_animal_type_name,
+                                                     HousingType)
 from holos_service.config import PathsHolosResources
+
+
+def get_feeding_activity_coefficient(
+        housing_type: HousingType
+) -> float:
+    """Returns the feeding activity coefficient of feeding situation (CA) for sheep
+    (Table_23_Feeding_Activity_Coefficient_Sheep_Provider)
+
+    Args:
+        housing_type: Housing type class instance
+
+    Returns:
+        (MJ d-1 kg-1) activity coefficient of feeding situation (CA)
+
+    Notes:
+        1. Animals are confined due to pregnancy in final trimester (50 days) (IPCC, 2019)
+        2. Animals housed for fattening
+
+    Holos Source Code:
+        https://github.com/holos-aafc/Holos/blob/97331845af308fe8aab6267edad4bbda6f5938b6/H.Core/Providers/Animals/Table_23_Feeding_Activity_Coefficient_Sheep_Provider.cs#L17
+
+    """
+    match housing_type:
+        # Footnote 1
+        case HousingType.housed_ewes:
+            return 0.0096
+
+        # Footnote 2
+        case HousingType.confined:
+            return 0.0067
+
+        case HousingType.pasture | HousingType.flat_pasture:
+            return 0.0107
+
+        case HousingType.hilly_pasture_or_open_range:
+            return 0.024
+
+        case _:
+            raise ValueError(f"unable to get data for housing type: {housing_type}. Returning default value of 0.")
+            # return 0
 
 
 class GroupNames(Enum):
@@ -33,7 +74,7 @@ class AnimalCoefficientData:
             final_weight: (kg)
             wool_production: : (kg year-1)
         """
-        self.cf = maintenance_coefficient
+        self.baseline_maintenance_coefficient = maintenance_coefficient
         self.coefficient_a = coefficient_a
         self.coefficient_b = coefficient_b
         self.initial_weight = initial_weight
