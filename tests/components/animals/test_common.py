@@ -3086,5 +3086,78 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                         soil_texture=random.choice(self.soil_texture))
 
 
+class TestGetManureExcretionRate(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.df = read_holos_resource_table(
+            path_file=PathsHolosResources.Table_29_Percentage_Total_Manure_Produced_In_Systems,
+            index_col="Animal group",
+            usecols=["Animal group", "manure_excreted_rate"]).squeeze()
+
+    def test_value_for_beef_animal_type(self):
+        for animal_type in _AnimalGroups.beef_cattle_type:
+            self.assertEqual(
+                self.df.loc['Non-dairy cattle'],
+                common.get_manure_excretion_rate(animal_type=animal_type))
+
+    def test_value_for_dairy_animal_type(self):
+        for animal_type in _AnimalGroups.dairy_cattle_type:
+            self.assertEqual(
+                self.df.loc['Dairy cattle'],
+                common.get_manure_excretion_rate(animal_type=animal_type))
+
+    def test_value_for_sheep_animal_type(self):
+        for animal_type in _AnimalGroups.sheep_type:
+            self.assertEqual(
+                self.df.loc['Sheep and lambs'],
+                common.get_manure_excretion_rate(animal_type=animal_type))
+
+    def test_value_for_swine_animal_type(self):
+        for animal_type in _AnimalGroups.swine_type:
+            self.assertEqual(
+                self.df.loc['Swine'],
+                common.get_manure_excretion_rate(animal_type=animal_type))
+
+    def test_value_for_turkey_animal_type(self):
+        for animal_type in _AnimalGroups.turkey_type:
+            self.assertEqual(
+                self.df.loc['Turkeys'],
+                common.get_manure_excretion_rate(animal_type=animal_type))
+
+    def test_value_for_poultry_animal_type(self):
+        for animal_type in _AnimalGroups.poultry_type:
+            if animal_type == common.AnimalType.chicken_hens:
+                self.assertEqual(
+                    self.df.loc['Chicken layers'],
+                    common.get_manure_excretion_rate(animal_type=animal_type))
+
+    def test_values_for_other_animal_types(self):
+        for animal_type in common.AnimalType:
+            if not any([
+                animal_type in _AnimalGroups.beef_cattle_type,
+                animal_type in _AnimalGroups.dairy_cattle_type,
+                animal_type in _AnimalGroups.sheep_type,
+                animal_type in _AnimalGroups.swine_type,
+                animal_type in _AnimalGroups.turkey_type,
+                animal_type == common.AnimalType.chicken_hens,
+                animal_type == common.AnimalType.not_selected,
+                animal_type == common.AnimalType.chicken,
+                animal_type == common.AnimalType.cow_calf,
+                animal_type == common.AnimalType.calf,
+                animal_type == common.AnimalType.layers_dry_poultry,
+                animal_type == common.AnimalType.layers_wet_poultry,
+                animal_type == common.AnimalType.layers_wet_poultry,
+                animal_type == common.AnimalType.other_livestock,
+                animal_type == common.AnimalType.poultry,
+                animal_type == common.AnimalType.young_bulls,
+                animal_type == common.AnimalType.chicken_roosters,
+                animal_type == common.AnimalType.chicken_eggs,
+                animal_type == common.AnimalType.chicks,
+                animal_type == common.AnimalType.cattle,
+            ]):
+                self.assertIsNotNone(
+                    common.get_manure_excretion_rate(animal_type=animal_type))
+
+
 if __name__ == '__main__':
     unittest.main()

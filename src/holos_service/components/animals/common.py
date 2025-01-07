@@ -2059,3 +2059,40 @@ def get_manure_emission_factors(
                     "Returning default value."
                 ]))
             # return Table_36_Livestock_Emission_Conversion_Factors_Data();
+
+
+def get_manure_excretion_rate(
+        animal_type: AnimalType
+) -> float:
+    """Returns the manure excretion rate of animals
+
+    Args:
+        animal_type: AnimalType class instance
+
+    Returns:
+        (kg head-1 day-1) animal excretion rate
+
+    Holos Source Code:
+        https://github.com/holos-aafc/Holos/blob/97331845af308fe8aab6267edad4bbda6f5938b6/H.Core/Providers/Animals/Table_29_Default_Manure_Excreted_Provider.cs#L100
+
+    """
+    _excretionRates = read_holos_resource_table(
+        path_file=PathsHolosResources.Table_29_Percentage_Total_Manure_Produced_In_Systems)
+    _excretionRates.index = _excretionRates.pop('Animal group').apply(lambda x: convert_animal_type_name(name=x))
+
+    animal_type_lookup = animal_type
+    if animal_type.is_beef_cattle_type():
+        animal_type_lookup = AnimalType.beef
+    elif animal_type.is_dairy_cattle_type():
+        animal_type_lookup = AnimalType.dairy
+    elif animal_type.is_sheep_type():
+        animal_type_lookup = AnimalType.sheep
+    elif animal_type.is_swine_type():
+        animal_type_lookup = AnimalType.swine
+    elif animal_type.is_turkey_type():
+        animal_type_lookup = AnimalType.turkeys
+    elif animal_type.is_poultry_type():
+        if animal_type == AnimalType.chicken_hens:
+            animal_type_lookup = AnimalType.layers
+
+    return _excretionRates.loc[animal_type_lookup, 'manure_excreted_rate']
