@@ -449,8 +449,8 @@ def convert_animal_type_name(name: str) -> AnimalType:
         case "poultrylayers" | "chickenlayers" | "layers":
             return AnimalType.layers
         case _:
-            raise ValueError(f"unknown animal type. Returning {AnimalType.beef_backgrounder}")
-            # return AnimalType.beef_backgrounder
+            # raise ValueError(f"unknown animal type. Returning {AnimalType.beef_backgrounder}")
+            return AnimalType.beef_backgrounder
 
 
 class ManureAnimalSourceTypes(EnumGeneric):
