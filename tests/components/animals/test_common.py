@@ -3299,5 +3299,137 @@ class TestConvertManureStateTypeName(unittest.TestCase):
                     user_defined_manure_state_type=v),
 
 
+class GetDefaultManureCompositionData(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.simulated_animal_types = []
+        _df = read_holos_resource_table(path_file=PathsHolosResources.Table_6_Manure_Types_And_Default_Composition)
+        _df['animal_type'] = _df['animal_type'].apply(lambda x: common.convert_animal_type_name(name=x))
+        _df.set_index(['animal_type', 'manure_state_type'], inplace=True)
+        cls.df = _df
+
+        cls.simulated_animal_types = []
+
+    def run_test(
+            self,
+            animal_type_in_table: common.AnimalType,
+            animal_type: common.AnimalType,
+            manure_handling_system: str
+    ):
+        self.assertEqual(
+            self.df.loc[(animal_type_in_table, manure_handling_system)].to_dict(),
+            common.get_default_manure_composition_data(
+                animal_type=animal_type,
+                manure_state_type=common.convert_manure_state_type_name(name=manure_handling_system)).__dict__)
+
+        self.simulated_animal_types.append(animal_type)
+
+    def test_value_for_beef_cattle(self):
+        for animal_type, manure_handling_system in product(
+                _AnimalGroups.beef_cattle_type,
+                ["Pasture/range/paddock",
+                 "Deep bedding",
+                 "Solid storage",
+                 "Compost - passive windrow",
+                 "Compost - intensive windrow"
+                 ]
+        ):
+            self.run_test(
+                animal_type_in_table=common.AnimalType.beef,
+                animal_type=animal_type,
+                manure_handling_system=manure_handling_system)
+
+    def test_value_for_dairy_cattle(self):
+        for animal_type, manure_handling_system in product(
+                _AnimalGroups.dairy_cattle_type,
+                [
+                    "Pasture/range/paddock",
+                    "Deep bedding",
+                    "Solid storage",
+                    "Compost - passive windrow",
+                    "Compost - intensive windrow",
+                    "Daily spread",
+                    "Liquid/slurry with natural crust",
+                    "Liquid/slurry with no natural crust",
+                    "Liquid/slurry with solid cover",
+                    "Deep pit under barn"
+                ]
+        ):
+            self.run_test(
+                animal_type_in_table=common.AnimalType.dairy,
+                animal_type=animal_type,
+                manure_handling_system=manure_handling_system)
+
+    def test_value_for_sheep(self):
+        for animal_type, manure_handling_system in product(
+                _AnimalGroups.sheep_type,
+                [
+                    "Pasture/range/paddock",
+                    "Solid storage",
+                ]
+        ):
+            self.run_test(
+                animal_type_in_table=common.AnimalType.sheep,
+                animal_type=animal_type,
+                manure_handling_system=manure_handling_system)
+
+    def test_value_for_swine(self):
+        for animal_type, manure_handling_system in product(
+                _AnimalGroups.swine_type,
+                [
+                    "Liquid/slurry with natural crust",
+                    "Liquid/slurry with no natural crust",
+                    "Liquid/slurry with solid cover",
+                    "Deep pit under barn"
+                ]
+        ):
+            self.run_test(
+                animal_type_in_table=common.AnimalType.swine,
+                animal_type=animal_type,
+                manure_handling_system=manure_handling_system)
+
+    def test_value_for_poultry(self):
+        for animal_type in _AnimalGroups.poultry_type:
+            self.run_test(
+                animal_type_in_table=common.AnimalType.poultry,
+                animal_type=animal_type,
+                manure_handling_system="Solid storage - with or without litter")
+
+    def test_value_for_other_animals(self):
+        ls = list(product(
+            [
+                common.AnimalType.alpacas,
+                common.AnimalType.deer,
+                common.AnimalType.elk,
+                common.AnimalType.goats,
+                common.AnimalType.horses,
+                common.AnimalType.llamas,
+                common.AnimalType.mules
+            ],
+            [
+                "Pasture/range/paddock",
+                "Solid storage"
+            ]
+        ))
+
+        ls = list(ls) + [(common.AnimalType.bison, 'Pasture'),
+                         (common.AnimalType.bison, 'Solid storage')]
+
+        for animal_type, manure_handling_system in ls:
+            self.run_test(
+                animal_type_in_table=animal_type,
+                animal_type=animal_type,
+                manure_handling_system=manure_handling_system)
+
+    def test_error(self):
+        for animal_type in common.AnimalType:
+            if animal_type not in self.simulated_animal_types:
+                with self.assertRaises(KeyError):
+                    self.run_test(
+                        animal_type_in_table=animal_type,
+                        animal_type=animal_type,
+                        manure_handling_system="")
+
+
 if __name__ == '__main__':
     unittest.main()

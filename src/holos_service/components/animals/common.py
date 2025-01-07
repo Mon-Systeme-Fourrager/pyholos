@@ -2146,3 +2146,67 @@ def convert_manure_state_type_name(name: str) -> ManureStateType:
         case _:
             # raise ValueError(f"was not able to convert {name}. Returning {ManureStateType.not_selected}")
             return ManureStateType.not_selected
+
+
+class ManureComposition:
+    def __init__(
+            self,
+            moisture_content: float,
+            nitrogen_content: float,
+            carbon_content: float,
+            phosphorus_content: float,
+            carbon_to_nitrogen_ratio: float,
+            volatile_solid_content: float
+    ):
+        self.moisture_content = moisture_content
+        self.nitrogen_content = nitrogen_content
+        self.carbon_content = carbon_content
+        self.phosphorus_content = phosphorus_content
+        self.carbon_to_nitrogen_ratio = carbon_to_nitrogen_ratio
+        self.volatile_solid_content = volatile_solid_content
+
+
+def get_default_manure_composition_data(
+        animal_type: AnimalType,
+        manure_state_type: ManureStateType
+) -> ManureComposition:
+    """Returns the default manure composition values depending on animal type and manure state (handling system) type
+
+    Args:
+        animal_type: AnimalType class instance
+        manure_state_type: ManureStateType class instance
+
+    Returns:
+        ManureComposition class instance
+
+    Holos Source Code:
+        https://github.com/holos-aafc/Holos/blob/97331845af308fe8aab6267edad4bbda6f5938b6/H.Core/Models/Farm.Manure.cs#L34
+    """
+
+    # var defaultValue = new DefaultManureCompositionData();
+
+    if animal_type.is_beef_cattle_type():
+        animal_lookup_type = AnimalType.beef
+    elif animal_type.is_dairy_cattle_type():
+        animal_lookup_type = AnimalType.dairy
+    elif animal_type.is_sheep_type():
+        animal_lookup_type = AnimalType.sheep
+    elif animal_type.is_swine_type():
+        animal_lookup_type = AnimalType.swine
+    elif animal_type.is_poultry_type():
+        animal_lookup_type = AnimalType.poultry
+    else:
+        # Other animals have a value for animal group (Horses, Goats, etc.)
+        animal_lookup_type = animal_type
+
+    manure_composition_data = read_holos_resource_table(
+        path_file=PathsHolosResources.Table_6_Manure_Types_And_Default_Composition)
+    manure_composition_data['animal_type'] = manure_composition_data['animal_type'].apply(
+        lambda x: convert_animal_type_name(name=x))
+    manure_composition_data['manure_state_type'] = manure_composition_data['manure_state_type'].apply(
+        lambda x: convert_manure_state_type_name(name=x))
+    manure_composition_data.set_index(['animal_type', 'manure_state_type'], inplace=True)
+
+    res = manure_composition_data.loc[(animal_lookup_type, manure_state_type)]
+
+    return ManureComposition(**res)
