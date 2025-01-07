@@ -2096,3 +2096,53 @@ def get_manure_excretion_rate(
             animal_type_lookup = AnimalType.layers
 
     return _excretionRates.loc[animal_type_lookup, 'manure_excreted_rate']
+
+
+def convert_manure_state_type_name(name: str) -> ManureStateType:
+    cleaned_input = name.lower().strip().replace(' ', '').replace('-', '').replace('/', '')
+    match cleaned_input:
+        case "pasture" | "pasturerangepaddock":
+            return ManureStateType.pasture
+
+        case "deepbedding":
+            return ManureStateType.deep_bedding
+
+        case "solidstorage" | "solidstoragestockpiled":
+            return ManureStateType.solid_storage
+
+        case "solidstoragewithorwithoutlitter":
+            return ManureStateType.solid_storage_with_or_without_litter
+
+        case "compostedpassive" | "compostpassive" | "compostpassivewindrow":
+            return ManureStateType.compost_passive
+
+        case "compostedintensive" | "compostintensive" | "compostintensivewindrow":
+            return ManureStateType.compost_intensive
+
+        case "compostedinvessel":
+            return ManureStateType.composted_in_vessel
+
+        case "composted":
+            return ManureStateType.composted
+
+        case "anaerobicdigestion" | "anaerobicdigestor":
+            return ManureStateType.anaerobic_digester
+
+        case "deeppit" | "deeppitunderbarn":
+            return ManureStateType.deep_pit
+
+        case "liquidsolidcover" | "liquidwithsolidcover" | "liquidslurrywithsolidcover":
+            return ManureStateType.liquid_with_solid_cover
+
+        case "liquidnaturalcrust" | "liquidwithnaturalcrust" | "liquidslurrywithnaturalcrust":
+            return ManureStateType.liquid_with_natural_crust
+
+        case "liquidnocrust" | "liquidwithnocrust" | "liquidslurrywithnonaturalcrust":
+            return ManureStateType.liquid_no_crust
+
+        case "dailyspread":
+            return ManureStateType.daily_spread
+
+        case _:
+            # raise ValueError(f"was not able to convert {name}. Returning {ManureStateType.not_selected}")
+            return ManureStateType.not_selected

@@ -3159,5 +3159,145 @@ class TestGetManureExcretionRate(unittest.TestCase):
                     common.get_manure_excretion_rate(animal_type=animal_type))
 
 
+class TestConvertManureStateTypeName(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.used_manure_handling_systems = []
+
+    def run_test(
+            self,
+            expected_manure_state_type: common.ManureStateType,
+            user_defined_manure_state_type: str
+    ):
+        self.assertEqual(
+            expected_manure_state_type,
+            common.convert_manure_state_type_name(name=user_defined_manure_state_type))
+
+        self.used_manure_handling_systems.append(self._clearn_text(user_defined_manure_state_type))
+
+    @staticmethod
+    def _clearn_text(s: str) -> str:
+        return s.lower().strip().replace(' ', '').replace('-', '').replace('/', '')
+
+    def test_value_for_pasture(self):
+        for manure_handling_system in [
+            "Pasture",
+            "Pasture/range/paddock"
+        ]:
+            self.run_test(
+                expected_manure_state_type=common.ManureStateType.pasture,
+                user_defined_manure_state_type=manure_handling_system),
+
+    def test_value_for_deep_bedding(self):
+        self.run_test(
+            expected_manure_state_type=common.ManureStateType.deep_bedding,
+            user_defined_manure_state_type="Deep bedding"),
+
+    def test_value_for_solid_storage_with_or_without_litter(self):
+        self.run_test(
+            expected_manure_state_type=common.ManureStateType.solid_storage_with_or_without_litter,
+            user_defined_manure_state_type="Solid storage - with or without litter"),
+
+    def test_value_for_solid_storage(self):
+        for manure_handling_system in [
+            "Solid storage",
+            "Solid-Storage/Stock Piled"
+        ]:
+            self.run_test(
+                expected_manure_state_type=common.ManureStateType.solid_storage,
+                user_defined_manure_state_type=manure_handling_system),
+
+    def test_value_for_solid_compost_passive(self):
+        for manure_handling_system in [
+            "Composted - passive",
+            "Compost/Passive- ",
+            " Compost-Passive Windrow/",
+        ]:
+            self.run_test(
+                expected_manure_state_type=common.ManureStateType.compost_passive,
+                user_defined_manure_state_type=manure_handling_system),
+
+    def test_value_for_solid_compost_intensive(self):
+        for manure_handling_system in [
+            "Composted/Intensive- ",
+            "/ Compost-intensivE/",
+            "Compost - intensive windrow",
+        ]:
+            self.run_test(
+                expected_manure_state_type=common.ManureStateType.compost_intensive,
+                user_defined_manure_state_type=manure_handling_system),
+
+    def test_value_for_solid_compost_in_vessel(self):
+        self.run_test(
+            expected_manure_state_type=common.ManureStateType.composted_in_vessel,
+            user_defined_manure_state_type="Composted in-vessel"),
+
+    def test_value_for_composted(self):
+        self.run_test(
+            expected_manure_state_type=common.ManureStateType.composted,
+            user_defined_manure_state_type=" // -Composted-/ "),
+
+    def test_value_for_anaerobic_digestion(self):
+        for manure_handling_system in [
+            "anaerobic--/digestion- ",
+            "/ AnaerobicDigesTOR/"
+        ]:
+            self.run_test(
+                expected_manure_state_type=common.ManureStateType.anaerobic_digester,
+                user_defined_manure_state_type=manure_handling_system),
+
+    def test_value_for_deep_pit(self):
+        for manure_handling_system in [
+            " ///DeepPit/- ",
+            " Deep pit under barn--/- "
+        ]:
+            self.run_test(
+                expected_manure_state_type=common.ManureStateType.deep_pit,
+                user_defined_manure_state_type=manure_handling_system),
+
+    def test_value_for_liquid_with_solid_cover(self):
+        for manure_handling_system in [
+            "liquid/solid-cover",
+            "liquid/with solid cover",
+            "liquid-slurry-with Solid/cover"
+        ]:
+            self.run_test(
+                expected_manure_state_type=common.ManureStateType.liquid_with_solid_cover,
+                user_defined_manure_state_type=manure_handling_system),
+
+    def test_value_for_liquid_with_natural_crust(self):
+        for manure_handling_system in [
+            "/liquid/natural crust",
+            "LIQUIDWITHNATURALCRUST",
+            "Liquid/slurry with natural crust"
+        ]:
+            self.run_test(
+                expected_manure_state_type=common.ManureStateType.liquid_with_natural_crust,
+                user_defined_manure_state_type=manure_handling_system),
+
+    def test_value_for_liquid_no_crust(self):
+        for manure_handling_system in [
+            "liquid no crust",
+            "liquid with no crust",
+            "Liquid/slurry with no natural crust"
+        ]:
+            self.run_test(
+                expected_manure_state_type=common.ManureStateType.liquid_no_crust,
+                user_defined_manure_state_type=manure_handling_system),
+
+    def test_value_for_daily_spread(self):
+        self.run_test(
+            expected_manure_state_type=common.ManureStateType.daily_spread,
+            user_defined_manure_state_type="/Daily/spread "),
+
+    def test_z_default_value(self):
+        for manure_handling_system in common.ManureStateType:
+            v = manure_handling_system.value
+            if self._clearn_text(v) not in self.used_manure_handling_systems:
+                self.run_test(
+                    expected_manure_state_type=common.ManureStateType.not_selected,
+                    user_defined_manure_state_type=v),
+
+
 if __name__ == '__main__':
     unittest.main()
