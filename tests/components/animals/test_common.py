@@ -1587,15 +1587,22 @@ class TestDiet(unittest.TestCase):
                 expected_value,
                 self.diet.calc_methane_conversion_factor(animal_type=common.AnimalType.beef_finisher))
 
+    def test_calc_methane_conversion_factor_returns_expected_value_for_sheep(self):
+        for animal_type in _AnimalGroups.sheep_type:
+            self.assertEqual(
+                0.067,
+                self.diet.calc_methane_conversion_factor(animal_type=animal_type))
+
     def test_calc_methane_conversion_factor_returns_expected_default_values(self):
         for animal_type in common.AnimalType:
             if not any([
                 animal_type.is_dairy_cattle_type(),
                 animal_type.is_beef_cattle_type(),
-                animal_type == common.AnimalType.beef_finisher
+                animal_type == common.AnimalType.beef_finisher,
+                animal_type.is_sheep_type()
             ]):
                 self.assertEqual(
-                    0.4,
+                    None,
                     self.diet.calc_methane_conversion_factor(animal_type=animal_type))
 
 

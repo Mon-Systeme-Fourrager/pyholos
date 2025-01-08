@@ -573,10 +573,21 @@ class Diet:
             net_energy_for_maintenance=self.metabolizable_energy * 0.8134 - 0.3518,
             net_energy_for_growth=self.metabolizable_energy * 0.6299 - 0.5162)
 
-    def calc_methane_conversion_factor(
+    def calc_methane_conversion_factor_for_beef_and_dairy_cattle(
             self,
             animal_type: AnimalType
     ) -> float:
+        """Calculates the methane conversion factor based on the animal type.
+
+        Args:
+            animal_type: AnimalType class instance
+
+        Returns:
+            (kg CH4 kg CH4-1) methane conversion factor for diet (Y_m)
+
+        Holos Source Code:
+            https://github.com/holos-aafc/Holos/blob/2bc9704a51449a8ffd4005462a6a7e6fb8a27f2d/H.Core/Providers/Feed/Diet.cs#L602
+        """
         # Assign a default ym so that if there are no cases that cover the diet below, there will be a value assigned
         result = 0.4
         total_digestible_nutrient = self.total_digestible_nutrient_percentage
@@ -621,6 +632,40 @@ class Diet:
             # }
 
         return result
+
+    @staticmethod
+    def calc_methane_conversion_factor_for_sheep() -> float:
+        """Returns the methane conversion factor for sheep irrespective of feed quality values
+
+        Returns:
+            (kg CH4 kg CH4-1) methane conversion factor for diet (Y_m)
+
+        Holos Source Code:
+            https://github.com/holos-aafc/Holos/blob/2bc9704a51449a8ffd4005462a6a7e6fb8a27f2d/H.Content/Resources/Table_18_26_Diet_Coefficients_For_Beef_Dairy_Sheep.csv#L33
+
+        """
+        return 0.067
+
+    def calc_methane_conversion_factor(
+            self,
+            animal_type: AnimalType
+    ) -> float:
+        """Calculates the methane conversion factor based on the animal type.
+
+        Args:
+            animal_type: AnimalType class instance
+
+        Returns:
+            (kg CH4 kg CH4-1) methane conversion factor for diet (Y_m)
+        """
+        if animal_type.is_beef_cattle_type() or animal_type.is_dairy_cattle_type():
+            res = self.calc_methane_conversion_factor_for_beef_and_dairy_cattle(animal_type=animal_type)
+        elif animal_type.is_sheep_type():
+            res = self.calc_methane_conversion_factor_for_sheep()
+        else:
+            res = None
+
+        return res
 
 
 # class HousingSystem:
