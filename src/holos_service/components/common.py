@@ -88,3 +88,25 @@ class ClimateZones(StrEnum):
     BorealDry = auto()
     WarmTemperateMoist = auto()
     WarmTemperateDry = auto()
+
+
+def calculate_fraction_of_nitrogen_lost_by_leaching_and_runoff(
+        growing_season_precipitation: float,
+        growing_season_evapotranspiration: float
+) -> float:
+    """Calculates the nitrogen loss due to leaching and runoff
+
+    Args:
+        growing_season_precipitation: Growing season precipitation, by ecodistrict (May – October)</param>
+        growing_season_evapotranspiration: Growing season potential evapotranspiration, by ecodistrict (May – October)
+
+    Returns:
+        (kg N (kg N)^-1) fraction of N lost by leaching and runoff
+
+    Holos Source Code:
+        https://github.com/RamiALBASHA/Holos/blob/71638efd97c84c6ded45e342ce664477df6f803f/H.Core/Calculators/Nitrogen/NitrogenInputCalculatorBase.cs#L15
+
+    """
+    fraction_of_nitrogen_lost_by_leaching_and_runoff = 0.3247 * (
+            growing_season_precipitation / growing_season_evapotranspiration) - 0.0247
+    return min(0.3, max(0.05, fraction_of_nitrogen_lost_by_leaching_and_runoff))
