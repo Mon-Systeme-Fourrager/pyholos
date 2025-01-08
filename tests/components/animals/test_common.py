@@ -3,6 +3,7 @@ import unittest
 from itertools import product
 from unittest.mock import patch
 
+from holos_service.common import ClimateZones
 from holos_service.components.animals import common
 from holos_service.components.common import ComponentCategory
 from holos_service.config import PathsHolosResources
@@ -287,6 +288,236 @@ class TestAnimalTypeExtensions(unittest.TestCase):
                 self.assertEqual(
                     common.ComponentCategory.OtherLivestock,
                     animal_type.get_component_category_from_animal_type())
+
+
+class TestConvertAnimalTypeName(unittest.TestCase):
+    def test_beef_cattle_names(self):
+        self.assertEqual(
+            common.convert_animal_type_name(name="backgrounding"),
+            common.AnimalType.beef_backgrounder)
+        self.assertEqual(
+            common.convert_animal_type_name(name="backgrounder"),
+            common.AnimalType.beef_backgrounder)
+        self.assertEqual(
+            common.convert_animal_type_name(name="backgroundingsteers"),
+            common.AnimalType.beef_backgrounder_steer)
+        self.assertEqual(
+            common.convert_animal_type_name(name="backgroundingheifers"),
+            common.AnimalType.beef_backgrounder_heifer)
+        self.assertEqual(
+            common.convert_animal_type_name(name="beef"),
+            common.AnimalType.beef)
+        self.assertEqual(
+            common.convert_animal_type_name(name="nondairycattle"),
+            common.AnimalType.beef)
+        self.assertEqual(
+            common.convert_animal_type_name(name="beefcattle"),
+            common.AnimalType.beef)
+        self.assertEqual(
+            common.convert_animal_type_name(name="beeffinisher"),
+            common.AnimalType.beef_finisher)
+        self.assertEqual(
+            common.convert_animal_type_name(name="finisher"),
+            common.AnimalType.beef_finisher)
+        self.assertEqual(
+            common.convert_animal_type_name(name="cowcalf"),
+            common.AnimalType.cow_calf)
+        self.assertEqual(
+            common.convert_animal_type_name(name="stockers"),
+            common.AnimalType.stockers)
+        self.assertEqual(
+            common.convert_animal_type_name(name="beefcalves"),
+            common.AnimalType.beef_calf)
+        self.assertEqual(
+            common.convert_animal_type_name(name="beefcalf"),
+            common.AnimalType.beef_calf)
+
+    def test_dairy_names(self):
+        self.assertEqual(
+            common.convert_animal_type_name(name="dairy"),
+            common.AnimalType.dairy)
+        self.assertEqual(
+            common.convert_animal_type_name(name="dairycattle"),
+            common.AnimalType.dairy)
+        self.assertEqual(
+            common.convert_animal_type_name(name="dairybulls"),
+            common.AnimalType.dairy_bulls)
+        self.assertEqual(
+            common.convert_animal_type_name(name="dairydry"),
+            common.AnimalType.dairy_dry_cow)
+        self.assertEqual(
+            common.convert_animal_type_name(name="dairydrycow"),
+            common.AnimalType.dairy_dry_cow)
+        self.assertEqual(
+            common.convert_animal_type_name(name="dairyheifers"),
+            common.AnimalType.dairy_heifers)
+        self.assertEqual(
+            common.convert_animal_type_name(name="dairylactating"),
+            common.AnimalType.dairy_lactating_cow)
+
+    def test_swine_names(self):
+        self.assertEqual(
+            common.convert_animal_type_name(name="boar"),
+            common.AnimalType.swine_boar)
+        self.assertEqual(
+            common.convert_animal_type_name(name="swineboar"),
+            common.AnimalType.swine_boar)
+        self.assertEqual(
+            common.convert_animal_type_name(name="weaners"),
+            common.AnimalType.swine_piglets)
+        self.assertEqual(
+            common.convert_animal_type_name(name="piglets"),
+            common.AnimalType.swine_piglets)
+        self.assertEqual(
+            common.convert_animal_type_name(name="drysow"),
+            common.AnimalType.swine_dry_sow)
+        self.assertEqual(
+            common.convert_animal_type_name(name="sow"),
+            common.AnimalType.swine_sows)
+        self.assertEqual(
+            common.convert_animal_type_name(name="sows"),
+            common.AnimalType.swine_sows)
+        self.assertEqual(
+            common.convert_animal_type_name(name="grower"),
+            common.AnimalType.swine_grower)
+        self.assertEqual(
+            common.convert_animal_type_name(name="hogs"),
+            common.AnimalType.swine_grower)
+        self.assertEqual(
+            common.convert_animal_type_name(name="swinegrower"),
+            common.AnimalType.swine_grower)
+        self.assertEqual(
+            common.convert_animal_type_name(name="lactatingsow"),
+            common.AnimalType.swine_lactating_sow)
+        self.assertEqual(
+            common.convert_animal_type_name(name="swine"),
+            common.AnimalType.swine)
+        self.assertEqual(
+            common.convert_animal_type_name(name="swinefinisher"),
+            common.AnimalType.swine_finisher)
+
+    def test_sheep_names(self):
+        self.assertEqual(
+            common.convert_animal_type_name(name="ewe"),
+            common.AnimalType.ewes)
+        self.assertEqual(
+            common.convert_animal_type_name(name="ewes"),
+            common.AnimalType.ewes)
+        self.assertEqual(
+            common.convert_animal_type_name(name="ram"),
+            common.AnimalType.ram)
+        self.assertEqual(
+            common.convert_animal_type_name(name="sheep"),
+            common.AnimalType.sheep)
+        self.assertEqual(
+            common.convert_animal_type_name(name="sheepandlambs"),
+            common.AnimalType.sheep)
+        self.assertEqual(
+            common.convert_animal_type_name(name="weanedlambs"),
+            common.AnimalType.lambs)
+
+    def test_other_livestock_names(self):
+        self.assertEqual(
+            common.convert_animal_type_name(name="horse"),
+            common.AnimalType.horses)
+        self.assertEqual(
+            common.convert_animal_type_name(name="horses"),
+            common.AnimalType.horses)
+        self.assertEqual(
+            common.convert_animal_type_name(name="goat"),
+            common.AnimalType.goats)
+        self.assertEqual(
+            common.convert_animal_type_name(name="goats"),
+            common.AnimalType.goats)
+        self.assertEqual(
+            common.convert_animal_type_name(name="mules"),
+            common.AnimalType.mules)
+        self.assertEqual(
+            common.convert_animal_type_name(name="mule"),
+            common.AnimalType.mules)
+        self.assertEqual(
+            common.convert_animal_type_name(name="bull"),
+            common.AnimalType.beef_bulls)
+        self.assertEqual(
+            common.convert_animal_type_name(name="llamas"),
+            common.AnimalType.llamas)
+        self.assertEqual(
+            common.convert_animal_type_name(name="alpacas"),
+            common.AnimalType.alpacas)
+        self.assertEqual(
+            common.convert_animal_type_name(name="deer"),
+            common.AnimalType.deer)
+        self.assertEqual(
+            common.convert_animal_type_name(name="elk"),
+            common.AnimalType.elk)
+        self.assertEqual(
+            common.convert_animal_type_name(name="bison"),
+            common.AnimalType.bison)
+
+    def test_poultry_names(self):
+        self.assertEqual(
+            common.convert_animal_type_name(name="poultry"),
+            common.AnimalType.poultry)
+        self.assertEqual(
+            common.convert_animal_type_name(name="poultrypulletsbroilers"),
+            common.AnimalType.broilers)
+        self.assertEqual(
+            common.convert_animal_type_name(name="chickenbroilers"),
+            common.AnimalType.broilers)
+        self.assertEqual(
+            common.convert_animal_type_name(name="broilers"),
+            common.AnimalType.broilers)
+        self.assertEqual(
+            common.convert_animal_type_name(name="chickenpullets"),
+            common.AnimalType.chicken_pullets)
+        self.assertEqual(
+            common.convert_animal_type_name(name="pullets"),
+            common.AnimalType.chicken_pullets)
+        self.assertEqual(
+            common.convert_animal_type_name(name="chicken"),
+            common.AnimalType.chicken)
+        self.assertEqual(
+            common.convert_animal_type_name(name="chickencockerels"),
+            common.AnimalType.chicken_cockerels)
+        self.assertEqual(
+            common.convert_animal_type_name(name="cockerels"),
+            common.AnimalType.chicken_cockerels)
+        self.assertEqual(
+            common.convert_animal_type_name(name="roasters"),
+            common.AnimalType.chicken_roosters)
+        self.assertEqual(
+            common.convert_animal_type_name(name="hens"),
+            common.AnimalType.chicken_hens)
+        self.assertEqual(
+            common.convert_animal_type_name(name="poultryturkeys"),
+            common.AnimalType.ducks)
+        self.assertEqual(
+            common.convert_animal_type_name(name="turkey"),
+            common.AnimalType.ducks)
+        self.assertEqual(
+            common.convert_animal_type_name(name="ducks"),
+            common.AnimalType.ducks)
+        self.assertEqual(
+            common.convert_animal_type_name(name="geese"),
+            common.AnimalType.geese)
+        self.assertEqual(
+            common.convert_animal_type_name(name="turkeys"),
+            common.AnimalType.turkeys)
+        self.assertEqual(
+            common.convert_animal_type_name(name="layersdry"),
+            common.AnimalType.layers_dry_poultry)
+        self.assertEqual(
+            common.convert_animal_type_name(name="layerswet"),
+            common.AnimalType.layers_wet_poultry)
+        self.assertEqual(
+            common.convert_animal_type_name(name="poultrylayers"),
+            common.AnimalType.layers)
+        self.assertEqual(
+            common.convert_animal_type_name(name="chickenlayers"),
+            common.AnimalType.layers)
+        self.assertEqual(
+            common.convert_animal_type_name(name="layers"),
+            common.AnimalType.layers)
 
 
 class TestHousingTypeExtensions(unittest.TestCase):
@@ -1357,15 +1588,22 @@ class TestDiet(unittest.TestCase):
                 expected_value,
                 self.diet.calc_methane_conversion_factor(animal_type=common.AnimalType.beef_finisher))
 
+    def test_calc_methane_conversion_factor_returns_expected_value_for_sheep(self):
+        for animal_type in _AnimalGroups.sheep_type:
+            self.assertEqual(
+                0.067,
+                self.diet.calc_methane_conversion_factor(animal_type=animal_type))
+
     def test_calc_methane_conversion_factor_returns_expected_default_values(self):
         for animal_type in common.AnimalType:
             if not any([
                 animal_type.is_dairy_cattle_type(),
                 animal_type.is_beef_cattle_type(),
-                animal_type == common.AnimalType.beef_finisher
+                animal_type == common.AnimalType.beef_finisher,
+                animal_type.is_sheep_type()
             ]):
                 self.assertEqual(
-                    0.4,
+                    None,
                     self.diet.calc_methane_conversion_factor(animal_type=animal_type))
 
 
@@ -1385,68 +1623,18 @@ class TestGetEmissionFactorForVolatilizationBasedOnClimate(unittest.TestCase):
                 mean_annual_potential_evapotranspiration=1000))
 
 
-class TestGetClimateZone(unittest.TestCase):
-    def test_high_temperature_high_ratio_precipitation_to_evapotranspiration(self):
-        self.assertEqual(
-            common.ClimateZones.WarmTemperateMoist,
-            common.get_climate_zone(
-                mean_annual_temperature=20,
-                mean_annual_precipitation=1000,
-                mean_annual_potential_evapotranspiration=700))
-
-    def test_high_temperature_low_ratio_precipitation_to_evapotranspiration(self):
-        self.assertEqual(
-            common.ClimateZones.WarmTemperateDry,
-            common.get_climate_zone(
-                mean_annual_temperature=20,
-                mean_annual_precipitation=700,
-                mean_annual_potential_evapotranspiration=1000))
-
-    def test_medium_temperature_high_ratio_precipitation_to_evapotranspiration(self):
-        self.assertEqual(
-            common.ClimateZones.CoolTemperateMoist,
-            common.get_climate_zone(
-                mean_annual_temperature=5,
-                mean_annual_precipitation=1000,
-                mean_annual_potential_evapotranspiration=700))
-
-    def test_medium_temperature_low_ratio_precipitation_to_evapotranspiration(self):
-        self.assertEqual(
-            common.ClimateZones.CoolTemperateDry,
-            common.get_climate_zone(
-                mean_annual_temperature=5,
-                mean_annual_precipitation=700,
-                mean_annual_potential_evapotranspiration=1000))
-
-    def test_low_temperature_high_ratio_precipitation_to_evapotranspiration(self):
-        self.assertEqual(
-            common.ClimateZones.WarmTemperateMoist,
-            common.get_climate_zone(
-                mean_annual_temperature=-5,
-                mean_annual_precipitation=1000,
-                mean_annual_potential_evapotranspiration=700))
-
-    def test_low_temperature_low_ratio_precipitation_to_evapotranspiration(self):
-        self.assertEqual(
-            common.ClimateZones.WarmTemperateDry,
-            common.get_climate_zone(
-                mean_annual_temperature=-5,
-                mean_annual_precipitation=700,
-                mean_annual_potential_evapotranspiration=1000))
-
-
 class TestGetMethaneConversionFactor(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.cool_climate_zones = [
-            common.ClimateZones.CoolTemperateMoist,
-            common.ClimateZones.CoolTemperateDry,
-            common.ClimateZones.BorealDry,
-            common.ClimateZones.BorealMoist]
+            ClimateZones.CoolTemperateMoist,
+            ClimateZones.CoolTemperateDry,
+            ClimateZones.BorealDry,
+            ClimateZones.BorealMoist]
 
         cls.warm_climate_zones = [
-            common.ClimateZones.WarmTemperateDry,
-            common.ClimateZones.WarmTemperateMoist]
+            ClimateZones.WarmTemperateDry,
+            ClimateZones.WarmTemperateMoist]
 
     def test_values_for_solid_and_solid_storage_manure_under_cool_climates(self):
         for manure_state_type in [
@@ -1506,12 +1694,12 @@ class TestGetMethaneConversionFactor(unittest.TestCase):
 
     def test_values_for_deep_bedding(self):
         for climate_zone, expected_value in [
-            (common.ClimateZones.CoolTemperateMoist, 0.21),
-            (common.ClimateZones.CoolTemperateDry, 0.26),
-            (common.ClimateZones.BorealDry, 0.14),
-            (common.ClimateZones.BorealMoist, 0.14),
-            (common.ClimateZones.WarmTemperateDry, 0.37),
-            (common.ClimateZones.WarmTemperateMoist, 0.41)
+            (ClimateZones.CoolTemperateMoist, 0.21),
+            (ClimateZones.CoolTemperateDry, 0.26),
+            (ClimateZones.BorealDry, 0.14),
+            (ClimateZones.BorealMoist, 0.14),
+            (ClimateZones.WarmTemperateDry, 0.37),
+            (ClimateZones.WarmTemperateMoist, 0.41)
         ]:
             self.assertEqual(
                 expected_value,
@@ -1520,7 +1708,7 @@ class TestGetMethaneConversionFactor(unittest.TestCase):
                     climate_zone=climate_zone))
 
     def test_values_for_compost_in_vessel(self):
-        for climate_zone in common.ClimateZones:
+        for climate_zone in ClimateZones:
             self.assertEqual(
                 0.005,
                 common.get_methane_conversion_factor(
@@ -1545,12 +1733,12 @@ class TestGetMethaneConversionFactor(unittest.TestCase):
 
     def test_values_for_deep_pit(self):
         for climate_zone, expected_value in [
-            (common.ClimateZones.CoolTemperateMoist, 0.06),
-            (common.ClimateZones.CoolTemperateDry, 0.08),
-            (common.ClimateZones.BorealDry, 0.04),
-            (common.ClimateZones.BorealMoist, 0.04),
-            (common.ClimateZones.WarmTemperateDry, 0.15),
-            (common.ClimateZones.WarmTemperateMoist, 0.13)
+            (ClimateZones.CoolTemperateMoist, 0.06),
+            (ClimateZones.CoolTemperateDry, 0.08),
+            (ClimateZones.BorealDry, 0.04),
+            (ClimateZones.BorealMoist, 0.04),
+            (ClimateZones.WarmTemperateDry, 0.15),
+            (ClimateZones.WarmTemperateMoist, 0.13)
         ]:
             self.assertEqual(
                 expected_value,
@@ -1559,7 +1747,7 @@ class TestGetMethaneConversionFactor(unittest.TestCase):
                     climate_zone=climate_zone))
 
     def test_default_values(self):
-        for climate_zone, manure_state_type in product(common.ClimateZones, common.ManureStateType):
+        for climate_zone, manure_state_type in product(ClimateZones, common.ManureStateType):
             if manure_state_type not in [
                 common.ManureStateType.solid_storage,
                 common.ManureStateType.solid,
@@ -1726,6 +1914,8 @@ class TestGetLandApplicationFactors(unittest.TestCase):
 
         cls.mean_annual_precipitation = 1000
         cls.mean_annual_evapotranspiration = 700
+        cls.growing_season_precipitation = 400
+        cls.growing_season_evapotranspiration = 570
 
         cls.emission_factor_volatilization = 0.014
 
@@ -1738,6 +1928,9 @@ class TestGetLandApplicationFactors(unittest.TestCase):
 
         cls.methane_conversion_factor = 0.0047
         cls.emission_factor_leaching = Defaults.EmissionFactorForLeachingAndRunoff.value
+        cls.leaching_fraction = common.calculate_fraction_of_nitrogen_lost_by_leaching_and_runoff(
+            growing_season_precipitation=cls.growing_season_precipitation,
+            growing_season_evapotranspiration=cls.growing_season_evapotranspiration)
 
         cls.df_dairy = read_holos_resource_table(
             path_file=PathsHolosResources.Table_61_Fractions_of_dairy_cattle_N_volatilized,
@@ -1756,6 +1949,8 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 province=province,
                 mean_annual_precipitation=self.mean_annual_precipitation,
                 mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                growing_season_precipitation=self.growing_season_precipitation,
+                growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                 animal_type=animal_type,
                 year=self.year,
                 soil_texture=soil_texture)
@@ -1764,7 +1959,7 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 n2o_direct_emission_factor=self.n2o_direct_emission_factor_west,
                 volatilization_fraction=self.df_swine.loc[self.year, province.value.abbreviation],
                 emission_factor_volatilization=self.emission_factor_volatilization,
-                leaching_fraction=0,
+                leaching_fraction=self.leaching_fraction,
                 emission_factor_leach=self.emission_factor_leaching,
                 methane_enteric_rat=0,
                 methane_manure_rate=0,
@@ -1784,6 +1979,8 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 province=province,
                 mean_annual_precipitation=self.mean_annual_precipitation,
                 mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                growing_season_precipitation=self.growing_season_precipitation,
+                growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                 animal_type=animal_type,
                 year=self.year,
                 soil_texture=soil_texture)
@@ -1792,7 +1989,7 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 n2o_direct_emission_factor=self.n2o_direct_emission_factor_west,
                 volatilization_fraction=self.df_dairy.loc[self.year, province.value.abbreviation],
                 emission_factor_volatilization=self.emission_factor_volatilization,
-                leaching_fraction=0,
+                leaching_fraction=self.leaching_fraction,
                 emission_factor_leach=self.emission_factor_leaching,
                 methane_enteric_rat=0,
                 methane_manure_rate=0,
@@ -1812,6 +2009,8 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 province=province,
                 mean_annual_precipitation=self.mean_annual_precipitation,
                 mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                growing_season_precipitation=self.growing_season_precipitation,
+                growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                 animal_type=animal_type,
                 year=self.year,
                 soil_texture=soil_texture)
@@ -1820,7 +2019,7 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 n2o_direct_emission_factor=self.n2o_direct_emission_factor_west,
                 volatilization_fraction=self.volatilization_fraction_for_other_animal_types,
                 emission_factor_volatilization=self.emission_factor_volatilization,
-                leaching_fraction=0,
+                leaching_fraction=self.leaching_fraction,
                 emission_factor_leach=self.emission_factor_leaching,
                 methane_enteric_rat=0,
                 methane_manure_rate=0,
@@ -1839,6 +2038,8 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 province=province,
                 mean_annual_precipitation=self.mean_annual_precipitation,
                 mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                growing_season_precipitation=self.growing_season_precipitation,
+                growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                 animal_type=animal_type,
                 year=self.year,
                 soil_texture=SoilTexture.Fine)
@@ -1847,7 +2048,7 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 n2o_direct_emission_factor=self.n2o_direct_emission_factor_east_fine_soil,
                 volatilization_fraction=self.df_swine.loc[self.year, province.value.abbreviation],
                 emission_factor_volatilization=self.emission_factor_volatilization,
-                leaching_fraction=0,
+                leaching_fraction=self.leaching_fraction,
                 emission_factor_leach=self.emission_factor_leaching,
                 methane_enteric_rat=0,
                 methane_manure_rate=0,
@@ -1866,6 +2067,8 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 province=province,
                 mean_annual_precipitation=self.mean_annual_precipitation,
                 mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                growing_season_precipitation=self.growing_season_precipitation,
+                growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                 animal_type=animal_type,
                 year=self.year,
                 soil_texture=SoilTexture.Medium)
@@ -1874,7 +2077,7 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 n2o_direct_emission_factor=self.n2o_direct_emission_factor_east_medium_soil,
                 volatilization_fraction=self.df_swine.loc[self.year, province.value.abbreviation],
                 emission_factor_volatilization=self.emission_factor_volatilization,
-                leaching_fraction=0,
+                leaching_fraction=self.leaching_fraction,
                 emission_factor_leach=self.emission_factor_leaching,
                 methane_enteric_rat=0,
                 methane_manure_rate=0,
@@ -1893,6 +2096,8 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 province=province,
                 mean_annual_precipitation=self.mean_annual_precipitation,
                 mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                growing_season_precipitation=self.growing_season_precipitation,
+                growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                 animal_type=animal_type,
                 year=self.year,
                 soil_texture=SoilTexture.Coarse)
@@ -1901,7 +2106,7 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 n2o_direct_emission_factor=self.n2o_direct_emission_factor_east_coarse_soil,
                 volatilization_fraction=self.df_swine.loc[self.year, province.value.abbreviation],
                 emission_factor_volatilization=self.emission_factor_volatilization,
-                leaching_fraction=0,
+                leaching_fraction=self.leaching_fraction,
                 emission_factor_leach=self.emission_factor_leaching,
                 methane_enteric_rat=0,
                 methane_manure_rate=0,
@@ -1920,6 +2125,8 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 province=province,
                 mean_annual_precipitation=self.mean_annual_precipitation,
                 mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                growing_season_precipitation=self.growing_season_precipitation,
+                growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                 animal_type=animal_type,
                 year=self.year,
                 soil_texture=SoilTexture.Fine)
@@ -1928,7 +2135,7 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 n2o_direct_emission_factor=self.n2o_direct_emission_factor_east_fine_soil,
                 volatilization_fraction=self.df_dairy.loc[self.year, province.value.abbreviation],
                 emission_factor_volatilization=self.emission_factor_volatilization,
-                leaching_fraction=0,
+                leaching_fraction=self.leaching_fraction,
                 emission_factor_leach=self.emission_factor_leaching,
                 methane_enteric_rat=0,
                 methane_manure_rate=0,
@@ -1947,6 +2154,8 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 province=province,
                 mean_annual_precipitation=self.mean_annual_precipitation,
                 mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                growing_season_precipitation=self.growing_season_precipitation,
+                growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                 animal_type=animal_type,
                 year=self.year,
                 soil_texture=SoilTexture.Medium)
@@ -1955,7 +2164,7 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 n2o_direct_emission_factor=self.n2o_direct_emission_factor_east_medium_soil,
                 volatilization_fraction=self.df_dairy.loc[self.year, province.value.abbreviation],
                 emission_factor_volatilization=self.emission_factor_volatilization,
-                leaching_fraction=0,
+                leaching_fraction=self.leaching_fraction,
                 emission_factor_leach=self.emission_factor_leaching,
                 methane_enteric_rat=0,
                 methane_manure_rate=0,
@@ -1974,6 +2183,8 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 province=province,
                 mean_annual_precipitation=self.mean_annual_precipitation,
                 mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                growing_season_precipitation=self.growing_season_precipitation,
+                growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                 animal_type=animal_type,
                 year=self.year,
                 soil_texture=SoilTexture.Coarse)
@@ -1982,7 +2193,7 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 n2o_direct_emission_factor=self.n2o_direct_emission_factor_east_coarse_soil,
                 volatilization_fraction=self.df_dairy.loc[self.year, province.value.abbreviation],
                 emission_factor_volatilization=self.emission_factor_volatilization,
-                leaching_fraction=0,
+                leaching_fraction=self.leaching_fraction,
                 emission_factor_leach=self.emission_factor_leaching,
                 methane_enteric_rat=0,
                 methane_manure_rate=0,
@@ -2001,6 +2212,8 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 province=province,
                 mean_annual_precipitation=self.mean_annual_precipitation,
                 mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                growing_season_precipitation=self.growing_season_precipitation,
+                growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                 animal_type=animal_type,
                 year=self.year,
                 soil_texture=SoilTexture.Fine)
@@ -2009,7 +2222,7 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 n2o_direct_emission_factor=self.n2o_direct_emission_factor_east_fine_soil,
                 volatilization_fraction=self.volatilization_fraction_for_other_animal_types,
                 emission_factor_volatilization=self.emission_factor_volatilization,
-                leaching_fraction=0,
+                leaching_fraction=self.leaching_fraction,
                 emission_factor_leach=self.emission_factor_leaching,
                 methane_enteric_rat=0,
                 methane_manure_rate=0,
@@ -2028,6 +2241,8 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 province=province,
                 mean_annual_precipitation=self.mean_annual_precipitation,
                 mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                growing_season_precipitation=self.growing_season_precipitation,
+                growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                 animal_type=animal_type,
                 year=self.year,
                 soil_texture=SoilTexture.Medium)
@@ -2036,7 +2251,7 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 n2o_direct_emission_factor=self.n2o_direct_emission_factor_east_medium_soil,
                 volatilization_fraction=self.volatilization_fraction_for_other_animal_types,
                 emission_factor_volatilization=self.emission_factor_volatilization,
-                leaching_fraction=0,
+                leaching_fraction=self.leaching_fraction,
                 emission_factor_leach=self.emission_factor_leaching,
                 methane_enteric_rat=0,
                 methane_manure_rate=0,
@@ -2055,6 +2270,8 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 province=province,
                 mean_annual_precipitation=self.mean_annual_precipitation,
                 mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                growing_season_precipitation=self.growing_season_precipitation,
+                growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                 animal_type=animal_type,
                 year=self.year,
                 soil_texture=SoilTexture.Coarse)
@@ -2063,7 +2280,7 @@ class TestGetLandApplicationFactors(unittest.TestCase):
                 n2o_direct_emission_factor=self.n2o_direct_emission_factor_east_coarse_soil,
                 volatilization_fraction=self.volatilization_fraction_for_other_animal_types,
                 emission_factor_volatilization=self.emission_factor_volatilization,
-                leaching_fraction=0,
+                leaching_fraction=self.leaching_fraction,
                 emission_factor_leach=self.emission_factor_leaching,
                 methane_enteric_rat=0,
                 methane_manure_rate=0,
@@ -2085,7 +2302,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
         cls.mean_annual_precipitation = 1000
         cls.mean_annual_evapotranspiration = 700
         cls.mean_annual_temperature = 10
-
+        cls.growing_season_precipitation = 383
+        cls.growing_season_evapotranspiration = 568
         cls.animal_types = list(common.AnimalType)
         cls.soil_texture = list(common.SoilTexture)
 
@@ -2127,6 +2345,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     province=province,
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     year=self.year,
                     soil_texture=soil_texture)
@@ -2163,6 +2383,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2187,6 +2409,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2211,6 +2435,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2235,6 +2461,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2260,6 +2488,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2273,16 +2503,20 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                 ])
 
     def test_category_beef_production_error_case(self):
-        with self.assertRaises(ValueError):
+        self.assertEqual(
+            common.LivestockEmissionConversionFactorsData().__dict__,
             common.get_manure_emission_factors(
                 manure_state_type=common.ManureStateType.daily_spread,
                 mean_annual_precipitation=self.mean_annual_precipitation,
                 mean_annual_temperature=self.mean_annual_temperature,
                 mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                growing_season_precipitation=self.growing_season_precipitation,
+                growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                 animal_type=common.AnimalType.beef,
                 province=random.choice(self.provinces),
                 year=self.year,
-                soil_texture=random.choice(self.soil_texture))
+                soil_texture=random.choice(self.soil_texture)).__dict__
+        )
 
     def test_category_dairy_production_daily_spread_manure_state(self):
         for animal_type in self.dairy_production_category:
@@ -2297,6 +2531,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2321,6 +2557,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2345,6 +2583,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2369,6 +2609,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2393,6 +2635,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2417,6 +2661,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2441,6 +2687,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2465,6 +2713,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2489,6 +2739,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2513,6 +2765,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2531,6 +2785,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                 mean_annual_precipitation=self.mean_annual_precipitation,
                 mean_annual_temperature=self.mean_annual_temperature,
                 mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                growing_season_precipitation=self.growing_season_precipitation,
+                growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                 animal_type=common.AnimalType.dairy,
                 province=random.choice(self.provinces),
                 year=self.year,
@@ -2550,6 +2806,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2576,6 +2834,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2602,6 +2862,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2628,6 +2890,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2652,6 +2916,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2675,6 +2941,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2693,6 +2961,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                 mean_annual_precipitation=self.mean_annual_precipitation,
                 mean_annual_temperature=self.mean_annual_temperature,
                 mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                growing_season_precipitation=self.growing_season_precipitation,
+                growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                 animal_type=common.AnimalType.swine,
                 province=random.choice(self.provinces),
                 year=self.year,
@@ -2711,6 +2981,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2729,6 +3001,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                 mean_annual_precipitation=self.mean_annual_precipitation,
                 mean_annual_temperature=self.mean_annual_temperature,
                 mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                growing_season_precipitation=self.growing_season_precipitation,
+                growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                 animal_type=common.AnimalType.sheep,
                 province=random.choice(self.provinces),
                 year=self.year,
@@ -2748,6 +3022,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2774,6 +3050,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2793,6 +3071,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                 mean_annual_precipitation=self.mean_annual_precipitation,
                 mean_annual_temperature=self.mean_annual_temperature,
                 mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                growing_season_precipitation=self.growing_season_precipitation,
+                growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                 animal_type=common.AnimalType.poultry,
                 province=random.choice(self.provinces),
                 year=self.year,
@@ -2811,6 +3091,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                     mean_annual_precipitation=self.mean_annual_precipitation,
                     mean_annual_temperature=self.mean_annual_temperature,
                     mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                    growing_season_precipitation=self.growing_season_precipitation,
+                    growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                     animal_type=animal_type,
                     province=random.choice(self.provinces),
                     year=self.year,
@@ -2829,6 +3111,8 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                 mean_annual_precipitation=self.mean_annual_precipitation,
                 mean_annual_temperature=self.mean_annual_temperature,
                 mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                growing_season_precipitation=self.growing_season_precipitation,
+                growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                 animal_type=common.AnimalType.other_livestock,
                 province=random.choice(self.provinces),
                 year=self.year,
@@ -2850,10 +3134,357 @@ class TestGetManureEmissionFactors(unittest.TestCase):
                         mean_annual_precipitation=self.mean_annual_precipitation,
                         mean_annual_temperature=self.mean_annual_temperature,
                         mean_annual_evapotranspiration=self.mean_annual_evapotranspiration,
+                        growing_season_precipitation=self.growing_season_precipitation,
+                        growing_season_evapotranspiration=self.growing_season_evapotranspiration,
                         animal_type=common.AnimalType.other_livestock,
                         province=random.choice(self.provinces),
                         year=self.year,
                         soil_texture=random.choice(self.soil_texture))
+
+
+class TestGetManureExcretionRate(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.df = read_holos_resource_table(
+            path_file=PathsHolosResources.Table_29_Percentage_Total_Manure_Produced_In_Systems,
+            index_col="Animal group",
+            usecols=["Animal group", "manure_excreted_rate"]).squeeze()
+
+    def test_value_for_beef_animal_type(self):
+        for animal_type in _AnimalGroups.beef_cattle_type:
+            self.assertEqual(
+                self.df.loc['Non-dairy cattle'],
+                common.get_manure_excretion_rate(animal_type=animal_type))
+
+    def test_value_for_dairy_animal_type(self):
+        for animal_type in _AnimalGroups.dairy_cattle_type:
+            self.assertEqual(
+                self.df.loc['Dairy cattle'],
+                common.get_manure_excretion_rate(animal_type=animal_type))
+
+    def test_value_for_sheep_animal_type(self):
+        for animal_type in _AnimalGroups.sheep_type:
+            self.assertEqual(
+                self.df.loc['Sheep and lambs'],
+                common.get_manure_excretion_rate(animal_type=animal_type))
+
+    def test_value_for_swine_animal_type(self):
+        for animal_type in _AnimalGroups.swine_type:
+            self.assertEqual(
+                self.df.loc['Swine'],
+                common.get_manure_excretion_rate(animal_type=animal_type))
+
+    def test_value_for_turkey_animal_type(self):
+        for animal_type in _AnimalGroups.turkey_type:
+            self.assertEqual(
+                self.df.loc['Turkeys'],
+                common.get_manure_excretion_rate(animal_type=animal_type))
+
+    def test_value_for_poultry_animal_type(self):
+        for animal_type in _AnimalGroups.poultry_type:
+            if animal_type == common.AnimalType.chicken_hens:
+                self.assertEqual(
+                    self.df.loc['Chicken layers'],
+                    common.get_manure_excretion_rate(animal_type=animal_type))
+
+    def test_values_for_other_animal_types(self):
+        for animal_type in common.AnimalType:
+            if not any([
+                animal_type in _AnimalGroups.beef_cattle_type,
+                animal_type in _AnimalGroups.dairy_cattle_type,
+                animal_type in _AnimalGroups.sheep_type,
+                animal_type in _AnimalGroups.swine_type,
+                animal_type in _AnimalGroups.turkey_type,
+                animal_type == common.AnimalType.chicken_hens,
+                animal_type == common.AnimalType.not_selected,
+                animal_type == common.AnimalType.chicken,
+                animal_type == common.AnimalType.cow_calf,
+                animal_type == common.AnimalType.calf,
+                animal_type == common.AnimalType.layers_dry_poultry,
+                animal_type == common.AnimalType.layers_wet_poultry,
+                animal_type == common.AnimalType.layers_wet_poultry,
+                animal_type == common.AnimalType.other_livestock,
+                animal_type == common.AnimalType.poultry,
+                animal_type == common.AnimalType.young_bulls,
+                animal_type == common.AnimalType.chicken_roosters,
+                animal_type == common.AnimalType.chicken_eggs,
+                animal_type == common.AnimalType.chicks,
+                animal_type == common.AnimalType.cattle,
+            ]):
+                self.assertIsNotNone(
+                    common.get_manure_excretion_rate(animal_type=animal_type))
+
+
+class TestConvertManureStateTypeName(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.used_manure_handling_systems = []
+
+    def run_test(
+            self,
+            expected_manure_state_type: common.ManureStateType,
+            user_defined_manure_state_type: str
+    ):
+        self.assertEqual(
+            expected_manure_state_type,
+            common.convert_manure_state_type_name(name=user_defined_manure_state_type))
+
+        self.used_manure_handling_systems.append(self._clearn_text(user_defined_manure_state_type))
+
+    @staticmethod
+    def _clearn_text(s: str) -> str:
+        return s.lower().strip().replace(' ', '').replace('-', '').replace('/', '')
+
+    def test_value_for_pasture(self):
+        for manure_handling_system in [
+            "Pasture",
+            "Pasture/range/paddock"
+        ]:
+            self.run_test(
+                expected_manure_state_type=common.ManureStateType.pasture,
+                user_defined_manure_state_type=manure_handling_system),
+
+    def test_value_for_deep_bedding(self):
+        self.run_test(
+            expected_manure_state_type=common.ManureStateType.deep_bedding,
+            user_defined_manure_state_type="Deep bedding"),
+
+    def test_value_for_solid_storage_with_or_without_litter(self):
+        self.run_test(
+            expected_manure_state_type=common.ManureStateType.solid_storage_with_or_without_litter,
+            user_defined_manure_state_type="Solid storage - with or without litter"),
+
+    def test_value_for_solid_storage(self):
+        for manure_handling_system in [
+            "Solid storage",
+            "Solid-Storage/Stock Piled"
+        ]:
+            self.run_test(
+                expected_manure_state_type=common.ManureStateType.solid_storage,
+                user_defined_manure_state_type=manure_handling_system),
+
+    def test_value_for_solid_compost_passive(self):
+        for manure_handling_system in [
+            "Composted - passive",
+            "Compost/Passive- ",
+            " Compost-Passive Windrow/",
+        ]:
+            self.run_test(
+                expected_manure_state_type=common.ManureStateType.compost_passive,
+                user_defined_manure_state_type=manure_handling_system),
+
+    def test_value_for_solid_compost_intensive(self):
+        for manure_handling_system in [
+            "Composted/Intensive- ",
+            "/ Compost-intensivE/",
+            "Compost - intensive windrow",
+        ]:
+            self.run_test(
+                expected_manure_state_type=common.ManureStateType.compost_intensive,
+                user_defined_manure_state_type=manure_handling_system),
+
+    def test_value_for_solid_compost_in_vessel(self):
+        self.run_test(
+            expected_manure_state_type=common.ManureStateType.composted_in_vessel,
+            user_defined_manure_state_type="Composted in-vessel"),
+
+    def test_value_for_composted(self):
+        self.run_test(
+            expected_manure_state_type=common.ManureStateType.composted,
+            user_defined_manure_state_type=" // -Composted-/ "),
+
+    def test_value_for_anaerobic_digestion(self):
+        for manure_handling_system in [
+            "anaerobic--/digestion- ",
+            "/ AnaerobicDigesTOR/"
+        ]:
+            self.run_test(
+                expected_manure_state_type=common.ManureStateType.anaerobic_digester,
+                user_defined_manure_state_type=manure_handling_system),
+
+    def test_value_for_deep_pit(self):
+        for manure_handling_system in [
+            " ///DeepPit/- ",
+            " Deep pit under barn--/- "
+        ]:
+            self.run_test(
+                expected_manure_state_type=common.ManureStateType.deep_pit,
+                user_defined_manure_state_type=manure_handling_system),
+
+    def test_value_for_liquid_with_solid_cover(self):
+        for manure_handling_system in [
+            "liquid/solid-cover",
+            "liquid/with solid cover",
+            "liquid-slurry-with Solid/cover"
+        ]:
+            self.run_test(
+                expected_manure_state_type=common.ManureStateType.liquid_with_solid_cover,
+                user_defined_manure_state_type=manure_handling_system),
+
+    def test_value_for_liquid_with_natural_crust(self):
+        for manure_handling_system in [
+            "/liquid/natural crust",
+            "LIQUIDWITHNATURALCRUST",
+            "Liquid/slurry with natural crust"
+        ]:
+            self.run_test(
+                expected_manure_state_type=common.ManureStateType.liquid_with_natural_crust,
+                user_defined_manure_state_type=manure_handling_system),
+
+    def test_value_for_liquid_no_crust(self):
+        for manure_handling_system in [
+            "liquid no crust",
+            "liquid with no crust",
+            "Liquid/slurry with no natural crust"
+        ]:
+            self.run_test(
+                expected_manure_state_type=common.ManureStateType.liquid_no_crust,
+                user_defined_manure_state_type=manure_handling_system),
+
+    def test_value_for_daily_spread(self):
+        self.run_test(
+            expected_manure_state_type=common.ManureStateType.daily_spread,
+            user_defined_manure_state_type="/Daily/spread "),
+
+    def test_z_default_value(self):
+        for manure_handling_system in common.ManureStateType:
+            v = manure_handling_system.value
+            if self._clearn_text(v) not in self.used_manure_handling_systems:
+                self.run_test(
+                    expected_manure_state_type=common.ManureStateType.not_selected,
+                    user_defined_manure_state_type=v),
+
+
+class GetDefaultManureCompositionData(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.simulated_animal_types = []
+        _df = read_holos_resource_table(path_file=PathsHolosResources.Table_6_Manure_Types_And_Default_Composition)
+        _df['animal_type'] = _df['animal_type'].apply(lambda x: common.convert_animal_type_name(name=x))
+        _df.set_index(['animal_type', 'manure_state_type'], inplace=True)
+        cls.df = _df
+
+        cls.simulated_animal_types = []
+
+    def run_test(
+            self,
+            animal_type_in_table: common.AnimalType,
+            animal_type: common.AnimalType,
+            manure_handling_system: str
+    ):
+        self.assertEqual(
+            self.df.loc[(animal_type_in_table, manure_handling_system)].to_dict(),
+            common.get_default_manure_composition_data(
+                animal_type=animal_type,
+                manure_state_type=common.convert_manure_state_type_name(name=manure_handling_system)).__dict__)
+
+        self.simulated_animal_types.append(animal_type)
+
+    def test_value_for_beef_cattle(self):
+        for animal_type, manure_handling_system in product(
+                _AnimalGroups.beef_cattle_type,
+                ["Pasture/range/paddock",
+                 "Deep bedding",
+                 "Solid storage",
+                 "Compost - passive windrow",
+                 "Compost - intensive windrow"
+                 ]
+        ):
+            self.run_test(
+                animal_type_in_table=common.AnimalType.beef,
+                animal_type=animal_type,
+                manure_handling_system=manure_handling_system)
+
+    def test_value_for_dairy_cattle(self):
+        for animal_type, manure_handling_system in product(
+                _AnimalGroups.dairy_cattle_type,
+                [
+                    "Pasture/range/paddock",
+                    "Deep bedding",
+                    "Solid storage",
+                    "Compost - passive windrow",
+                    "Compost - intensive windrow",
+                    "Daily spread",
+                    "Liquid/slurry with natural crust",
+                    "Liquid/slurry with no natural crust",
+                    "Liquid/slurry with solid cover",
+                    "Deep pit under barn"
+                ]
+        ):
+            self.run_test(
+                animal_type_in_table=common.AnimalType.dairy,
+                animal_type=animal_type,
+                manure_handling_system=manure_handling_system)
+
+    def test_value_for_sheep(self):
+        for animal_type, manure_handling_system in product(
+                _AnimalGroups.sheep_type,
+                [
+                    "Pasture/range/paddock",
+                    "Solid storage",
+                ]
+        ):
+            self.run_test(
+                animal_type_in_table=common.AnimalType.sheep,
+                animal_type=animal_type,
+                manure_handling_system=manure_handling_system)
+
+    def test_value_for_swine(self):
+        for animal_type, manure_handling_system in product(
+                _AnimalGroups.swine_type,
+                [
+                    "Liquid/slurry with natural crust",
+                    "Liquid/slurry with no natural crust",
+                    "Liquid/slurry with solid cover",
+                    "Deep pit under barn"
+                ]
+        ):
+            self.run_test(
+                animal_type_in_table=common.AnimalType.swine,
+                animal_type=animal_type,
+                manure_handling_system=manure_handling_system)
+
+    def test_value_for_poultry(self):
+        for animal_type in _AnimalGroups.poultry_type:
+            self.run_test(
+                animal_type_in_table=common.AnimalType.poultry,
+                animal_type=animal_type,
+                manure_handling_system="Solid storage - with or without litter")
+
+    def test_value_for_other_animals(self):
+        ls = list(product(
+            [
+                common.AnimalType.alpacas,
+                common.AnimalType.deer,
+                common.AnimalType.elk,
+                common.AnimalType.goats,
+                common.AnimalType.horses,
+                common.AnimalType.llamas,
+                common.AnimalType.mules
+            ],
+            [
+                "Pasture/range/paddock",
+                "Solid storage"
+            ]
+        ))
+
+        ls = list(ls) + [(common.AnimalType.bison, 'Pasture'),
+                         (common.AnimalType.bison, 'Solid storage')]
+
+        for animal_type, manure_handling_system in ls:
+            self.run_test(
+                animal_type_in_table=animal_type,
+                animal_type=animal_type,
+                manure_handling_system=manure_handling_system)
+
+    def test_error(self):
+        for animal_type in common.AnimalType:
+            if animal_type not in self.simulated_animal_types:
+                with self.assertRaises(KeyError):
+                    self.run_test(
+                        animal_type_in_table=animal_type,
+                        animal_type=animal_type,
+                        manure_handling_system="")
 
 
 if __name__ == '__main__':

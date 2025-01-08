@@ -1,5 +1,6 @@
-from holos_service.common import EnumGeneric, HolosVar, Region, get_region
-from holos_service.components.common import ClimateZones, ComponentCategory
+from holos_service.common import EnumGeneric, HolosVar, Region, get_region, get_climate_zone, ClimateZones
+from holos_service.components.common import (ComponentCategory,
+                                             calculate_fraction_of_nitrogen_lost_by_leaching_and_runoff)
 from holos_service.config import PathsHolosResources
 from holos_service.defaults import Defaults
 from holos_service.django_stuff import CanadianProvince
@@ -329,6 +330,130 @@ class AnimalType(EnumGeneric):
         return res
 
 
+def convert_animal_type_name(name: str) -> AnimalType:
+    """Maps animal type name to its nearest AnimalType Enum.
+
+    Holos source code:
+        https://github.com/RamiALBASHA/Holos/blob/71638efd97c84c6ded45e342ce664477df6f803f/H.Core/Converters/AnimalTypeStringConverter.cs#L10
+
+    Notes:
+        lines followed by multiple '#' were modified from the original code
+    """
+    cleaned_input = name.lower().strip().replace(' ', '').replace('-', '')
+
+    match cleaned_input:
+        # Beef cattle
+        case "backgrounding" | "backgrounder":
+            return AnimalType.beef_backgrounder
+        case "backgroundingsteers":
+            return AnimalType.beef_backgrounder_steer
+        case "backgroundingheifers":
+            return AnimalType.beef_backgrounder_heifer
+        case "beef" | "nondairycattle" | "beefcattle":
+            return AnimalType.beef
+        case "beeffinisher" | "finisher":
+            return AnimalType.beef_finisher
+        case "cowcalf":
+            return AnimalType.cow_calf
+        case "stockers":
+            return AnimalType.stockers
+        case "beefcalves" | "beefcalf":
+            return AnimalType.beef_calf
+
+        # Dairy
+        case "dairy" | "dairycattle":
+            return AnimalType.dairy
+        case "dairybulls":
+            return AnimalType.dairy_bulls
+        case "dairydry" | "dairydrycow":
+            return AnimalType.dairy_dry_cow
+        case "dairyheifers":
+            return AnimalType.dairy_heifers
+        case "dairylactating":
+            return AnimalType.dairy_lactating_cow
+
+        # Swine
+        case "boar" | "swineboar":
+            return AnimalType.swine_boar
+        case "weaners" | "piglets":
+            return AnimalType.swine_piglets
+        case "drysow":
+            return AnimalType.swine_dry_sow
+        case "sow" | "sows":
+            return AnimalType.swine_sows
+        case "grower" | "hogs" | "swinegrower":
+            return AnimalType.swine_grower
+        case "lactatingsow":
+            return AnimalType.swine_lactating_sow
+        case "swine":
+            return AnimalType.swine
+        case "swinefinisher":
+            return AnimalType.swine_finisher
+
+        # Sheep
+        case "sheepfeedlot":
+            return AnimalType.sheep_feedlot
+        case "ewe" | "ewes":
+            return AnimalType.ewes
+        case "ram" | "rams":  ###################
+            return AnimalType.ram
+        case "sheep" | "sheepandlambs":
+            return AnimalType.sheep
+        case "weanedlambs" | "lambs":  ####################
+            return AnimalType.lambs
+
+        # Other livestock
+        case "horse" | "horses":
+            return AnimalType.horses
+        case "goat" | "goats":
+            return AnimalType.goats
+        case "mules" | "mule":
+            return AnimalType.mules
+        case "bull":
+            return AnimalType.beef_bulls
+        case "llamas":
+            return AnimalType.llamas
+        case "alpacas":
+            return AnimalType.alpacas
+        case "deer":
+            return AnimalType.deer
+        case "elk":
+            return AnimalType.elk
+        case "bison":
+            return AnimalType.bison
+
+        # Poultry
+        case "poultry":
+            return AnimalType.poultry
+        case "poultrypulletsbroilers" | "chickenbroilers" | "broilers":
+            return AnimalType.broilers
+        case "chickenpullets" | "pullets":
+            return AnimalType.chicken_pullets
+        case "chicken":
+            return AnimalType.chicken
+        case "chickencockerels" | "cockerels":
+            return AnimalType.chicken_cockerels
+        case "roasters" | "roosters" | "chickenroosters":  ####################
+            return AnimalType.chicken_roosters
+        case "hens":
+            return AnimalType.chicken_hens
+        case "poultryturkeys" | "turkey" | "ducks":
+            return AnimalType.ducks
+        case "geese":
+            return AnimalType.geese
+        case "turkeys":
+            return AnimalType.turkeys
+        case "layersdry" | "layersdrypoultry":  ################
+            return AnimalType.layers_dry_poultry
+        case "layerswet" | "layerswetpoultry":  ################
+            return AnimalType.layers_wet_poultry
+        case "poultrylayers" | "chickenlayers" | "layers":
+            return AnimalType.layers
+        case _:
+            # raise ValueError(f"unknown animal type. Returning {AnimalType.beef_backgrounder}")
+            return AnimalType.beef_backgrounder
+
+
 class ManureAnimalSourceTypes(EnumGeneric):
     not_selected: str = "NotSelected"
     beef_manure: str = "BeefManure"
@@ -449,10 +574,21 @@ class Diet:
             net_energy_for_maintenance=self.metabolizable_energy * 0.8134 - 0.3518,
             net_energy_for_growth=self.metabolizable_energy * 0.6299 - 0.5162)
 
-    def calc_methane_conversion_factor(
+    def calc_methane_conversion_factor_for_beef_and_dairy_cattle(
             self,
             animal_type: AnimalType
     ) -> float:
+        """Calculates the methane conversion factor based on the animal type.
+
+        Args:
+            animal_type: AnimalType class instance
+
+        Returns:
+            (kg CH4 kg CH4-1) methane conversion factor for diet (Y_m)
+
+        Holos Source Code:
+            https://github.com/holos-aafc/Holos/blob/2bc9704a51449a8ffd4005462a6a7e6fb8a27f2d/H.Core/Providers/Feed/Diet.cs#L602
+        """
         # Assign a default ym so that if there are no cases that cover the diet below, there will be a value assigned
         result = 0.4
         total_digestible_nutrient = self.total_digestible_nutrient_percentage
@@ -497,6 +633,40 @@ class Diet:
             # }
 
         return result
+
+    @staticmethod
+    def calc_methane_conversion_factor_for_sheep() -> float:
+        """Returns the methane conversion factor for sheep irrespective of feed quality values
+
+        Returns:
+            (kg CH4 kg CH4-1) methane conversion factor for diet (Y_m)
+
+        Holos Source Code:
+            https://github.com/holos-aafc/Holos/blob/2bc9704a51449a8ffd4005462a6a7e6fb8a27f2d/H.Content/Resources/Table_18_26_Diet_Coefficients_For_Beef_Dairy_Sheep.csv#L33
+
+        """
+        return 0.067
+
+    def calc_methane_conversion_factor(
+            self,
+            animal_type: AnimalType
+    ) -> float:
+        """Calculates the methane conversion factor based on the animal type.
+
+        Args:
+            animal_type: AnimalType class instance
+
+        Returns:
+            (kg CH4 kg CH4-1) methane conversion factor for diet (Y_m)
+        """
+        if animal_type.is_beef_cattle_type() or animal_type.is_dairy_cattle_type():
+            res = self.calc_methane_conversion_factor_for_beef_and_dairy_cattle(animal_type=animal_type)
+        elif animal_type.is_sheep_type():
+            res = self.calc_methane_conversion_factor_for_sheep()
+        else:
+            res = None
+
+        return res
 
 
 # class HousingSystem:
@@ -1321,71 +1491,6 @@ class LivestockEmissionConversionFactorsData:
         self.NitrogenExcretionRate = nitrogen_excretion_rate
 
 
-def get_climate_zone(
-        mean_annual_temperature: float,
-        mean_annual_precipitation: float,
-        mean_annual_potential_evapotranspiration: float
-) -> ClimateZones:
-    """Returns a ClimateZones member for the specified climate conditions
-    
-    Args:
-        mean_annual_temperature: (°C) mean annual air temperature
-        mean_annual_precipitation: (mm) mean annual precipitation
-        mean_annual_potential_evapotranspiration: (mm) mean annual potential evapotranspiration
-
-    Returns:
-        ClimateZones object
-
-    Notes:
-        For the determination of the methane conversion factor) MCF value, IPCC (2019) defines the different climate zones as follows:
-            1. Warm temperate moist: mean annual temperature (MAT) > 10 °C, P:PE >1;
-            2. Warm temperate dry: MAT >10 °C, P:PE < 1;
-            3. Cool temperate moist: MAT > 0 °C, P:PE >1;
-            4. Cool temperate dry: MAT > 0 °C, P:PE <1;
-            5. Boreal moist: MAT < 0 °C but some monthly temperatures > 10 °C, P:PE >1;
-            6. Boreal dry: MAT < 0 °C but some monthly temperatures > 10 °C, P:PE <1.
-        The MAT for cool temperate moist, cool temperate dry, warm temperate moist and warm temperate dry were 4.6, 5.8, 13.9, 14.0, respectively.
-        For deep pit manure storage systems for dairy cattle and swine, an average storage duration of 1 month was assumed.
-        (Source: IPCC (2019), Table 10.17)
-    
-    Holos Source Code:
-        https://github.com/holos-aafc/Holos/blob/396f1ab9bc7247e6d78766f9445c14d2eb7c0d9d/H.Core/Providers/Animals/Table_37_MCF_By_Climate_Livestock_MansureSystem_Provider.cs#L147
-    """
-    is_high_ratio_precipitation_to_potential_evapotranspiration = (
-            (mean_annual_precipitation / mean_annual_potential_evapotranspiration) >= 1)
-
-    if (mean_annual_temperature >= 10) and is_high_ratio_precipitation_to_potential_evapotranspiration:
-        climate_zone = ClimateZones.WarmTemperateMoist
-
-    elif (mean_annual_temperature >= 10) and not is_high_ratio_precipitation_to_potential_evapotranspiration:
-        climate_zone = ClimateZones.WarmTemperateDry
-
-    elif all([
-        mean_annual_temperature >= 0,
-        mean_annual_temperature < 10,
-        is_high_ratio_precipitation_to_potential_evapotranspiration
-    ]):
-        climate_zone = ClimateZones.CoolTemperateMoist
-
-    elif all([
-        mean_annual_temperature >= 0,
-        mean_annual_temperature < 10,
-        not is_high_ratio_precipitation_to_potential_evapotranspiration
-    ]):
-        climate_zone = ClimateZones.CoolTemperateDry
-
-    elif (mean_annual_temperature <= 0) and is_high_ratio_precipitation_to_potential_evapotranspiration:
-        climate_zone = ClimateZones.WarmTemperateMoist
-
-    elif (mean_annual_temperature <= 0) and not is_high_ratio_precipitation_to_potential_evapotranspiration:
-        climate_zone = ClimateZones.WarmTemperateDry
-
-    else:
-        raise ValueError("Unable to get data for methane conversion factor since climate zone is unknown")
-
-    return climate_zone
-
-
 def get_methane_conversion_factor(
         manure_state_type: ManureStateType,
         climate_zone: ClimateZones,
@@ -1574,6 +1679,8 @@ def get_land_application_factors(
         province: CanadianProvince,
         mean_annual_precipitation: float,
         mean_annual_evapotranspiration: float,
+        growing_season_precipitation: float,
+        growing_season_evapotranspiration: float,
         animal_type: AnimalType,
         year: int,
         soil_texture: SoilTexture
@@ -1584,9 +1691,15 @@ def get_land_application_factors(
         province: Canadian Province class
         mean_annual_precipitation: (mm) mean annual precipitation
         mean_annual_evapotranspiration: (mm) mean annual potential evapotranspiration
+        growing_season_precipitation: (mm) total amount of precipitations during the growing season (e.g. may to oct.)
+        growing_season_evapotranspiration: (mm) total amount of evapotranspiration during the growing season (e.g. may to oct.)
         animal_type: animal type class
         year: year
         soil_texture: soil texture as set in Holos
+
+    Holos Source Code:
+        (1) https://github.com/RamiALBASHA/Holos/blob/71638efd97c84c6ded45e342ce664477df6f803f/H.Core/Providers/Animals/Table_36_Livestock_Emission_Conversion_Factors_Provider.cs#L41
+        (2) https://github.com/holos-aafc/Holos/blob/267abf1066bb5494e5ec6a4085a85ab42dfa76c7/H.Core/Services/Initialization/Animals/AnimalInitializationService.Ammonia.cs#L55
     """
     region = get_region(province=province.name)
     climate_dependent_emission_factor_for_volatilization = get_emission_factor_for_volatilization_based_on_climate(
@@ -1622,6 +1735,11 @@ def get_land_application_factors(
         province=province,
         year=year)
 
+    # This part of the code comes from Holos Source Code (2)
+    factors.LeachingFraction = calculate_fraction_of_nitrogen_lost_by_leaching_and_runoff(
+        growing_season_precipitation=growing_season_precipitation,
+        growing_season_evapotranspiration=growing_season_evapotranspiration)
+
     return factors
 
 
@@ -1630,11 +1748,32 @@ def get_manure_emission_factors(
         mean_annual_precipitation: float,
         mean_annual_temperature: float,
         mean_annual_evapotranspiration: float,
+        growing_season_precipitation: float,
+        growing_season_evapotranspiration: float,
         animal_type: AnimalType,
         province: CanadianProvince,
         year: int,
         soil_texture: SoilTexture
 ) -> LivestockEmissionConversionFactorsData:
+    """Sets the emission factors for manure
+
+    Args:
+        manure_state_type: ManureStateType class instance
+        mean_annual_precipitation: (mm) mean annual precipitation
+        mean_annual_temperature: (degrees Celsius) mean annual air temperature
+        mean_annual_evapotranspiration: (mm) mean annual potential evapotranspiration
+        growing_season_precipitation: (mm) total amount of precipitations during the growing season (e.g. may to oct.)
+        growing_season_evapotranspiration: (mm) total amount of evapotranspiration during the growing season (e.g. may to oct.)
+        animal_type: animal type class
+        province: CanadianProvince class instance
+        year: year
+        soil_texture: soil texture as set in Holos
+
+    Returns:
+
+    Holos Source Code:
+        https://github.com/RamiALBASHA/Holos/blob/71638efd97c84c6ded45e342ce664477df6f803f/H.Core/Providers/Animals/Table_36_Livestock_Emission_Conversion_Factors_Provider.cs#L117
+    """
     climate_dependent_methane_conversion_factor = get_methane_conversion_factor(
         manure_state_type=manure_state_type,
         climate_zone=get_climate_zone(
@@ -1656,6 +1795,8 @@ def get_manure_emission_factors(
             province=province,
             mean_annual_precipitation=mean_annual_precipitation,
             mean_annual_evapotranspiration=mean_annual_evapotranspiration,
+            growing_season_precipitation=growing_season_precipitation,
+            growing_season_evapotranspiration=growing_season_evapotranspiration,
             animal_type=animal_type,
             year=year,
             soil_texture=soil_texture)
@@ -1712,9 +1853,9 @@ def get_manure_emission_factors(
                         emission_factor_leach=0.011)
 
                 case _:
-                    raise ValueError(
-                        f"Unable to get data for manure state type: {manure_state_type}. Returning default value.")
-                    # return Table_36_Livestock_Emission_Conversion_Factors_Data()
+                    # raise ValueError(
+                    #     f"Unable to get data for manure state type: {manure_state_type}. Returning default value.")
+                    return LivestockEmissionConversionFactorsData()
 
         case ComponentCategory.Dairy:
             match manure_state_type:
@@ -1935,3 +2076,154 @@ def get_manure_emission_factors(
                     "Returning default value."
                 ]))
             # return Table_36_Livestock_Emission_Conversion_Factors_Data();
+
+
+def get_manure_excretion_rate(
+        animal_type: AnimalType
+) -> float:
+    """Returns the manure excretion rate of animals
+
+    Args:
+        animal_type: AnimalType class instance
+
+    Returns:
+        (kg head-1 day-1) animal excretion rate
+
+    Holos Source Code:
+        https://github.com/holos-aafc/Holos/blob/97331845af308fe8aab6267edad4bbda6f5938b6/H.Core/Providers/Animals/Table_29_Default_Manure_Excreted_Provider.cs#L100
+
+    """
+    _excretionRates = read_holos_resource_table(
+        path_file=PathsHolosResources.Table_29_Percentage_Total_Manure_Produced_In_Systems)
+    _excretionRates.index = _excretionRates.pop('Animal group').apply(lambda x: convert_animal_type_name(name=x))
+
+    animal_type_lookup = animal_type
+    if animal_type.is_beef_cattle_type():
+        animal_type_lookup = AnimalType.beef
+    elif animal_type.is_dairy_cattle_type():
+        animal_type_lookup = AnimalType.dairy
+    elif animal_type.is_sheep_type():
+        animal_type_lookup = AnimalType.sheep
+    elif animal_type.is_swine_type():
+        animal_type_lookup = AnimalType.swine
+    elif animal_type.is_turkey_type():
+        animal_type_lookup = AnimalType.turkeys
+    elif animal_type.is_poultry_type():
+        if animal_type == AnimalType.chicken_hens:
+            animal_type_lookup = AnimalType.layers
+
+    return _excretionRates.loc[animal_type_lookup, 'manure_excreted_rate']
+
+
+def convert_manure_state_type_name(name: str) -> ManureStateType:
+    cleaned_input = name.lower().strip().replace(' ', '').replace('-', '').replace('/', '')
+    match cleaned_input:
+        case "pasture" | "pasturerangepaddock":
+            return ManureStateType.pasture
+
+        case "deepbedding":
+            return ManureStateType.deep_bedding
+
+        case "solidstorage" | "solidstoragestockpiled":
+            return ManureStateType.solid_storage
+
+        case "solidstoragewithorwithoutlitter":
+            return ManureStateType.solid_storage_with_or_without_litter
+
+        case "compostedpassive" | "compostpassive" | "compostpassivewindrow":
+            return ManureStateType.compost_passive
+
+        case "compostedintensive" | "compostintensive" | "compostintensivewindrow":
+            return ManureStateType.compost_intensive
+
+        case "compostedinvessel":
+            return ManureStateType.composted_in_vessel
+
+        case "composted":
+            return ManureStateType.composted
+
+        case "anaerobicdigestion" | "anaerobicdigestor":
+            return ManureStateType.anaerobic_digester
+
+        case "deeppit" | "deeppitunderbarn":
+            return ManureStateType.deep_pit
+
+        case "liquidsolidcover" | "liquidwithsolidcover" | "liquidslurrywithsolidcover":
+            return ManureStateType.liquid_with_solid_cover
+
+        case "liquidnaturalcrust" | "liquidwithnaturalcrust" | "liquidslurrywithnaturalcrust":
+            return ManureStateType.liquid_with_natural_crust
+
+        case "liquidnocrust" | "liquidwithnocrust" | "liquidslurrywithnonaturalcrust":
+            return ManureStateType.liquid_no_crust
+
+        case "dailyspread":
+            return ManureStateType.daily_spread
+
+        case _:
+            # raise ValueError(f"was not able to convert {name}. Returning {ManureStateType.not_selected}")
+            return ManureStateType.not_selected
+
+
+class ManureComposition:
+    def __init__(
+            self,
+            moisture_content: float,
+            nitrogen_content: float,
+            carbon_content: float,
+            phosphorus_content: float,
+            carbon_to_nitrogen_ratio: float,
+            volatile_solid_content: float
+    ):
+        self.moisture_content = moisture_content
+        self.nitrogen_content = nitrogen_content
+        self.carbon_content = carbon_content
+        self.phosphorus_content = phosphorus_content
+        self.carbon_to_nitrogen_ratio = carbon_to_nitrogen_ratio
+        self.volatile_solid_content = volatile_solid_content
+
+
+def get_default_manure_composition_data(
+        animal_type: AnimalType,
+        manure_state_type: ManureStateType
+) -> ManureComposition:
+    """Returns the default manure composition values depending on animal type and manure state (handling system) type
+
+    Args:
+        animal_type: AnimalType class instance
+        manure_state_type: ManureStateType class instance
+
+    Returns:
+        ManureComposition class instance
+
+    Holos Source Code:
+        https://github.com/holos-aafc/Holos/blob/97331845af308fe8aab6267edad4bbda6f5938b6/H.Core/Models/Farm.Manure.cs#L34
+    """
+
+    # var defaultValue = new DefaultManureCompositionData();
+
+    if animal_type.is_beef_cattle_type():
+        animal_lookup_type = AnimalType.beef
+    elif animal_type.is_dairy_cattle_type():
+        animal_lookup_type = AnimalType.dairy
+    elif animal_type.is_sheep_type():
+        animal_lookup_type = AnimalType.sheep
+    elif animal_type.is_swine_type():
+        animal_lookup_type = AnimalType.swine
+    elif animal_type.is_poultry_type():
+        animal_lookup_type = AnimalType.poultry
+    else:
+        # Other animals have a value for animal group (Horses, Goats, etc.)
+        animal_lookup_type = animal_type
+
+    manure_composition_data = read_holos_resource_table(
+        path_file=PathsHolosResources.Table_6_Manure_Types_And_Default_Composition)
+    manure_composition_data['animal_type'] = manure_composition_data['animal_type'].apply(
+        lambda x: convert_animal_type_name(name=x))
+    manure_composition_data['manure_state_type'] = manure_composition_data['manure_state_type'].apply(
+        lambda x: convert_manure_state_type_name(name=x))
+    manure_composition_data.set_index(['animal_type', 'manure_state_type'], inplace=True)
+
+    res = manure_composition_data.loc[(animal_lookup_type, manure_state_type)]
+
+    return ManureComposition(**res)
