@@ -190,6 +190,8 @@ class TestCowCalfNoneRegression(unittest.TestCase):
             mean_annual_precipitation=45.36,
             mean_annual_temperature=3.72,
             mean_annual_evapotranspiration=51.95,
+            growing_season_precipitation=20,
+            growing_season_evapotranspiration=20,
             animal_type=cls.animal_type,
             province=CanadianProvince.Alberta,
             year=2024,
