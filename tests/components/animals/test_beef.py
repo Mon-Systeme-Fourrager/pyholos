@@ -183,8 +183,8 @@ class TestCowCalfNoneRegression(unittest.TestCase):
             path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_cow_calf.csv').loc[0].to_dict()
         cls.non_regression_data.update(
             {"Animals Are Milk Fed Only": str(cls.non_regression_data["Animals Are Milk Fed Only"]).upper()})
-        cls.manure_state_type = beef.ManureStateType.deep_bedding
-        cls.animal_type = beef.AnimalType.beef_bulls
+        cls.manure_state_type = common.ManureStateType.deep_bedding
+        cls.animal_type = common.AnimalType.beef_bulls
         cls.manure_emission_factors = common.get_manure_emission_factors(
             manure_state_type=cls.manure_state_type,
             mean_annual_precipitation=45.36,
@@ -204,11 +204,11 @@ class TestCowCalfNoneRegression(unittest.TestCase):
             management_period_start_date=date(2023, 1, 1),
             management_period_days=120,
             number_of_animals=150,
-            production_stage=beef.ProductionStage.gestating,
+            production_stage=common.ProductionStage.gestating,
             number_of_young_animals=0,
             is_milk_fed_only=False,
-            milk_data=beef.Milk(),
-            diet=beef.Diet(
+            milk_data=common.Milk(),
+            diet=common.Diet(
                 crude_protein_percentage=15.35,
                 forage_percentage=100,
                 total_digestible_nutrient_percentage=57.7,
@@ -217,15 +217,16 @@ class TestCowCalfNoneRegression(unittest.TestCase):
                 fat_percentage=1.95,
                 neutral_detergent_fiber_percentage=49.3,
                 metabolizable_energy=2.1),
-            housing_type=beef.HousingType.confined_no_barn,
+            housing_type=common.HousingType.confined_no_barn,
             manure_handling_system=self.manure_state_type,
             manure_emission_factors=self.manure_emission_factors,
             bedding_material_type=common.BeddingMaterialType.straw
         )
+        res = cow_calf.to_dict()
         for k, v in self.non_regression_data.items():
             self.assertAlmostEqual(
                 v,
-                cow_calf.to_dict()[k],
+                res[k],
                 places=3)
 
     pass
