@@ -19,7 +19,6 @@ class TestGetAnimalCoefficientData(unittest.TestCase):
                 "cf": "baseline_maintenance_coefficient",
                 "a": "coefficient_a",
                 "b": "coefficient_b",
-                "b": "coefficient_b",
                 "Initial Weight": "initial_weight",
                 "Final Weight": "final_weight",
                 "Wool Production": "wool_production",
