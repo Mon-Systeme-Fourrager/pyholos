@@ -1,17 +1,19 @@
 from pathlib import Path
 from typing import Any
 
+from holos_service.common import HolosVar
 from holos_service.soil import set_soil_properties
 
 
-class FarmSettingsVar:
+class FarmSettingsVar(HolosVar):
     def __init__(
             self,
             name: str,
             value: Any
     ):
-        self.name = name
-        self.value = value
+        super().__init__(
+            name=name,
+            value=value)
 
     def to_text(self):
         return f'{self.name} = {self.value}'
