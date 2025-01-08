@@ -28,7 +28,7 @@ class TestGetAnimalCoefficientData(unittest.TestCase):
         print(cls.animal_coefficients)
 
     def setUp(self):
-        self.sheep = sheep.SheepBase()
+        self.sheep = sheep.Sheep()
 
     def test_get_animal_coefficient_data_for_sheep_feedlot(self):
         self.sheep.group_name.value = sheep.GroupNames.sheep_feedlot.value
