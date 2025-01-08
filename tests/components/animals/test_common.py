@@ -3,6 +3,7 @@ import unittest
 from itertools import product
 from unittest.mock import patch
 
+from holos_service.common import ClimateZones
 from holos_service.components.animals import common
 from holos_service.components.common import ComponentCategory
 from holos_service.config import PathsHolosResources
@@ -1622,68 +1623,18 @@ class TestGetEmissionFactorForVolatilizationBasedOnClimate(unittest.TestCase):
                 mean_annual_potential_evapotranspiration=1000))
 
 
-class TestGetClimateZone(unittest.TestCase):
-    def test_high_temperature_high_ratio_precipitation_to_evapotranspiration(self):
-        self.assertEqual(
-            common.ClimateZones.WarmTemperateMoist,
-            common.get_climate_zone(
-                mean_annual_temperature=20,
-                mean_annual_precipitation=1000,
-                mean_annual_potential_evapotranspiration=700))
-
-    def test_high_temperature_low_ratio_precipitation_to_evapotranspiration(self):
-        self.assertEqual(
-            common.ClimateZones.WarmTemperateDry,
-            common.get_climate_zone(
-                mean_annual_temperature=20,
-                mean_annual_precipitation=700,
-                mean_annual_potential_evapotranspiration=1000))
-
-    def test_medium_temperature_high_ratio_precipitation_to_evapotranspiration(self):
-        self.assertEqual(
-            common.ClimateZones.CoolTemperateMoist,
-            common.get_climate_zone(
-                mean_annual_temperature=5,
-                mean_annual_precipitation=1000,
-                mean_annual_potential_evapotranspiration=700))
-
-    def test_medium_temperature_low_ratio_precipitation_to_evapotranspiration(self):
-        self.assertEqual(
-            common.ClimateZones.CoolTemperateDry,
-            common.get_climate_zone(
-                mean_annual_temperature=5,
-                mean_annual_precipitation=700,
-                mean_annual_potential_evapotranspiration=1000))
-
-    def test_low_temperature_high_ratio_precipitation_to_evapotranspiration(self):
-        self.assertEqual(
-            common.ClimateZones.WarmTemperateMoist,
-            common.get_climate_zone(
-                mean_annual_temperature=-5,
-                mean_annual_precipitation=1000,
-                mean_annual_potential_evapotranspiration=700))
-
-    def test_low_temperature_low_ratio_precipitation_to_evapotranspiration(self):
-        self.assertEqual(
-            common.ClimateZones.WarmTemperateDry,
-            common.get_climate_zone(
-                mean_annual_temperature=-5,
-                mean_annual_precipitation=700,
-                mean_annual_potential_evapotranspiration=1000))
-
-
 class TestGetMethaneConversionFactor(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.cool_climate_zones = [
-            common.ClimateZones.CoolTemperateMoist,
-            common.ClimateZones.CoolTemperateDry,
-            common.ClimateZones.BorealDry,
-            common.ClimateZones.BorealMoist]
+            ClimateZones.CoolTemperateMoist,
+            ClimateZones.CoolTemperateDry,
+            ClimateZones.BorealDry,
+            ClimateZones.BorealMoist]
 
         cls.warm_climate_zones = [
-            common.ClimateZones.WarmTemperateDry,
-            common.ClimateZones.WarmTemperateMoist]
+            ClimateZones.WarmTemperateDry,
+            ClimateZones.WarmTemperateMoist]
 
     def test_values_for_solid_and_solid_storage_manure_under_cool_climates(self):
         for manure_state_type in [
@@ -1743,12 +1694,12 @@ class TestGetMethaneConversionFactor(unittest.TestCase):
 
     def test_values_for_deep_bedding(self):
         for climate_zone, expected_value in [
-            (common.ClimateZones.CoolTemperateMoist, 0.21),
-            (common.ClimateZones.CoolTemperateDry, 0.26),
-            (common.ClimateZones.BorealDry, 0.14),
-            (common.ClimateZones.BorealMoist, 0.14),
-            (common.ClimateZones.WarmTemperateDry, 0.37),
-            (common.ClimateZones.WarmTemperateMoist, 0.41)
+            (ClimateZones.CoolTemperateMoist, 0.21),
+            (ClimateZones.CoolTemperateDry, 0.26),
+            (ClimateZones.BorealDry, 0.14),
+            (ClimateZones.BorealMoist, 0.14),
+            (ClimateZones.WarmTemperateDry, 0.37),
+            (ClimateZones.WarmTemperateMoist, 0.41)
         ]:
             self.assertEqual(
                 expected_value,
@@ -1757,7 +1708,7 @@ class TestGetMethaneConversionFactor(unittest.TestCase):
                     climate_zone=climate_zone))
 
     def test_values_for_compost_in_vessel(self):
-        for climate_zone in common.ClimateZones:
+        for climate_zone in ClimateZones:
             self.assertEqual(
                 0.005,
                 common.get_methane_conversion_factor(
@@ -1782,12 +1733,12 @@ class TestGetMethaneConversionFactor(unittest.TestCase):
 
     def test_values_for_deep_pit(self):
         for climate_zone, expected_value in [
-            (common.ClimateZones.CoolTemperateMoist, 0.06),
-            (common.ClimateZones.CoolTemperateDry, 0.08),
-            (common.ClimateZones.BorealDry, 0.04),
-            (common.ClimateZones.BorealMoist, 0.04),
-            (common.ClimateZones.WarmTemperateDry, 0.15),
-            (common.ClimateZones.WarmTemperateMoist, 0.13)
+            (ClimateZones.CoolTemperateMoist, 0.06),
+            (ClimateZones.CoolTemperateDry, 0.08),
+            (ClimateZones.BorealDry, 0.04),
+            (ClimateZones.BorealMoist, 0.04),
+            (ClimateZones.WarmTemperateDry, 0.15),
+            (ClimateZones.WarmTemperateMoist, 0.13)
         ]:
             self.assertEqual(
                 expected_value,
@@ -1796,7 +1747,7 @@ class TestGetMethaneConversionFactor(unittest.TestCase):
                     climate_zone=climate_zone))
 
     def test_default_values(self):
-        for climate_zone, manure_state_type in product(common.ClimateZones, common.ManureStateType):
+        for climate_zone, manure_state_type in product(ClimateZones, common.ManureStateType):
             if manure_state_type not in [
                 common.ManureStateType.solid_storage,
                 common.ManureStateType.solid,

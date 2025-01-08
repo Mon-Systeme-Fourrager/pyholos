@@ -28,6 +28,55 @@ class TestGetRegion(unittest.TestCase):
                     common.Region.EasternCanada,
                     common.get_region(province=province.name))
 
+class TestGetClimateZone(unittest.TestCase):
+    def test_high_temperature_high_ratio_precipitation_to_evapotranspiration(self):
+        self.assertEqual(
+            common.ClimateZones.WarmTemperateMoist,
+            common.get_climate_zone(
+                mean_annual_temperature=20,
+                mean_annual_precipitation=1000,
+                mean_annual_potential_evapotranspiration=700))
+
+    def test_high_temperature_low_ratio_precipitation_to_evapotranspiration(self):
+        self.assertEqual(
+            common.ClimateZones.WarmTemperateDry,
+            common.get_climate_zone(
+                mean_annual_temperature=20,
+                mean_annual_precipitation=700,
+                mean_annual_potential_evapotranspiration=1000))
+
+    def test_medium_temperature_high_ratio_precipitation_to_evapotranspiration(self):
+        self.assertEqual(
+            common.ClimateZones.CoolTemperateMoist,
+            common.get_climate_zone(
+                mean_annual_temperature=5,
+                mean_annual_precipitation=1000,
+                mean_annual_potential_evapotranspiration=700))
+
+    def test_medium_temperature_low_ratio_precipitation_to_evapotranspiration(self):
+        self.assertEqual(
+            common.ClimateZones.CoolTemperateDry,
+            common.get_climate_zone(
+                mean_annual_temperature=5,
+                mean_annual_precipitation=700,
+                mean_annual_potential_evapotranspiration=1000))
+
+    def test_low_temperature_high_ratio_precipitation_to_evapotranspiration(self):
+        self.assertEqual(
+            common.ClimateZones.WarmTemperateMoist,
+            common.get_climate_zone(
+                mean_annual_temperature=-5,
+                mean_annual_precipitation=1000,
+                mean_annual_potential_evapotranspiration=700))
+
+    def test_low_temperature_low_ratio_precipitation_to_evapotranspiration(self):
+        self.assertEqual(
+            common.ClimateZones.WarmTemperateDry,
+            common.get_climate_zone(
+                mean_annual_temperature=-5,
+                mean_annual_precipitation=700,
+                mean_annual_potential_evapotranspiration=1000))
+
 
 if __name__ == '__main__':
     unittest.main()

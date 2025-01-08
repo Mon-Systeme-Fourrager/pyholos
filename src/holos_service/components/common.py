@@ -80,16 +80,6 @@ class ComponentType(EnumGeneric):
         return f'{self.value}Component'
 
 
-@unique
-class ClimateZones(StrEnum):
-    CoolTemperateMoist = auto()
-    CoolTemperateDry = auto()
-    BorealMoist = auto()
-    BorealDry = auto()
-    WarmTemperateMoist = auto()
-    WarmTemperateDry = auto()
-
-
 def calculate_fraction_of_nitrogen_lost_by_leaching_and_runoff(
         growing_season_precipitation: float,
         growing_season_evapotranspiration: float
