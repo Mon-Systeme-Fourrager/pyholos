@@ -12,14 +12,23 @@ from holos_service.utils import read_holos_resource_table
 class TestGetAnimalCoefficientData(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.animal_coefficients = (read_holos_resource_table(
-            path_file=PathsHolosResources.Table_22_Livestock_Coefficients_For_Sheep, index_col='Sheep Class'))
+        cls.animal_coefficients = read_holos_resource_table(
+            path_file=PathsHolosResources.Table_22_Livestock_Coefficients_For_Sheep, index_col='Sheep Class')
         cls.animal_coefficients.rename(
-            columns={v: v.lower().replace(' ', '_') for v in cls.animal_coefficients.columns},
+            columns={
+                "cf": "baseline_maintenance_coefficient",
+                "a": "coefficient_a",
+                "b": "coefficient_b",
+                "b": "coefficient_b",
+                "Initial Weight": "initial_weight",
+                "Final Weight": "final_weight",
+                "Wool Production": "wool_production",
+            },
             inplace=True)
+        print(cls.animal_coefficients)
 
     def setUp(self):
-        self.sheep = sheep.Sheep()
+        self.sheep = sheep.SheepBase()
 
     def test_get_animal_coefficient_data_for_sheep_feedlot(self):
         self.sheep.group_name.value = sheep.GroupNames.sheep_feedlot.value
