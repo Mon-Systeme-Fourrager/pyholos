@@ -1,5 +1,6 @@
 from holos_service.common import EnumGeneric, HolosVar, Region, get_region, get_climate_zone, ClimateZones
-from holos_service.components.common import ComponentCategory
+from holos_service.components.common import (ComponentCategory,
+                                             calculate_fraction_of_nitrogen_lost_by_leaching_and_runoff)
 from holos_service.config import PathsHolosResources
 from holos_service.defaults import Defaults
 from holos_service.django_stuff import CanadianProvince
@@ -1678,6 +1679,8 @@ def get_land_application_factors(
         province: CanadianProvince,
         mean_annual_precipitation: float,
         mean_annual_evapotranspiration: float,
+        growing_season_precipitation: float,
+        growing_season_evapotranspiration: float,
         animal_type: AnimalType,
         year: int,
         soil_texture: SoilTexture
@@ -1688,9 +1691,15 @@ def get_land_application_factors(
         province: Canadian Province class
         mean_annual_precipitation: (mm) mean annual precipitation
         mean_annual_evapotranspiration: (mm) mean annual potential evapotranspiration
+        growing_season_precipitation: (mm) total amount of precipitations during the growing season (e.g. may to oct.)
+        growing_season_evapotranspiration: (mm) total amount of evapotranspiration during the growing season (e.g. may to oct.)
         animal_type: animal type class
         year: year
         soil_texture: soil texture as set in Holos
+
+    Holos Source Code:
+        (1) https://github.com/RamiALBASHA/Holos/blob/71638efd97c84c6ded45e342ce664477df6f803f/H.Core/Providers/Animals/Table_36_Livestock_Emission_Conversion_Factors_Provider.cs#L41
+        (2) https://github.com/holos-aafc/Holos/blob/267abf1066bb5494e5ec6a4085a85ab42dfa76c7/H.Core/Services/Initialization/Animals/AnimalInitializationService.Ammonia.cs#L55
     """
     region = get_region(province=province.name)
     climate_dependent_emission_factor_for_volatilization = get_emission_factor_for_volatilization_based_on_climate(
@@ -1726,6 +1735,11 @@ def get_land_application_factors(
         province=province,
         year=year)
 
+    # This part of the code comes from Holos Source Code (2)
+    factors.LeachingFraction = calculate_fraction_of_nitrogen_lost_by_leaching_and_runoff(
+        growing_season_precipitation=growing_season_precipitation,
+        growing_season_evapotranspiration=growing_season_evapotranspiration)
+
     return factors
 
 
@@ -1734,11 +1748,32 @@ def get_manure_emission_factors(
         mean_annual_precipitation: float,
         mean_annual_temperature: float,
         mean_annual_evapotranspiration: float,
+        growing_season_precipitation: float,
+        growing_season_evapotranspiration: float,
         animal_type: AnimalType,
         province: CanadianProvince,
         year: int,
         soil_texture: SoilTexture
 ) -> LivestockEmissionConversionFactorsData:
+    """Sets the emission factors for manure
+
+    Args:
+        manure_state_type: ManureStateType class instance
+        mean_annual_precipitation: (mm) mean annual precipitation
+        mean_annual_temperature: (degrees Celsius) mean annual air temperature
+        mean_annual_evapotranspiration: (mm) mean annual potential evapotranspiration
+        growing_season_precipitation: (mm) total amount of precipitations during the growing season (e.g. may to oct.)
+        growing_season_evapotranspiration: (mm) total amount of evapotranspiration during the growing season (e.g. may to oct.)
+        animal_type: animal type class
+        province: CanadianProvince class instance
+        year: year
+        soil_texture: soil texture as set in Holos
+
+    Returns:
+
+    Holos Source Code:
+        https://github.com/RamiALBASHA/Holos/blob/71638efd97c84c6ded45e342ce664477df6f803f/H.Core/Providers/Animals/Table_36_Livestock_Emission_Conversion_Factors_Provider.cs#L117
+    """
     climate_dependent_methane_conversion_factor = get_methane_conversion_factor(
         manure_state_type=manure_state_type,
         climate_zone=get_climate_zone(
@@ -1760,6 +1795,8 @@ def get_manure_emission_factors(
             province=province,
             mean_annual_precipitation=mean_annual_precipitation,
             mean_annual_evapotranspiration=mean_annual_evapotranspiration,
+            growing_season_precipitation=growing_season_precipitation,
+            growing_season_evapotranspiration=growing_season_evapotranspiration,
             animal_type=animal_type,
             year=year,
             soil_texture=soil_texture)
