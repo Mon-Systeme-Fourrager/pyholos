@@ -1,10 +1,16 @@
+from datetime import date
 from enum import Enum
 
 from holos_service import utils
 from holos_service.common import Component, HolosVar
-from holos_service.components.animals.common import (AnimalType, convert_animal_type_name,
-                                                     HousingType)
-from holos_service.config import PathsHolosResources
+from holos_service.components.animals.common import (ProductionStage, AnimalType, convert_animal_type_name,
+                                                     DietAdditiveType, Diet, HousingType, Bedding, BeddingMaterialType,
+                                                     LivestockEmissionConversionFactorsData,
+                                                     get_default_methane_producing_capacity_of_manure,
+                                                     get_manure_excretion_rate, get_default_manure_composition_data,
+                                                     ManureStateType)
+from holos_service.components.common import ComponentType
+from holos_service.config import DATE_FMT, PathsHolosResources
 
 
 def get_feeding_activity_coefficient(
@@ -181,3 +187,95 @@ class Sheep(Component):
         else:
             res = AnimalCoefficientData()
         return res
+
+
+class SheepFeedlot(Sheep):
+    def __init__(
+            self,
+            management_period_name: str,
+            group_pairing_number: int,
+            management_period_start_date: date,
+            management_period_days: int,
+            number_of_animals: int,
+            production_stage: ProductionStage,
+            number_of_young_animals: int,
+
+            diet: Diet,
+            housing_type: HousingType,
+            manure_emission_factors: LivestockEmissionConversionFactorsData,
+            manure_handling_system: ManureStateType,
+
+            start_weight: float = None,
+            end_weight: float = None,
+
+            diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
+            bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+    ):
+        super().__init__()
+
+        _name = GroupNames.sheep_feedlot.value
+        animal_type: AnimalType = AnimalType.sheep_feedlot
+
+        self.name.value = _name
+        self.update_component_type(component_type=ComponentType.sheep_feedlot.to_str())
+        self.group_name.value = _name
+        self.update_group_type(group_name=_name)
+        self.management_period_name.value = management_period_name
+        self.group_pairing_number.value = group_pairing_number
+        self.management_period_start_date.value = management_period_start_date.strftime(DATE_FMT)
+        self.management_period_days.value = management_period_days
+        self.number_of_animals.value = number_of_animals
+        self.production_stage.value = production_stage.value
+        self.number_of_young_animals.value = number_of_young_animals
+
+        _animal_coefficient_data = self.get_animal_coefficient_data()
+
+        self.maintenance_coefficient.value = _animal_coefficient_data.baseline_maintenance_coefficient
+        self.start_weight.value = _animal_coefficient_data.initial_weight if start_weight is None else start_weight
+        self.end_weight.value = _animal_coefficient_data.final_weight if end_weight is None else end_weight
+        self.gain_coefficient_a.value = _animal_coefficient_data.coefficient_a
+        self.gain_coefficient_b.value = _animal_coefficient_data.coefficient_b
+        self.wool_production.value = _animal_coefficient_data.wool_production
+
+        self.average_daily_gain.value = (self.end_weight.value - self.start_weight.value) / management_period_days
+
+        self.diet_additive_type.value = diet_additive_type.value
+
+        self.crude_protein.value = diet.crude_protein_percentage
+        self.forage.value = diet.forage_percentage
+        self.tdn.value = diet.total_digestible_nutrient_percentage
+        self.ash_content_of_diet.value = diet.ash_percentage
+        self.starch.value = diet.starch_percentage
+        self.fat.value = diet.fat_percentage
+        self.me.value = diet.metabolizable_energy
+        self.ndf.value = diet.neutral_detergent_fiber_percentage
+
+        self.activity_coefficient_of_feeding_situation.value = get_feeding_activity_coefficient(
+            housing_type=housing_type)
+
+        bedding = Bedding(
+            housing_type=housing_type,
+            bedding_material_type=bedding_material_type,
+            animal_type=animal_type)
+
+        self.user_defined_bedding_rate.value = bedding.user_defined_bedding_rate.value
+        self.total_carbon_kilograms_dry_matter_for_bedding.value = bedding.total_carbon_kilograms_dry_matter_for_bedding.value
+        self.total_nitrogen_kilograms_dry_matter_for_bedding.value = bedding.total_nitrogen_kilograms_dry_matter_for_bedding.value
+        self.moisture_content_of_bedding_material.value = bedding.moisture_content_of_bedding_material.value
+
+        self.methane_conversion_factor_of_manure.value = manure_emission_factors.MethaneConversionFactor
+        self.n2o_direct_emission_factor.value = manure_emission_factors.N2ODirectEmissionFactor
+        self.volatilization_fraction.value = manure_emission_factors.VolatilizationFraction
+        self.emission_factor_volatilization.value = manure_emission_factors.EmissionFactorVolatilization
+        self.fraction_leaching.value = manure_emission_factors.LeachingFraction
+        self.emission_factor_leaching.value = manure_emission_factors.EmissionFactorLeach
+
+        self.methane_conversion_factor_of_diet.value = diet.calc_methane_conversion_factor(animal_type=animal_type)
+        self.methane_producing_capacity_of_manure.value = get_default_methane_producing_capacity_of_manure(
+            is_pasture=housing_type.is_pasture(),
+            animal_type=animal_type)
+
+        self.manure_excretion_rate.value = get_manure_excretion_rate(animal_type=animal_type)
+        self.fraction_of_carbon_in_manure.value = get_default_manure_composition_data(
+            animal_type=animal_type,
+            manure_state_type=manure_handling_system).carbon_content
