@@ -1881,9 +1881,9 @@ def get_manure_emission_factors(
                         emission_factor_leach=0.011)
 
                 case _:
-                    raise ValueError(
-                        f"Unable to get data for manure state type: {manure_state_type}. Returning default value.")
-                    # return Table_36_Livestock_Emission_Conversion_Factors_Data()
+                    # raise ValueError(
+                    #     f"Unable to get data for manure state type: {manure_state_type}. Returning default value.")
+                    return LivestockEmissionConversionFactorsData()
 
         case ComponentCategory.Dairy:
             match manure_state_type:
