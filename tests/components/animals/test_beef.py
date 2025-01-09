@@ -180,13 +180,13 @@ class TestBeefCowCalfNoneRegression(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.non_regression_data = read_holos_resource_table(
-            path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_beef_cow_calf.csv',)
+            path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_beef_cow_calf.csv')
         cls.non_regression_data.loc[:, 'Animals Are Milk Fed Only'] = (
             cls.non_regression_data['Animals Are Milk Fed Only'].apply(lambda x: str(x).upper()))
-        cls.manure_state_type = common.ManureStateType.deep_bedding
+        cls.non_regression_data.set_index("Group Name", inplace=True)
+
         cls.animal_type = common.AnimalType.beef_bulls
         cls.manure_emission_kwargs = dict(
-            manure_state_type=cls.manure_state_type,
             mean_annual_precipitation=541.5,
             mean_annual_temperature=3.6,
             mean_annual_evapotranspiration=625.7,
@@ -196,6 +196,8 @@ class TestBeefCowCalfNoneRegression(unittest.TestCase):
             soil_texture=SoilTexture.Fine)
 
     def test_bulls(self):
+        manure_state_type = common.ManureStateType.deep_bedding
+
         bulls = beef.Bulls(
             management_period_name='Winter feeding',
             group_pairing_number=0,
@@ -216,21 +218,60 @@ class TestBeefCowCalfNoneRegression(unittest.TestCase):
                 neutral_detergent_fiber_percentage=53.478,
                 metabolizable_energy=1.965),
             housing_type=common.HousingType.confined_no_barn,
-            manure_handling_system=self.manure_state_type,
+            manure_handling_system=manure_state_type,
             manure_emission_factors=common.get_manure_emission_factors(
                 animal_type=self.animal_type,
                 year=2024,
+                manure_state_type=manure_state_type,
                 **self.manure_emission_kwargs),
             bedding_material_type=common.BeddingMaterialType.straw
         )
         res = bulls.to_dict()
-        for k, v in self.non_regression_data.loc[0].to_dict().items():
+        for k, v in self.non_regression_data.loc["Bulls"].to_dict().items():
             self.assertAlmostEqual(
                 v,
                 res[k],
                 places=3)
 
-    pass
+    def test_replacement_heifers(self):
+        manure_state_type = common.ManureStateType.pasture
+
+        replacement_heifers = beef.ReplacementHeifers(
+            management_period_name='Management period 1',
+            group_pairing_number=0,
+            management_period_start_date=date(2024, 1, 1),
+            management_period_days=365,
+            number_of_animals=20,
+            production_stage=common.ProductionStage.gestating,
+            number_of_young_animals=0,
+            is_milk_fed_only=False,
+            milk_data=common.Milk(),
+            diet=common.Diet(
+                crude_protein_percentage=6.8,
+                forage_percentage=100,
+                total_digestible_nutrient_percentage=48.4,
+                ash_percentage=10.3,
+                starch_percentage=4.2,
+                fat_percentage=1.8,
+                neutral_detergent_fiber_percentage=66.6,
+                metabolizable_energy=1.8),
+            housing_type=common.HousingType.confined_no_barn,
+            manure_handling_system=manure_state_type,
+            manure_emission_factors=common.get_manure_emission_factors(
+                animal_type=self.animal_type,
+                year=2024,
+                manure_state_type=manure_state_type,
+                **self.manure_emission_kwargs),
+            bedding_material_type=common.BeddingMaterialType.straw
+        )
+        res = replacement_heifers.to_dict()
+        for k, v in self.non_regression_data.loc["Replacement heifers"].to_dict().items():
+            print(k, v, res[k])
+            self.assertAlmostEqual(
+                v,
+                res[k],
+                places=3)
+
 
 
 if __name__ == '__main__':
