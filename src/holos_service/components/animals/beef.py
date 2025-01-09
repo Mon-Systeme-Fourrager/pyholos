@@ -489,3 +489,52 @@ class ReplacementHeifers(Beef):
 
         **utils.get_local_args(locals())
         )
+
+
+class Cows(Beef):
+    def __init__(
+            self,
+            management_period_name: str,
+            group_pairing_number: int,
+            management_period_start_date: date,
+            management_period_days: int,
+            number_of_animals: int,
+            production_stage: ProductionStage,
+            number_of_young_animals: int,
+            is_milk_fed_only: bool,
+            milk_data: Milk,
+            diet: Diet,
+            housing_type: HousingType,
+            manure_handling_system: ManureStateType,
+            manure_emission_factors: LivestockEmissionConversionFactorsData,
+            start_weight: float = None,
+            end_weight: float = None,
+            diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
+            bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+    ):
+        """
+
+        Args:
+            management_period_name: given name for the management period
+            group_pairing_number: number of paired animals
+            management_period_start_date: starting date for the management period
+            management_period_days: number of days of the management period
+            number_of_animals: number of animals
+            production_stage: ProductionStage class instance
+            number_of_young_animals: number of young animals
+            is_milk_fed_only: used to indicate when animals are not consuming forage but only milk (distinction needed for calculate enteric methane for beef calves)
+            start_weight: (kg) animal weight at the beginning of the management period
+            end_weight: (kg) animal weight at the end of the management period
+            milk_data: class object that contains all required milk production data
+            diet: class object that contains all required diet data
+            diet_additive_type: type of the diet additive
+            bedding_material_type: bedding material type
+        """
+        super().__init__(
+            name='Cow-Calf',
+            component_type=ComponentType.cow_calf,
+            group_name=GroupNames.cows,
+            animal_type=AnimalType.beef_cow_lactating,
+
+        **utils.get_local_args(locals())
+        )
