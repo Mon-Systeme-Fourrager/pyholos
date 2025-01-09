@@ -198,8 +198,7 @@ class TestEwesNoneRegression(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.non_regression_data = read_holos_resource_table(
-            path_file=Path(__file__).parents[2] / (
-                'sources/holos/non_regression_sheep_lambs_and_ewes.csv')).loc[0].to_dict()
+            path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_sheep_lambs_and_ewes.csv')
 
         cls.manure_state_type = common.ManureStateType.pasture
         cls.manure_emission_kwargs = dict(
@@ -243,7 +242,44 @@ class TestEwesNoneRegression(unittest.TestCase):
             bedding_material_type=common.BeddingMaterialType.straw
         )
         res = ewes.to_dict()
-        for k, v in self.non_regression_data.items():
+        for k, v in self.non_regression_data.loc[0].to_dict().items():
+            self.assertAlmostEqual(
+                v,
+                res[k],
+                places=3)
+
+    def test_lambs(self):
+        ewes = sheep.Lambs(
+            management_period_name="Management period 1",
+            group_pairing_number=1,
+            management_period_start_date=date(2025, 1, 1),
+            management_period_days=30,
+            number_of_animals=100,
+            production_stage=common.ProductionStage.weaning,
+            number_of_young_animals=0,
+
+            diet=common.Diet(
+                crude_protein_percentage=17.7,
+                forage_percentage=0,
+                total_digestible_nutrient_percentage=60,
+                ash_percentage=8,
+                starch_percentage=0,
+                fat_percentage=0,
+                neutral_detergent_fiber_percentage=0,
+                metabolizable_energy=0),
+
+            housing_type=common.HousingType.confined,  #########################
+            manure_emission_factors=common.get_manure_emission_factors(
+                animal_type=common.AnimalType.lambs,
+                year=2025,
+                **self.manure_emission_kwargs),
+            manure_handling_system=self.manure_state_type,
+            bedding_material_type=common.BeddingMaterialType.straw
+        )
+        res = ewes.to_dict()
+        for k, v in self.non_regression_data.loc[1].to_dict().items():
+            print(k, v, res[k])
+
             self.assertAlmostEqual(
                 v,
                 res[k],
