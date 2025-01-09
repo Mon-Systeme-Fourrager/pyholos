@@ -13,3 +13,7 @@ def read_holos_resource_table(
                     ).replace({
         'NotApplicable': CoreConstants.NotApplicable,
         float('nan'): None})
+
+
+def get_local_args(kwargs: dict) -> dict:
+    return {k: v for k, v in kwargs.items() if not any([k.startswith('_'), k == 'self'])}

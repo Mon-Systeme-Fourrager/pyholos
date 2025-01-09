@@ -309,7 +309,7 @@ class SheepFeedlot(Sheep):
             group_name=_group_name,
             component_type=ComponentType.sheep_feedlot,
 
-            **{k: v for k, v in locals().items() if not any([k.startswith('_'), k == 'self'])}
+            **utils.get_local_args(locals())
         )
 
 
@@ -340,7 +340,7 @@ class Rams(Sheep):
             group_name=_group_name,
             component_type=ComponentType.rams,
 
-            **{k: v for k, v in locals().items() if not any([k.startswith('_'), k == 'self'])}
+            **utils.get_local_args(locals())
         )
 
 
@@ -369,7 +369,7 @@ class Ewes(Sheep):
             group_name=GroupNames.ewes.value,
             component_type=ComponentType.ewes_and_lambs,
 
-            **{k: v for k, v in locals().items() if not any([k.startswith('_'), k == 'self'])}
+            **utils.get_local_args(locals())
         )
 
 class Lambs(Sheep):
@@ -397,5 +397,5 @@ class Lambs(Sheep):
             group_name=GroupNames.lambs.value,
             component_type=ComponentType.ewes_and_lambs,
 
-            **{k: v for k, v in locals().items() if not any([k.startswith('_'), k == 'self'])}
+            **utils.get_local_args(locals())
         )
