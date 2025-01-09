@@ -164,9 +164,6 @@ class SheepBase(Component):
     def update_component_type(self, component_type: str):
         self.component_type.value = '.'.join((self.component_type.value, component_type))
 
-    def update_group_type(self, group_name: str):
-        self.group_type.value = group_name.title().replace(' ', '')
-
     def get_animal_coefficient_data(self) -> AnimalCoefficientData:
         df = utils.read_holos_resource_table(
             path_file=PathsHolosResources.Table_22_Livestock_Coefficients_For_Sheep)
@@ -194,6 +191,7 @@ class Sheep(SheepBase):
             self,
             animal_type: AnimalType,
             group_name: str,
+            component_type: ComponentType,
             management_period_name: str,
             group_pairing_number: int,
             management_period_start_date: date,
@@ -219,9 +217,9 @@ class Sheep(SheepBase):
         # animal_type: AnimalType = AnimalType.sheep_feedlot
 
         self.name.value = group_name
-        self.update_component_type(component_type=ComponentType.sheep_feedlot.to_str())
+        self.update_component_type(component_type=component_type.to_str())
         self.group_name.value = group_name
-        self.update_group_type(group_name=group_name)
+        self.group_type.value = animal_type.value
         self.management_period_name.value = management_period_name
         self.group_pairing_number.value = group_pairing_number
         self.management_period_start_date.value = management_period_start_date.strftime(DATE_FMT)
@@ -305,6 +303,7 @@ class SheepFeedlot(Sheep):
         super().__init__(
             animal_type=AnimalType.sheep_feedlot,
             group_name=GroupNames.sheep_feedlot.value,
+            component_type=ComponentType.sheep_feedlot,
 
             **{k: v for k, v in locals().items() if not any([k.startswith('_'), k == 'self'])}
         )
