@@ -176,13 +176,13 @@ class TestGetAverageMilkProductionForDairyCowsValue(unittest.TestCase):
                     year=year + 1))
 
 
-class TestCowCalfNoneRegression(unittest.TestCase):
+class TestBeefCowCalfNoneRegression(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.non_regression_data = read_holos_resource_table(
-            path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_cow_calf.csv').loc[0].to_dict()
-        cls.non_regression_data.update(
-            {"Animals Are Milk Fed Only": str(cls.non_regression_data["Animals Are Milk Fed Only"]).upper()})
+            path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_beef_cow_calf.csv')
+        cls.non_regression_data.loc[:, 'Animals Are Milk Fed Only'] = (
+            cls.non_regression_data['Animals Are Milk Fed Only'].apply(lambda x: str(x).upper()))
         cls.manure_state_type = common.ManureStateType.deep_bedding
         cls.animal_type = common.AnimalType.beef_bulls
         cls.manure_emission_factors = common.get_manure_emission_factors(
@@ -197,10 +197,8 @@ class TestCowCalfNoneRegression(unittest.TestCase):
             year=2024,
             soil_texture=SoilTexture.Fine)
 
-    def test_cow_calf(self):
-        cow_calf = beef.CowCalf(
-            group_name=beef.GroupNames.bulls,
-            animal_type=self.animal_type,
+    def test_bulls(self):
+        bulls = beef.Bulls(
             management_period_name='Winter feeding',
             group_pairing_number=0,
             management_period_start_date=date(2023, 1, 1),
@@ -224,8 +222,8 @@ class TestCowCalfNoneRegression(unittest.TestCase):
             manure_emission_factors=self.manure_emission_factors,
             bedding_material_type=common.BeddingMaterialType.straw
         )
-        res = cow_calf.to_dict()
-        for k, v in self.non_regression_data.items():
+        res = bulls.to_dict()
+        for k, v in self.non_regression_data.loc[0].to_dict().items():
             self.assertAlmostEqual(
                 v,
                 res[k],

@@ -266,9 +266,11 @@ class BeefBase(Component):
         pass
 
 
-class CowCalf(BeefBase):
+class Beef(BeefBase):
     def __init__(
             self,
+            name: str,
+            component_type: ComponentType,
             group_name: GroupNames,
             animal_type: AnimalType,
             management_period_name: str,
@@ -292,15 +294,15 @@ class CowCalf(BeefBase):
         """
 
         Args:
-            group_name:
-            animal_type:
-            management_period_name:
-            group_pairing_number:
-            management_period_start_date:
-            management_period_days:
-            number_of_animals:
-            production_stage:
-            number_of_young_animals:
+            group_name: GroupNames member
+            animal_type: AnimalType class instance
+            management_period_name: given name for the management period
+            group_pairing_number: number of paired animals
+            management_period_start_date: starting date for the management period
+            management_period_days: number of days of the management period
+            number_of_animals: number of animals
+            production_stage: ProductionStage class instance
+            number_of_young_animals: number of young animals
             is_milk_fed_only: used to indicate when animals are not consuming forage but only milk (distinction needed for calculate enteric methane for beef calves)
             start_weight: (kg) animal weight at the beginning of the management period
             end_weight: (kg) animal weight at the end of the management period
@@ -310,8 +312,8 @@ class CowCalf(BeefBase):
             bedding_material_type: bedding material type
         """
         super().__init__()
-        self.update_name('Cow-Calf')
-        self.update_component_type(ComponentType.cow_calf.to_str())
+        self.update_name(name=name)
+        self.update_component_type(component_type.to_str())
 
         self.group_name.value = group_name.value
         self.group_type.value = animal_type.value
@@ -389,3 +391,52 @@ class CowCalf(BeefBase):
         self.emission_factor_volatilization.value = manure_emission_factors.EmissionFactorVolatilization
         self.fraction_leaching.value = manure_emission_factors.LeachingFraction
         self.emission_factor_leaching.value = manure_emission_factors.EmissionFactorLeach
+
+
+class Bulls(Beef):
+    def __init__(
+            self,
+            management_period_name: str,
+            group_pairing_number: int,
+            management_period_start_date: date,
+            management_period_days: int,
+            number_of_animals: int,
+            production_stage: ProductionStage,
+            number_of_young_animals: int,
+            is_milk_fed_only: bool,
+            milk_data: Milk,
+            diet: Diet,
+            housing_type: HousingType,
+            manure_handling_system: ManureStateType,
+            manure_emission_factors: LivestockEmissionConversionFactorsData,
+            start_weight: float = None,
+            end_weight: float = None,
+            diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
+            bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+    ):
+        """
+
+        Args:
+            management_period_name: given name for the management period
+            group_pairing_number: number of paired animals
+            management_period_start_date: starting date for the management period
+            management_period_days: number of days of the management period
+            number_of_animals: number of animals
+            production_stage: ProductionStage class instance
+            number_of_young_animals: number of young animals
+            is_milk_fed_only: used to indicate when animals are not consuming forage but only milk (distinction needed for calculate enteric methane for beef calves)
+            start_weight: (kg) animal weight at the beginning of the management period
+            end_weight: (kg) animal weight at the end of the management period
+            milk_data: class object that contains all required milk production data
+            diet: class object that contains all required diet data
+            diet_additive_type: type of the diet additive
+            bedding_material_type: bedding material type
+        """
+        super().__init__(
+            name='Cow-Calf',
+            component_type=ComponentType.cow_calf,
+            group_name=GroupNames.bulls,
+            animal_type=AnimalType.beef_bulls,
+
+        **utils.get_local_args(locals())
+        )
