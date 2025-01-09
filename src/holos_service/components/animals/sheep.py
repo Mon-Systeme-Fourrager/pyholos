@@ -307,3 +307,31 @@ class SheepFeedlot(Sheep):
 
             **{k: v for k, v in locals().items() if not any([k.startswith('_'), k == 'self'])}
         )
+
+
+class Rams(Sheep):
+    def __init__(
+            self,
+            management_period_name: str,
+            group_pairing_number: int,
+            management_period_start_date: date,
+            management_period_days: int,
+            number_of_animals: int,
+            production_stage: ProductionStage,
+            number_of_young_animals: int,
+            diet: Diet,
+            housing_type: HousingType,
+            manure_emission_factors: LivestockEmissionConversionFactorsData,
+            manure_handling_system: ManureStateType,
+            start_weight: float = None,
+            end_weight: float = None,
+            diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
+            bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+    ):
+        super().__init__(
+            animal_type=AnimalType.ram,
+            group_name=GroupNames.rams.value,
+            component_type=ComponentType.rams,
+
+            **{k: v for k, v in locals().items() if not any([k.startswith('_'), k == 'self'])}
+        )
