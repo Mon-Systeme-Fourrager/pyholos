@@ -195,6 +195,17 @@ class TestBeefCowCalfNoneRegression(unittest.TestCase):
             province=CanadianProvince.Alberta,
             soil_texture=SoilTexture.Fine)
 
+    def run_test(
+            self,
+            group_name: str,
+            res: dict
+    ):
+        for k, v in self.non_regression_data.loc[group_name].to_dict().items():
+            self.assertAlmostEqual(
+                v,
+                res[k],
+                places=3)
+
     def test_bulls(self):
         manure_state_type = common.ManureStateType.deep_bedding
 
@@ -226,12 +237,10 @@ class TestBeefCowCalfNoneRegression(unittest.TestCase):
                 **self.manure_emission_kwargs),
             bedding_material_type=common.BeddingMaterialType.straw
         )
-        res = bulls.to_dict()
-        for k, v in self.non_regression_data.loc["Bulls"].to_dict().items():
-            self.assertAlmostEqual(
-                v,
-                res[k],
-                places=3)
+        self.run_test(
+            group_name="Bulls",
+            res=bulls.to_dict()
+        )
 
     def test_replacement_heifers(self):
         manure_state_type = common.ManureStateType.pasture
@@ -264,13 +273,10 @@ class TestBeefCowCalfNoneRegression(unittest.TestCase):
                 **self.manure_emission_kwargs),
             bedding_material_type=common.BeddingMaterialType.straw
         )
-        res = replacement_heifers.to_dict()
-        for k, v in self.non_regression_data.loc["Replacement heifers"].to_dict().items():
-            print(k, v, res[k])
-            self.assertAlmostEqual(
-                v,
-                res[k],
-                places=3)
+        self.run_test(
+            group_name="Replacement heifers",
+            res=replacement_heifers.to_dict()
+        )
 
     def test_cows(self):
         manure_state_type = common.ManureStateType.deep_bedding
@@ -303,13 +309,10 @@ class TestBeefCowCalfNoneRegression(unittest.TestCase):
                 **self.manure_emission_kwargs),
             bedding_material_type=common.BeddingMaterialType.straw
         )
-        res = cows.to_dict()
-        for k, v in self.non_regression_data.loc["Cows"].to_dict().items():
-            print(k, v, res[k])
-            self.assertAlmostEqual(
-                v,
-                res[k],
-                places=3)
+        self.run_test(
+            group_name="Cows",
+            res=cows.to_dict()
+        )
 
     def test_calves(self):
         manure_state_type = common.ManureStateType.deep_bedding
@@ -343,14 +346,10 @@ class TestBeefCowCalfNoneRegression(unittest.TestCase):
             bedding_material_type=common.BeddingMaterialType.straw,
             end_weight=90
         )
-        res = calves.to_dict()
-        for k, v in self.non_regression_data.loc["Calves"].to_dict().items():
-            print(k, v, res[k])
-            self.assertAlmostEqual(
-                v,
-                res[k],
-                places=3)
-
+        self.run_test(
+            group_name="Calves",
+            res=calves.to_dict()
+        )
 
 
 if __name__ == '__main__':
