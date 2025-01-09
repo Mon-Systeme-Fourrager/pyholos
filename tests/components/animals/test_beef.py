@@ -12,7 +12,7 @@ from holos_service.utils import read_holos_resource_table
 
 class TestBeef(unittest.TestCase):
     def setUp(self):
-        self.beef = beef.Beef()
+        self.beef = beef.BeefBase()
 
     def run_feeding_activity_test(
             self,

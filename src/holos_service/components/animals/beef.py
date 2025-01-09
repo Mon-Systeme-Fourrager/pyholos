@@ -50,7 +50,7 @@ class GroupNames(EnumGeneric):
     calves: str = "Calves"
 
 
-class Beef(Component):
+class BeefBase(Component):
     def __init__(self):
         super().__init__()
 
@@ -266,7 +266,7 @@ class Beef(Component):
         pass
 
 
-class CowCalf(Beef):
+class CowCalf(BeefBase):
     def __init__(
             self,
             group_name: GroupNames,
