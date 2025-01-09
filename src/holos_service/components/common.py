@@ -55,6 +55,7 @@ class ComponentType(EnumGeneric):
     sheep_feedlot: str = "SheepFeedlot"
     rams: str = "Rams"
     lambs_and_ewes: str = "LambsAndEwes"
+    ewes_and_lambs: str = "EwesAndLambs" # added to the original code for convenience
     other_livestock: str = "OtherLivestock"
     alpaca: str = "Alpaca"
     elk: str = "Elk"

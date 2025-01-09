@@ -58,6 +58,7 @@ class GroupNames(Enum):
     rams: str = "Rams"
     ewes: str = "Ewes"
     lambs: str = "Lambs"
+    lambs_and_ewes: str = "Lambs & ewes"
 
 
 class AnimalCoefficientData:
@@ -88,7 +89,7 @@ class AnimalCoefficientData:
         self.wool_production = wool_production
 
 
-class Sheep(Component):
+class SheepBase(Component):
     def __init__(self):
         super().__init__()
 
@@ -164,9 +165,6 @@ class Sheep(Component):
     def update_component_type(self, component_type: str):
         self.component_type.value = '.'.join((self.component_type.value, component_type))
 
-    def update_group_type(self, group_name: str):
-        self.group_type.value = group_name.title().replace(' ', '')
-
     def get_animal_coefficient_data(self) -> AnimalCoefficientData:
         df = utils.read_holos_resource_table(
             path_file=PathsHolosResources.Table_22_Livestock_Coefficients_For_Sheep)
@@ -189,9 +187,13 @@ class Sheep(Component):
         return res
 
 
-class SheepFeedlot(Sheep):
+class Sheep(SheepBase):
     def __init__(
             self,
+            name: str,
+            animal_type: AnimalType,
+            group_name: str,
+            component_type: ComponentType,
             management_period_name: str,
             group_pairing_number: int,
             management_period_start_date: date,
@@ -213,13 +215,13 @@ class SheepFeedlot(Sheep):
     ):
         super().__init__()
 
-        _name = GroupNames.sheep_feedlot.value
-        animal_type: AnimalType = AnimalType.sheep_feedlot
+        # group_name = GroupNames.sheep_feedlot.value
+        # animal_type: AnimalType = AnimalType.sheep_feedlot
 
-        self.name.value = _name
-        self.update_component_type(component_type=ComponentType.sheep_feedlot.to_str())
-        self.group_name.value = _name
-        self.update_group_type(group_name=_name)
+        self.name.value = name
+        self.update_component_type(component_type=component_type.to_str())
+        self.group_name.value = group_name
+        self.group_type.value = animal_type.value
         self.management_period_name.value = management_period_name
         self.group_pairing_number.value = group_pairing_number
         self.management_period_start_date.value = management_period_start_date.strftime(DATE_FMT)
@@ -279,3 +281,121 @@ class SheepFeedlot(Sheep):
         self.fraction_of_carbon_in_manure.value = get_default_manure_composition_data(
             animal_type=animal_type,
             manure_state_type=manure_handling_system).carbon_content
+
+
+class SheepFeedlot(Sheep):
+    def __init__(
+            self,
+            management_period_name: str,
+            group_pairing_number: int,
+            management_period_start_date: date,
+            management_period_days: int,
+            number_of_animals: int,
+            production_stage: ProductionStage,
+            number_of_young_animals: int,
+            diet: Diet,
+            housing_type: HousingType,
+            manure_emission_factors: LivestockEmissionConversionFactorsData,
+            manure_handling_system: ManureStateType,
+            start_weight: float = None,
+            end_weight: float = None,
+            diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
+            bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+    ):
+        _group_name = GroupNames.sheep_feedlot.value
+        super().__init__(
+            name=_group_name,
+            animal_type=AnimalType.sheep_feedlot,
+            group_name=_group_name,
+            component_type=ComponentType.sheep_feedlot,
+
+            **{k: v for k, v in locals().items() if not any([k.startswith('_'), k == 'self'])}
+        )
+
+
+class Rams(Sheep):
+    def __init__(
+            self,
+            management_period_name: str,
+            group_pairing_number: int,
+            management_period_start_date: date,
+            management_period_days: int,
+            number_of_animals: int,
+            production_stage: ProductionStage,
+            number_of_young_animals: int,
+            diet: Diet,
+            housing_type: HousingType,
+            manure_emission_factors: LivestockEmissionConversionFactorsData,
+            manure_handling_system: ManureStateType,
+            start_weight: float = None,
+            end_weight: float = None,
+            diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
+            bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+    ):
+        _group_name = GroupNames.rams.value
+
+        super().__init__(
+            name=_group_name,
+            animal_type=AnimalType.ram,
+            group_name=_group_name,
+            component_type=ComponentType.rams,
+
+            **{k: v for k, v in locals().items() if not any([k.startswith('_'), k == 'self'])}
+        )
+
+
+class Ewes(Sheep):
+    def __init__(
+            self,
+            management_period_name: str,
+            group_pairing_number: int,
+            management_period_start_date: date,
+            management_period_days: int,
+            number_of_animals: int,
+            production_stage: ProductionStage,
+            number_of_young_animals: int,
+            diet: Diet,
+            housing_type: HousingType,
+            manure_emission_factors: LivestockEmissionConversionFactorsData,
+            manure_handling_system: ManureStateType,
+            start_weight: float = None,
+            end_weight: float = None,
+            diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
+            bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+    ):
+        super().__init__(
+            name=GroupNames.lambs_and_ewes.value,
+            animal_type=AnimalType.ewes,
+            group_name=GroupNames.ewes.value,
+            component_type=ComponentType.ewes_and_lambs,
+
+            **{k: v for k, v in locals().items() if not any([k.startswith('_'), k == 'self'])}
+        )
+
+class Lambs(Sheep):
+    def __init__(
+            self,
+            management_period_name: str,
+            group_pairing_number: int,
+            management_period_start_date: date,
+            management_period_days: int,
+            number_of_animals: int,
+            production_stage: ProductionStage,
+            number_of_young_animals: int,
+            diet: Diet,
+            housing_type: HousingType,
+            manure_emission_factors: LivestockEmissionConversionFactorsData,
+            manure_handling_system: ManureStateType,
+            start_weight: float = None,
+            end_weight: float = None,
+            diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
+            bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+    ):
+        super().__init__(
+            name=GroupNames.lambs_and_ewes.value,
+            animal_type=AnimalType.lambs,
+            group_name=GroupNames.lambs.value,
+            component_type=ComponentType.ewes_and_lambs,
+
+            **{k: v for k, v in locals().items() if not any([k.startswith('_'), k == 'self'])}
+        )
