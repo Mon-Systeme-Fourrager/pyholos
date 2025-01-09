@@ -1250,7 +1250,7 @@ class TestGetDefaultMethaneProducingCapacityOfManure(unittest.TestCase):
 class TestFractionOfOrganicNitrogenMineralizedData(unittest.TestCase):
     def testDefaultValues(self):
         self.assertEqual(
-            {None},
+            {0},
             set(common.FractionOfOrganicNitrogenMineralizedData().__dict__.values())
         )
 

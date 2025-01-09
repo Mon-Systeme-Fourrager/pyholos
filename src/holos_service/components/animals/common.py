@@ -1139,14 +1139,14 @@ def get_default_methane_producing_capacity_of_manure(
 class FractionOfOrganicNitrogenMineralizedData:
     def __init__(
             self,
-            fraction_immobilized: float | None = None,
-            fraction_mineralized: float | None = None,
-            fraction_nitrified: float | None = None,
-            fraction_denitrified: float | None = None,
-            n2o_n: float | None = None,
-            no_n: float | None = None,
-            n2_n: float | None = None,
-            n_leached: float | None = None,
+            fraction_immobilized: float = 0,
+            fraction_mineralized: float = 0,
+            fraction_nitrified: float = 0,
+            fraction_denitrified: float = 0,
+            n2o_n: float = 0,
+            no_n: float = 0,
+            n2_n: float = 0,
+            n_leached: float = 0,
     ):
         """Mineralization of organic N (fecal N and bedding N)
 
