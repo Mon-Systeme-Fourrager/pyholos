@@ -142,7 +142,7 @@ class TestSheepFeedlotNoneRegression(unittest.TestCase):
                 res[k],
                 places=3)
 
-class TestSheepRamsNoneRegression(unittest.TestCase):
+class TestRamsNoneRegression(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.non_regression_data = read_holos_resource_table(
@@ -161,8 +161,8 @@ class TestSheepRamsNoneRegression(unittest.TestCase):
             year=2025,
             soil_texture=SoilTexture.Fine)
 
-    def test_sheep_rams(self):
-        sheep_rams = sheep.Rams(
+    def test_rams(self):
+        rams = sheep.Rams(
             management_period_name="Management period 1",
             group_pairing_number=0,
             management_period_start_date=date(2025, 1, 1),
@@ -186,7 +186,7 @@ class TestSheepRamsNoneRegression(unittest.TestCase):
             manure_handling_system=self.manure_state_type,
             bedding_material_type=common.BeddingMaterialType.straw
         )
-        res = sheep_rams.to_dict()
+        res = rams.to_dict()
         for k, v in self.non_regression_data.items():
             print(k, v, res[k])
             self.assertAlmostEqual(

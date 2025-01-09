@@ -189,6 +189,7 @@ class SheepBase(Component):
 class Sheep(SheepBase):
     def __init__(
             self,
+            name: str,
             animal_type: AnimalType,
             group_name: str,
             component_type: ComponentType,
@@ -216,7 +217,7 @@ class Sheep(SheepBase):
         # group_name = GroupNames.sheep_feedlot.value
         # animal_type: AnimalType = AnimalType.sheep_feedlot
 
-        self.name.value = group_name
+        self.name.value = name
         self.update_component_type(component_type=component_type.to_str())
         self.group_name.value = group_name
         self.group_type.value = animal_type.value
@@ -300,9 +301,11 @@ class SheepFeedlot(Sheep):
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
     ):
+        _group_name = GroupNames.sheep_feedlot.value
         super().__init__(
+            name=_group_name,
             animal_type=AnimalType.sheep_feedlot,
-            group_name=GroupNames.sheep_feedlot.value,
+            group_name=_group_name,
             component_type=ComponentType.sheep_feedlot,
 
             **{k: v for k, v in locals().items() if not any([k.startswith('_'), k == 'self'])}
@@ -328,9 +331,12 @@ class Rams(Sheep):
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
     ):
+        _group_name = GroupNames.rams.value
+
         super().__init__(
+            name=_group_name,
             animal_type=AnimalType.ram,
-            group_name=GroupNames.rams.value,
+            group_name=_group_name,
             component_type=ComponentType.rams,
 
             **{k: v for k, v in locals().items() if not any([k.startswith('_'), k == 'self'])}
