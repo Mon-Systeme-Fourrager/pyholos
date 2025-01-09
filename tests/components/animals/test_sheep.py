@@ -24,7 +24,6 @@ class TestGetAnimalCoefficientData(unittest.TestCase):
                 "Wool Production": "wool_production",
             },
             inplace=True)
-        print(cls.animal_coefficients)
 
     def setUp(self):
         self.sheep = sheep.SheepBase()
@@ -142,6 +141,7 @@ class TestSheepFeedlotNoneRegression(unittest.TestCase):
                 res[k],
                 places=3)
 
+
 class TestRamsNoneRegression(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -188,7 +188,62 @@ class TestRamsNoneRegression(unittest.TestCase):
         )
         res = rams.to_dict()
         for k, v in self.non_regression_data.items():
-            print(k, v, res[k])
+            self.assertAlmostEqual(
+                v,
+                res[k],
+                places=3)
+
+
+class TestEwesNoneRegression(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.non_regression_data = read_holos_resource_table(
+            path_file=Path(__file__).parents[2] / (
+                'sources/holos/non_regression_sheep_lambs_and_ewes.csv')).loc[0].to_dict()
+
+        cls.manure_state_type = common.ManureStateType.pasture
+        cls.manure_emission_kwargs = dict(
+            manure_state_type=cls.manure_state_type,
+            mean_annual_precipitation=541.5,
+            mean_annual_temperature=3.6,
+            mean_annual_evapotranspiration=625.7,
+            growing_season_precipitation=383,
+            growing_season_evapotranspiration=568,
+            #            animal_type=common.AnimalType.ram,
+            province=CanadianProvince.Alberta,
+            #           year=2025,
+            soil_texture=SoilTexture.Fine)
+
+    def test_ewes(self):
+        ewes = sheep.Ewes(
+            management_period_name="Lactation",
+            group_pairing_number=1,
+            management_period_start_date=date(2024, 5, 28),
+            management_period_days=218,
+            number_of_animals=100,
+            production_stage=common.ProductionStage.lactating,
+            number_of_young_animals=0,
+
+            diet=common.Diet(
+                crude_protein_percentage=17.7,
+                forage_percentage=0,
+                total_digestible_nutrient_percentage=60,
+                ash_percentage=8,
+                starch_percentage=0,
+                fat_percentage=0,
+                neutral_detergent_fiber_percentage=0,
+                metabolizable_energy=0),
+
+            housing_type=common.HousingType.confined,  #########################
+            manure_emission_factors=common.get_manure_emission_factors(
+                animal_type=common.AnimalType.ewes,
+                year=2024,
+                **self.manure_emission_kwargs),
+            manure_handling_system=self.manure_state_type,
+            bedding_material_type=common.BeddingMaterialType.straw
+        )
+        res = ewes.to_dict()
+        for k, v in self.non_regression_data.items():
             self.assertAlmostEqual(
                 v,
                 res[k],

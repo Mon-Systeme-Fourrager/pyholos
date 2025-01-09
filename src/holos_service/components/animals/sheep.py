@@ -58,6 +58,7 @@ class GroupNames(Enum):
     rams: str = "Rams"
     ewes: str = "Ewes"
     lambs: str = "Lambs"
+    lambs_and_ewes: str = "Lambs & ewes"
 
 
 class AnimalCoefficientData:
@@ -338,6 +339,35 @@ class Rams(Sheep):
             animal_type=AnimalType.ram,
             group_name=_group_name,
             component_type=ComponentType.rams,
+
+            **{k: v for k, v in locals().items() if not any([k.startswith('_'), k == 'self'])}
+        )
+
+
+class Ewes(Sheep):
+    def __init__(
+            self,
+            management_period_name: str,
+            group_pairing_number: int,
+            management_period_start_date: date,
+            management_period_days: int,
+            number_of_animals: int,
+            production_stage: ProductionStage,
+            number_of_young_animals: int,
+            diet: Diet,
+            housing_type: HousingType,
+            manure_emission_factors: LivestockEmissionConversionFactorsData,
+            manure_handling_system: ManureStateType,
+            start_weight: float = None,
+            end_weight: float = None,
+            diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
+            bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+    ):
+        super().__init__(
+            name=GroupNames.lambs_and_ewes.value,
+            animal_type=AnimalType.ewes,
+            group_name=GroupNames.ewes.value,
+            component_type=ComponentType.ewes_and_lambs,
 
             **{k: v for k, v in locals().items() if not any([k.startswith('_'), k == 'self'])}
         )
