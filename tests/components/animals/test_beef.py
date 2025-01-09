@@ -311,6 +311,46 @@ class TestBeefCowCalfNoneRegression(unittest.TestCase):
                 res[k],
                 places=3)
 
+    def test_calves(self):
+        manure_state_type = common.ManureStateType.deep_bedding
+
+        calves = beef.Calves(
+            management_period_name='Management period 1',
+            group_pairing_number=1,
+            management_period_start_date=date(2024, 3, 1),
+            management_period_days=60,
+            number_of_animals=102,
+            production_stage=common.ProductionStage.gestating,
+            number_of_young_animals=0,
+            is_milk_fed_only=True,
+            milk_data=common.Milk(),
+            diet=common.Diet(
+                crude_protein_percentage=12.44,
+                forage_percentage=97,
+                total_digestible_nutrient_percentage=54.572,
+                ash_percentage=10.327,
+                starch_percentage=7.081,
+                fat_percentage=1.716,
+                neutral_detergent_fiber_percentage=53.478,
+                metabolizable_energy=1.965),
+            housing_type=common.HousingType.confined_no_barn,
+            manure_handling_system=manure_state_type,
+            manure_emission_factors=common.get_manure_emission_factors(
+                animal_type=self.animal_type,
+                year=2024,
+                manure_state_type=manure_state_type,
+                **self.manure_emission_kwargs),
+            bedding_material_type=common.BeddingMaterialType.straw,
+            end_weight=90
+        )
+        res = calves.to_dict()
+        for k, v in self.non_regression_data.loc["Calves"].to_dict().items():
+            print(k, v, res[k])
+            self.assertAlmostEqual(
+                v,
+                res[k],
+                places=3)
+
 
 
 if __name__ == '__main__':

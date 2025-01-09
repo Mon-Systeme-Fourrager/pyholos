@@ -2,8 +2,10 @@
 # Table 16. Livestock coefficients for beef cattle and dairy cattle.
 # source: https://github.com/holos-aafc/Holos/blob/396f1ab9bc7247e6d78766f9445c14d2eb7c0d9d/H.Core/Providers/Animals/Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider.cs#L13
 #
+# The value of "DefaultFinalWeight" was modified from 260 kg to 90 kg, according to the default values set in the GUI.
+#
 AnimalType,BaselineMaintenanceCoefficient,GainCoefficient,DefaultInitialWeight,DefaultFinalWeight
-BeefCalf,-100000.0,-100000.0,39,260
+BeefCalf,-100000.0,-100000.0,39,90
 BeefCowLactating,0.386,0.8,610,610
 BeefCowDry,0.322,0.8,610,610
 BeefBulls,0.37,1.2,900,900
