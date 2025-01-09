@@ -180,46 +180,47 @@ class TestBeefCowCalfNoneRegression(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.non_regression_data = read_holos_resource_table(
-            path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_beef_cow_calf.csv')
+            path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_beef_cow_calf.csv',)
         cls.non_regression_data.loc[:, 'Animals Are Milk Fed Only'] = (
             cls.non_regression_data['Animals Are Milk Fed Only'].apply(lambda x: str(x).upper()))
         cls.manure_state_type = common.ManureStateType.deep_bedding
         cls.animal_type = common.AnimalType.beef_bulls
-        cls.manure_emission_factors = common.get_manure_emission_factors(
+        cls.manure_emission_kwargs = dict(
             manure_state_type=cls.manure_state_type,
-            mean_annual_precipitation=45.36,
-            mean_annual_temperature=3.72,
-            mean_annual_evapotranspiration=51.95,
-            growing_season_precipitation=20,
-            growing_season_evapotranspiration=20,
-            animal_type=cls.animal_type,
+            mean_annual_precipitation=541.5,
+            mean_annual_temperature=3.6,
+            mean_annual_evapotranspiration=625.7,
+            growing_season_precipitation=383,
+            growing_season_evapotranspiration=568,
             province=CanadianProvince.Alberta,
-            year=2024,
             soil_texture=SoilTexture.Fine)
 
     def test_bulls(self):
         bulls = beef.Bulls(
             management_period_name='Winter feeding',
             group_pairing_number=0,
-            management_period_start_date=date(2023, 1, 1),
-            management_period_days=120,
-            number_of_animals=150,
+            management_period_start_date=date(2024, 1, 1),
+            management_period_days=119,
+            number_of_animals=4,
             production_stage=common.ProductionStage.gestating,
             number_of_young_animals=0,
             is_milk_fed_only=False,
             milk_data=common.Milk(),
             diet=common.Diet(
-                crude_protein_percentage=15.35,
-                forage_percentage=100,
-                total_digestible_nutrient_percentage=57.7,
-                ash_percentage=10.15,
-                starch_percentage=4.35,
-                fat_percentage=1.95,
-                neutral_detergent_fiber_percentage=49.3,
-                metabolizable_energy=2.1),
+                crude_protein_percentage=12.44,
+                forage_percentage=97,
+                total_digestible_nutrient_percentage=54.572,
+                ash_percentage=10.327,
+                starch_percentage=7.081,
+                fat_percentage=1.716,
+                neutral_detergent_fiber_percentage=53.478,
+                metabolizable_energy=1.965),
             housing_type=common.HousingType.confined_no_barn,
             manure_handling_system=self.manure_state_type,
-            manure_emission_factors=self.manure_emission_factors,
+            manure_emission_factors=common.get_manure_emission_factors(
+                animal_type=self.animal_type,
+                year=2024,
+                **self.manure_emission_kwargs),
             bedding_material_type=common.BeddingMaterialType.straw
         )
         res = bulls.to_dict()
