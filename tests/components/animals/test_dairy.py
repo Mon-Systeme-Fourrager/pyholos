@@ -138,6 +138,34 @@ class MyTestCase(unittest.TestCase):
             res=dairy_calves.to_dict()
         )
 
+    def test_dairy_dry_cow(self):
+        manure_state_type = common.ManureStateType.solid_storage
+
+        dairy_dry_cow = dairy.DairyDryCow(
+            management_period_name='Dry period',
+            group_pairing_number=0,
+            management_period_start_date=date(2024, 11, 5),
+            management_period_days=60,
+            number_of_animals=20,
+            production_stage=common.ProductionStage.gestating,
+            number_of_young_animals=0,
+            milk_data=common.Milk(),
+            diet=self.diet,
+            housing_type=self.housing_type,
+            manure_handling_system=manure_state_type,
+            manure_emission_factors=common.get_manure_emission_factors(
+                animal_type=common.AnimalType.dairy_dry_cow,
+                year=2025,
+                manure_state_type=manure_state_type,
+                **self.manure_emission_kwargs),
+            bedding_material_type=self.bedding_material_type
+        )
+
+        self.run_test(
+            group_name=dairy_dry_cow.group_name.value,
+            res=dairy_dry_cow.to_dict()
+        )
+
 
 if __name__ == '__main__':
     unittest.main()

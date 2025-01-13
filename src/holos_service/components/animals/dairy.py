@@ -300,3 +300,32 @@ class DairyCalves(Dairy):
             animal_type=_animal_group.type,
             **get_local_args(locals())
         )
+
+
+class DairyDryCow(Dairy):
+    def __init__(
+            self,
+            management_period_name: str,
+            group_pairing_number: int,
+            management_period_start_date: date,
+            management_period_days: int,
+            number_of_animals: int,
+            production_stage: ProductionStage,
+            number_of_young_animals: int,
+            milk_data: Milk,
+            diet: Diet,
+            housing_type: HousingType,
+            manure_handling_system: ManureStateType,
+            manure_emission_factors: LivestockEmissionConversionFactorsData,
+            start_weight: float = None,
+            end_weight: float = None,
+            diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
+            bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+    ):
+        _animal_group = GroupNameType.dairy_dry_cow.value
+
+        super().__init__(
+            group_name=_animal_group.name,
+            animal_type=_animal_group.type,
+            **get_local_args(locals())
+        )
