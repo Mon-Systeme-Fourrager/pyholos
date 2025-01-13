@@ -5,7 +5,7 @@
 AnimalType,BeddingMaterial,TotalNitrogenKilogramsDryMatter,TotalCarbonKilogramsDryMatter,TotalPhosphorusKilogramsDryMatter,CarbonToNitrogenRatio,MoistureContent
 Beef,Straw,0.0057,0.447,0.000635,90.5,9.57
 Beef,WoodChip,0.00185,0.506,0.000275,329.5,12.82
-Dairy,Sand,,,,,
+Dairy,Sand,0.0,0.0,0.0,0.0,0.0
 Dairy,SeparatedManureSolid,0.033,0.395,0.0,12.0,0.0
 Dairy,StrawLong,0.0057,0.447,0.000635,90.5,9.57
 Dairy,StrawChopped,0.0057,0.447,0.000635,90.5,9.57
