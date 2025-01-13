@@ -3579,5 +3579,55 @@ class TestGetBeefAndDairyCattleCoefficientData(unittest.TestCase):
                 expected_default_final_weight=0)
 
 
+class TestGetAverageMilkProductionForDairyCowsValue(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.table_21 = read_holos_resource_table(
+            path_file=PathsHolosResources.Table_21_Average_Milk_Production_For_Dairy_Cows_By_Province,
+            index_col='Year')
+
+        cls.provinces = [v for v in CanadianProvince if not v in (
+            CanadianProvince.NorthwestTerritories,
+            CanadianProvince.Nunavut,
+            CanadianProvince.Yukon)]
+
+    def test_original_table_expected_values_returned(self):
+        for province in self.provinces:
+            for year in self.table_21.index:
+                self.assertEqual(
+                    self.table_21.loc[year, province.value.abbreviation],
+                    common.get_average_milk_production_for_dairy_cows_value(
+                        province=province,
+                        year=year))
+
+    def test_interpolated_values_returned(self):
+        years = range(self.table_21.index.min(), self.table_21.index.max() + 1)
+        for province in self.provinces:
+            for year in years:
+                if year not in self.table_21.index:
+                    self.assertIsNotNone(
+                        common.get_average_milk_production_for_dairy_cows_value(
+                            province=province,
+                            year=year))
+
+    def test_values_returned_for_oldest_year_for_years_older_than_oldest_year(self):
+        year = self.table_21.index.min()
+        for province in self.provinces:
+            self.assertEqual(
+                self.table_21.loc[year, province.value.abbreviation],
+                common.get_average_milk_production_for_dairy_cows_value(
+                    province=province,
+                    year=year - 1))
+
+    def test_values_returned_for_most_recent_year_for_years_later_than_the_most_recent_year(self):
+        year = self.table_21.index.max()
+        for province in self.provinces:
+            self.assertEqual(
+                self.table_21.loc[year, province.value.abbreviation],
+                common.get_average_milk_production_for_dairy_cows_value(
+                    province=province,
+                    year=year + 1))
+
+
 if __name__ == '__main__':
     unittest.main()
