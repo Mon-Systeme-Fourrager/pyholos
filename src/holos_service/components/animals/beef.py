@@ -9,7 +9,8 @@ from holos_service.components.animals.common import (
     Bedding, AnimalType, BeddingMaterialType, AnimalCoefficientData,
     get_default_methane_producing_capacity_of_manure, ManureStateType,
     get_fraction_of_organic_nitrogen_mineralized_data,
-    get_ammonia_emission_factor_for_storage_of_beef_and_dairy_cattle_manure, LivestockEmissionConversionFactorsData)
+    get_ammonia_emission_factor_for_storage_of_beef_and_dairy_cattle_manure, LivestockEmissionConversionFactorsData,
+    get_beef_and_dairy_cattle_coefficient_data, get_beef_and_dairy_cattle_feeding_activity_coefficient)
 from holos_service.components.common import ComponentType
 from holos_service.config import DATE_FMT, PathsHolosResources
 from holos_service.django_stuff import CanadianProvince
@@ -227,20 +228,7 @@ class BeefBase(Component):
         self._animal_coefficient_data: AnimalCoefficientData | None = None
 
     def get_animal_coefficient_data(self):
-        df = utils.read_holos_resource_table(
-            path_file=PathsHolosResources.Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider,
-            index_col="AnimalType")
-
-        if self.group_type.value in df.index:
-            _df = df.loc[self.group_type.value]
-            self._animal_coefficient_data = AnimalCoefficientData(
-                baseline_maintenance_coefficient=_df['BaselineMaintenanceCoefficient'],
-                gain_coefficient=_df['GainCoefficient'],
-                default_initial_weight=_df['DefaultInitialWeight'],
-                default_final_weight=_df['DefaultFinalWeight'])
-        else:
-            self._animal_coefficient_data = AnimalCoefficientData()
-        pass
+        self._animal_coefficient_data = get_beef_and_dairy_cattle_coefficient_data(animal_type=self.group_type.value)
 
     def update_name(self, name: str):
         self.name.value = ' '.join((self.name.value, name))
@@ -248,22 +236,9 @@ class BeefBase(Component):
     def update_component_type(self, component_type: str):
         self.component_type.value = '.'.join((self.component_type.value, component_type))
 
-    def get_feeding_activity_coefficient(self):
-        match self.housing_type.value:
-            case HousingType.housed_in_barn | HousingType.confined | HousingType.confined_no_barn:
-                res = 0
-
-            case HousingType.pasture | HousingType.flat_pasture | HousingType.enclosed_pasture:
-                res = 0.17
-
-            case HousingType.open_range_or_hills:
-                res = 0.36
-
-            case _:
-                res = 0
-
-        self.activity_coefficient_of_feeding_situation.value = res
-        pass
+    def set_feeding_activity_coefficient(self):
+        self.activity_coefficient_of_feeding_situation.value = get_beef_and_dairy_cattle_feeding_activity_coefficient(
+            housing_type=self.housing_type.value)
 
 
 class Beef(BeefBase):
@@ -294,6 +269,8 @@ class Beef(BeefBase):
         """
 
         Args:
+            name: Component description
+            component_type: ComponentType class instance
             group_name: GroupNames member
             animal_type: AnimalType class instance
             management_period_name: given name for the management period
@@ -304,12 +281,16 @@ class Beef(BeefBase):
             production_stage: ProductionStage class instance
             number_of_young_animals: number of young animals
             is_milk_fed_only: used to indicate when animals are not consuming forage but only milk (distinction needed for calculate enteric methane for beef calves)
-            start_weight: (kg) animal weight at the beginning of the management period
-            end_weight: (kg) animal weight at the end of the management period
             milk_data: class object that contains all required milk production data
             diet: class object that contains all required diet data
+            housing_type: HousingType class instance
+            manure_handling_system: ManureStateType class instance
+            manure_emission_factors: LivestockEmissionConversionFactorsData class instance
             diet_additive_type: type of the diet additive
+            start_weight: (kg) animal weight at the beginning of the management period
+            end_weight: (kg) animal weight at the end of the management period
             bedding_material_type: bedding material type
+
         """
         super().__init__()
         self.update_name(name=name)
@@ -366,7 +347,7 @@ class Beef(BeefBase):
         self.total_nitrogen_kilograms_dry_matter_for_bedding.value = bedding.total_nitrogen_kilograms_dry_matter_for_bedding.value
         self.moisture_content_of_bedding_material.value = bedding.moisture_content_of_bedding_material.value
 
-        self.get_feeding_activity_coefficient()
+        self.set_feeding_activity_coefficient()
 
         self.methane_producing_capacity_of_manure.value = get_default_methane_producing_capacity_of_manure(
             is_pasture=housing_type.is_pasture(),
@@ -438,7 +419,7 @@ class Bulls(Beef):
             group_name=GroupNames.bulls,
             animal_type=AnimalType.beef_bulls,
 
-        **utils.get_local_args(locals())
+            **utils.get_local_args(locals())
         )
 
 
@@ -487,7 +468,7 @@ class ReplacementHeifers(Beef):
             group_name=GroupNames.replacement_heifers,
             animal_type=AnimalType.beef_replacement_heifers,
 
-        **utils.get_local_args(locals())
+            **utils.get_local_args(locals())
         )
 
 
@@ -536,8 +517,9 @@ class Cows(Beef):
             group_name=GroupNames.cows,
             animal_type=AnimalType.beef_cow_lactating,
 
-        **utils.get_local_args(locals())
+            **utils.get_local_args(locals())
         )
+
 
 class Calves(Beef):
     def __init__(
@@ -584,5 +566,5 @@ class Calves(Beef):
             group_name=GroupNames.calves,
             animal_type=AnimalType.beef_calf,
 
-        **utils.get_local_args(locals())
+            **utils.get_local_args(locals())
         )

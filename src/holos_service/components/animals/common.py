@@ -2227,3 +2227,41 @@ def get_default_manure_composition_data(
     res = manure_composition_data.loc[(animal_lookup_type, manure_state_type)]
 
     return ManureComposition(**res)
+
+
+def get_beef_and_dairy_cattle_coefficient_data(
+        animal_type: str
+) -> AnimalCoefficientData:
+    df = read_holos_resource_table(
+        path_file=PathsHolosResources.Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider,
+        index_col="AnimalType")
+
+    if animal_type in df.index:
+        _df = df.loc[animal_type]
+        res = AnimalCoefficientData(
+            baseline_maintenance_coefficient=_df['BaselineMaintenanceCoefficient'],
+            gain_coefficient=_df['GainCoefficient'],
+            default_initial_weight=_df['DefaultInitialWeight'],
+            default_final_weight=_df['DefaultFinalWeight'])
+    else:
+        res = AnimalCoefficientData()
+    return res
+
+
+def get_beef_and_dairy_cattle_feeding_activity_coefficient(
+        housing_type: HousingType
+):
+    match housing_type:
+        case HousingType.housed_in_barn | HousingType.confined | HousingType.confined_no_barn:
+            res = 0
+
+        case HousingType.pasture | HousingType.flat_pasture | HousingType.enclosed_pasture:
+            res = 0.17
+
+        case HousingType.open_range_or_hills:
+            res = 0.36
+
+        case _:
+            res = 0
+
+    return res
