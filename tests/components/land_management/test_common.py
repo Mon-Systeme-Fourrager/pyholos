@@ -1,13 +1,13 @@
 import random
 import unittest
 
-from holos_service.components.land_management.field_system import (CropType, get_valid_crop_types,
-                                                                   get_valid_perennial_types,
-                                                                   get_alberta_economic_crop_types,
-                                                                   get_saskatchewan_economic_crop_types,
-                                                                   get_manitoba_economic_crop_types,
-                                                                   get_ontario_economic_crop_types, get_grassland_types,
-                                                                   get_economic_crop_types)
+from holos_service.components.land_management.common import (CropType, get_valid_crop_types,
+                                                             get_valid_perennial_types,
+                                                             get_alberta_economic_crop_types,
+                                                             get_saskatchewan_economic_crop_types,
+                                                             get_manitoba_economic_crop_types,
+                                                             get_ontario_economic_crop_types, get_grassland_types,
+                                                             get_economic_crop_types)
 from holos_service.utils import concat_lists
 
 
