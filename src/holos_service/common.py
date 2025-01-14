@@ -18,7 +18,7 @@ class HolosVar:
     def __init__(
             self,
             name: str,
-            value: Any
+            value: Any = None
     ):
         self.name = name
         self.value = value
