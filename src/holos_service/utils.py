@@ -29,7 +29,7 @@ def get_local_args(kwargs: dict) -> dict:
 
 
 def convert_camel_case_to_space_delimited(s: str) -> str:
-    return re.sub("([a-z])([A-Z])", "\g<1> \g<2>", s)
+    return re.sub("([a-z])([A-Z])", r"\g<1> \g<2>", s)
 
 
 def concat_lists(*args) -> list:
