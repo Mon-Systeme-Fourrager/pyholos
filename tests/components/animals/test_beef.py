@@ -372,6 +372,42 @@ class TestBeefBackgrounderNonRegression(unittest.TestCase):
             res=backgrounder_heifer.to_dict()
         )
 
+    def test_steers(self):
+        manure_state_type = common.ManureStateType.deep_bedding
+
+        backgrounder_heifer = beef.BackgrounderSteer(
+            management_period_name='Management period 1',
+            group_pairing_number=0,
+            management_period_start_date=date(2023, 10, 1),
+            management_period_days=110,
+            number_of_animals=100,
+            production_stage=common.ProductionStage.gestating,
+            number_of_young_animals=0,
+            is_milk_fed_only=False,
+            milk_data=common.Milk(),
+            diet=common.Diet(
+                crude_protein_percentage=12.28,
+                forage_percentage=65,
+                total_digestible_nutrient_percentage=68.825,
+                ash_percentage=6.57,
+                starch_percentage=25.825,
+                fat_percentage=3.045,
+                neutral_detergent_fiber_percentage=42.025,
+                metabolizable_energy=2.48),
+            housing_type=common.HousingType.confined_no_barn,
+            manure_handling_system=manure_state_type,
+            manure_emission_factors=common.get_manure_emission_factors(
+                animal_type=common.AnimalType.beef_backgrounder_steer,
+                year=2024,
+                manure_state_type=manure_state_type,
+                **self.manure_emission_kwargs),
+            bedding_material_type=common.BeddingMaterialType.straw
+        )
+        self.run_test(
+            group_name="Steers",
+            res=backgrounder_heifer.to_dict()
+        )
+
 
 if __name__ == '__main__':
     unittest.main()
