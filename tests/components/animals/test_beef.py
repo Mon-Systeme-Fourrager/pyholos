@@ -229,7 +229,6 @@ class TestBeefFinisherNonRegression(unittest.TestCase):
             res: dict
     ):
         for k, v in self.non_regression_data.loc[group_name].to_dict().items():
-            print(k, v, res[k])
             self.assertAlmostEqual(
                 v,
                 res[k],
@@ -269,6 +268,42 @@ class TestBeefFinisherNonRegression(unittest.TestCase):
         self.run_test(
             group_name="Heifers",
             res=finishing_heifers.to_dict()
+        )
+
+    def test_steers(self):
+        manure_state_type = common.ManureStateType.deep_bedding
+
+        finishing_steers = beef.FinishingSteers(
+            management_period_name='Management period 1',
+            group_pairing_number=0,
+            management_period_start_date=date(2024, 1, 19),
+            management_period_days=170,
+            number_of_animals=100,
+            production_stage=common.ProductionStage.gestating,
+            number_of_young_animals=0,
+            is_milk_fed_only=False,
+            milk_data=common.Milk(),
+            diet=common.Diet(
+                crude_protein_percentage=12.72,
+                forage_percentage=10,
+                total_digestible_nutrient_percentage=81.75,
+                ash_percentage=3.38,
+                starch_percentage=51.95,
+                fat_percentage=2.33,
+                neutral_detergent_fiber_percentage=21.95,
+                metabolizable_energy=2.92),
+            housing_type=common.HousingType.confined_no_barn,
+            manure_handling_system=manure_state_type,
+            manure_emission_factors=common.get_manure_emission_factors(
+                animal_type=common.AnimalType.beef_finishing_steer,
+                year=2024,
+                manure_state_type=manure_state_type,
+                **self.manure_emission_kwargs),
+            bedding_material_type=common.BeddingMaterialType.straw
+        )
+        self.run_test(
+            group_name="Steers",
+            res=finishing_steers.to_dict()
         )
 
 if __name__ == '__main__':
