@@ -50,6 +50,13 @@ class DairyBase(Component):
         self.milk_protein_content_as_percentage = HolosVar(name="Milk Protein Content As Percentage", value=None)
         self.diet_additive_type = HolosVar(name="Diet Additive Type", value=None)
         self.methane_conversion_factor_of_diet = HolosVar(name="Methane Conversion Factor Of Diet", value=None)
+
+        self.methane_conversion_factor_adjusted = HolosVar(name="Methane Conversion Factor Adjusted", value=0)
+        """deprecated"""
+
+        self.feed_intake = HolosVar(name="Feed Intake", value=0)
+        """deprecated"""
+
         self.crude_protein = HolosVar(name="Crude Protein", value=None)
         self.ash_content_of_diet = HolosVar(name="Ash Content Of Diet", value=None)
         self.forage = HolosVar(name="Forage", value=None)
@@ -58,8 +65,22 @@ class DairyBase(Component):
         self.fat = HolosVar(name="Fat", value=None)
         self.me = HolosVar(name="ME", value=None)
         self.ndf = HolosVar(name="NDF", value=None)
+
+        self.volatile_solid_adjusted = HolosVar(name="Volatile Solid Adjusted", value=1)
+        """deprecated"""
+
+        self.nitrogen_excretion_adjusted = HolosVar(name="Nitrogen Excretion Adjusted", value=1)
+        """deprecated"""
+
         self.dietary_net_energy_concentration = HolosVar(name="Dietary Net Energy Concentration", value=None)
         self.gain_coefficient = HolosVar(name="Gain Coefficient", value=None)
+
+        self.gain_coefficient_a = HolosVar(name="Gain Coefficient A", value=0)
+        """deprecated"""
+
+        self.gain_coefficient_b = HolosVar(name="Gain Coefficient B", value=0)
+        """deprecated"""
+
         self.housing_type = HolosVar(name="Housing Type", value=None)
         self.activity_coefficient_of_feeding_situation = HolosVar(name="Activity Coefficient Of Feeding Situation",
                                                                   value=None)
@@ -76,18 +97,11 @@ class DairyBase(Component):
         self.volatilization_fraction = HolosVar(name="Volatilization Fraction", value=None)
         self.emission_factor_leaching = HolosVar(name="Emission Factor Leaching", value=None)
         self.fraction_leaching = HolosVar(name="Fraction Leaching", value=None)
-        self.methane_producing_capacity_of_manure = HolosVar(name="Methane Producing Capacity Of Manure", value=None)
 
-        # deprecated
-        self.feed_intake = HolosVar(name="Feed Intake", value=0)
-        self.methane_conversion_factor_adjusted = HolosVar(name="Methane Conversion Factor Adjusted", value=0)
         self.ash_content = HolosVar(name="Ash Content", value=8.0)
-        self.gain_coefficient_a = HolosVar(name="Gain Coefficient A", value=0)
-        self.gain_coefficient_b = HolosVar(name="Gain Coefficient B", value=0)
+        """deprecated"""
 
-        # not for dairy
-        self.volatile_solid_adjusted = HolosVar(name="Volatile Solid Adjusted", value=1)
-        self.nitrogen_excretion_adjusted = HolosVar(name="Nitrogen Excretion Adjusted", value=1)
+        self.methane_producing_capacity_of_manure = HolosVar(name="Methane Producing Capacity Of Manure", value=None)
 
         self._animal_coefficient_data: AnimalCoefficientData | None = None
 
