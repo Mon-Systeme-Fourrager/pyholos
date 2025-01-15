@@ -7,7 +7,7 @@ from pandas import read_csv, DataFrame
 from holos_service.core_constants import CoreConstants
 
 
-class AutoName(StrEnum):
+class AutoNameEnum(StrEnum):
     """Allows automatically setting the member value identical to the member name."""
 
     def _generate_next_value_(self, start, count, last_values):

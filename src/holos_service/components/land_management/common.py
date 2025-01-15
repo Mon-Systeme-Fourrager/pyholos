@@ -1,9 +1,9 @@
 from enum import auto
 
-from holos_service.utils import AutoName, concat_lists
+from holos_service.utils import AutoNameEnum, concat_lists
 
 
-class CropType(AutoName):
+class CropType(AutoNameEnum):
     """
     Holos Source Code:
         - CropType members: https://github.com/holos-aafc/Holos/blob/c5b1a960639be5c4fa6a25e167c49c36403c291d/H.Core/Enumerations/CropType.cs#L5
