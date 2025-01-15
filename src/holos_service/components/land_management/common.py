@@ -3,6 +3,11 @@ from enum import auto
 from holos_service.utils import AutoNameEnum, concat_lists
 
 
+class IrrigationType(AutoNameEnum):
+    Irrigated = auto()
+    RainFed = auto()
+
+
 class TillageType(AutoNameEnum):
     """
     Holos Source Code:
