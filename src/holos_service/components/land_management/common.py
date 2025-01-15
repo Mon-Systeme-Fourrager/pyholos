@@ -736,3 +736,79 @@ def get_grassland_types() -> list[CropType]:
             CropType.GrasslandSeeded
         ]
     )
+
+
+class CropTypeInGui(AutoNameEnum):
+    """This class includes all CropType members that are allowed in the GUI of Holos.
+
+    Holos Source Code:
+        None. This class was manually written.
+
+    """
+    # region Oilseed
+    Camelina = CropType.Camelina
+    Canola = CropType.Canola
+    Flax = CropType.Flax
+    Mustard = CropType.Mustard
+    Oilseeds = CropType.Oilseeds
+    Soybeans = CropType.Soybeans
+    # endregion
+
+    # region Other field crops
+    BerriesAndGrapes = CropType.BerriesAndGrapes
+    OtherFieldCrops = CropType.OtherFieldCrops
+    Safflower = CropType.Safflower
+    SunflowerSeed = CropType.SunflowerSeed
+    Tobacco = CropType.Tobacco
+    Vegetables = CropType.Vegetables
+    # endregion
+
+    # region Pulse crops
+    BeansDryField = CropType.BeansDryField
+    Chickpeas = CropType.Chickpeas
+    DryFieldPeas = CropType.DryFieldPeas
+    Lentils = CropType.Lentils
+    PulseCrops = CropType.PulseCrops
+    # endregion
+
+    # region Root crops
+    Potatoes = CropType.Potatoes
+    SugarBeets = CropType.SugarBeets
+    # endregion
+
+    # region Silage
+    BarleySilage = CropType.BarleySilage
+    GrassSilage = CropType.GrassSilage
+    OatSilage = CropType.OatSilage
+    SilageCorn = CropType.SilageCorn
+    TriticaleSilage = CropType.TriticaleSilage
+    WheatSilage = CropType.WheatSilage
+    # endregion
+
+    # region Small grain cereals
+    Barley = CropType.Barley
+    Buckwheat = CropType.Buckwheat
+    CanarySeed = CropType.CanarySeed
+    FallRye = CropType.FallRye
+    GrainCorn = CropType.GrainCorn
+    MixedGrains = CropType.MixedGrains
+    Oats = CropType.Oats
+    SmallGrainCereals = CropType.SmallGrainCereals
+    Sorghum = CropType.Sorghum
+    Triticale = CropType.Triticale
+    UndersownBarley = CropType.UndersownBarley
+    Wheat = CropType.Wheat
+    # endregion
+
+    # region Fallow
+    Fallow = CropType.Fallow
+    # endregion
+
+    # region Perennial
+    ForageForSeed = CropType.ForageForSeed
+    RangelandNative = CropType.RangelandNative
+    SeededGrassland = CropType.SeededGrassland
+    TameGrass = CropType.TameGrass
+    TameLegume = CropType.TameLegume
+    TameMixed = CropType.TameMixed
+    # endregion
