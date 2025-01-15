@@ -3,7 +3,9 @@ from holos_service.common import HolosVar
 
 class LandManagementBase:
     def __init__(self):
-        self.phase_number = HolosVar(name='Phase Number')
+        self.phase_number = HolosVar(name='Phase Number', value=0)
+        """deprecated"""
+
         self.name = HolosVar(name='Name')
         self.area = HolosVar(name='Area')
         self.current_year = HolosVar(name='Current Year')
@@ -51,25 +53,64 @@ class LandManagementBase:
         self.climate_parameter = HolosVar(name='Climate Parameter')
         self.tillage_factor = HolosVar(name='Tillage Factor')
         self.management_factor = HolosVar(name='Management Factor')
-        self.plant_carbon_in_agricultural_product = HolosVar(name='Plant Carbon In Agricultural Product')
-        self.carbon_input_from_product = HolosVar(name='Carbon Input From Product')
-        self.carbon_input_from_straw = HolosVar(name='Carbon Input From Straw')
-        self.carbon_input_from_roots = HolosVar(name='Carbon Input From Roots')
-        self.carbon_input_from_extraroots = HolosVar(name='Carbon Input From Extraroots')
-        self.size_of_first_rotation_for_field = HolosVar(name='Size Of First Rotation For Field')
-        self.above_ground_carbon_input = HolosVar(name='Above Ground Carbon Input')
-        self.below_ground_carbon_input = HolosVar(name='Below Ground Carbon Input')
-        self.manure_carbon_inputs_per_hectare = HolosVar(name='Manure Carbon Inputs Per Hectare')
-        self.digestate_carbon_inputs_per_hectare = HolosVar(name='Digestate Carbon Inputs Per Hectare')
-        self.total_carbon_inputs = HolosVar(name='Total Carbon Inputs')
-        self.sand = HolosVar(name='Sand')
-        self.lignin = HolosVar(name='Lignin')
-        self.w_fac = HolosVar(name='WFac')
-        self.t_fac = HolosVar(name='TFac')
-        self.total_nitrogen_inputs_for_ipcc_tier2 = HolosVar(name='Total Nitrogen Inputs For Ipcc Tier 2')
-        self.nitrogen_content = HolosVar(name='Nitrogen Content')
-        self.above_ground_residue_dry_matter = HolosVar(name='Above Ground Residue Dry Matter')
-        self.below_ground_residue_dry_matter = HolosVar(name='Below Ground Residue Dry Matter')
+
+        self.plant_carbon_in_agricultural_product = HolosVar(name='Plant Carbon In Agricultural Product', value=0)
+        """deprecated"""
+
+        self.carbon_input_from_product = HolosVar(name='Carbon Input From Product', value=0)
+        """deprecated"""
+
+        self.carbon_input_from_straw = HolosVar(name='Carbon Input From Straw', value=0)
+        """deprecated"""
+
+        self.carbon_input_from_roots = HolosVar(name='Carbon Input From Roots', value=0)
+        """deprecated"""
+
+        self.carbon_input_from_extraroots = HolosVar(name='Carbon Input From Extraroots', value=0)
+        """deprecated"""
+
+        self.size_of_first_rotation_for_field = HolosVar(name='Size Of First Rotation For Field', value=1)
+        """deprecated"""
+
+        self.above_ground_carbon_input = HolosVar(name='Above Ground Carbon Input', value=0)
+        """deprecated"""
+
+        self.below_ground_carbon_input = HolosVar(name='Below Ground Carbon Input', value=0)
+        """deprecated"""
+
+        self.manure_carbon_inputs_per_hectare = HolosVar(name='Manure Carbon Inputs Per Hectare', value=0)
+        """deprecated"""
+
+        self.digestate_carbon_inputs_per_hectare = HolosVar(name='Digestate Carbon Inputs Per Hectare', value=0)
+        """deprecated"""
+
+        self.total_carbon_inputs = HolosVar(name='Total Carbon Inputs', value=0)
+        """deprecated"""
+
+        self.sand = HolosVar(name='Sand', value=0)
+        """deprecated"""
+
+        self.lignin = HolosVar(name='Lignin', value=0)
+        """deprecated"""
+
+        self.w_fac = HolosVar(name='WFac', value=0)
+        """deprecated"""
+
+        self.t_fac = HolosVar(name='TFac', value=0)
+        """deprecated"""
+
+        self.total_nitrogen_inputs_for_ipcc_tier2 = HolosVar(name='Total Nitrogen Inputs For Ipcc Tier 2', value=0)
+        """deprecated"""
+
+        self.nitrogen_content = HolosVar(name='Nitrogen Content', value=0)
+        """deprecated"""
+
+        self.above_ground_residue_dry_matter = HolosVar(name='Above Ground Residue Dry Matter', value=0)
+        """deprecated"""
+
+        self.below_ground_residue_dry_matter = HolosVar(name='Below Ground Residue Dry Matter', value=0)
+        """deprecated"""
+
         self.fuel_energy = HolosVar(name='Fuel Energy')
         self.herbicide_energy = HolosVar(name='Herbicide Energy')
         self.fertilizer_blend = HolosVar(name='Fertilizer Blend')
