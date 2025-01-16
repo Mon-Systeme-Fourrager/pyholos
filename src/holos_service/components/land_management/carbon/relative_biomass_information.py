@@ -1,4 +1,5 @@
 from holos_service.components.land_management.common import IrrigationType
+from holos_service.components.land_management.crop import CropType, convert_crop_type_name
 
 
 class _IrrigationData:
@@ -11,6 +12,12 @@ class _IrrigationData:
         self.irrigation_type = irrigation_type
         self.irrigation_lower_range_limit = irrigation_lower_range_limit
         self.irrigation_upper_range_limit = irrigation_upper_range_limit
+
+
+def parse_crop_type(
+        raw_input: str
+) -> CropType:
+    return convert_crop_type_name(name=raw_input)
 
 
 def parse_irrigation_data(
