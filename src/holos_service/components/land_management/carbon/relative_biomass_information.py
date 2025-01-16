@@ -1,0 +1,45 @@
+from holos_service.components.land_management.common import IrrigationType
+
+
+class _IrrigationData:
+    def __init__(
+            self,
+            irrigation_type: IrrigationType,
+            irrigation_lower_range_limit: float,
+            irrigation_upper_range_limit: float
+    ):
+        self.irrigation_type = irrigation_type
+        self.irrigation_lower_range_limit = irrigation_lower_range_limit
+        self.irrigation_upper_range_limit = irrigation_upper_range_limit
+
+
+def parse_irrigation_data(
+        raw_input: str,
+) -> _IrrigationData:
+    raw_input = raw_input.replace(' ', '').lower()
+
+    irrigation_type = IrrigationType.RainFed if raw_input == "rainfed" else (
+        IrrigationType.Irrigated if raw_input == "irrigated" else None)
+
+    if "<" in raw_input:
+        # Lower range
+        irrigation_lower_range_limit = 0
+        irrigation_upper_range_limit = float(raw_input.replace("<", "").replace("mm", ""))
+
+    elif ">" in raw_input:
+        # Upper range
+        irrigation_lower_range_limit = float(raw_input.replace(">", "").replace("mm", ""))
+        irrigation_upper_range_limit = float('inf')
+
+    elif "-" in raw_input:
+        # Irrigation is a range
+        irrigation_lower_range_limit, irrigation_upper_range_limit = [
+            float(s) for s in raw_input.replace("mm", "").replace(" ", "").split('-')]
+    else:
+        irrigation_lower_range_limit = None
+        irrigation_upper_range_limit = None
+
+    return _IrrigationData(
+        irrigation_type=irrigation_type,
+        irrigation_lower_range_limit=irrigation_lower_range_limit,
+        irrigation_upper_range_limit=irrigation_upper_range_limit)
