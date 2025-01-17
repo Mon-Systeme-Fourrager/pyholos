@@ -16,6 +16,20 @@ class _IrrigationData:
         self.irrigation_upper_range_limit = irrigation_upper_range_limit
 
 
+class _CarbonResidueData:
+    def __init__(
+            self,
+            relative_biomass_product: float,
+            relative_biomass_straw: float,
+            relative_biomass_root: float,
+            relative_biomass_extraroot: float
+    ):
+        self.relative_biomass_product = relative_biomass_product
+        self.relative_biomass_straw = relative_biomass_straw
+        self.relative_biomass_root = relative_biomass_root
+        self.relative_biomass_extraroot = relative_biomass_extraroot
+
+
 def parse_crop_type(
         raw_input: str
 ) -> CropType:
@@ -71,3 +85,15 @@ def parse_moisture_content_data(
 ) -> float:
     raw_input = raw_input.lower().replace(" ", "")
     return float(raw_input) if not len(raw_input) == 0 else None
+
+
+def parse_carbon_residue_data(
+        raw_inputs: list[str]
+) -> _CarbonResidueData:
+    raw_inputs = [float(s) if len(s.lower().replace(" ", "")) != 0 else None for s in raw_inputs]
+    return _CarbonResidueData(
+        relative_biomass_product=raw_inputs[0],
+        relative_biomass_straw=raw_inputs[1],
+        relative_biomass_root=raw_inputs[2],
+        relative_biomass_extraroot=raw_inputs[3]
+    )
