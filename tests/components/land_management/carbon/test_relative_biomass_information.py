@@ -1,8 +1,8 @@
 import unittest
-from random import random
+from random import random, randint
 
 from holos_service.components.land_management.carbon.relative_biomass_information import (
-    parse_irrigation_data, parse_province_data, parse_carbon_residue_data)
+    parse_irrigation_data, parse_province_data, parse_carbon_residue_data, parse_nitrogen_residue_data)
 from holos_service.components.land_management.common import IrrigationType
 from holos_service.django_stuff import CanadianProvince
 
@@ -68,6 +68,26 @@ class TestParseCarbonResidueData(unittest.TestCase):
         self.assertEqual(
             {None},
             set(parse_carbon_residue_data(raw_inputs=[''] * 4).__dict__.values()))
+
+
+class TestParseNitrogenResidueData(unittest.TestCase):
+    def test_all_filled_columns(self):
+        self.assertNotIn(
+            None,
+            parse_nitrogen_residue_data(raw_inputs=[str(v) for v in [randint(0, 100)] * 3]).__dict__.values())
+
+    def test_columns_include_empty_column(self):
+        for i in range(4):
+            base_columns = [str(v) for v in [randint(0, 100)] * 2]
+            base_columns.insert(i, "")
+            self.assertEqual(
+                None,
+                list(parse_nitrogen_residue_data(raw_inputs=base_columns).__dict__.values())[i])
+
+    def test_all_empty_columns(self):
+        self.assertEqual(
+            {None},
+            set(parse_nitrogen_residue_data(raw_inputs=[''] * 3).__dict__.values()))
 
 
 if __name__ == '__main__':

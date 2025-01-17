@@ -30,6 +30,19 @@ class _CarbonResidueData:
         self.relative_biomass_extraroot = relative_biomass_extraroot
 
 
+class _NitrogenResidueData:
+    def __init__(
+            self,
+            nitrogen_content_product: float,
+            nitrogen_content_straw: float,
+            nitrogen_content_root: float
+    ):
+        self.nitrogen_content_product = nitrogen_content_product
+        self.nitrogen_content_straw = nitrogen_content_straw
+        self.nitrogen_content_root = nitrogen_content_root
+        self.nitrogen_content_extraroot = nitrogen_content_root
+
+
 def parse_crop_type(
         raw_input: str
 ) -> CropType:
@@ -96,4 +109,15 @@ def parse_carbon_residue_data(
         relative_biomass_straw=raw_inputs[1],
         relative_biomass_root=raw_inputs[2],
         relative_biomass_extraroot=raw_inputs[3]
+    )
+
+
+def parse_nitrogen_residue_data(
+        raw_inputs: list[str]
+) -> _NitrogenResidueData:
+    raw_inputs = [float(s) if len(s.lower().replace(" ", "")) != 0 else None for s in raw_inputs]
+    return _NitrogenResidueData(
+        nitrogen_content_product=raw_inputs[0],
+        nitrogen_content_straw=raw_inputs[1],
+        nitrogen_content_root=raw_inputs[2]
     )
