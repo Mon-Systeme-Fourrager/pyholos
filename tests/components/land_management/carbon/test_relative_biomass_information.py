@@ -1,10 +1,11 @@
 import unittest
-from random import random, randint
+from random import random, randint, choice
 
 from holos_service.components.land_management.carbon.relative_biomass_information import (
     parse_irrigation_data, parse_province_data, parse_carbon_residue_data, parse_nitrogen_residue_data,
-    parse_lignin_content_data)
+    parse_lignin_content_data, parse_biomethane_data)
 from holos_service.components.land_management.common import IrrigationType
+from holos_service.components.land_management.crop import CropType
 from holos_service.django_stuff import CanadianProvince
 
 
@@ -101,6 +102,33 @@ class TestParseLigninContentData(unittest.TestCase):
         self.assertEqual(
             None,
             parse_lignin_content_data(raw_input=""))
+
+
+class TestParseBiomethaneData(unittest.TestCase):
+    def test_all_filled_columns(self):
+        self.assertNotIn(
+            None,
+            parse_biomethane_data(
+                crop_type=choice(list(CropType)),
+                raw_inputs=[str(v) for v in [random()] * 5]).__dict__.values()
+        )
+
+    def test_columns_include_empty_column(self):
+        for i in range(4):
+            base_columns = [str(v) for v in [random()] * 4]
+            base_columns.insert(i, "")
+            self.assertEqual(
+                None,
+                list(parse_biomethane_data(
+                    crop_type=choice(list(CropType)),
+                    raw_inputs=base_columns).__dict__.values())[i + 1])
+
+    def test_all_empty_columns(self):
+        self.assertEqual(
+            {None},
+            set(list(parse_biomethane_data(
+                crop_type=choice(list(CropType)),
+                raw_inputs=[''] * 5).__dict__.values())[1:]))
 
 
 if __name__ == '__main__':

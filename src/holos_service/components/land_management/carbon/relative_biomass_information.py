@@ -1,6 +1,7 @@
 from holos_service.components.common import convert_province_name
 from holos_service.components.land_management.common import IrrigationType
 from holos_service.components.land_management.crop import CropType, convert_crop_type_name
+from holos_service.config import PathsHolosResources
 from holos_service.django_stuff import CanadianProvince
 
 
@@ -41,6 +42,34 @@ class _NitrogenResidueData:
         self.nitrogen_content_straw = nitrogen_content_straw
         self.nitrogen_content_root = nitrogen_content_root
         self.nitrogen_content_extraroot = nitrogen_content_root
+
+
+class BiogasAndMethaneProductionParametersData:
+    def __init__(
+            self,
+            crop_type: CropType,
+            bio_methane_potential,
+            methane_fraction,
+            volatile_solids,
+            total_solids,
+            total_nitrogen
+    ):
+        """Table_46_Biogas_Methane_Production_CropResidue_Data
+
+        Args:
+            crop_type: CropType class member
+            bio_methane_potential: (Nm3 ton-1 VS) Biomethane potential given a subtrate type (BMP)
+            methane_fraction: (-) fraction of methane in biogas (f_CH4)
+            volatile_solids: (%) percentage of total solids
+            total_solids: (kg t^-1)^3 total solids in the substrate type (TS)
+            total_nitrogen: (KG N t^-1)^5 total Nitrogen in the substrate
+        """
+        self.crop_type = crop_type
+        self.bio_methane_potential = bio_methane_potential
+        self.methane_fraction = methane_fraction
+        self.volatile_solids = volatile_solids
+        self.total_solids = total_solids
+        self.total_nitrogen = total_nitrogen
 
 
 def parse_crop_type(
@@ -127,3 +156,17 @@ def parse_lignin_content_data(
         raw_input: str
 ) -> float:
     return float(raw_input) if len(raw_input.lower().replace(" ", "")) != 0 else None
+
+
+def parse_biomethane_data(
+        crop_type: CropType,
+        raw_inputs: list[str]
+) -> BiogasAndMethaneProductionParametersData:
+    raw_inputs = [float(s) if len(s.lower().replace(" ", "")) != 0 else None for s in raw_inputs]
+    return BiogasAndMethaneProductionParametersData(
+        crop_type=crop_type,
+        bio_methane_potential=raw_inputs[0],
+        methane_fraction=raw_inputs[1],
+        volatile_solids=raw_inputs[2],
+        total_solids=raw_inputs[3],
+        total_nitrogen=raw_inputs[4])
