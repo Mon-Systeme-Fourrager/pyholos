@@ -1,7 +1,9 @@
 import unittest
 
-from holos_service.components.land_management.carbon.relative_biomass_information import parse_irrigation_data
+from holos_service.components.land_management.carbon.relative_biomass_information import (
+    parse_irrigation_data, parse_province_data)
 from holos_service.components.land_management.common import IrrigationType
+from holos_service.django_stuff import CanadianProvince
 
 
 class TestParseIrrigationData(unittest.TestCase):
@@ -24,6 +26,27 @@ class TestParseIrrigationData(unittest.TestCase):
             self.assertEqual(
                 expected,
                 list(parse_irrigation_data(raw_input=raw_input).__dict__.values()))
+
+
+class TestParseProvinceData(unittest.TestCase):
+
+    def test_values(self):
+        for raw_input, expected in [
+            ("<200 mm", None),
+            ("<350", None),
+            (">200mm", None),
+            (">350 mm", None),
+            (">750", None),
+            ("200 -350 mm", None),
+            ("350-750", None),
+            ("AB", CanadianProvince.Alberta),
+            ("Canada", None),
+            ("Irrigated", None),
+            ("Rainfed", None)
+        ]:
+            self.assertEqual(
+                expected,
+                parse_province_data(raw_input=raw_input))
 
 
 if __name__ == '__main__':

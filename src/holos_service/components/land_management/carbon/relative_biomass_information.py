@@ -1,5 +1,7 @@
+from holos_service.components.common import convert_province_name
 from holos_service.components.land_management.common import IrrigationType
 from holos_service.components.land_management.crop import CropType, convert_crop_type_name
+from holos_service.django_stuff import CanadianProvince
 
 
 class _IrrigationData:
@@ -50,3 +52,22 @@ def parse_irrigation_data(
         irrigation_type=irrigation_type,
         irrigation_lower_range_limit=irrigation_lower_range_limit,
         irrigation_upper_range_limit=irrigation_upper_range_limit)
+
+
+def parse_province_data(
+        raw_input: str
+) -> None | CanadianProvince:
+    raw_input = raw_input.lower().replace(' ', '')
+    if any([len(raw_input) == 0] + [v in raw_input for v in ["canada", "rainfed", "irrigated", ">", "<", "-"]]):
+        province = None
+    else:
+        province = convert_province_name(name=raw_input)
+
+    return province
+
+
+def parse_moisture_content_data(
+        raw_input: str
+) -> float:
+    raw_input = raw_input.lower().replace(" ", "")
+    return float(raw_input) if not len(raw_input) == 0 else None
