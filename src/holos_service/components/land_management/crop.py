@@ -727,8 +727,23 @@ def get_grassland_types() -> list[CropType]:
     )
 
 
+def _clean_crop_name(crop_name: str) -> str:
+    return ''.join(s for s in crop_name if s.isalpha()).lower()
+
+
 def convert_crop_type_name(name: str) -> CropType:
-    match name.lower():
+    """Returns a CropType member based on its name or abbreviation.
+
+    Args:
+        name: name or abbreviation of the crop
+
+    Returns:
+        CropType member
+
+    Holos source code:
+        https://github.com/RamiALBASHA/Holos/blob/71638efd97c84c6ded45e342ce664477df6f803f/H.Core/Converters/CropTypeStringConverter.cs#L10
+    """
+    match _clean_crop_name(crop_name=name):
         case "alfalfaseed":
             return CropType.AlfalfaSeed
         case "barley":

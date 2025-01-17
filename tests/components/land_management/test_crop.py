@@ -1549,6 +1549,41 @@ class TestCropTypeConverter(unittest.TestCase):
             convert_crop_type_name(name="_"),
             CropType.NotSelected)
 
+    def test_misc(self):
+        for crop_name, crop_type in [
+            ("Berries & grapes", CropType.BerriesAndGrapes),
+            ("Red clover(Trifolium pratense L.)", CropType.RedCloverTrifoliumPratenseL),
+            ("Berseem clover (Trifolium alexandrium L.)", CropType.BerseemCloverTrifoliumAlexandriumL),
+            ("Sweet clover (Melilotus officinalis)", CropType.SweetCloverMelilotusOfficinalis),
+            ("Crimson clover (Trifolium incarnatum)", CropType.CrimsonCloverTrifoliumIncarnatum),
+            ("Hairy Vetch (Vicia villosa roth)", CropType.HairyVetchViciaVillosaRoth),
+            ("Alfalfa (Medicago sativa L.)", CropType.AlfalfaMedicagoSativaL),
+            ("Faba bean / broad bean (Vicia faba)", CropType.FabaBeanBroadBeanViciaFaba),
+            ("Cowpea (Vigna unguiculata)", CropType.CowpeaVignaUnguiculata),
+            ("Rapeseed (Brassica Napus L.)", CropType.RapeseedBrassicaNapusL),
+            ('Winter turnip rape [Brassica Rapa spp. oleifera L. (cv. "Largo")]', CropType.WinterTurnipRapeBrassicaRapaSppOleiferaLCVLargo),
+            ("Phacelia[Phacelia tanacetifolia (cv.'Phaci')]", CropType.PhaceliaPhaceliaTanacetifoliaCVPhaci),
+            ("Forage radish (Raphanus sativus L.)", CropType.ForageRadishRaphanusSativusL),
+            ("Mustard (Sinapus alba L.subsp.Mairei (H.Lindb.) Maire)", CropType.MustardSinapusAlbaLSubspMaireiHLindbMaire),
+            ("Barley (Hordeum vulgare)", CropType.BarleyHordeumVulgare),
+            ("Oat (Avena sativa)", CropType.OatAvenaSativa),
+            ("Rye (Secale cereale) / Winter rye / Cereal rye", CropType.RyeSecaleCerealeWinterRyeCerealRye),
+            ("Sesame (Sesamum indicum)", CropType.SesameSesamumIndicum),
+            ("Flax (Linum usitatissimum)", CropType.FlaxLinumUsitatissimum),
+            ("Ryegrass (Lolium Perenne L.)", CropType.RyeGrassLoliumPerenneL),
+            ("Annual Ryegrass (Lolium multiflorum)", CropType.AnnualRyeGrassLoliumMultiflorum),
+            ("Sorghum (Sorghum bicolour)", CropType.SorghumSorghumBicolour),
+            ("Shepherd's purse", CropType.ShepherdsPurse),
+            ("Winter wheat (Triticum aestivum)", CropType.WinterWheatTriticumAestivum),
+            ("(Fall) Rye", CropType.FallRye),
+            ("Rangeland (native)", CropType.RangelandNative),
+            ("Grazed pasture (all perennial types)", CropType.NotSelected),
+            ("Total tree fruits & nuts", CropType.TreeFruitAndNuts)
+        ]:
+            self.assertEqual(
+                crop_type,
+                convert_crop_type_name(name=crop_name))
+
 
 if __name__ == '__main__':
     unittest.main()
