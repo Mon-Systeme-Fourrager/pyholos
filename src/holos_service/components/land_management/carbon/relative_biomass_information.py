@@ -121,3 +121,9 @@ def parse_nitrogen_residue_data(
         nitrogen_content_straw=raw_inputs[1],
         nitrogen_content_root=raw_inputs[2]
     )
+
+
+def parse_lignin_content_data(
+        raw_input: str
+) -> float:
+    return float(raw_input) if len(raw_input.lower().replace(" ", "")) != 0 else None
