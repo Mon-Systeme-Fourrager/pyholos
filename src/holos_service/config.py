@@ -12,6 +12,8 @@ class PathsHolosResources:
     _path_root = _PATH_HOLOS_SERVICE_RESOURCES / 'holos'
     Table_6_Manure_Types_And_Default_Composition = _path_root / (
         'Table_6_Manure_Types_And_Default_Composition.csv')
+    Table_7_Relative_Biomass_Information = _path_root / (
+        'Table_7_Relative_Biomass_Information.csv')
     Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider = _path_root / (
         'Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider.csv')
     Table_21_Average_Milk_Production_For_Dairy_Cows_By_Province = _path_root / (
