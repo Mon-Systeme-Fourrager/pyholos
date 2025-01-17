@@ -1,6 +1,7 @@
 import unittest
 
 from holos_service.components import common
+from holos_service.django_stuff import CanadianProvince
 
 
 class TestComponentType(unittest.TestCase):
@@ -44,6 +45,92 @@ class TestCalculateFractionOfNitrogenLostByLeachingAndRunoff(unittest.TestCase):
                 common.calculate_fraction_of_nitrogen_lost_by_leaching_and_runoff(
                     growing_season_precipitation=evapotranspiration / evapotranspiration_to_precipitation_ratio,
                     growing_season_evapotranspiration=evapotranspiration))
+
+
+class TestConvertProvinceName(unittest.TestCase):
+    def test_alberta(self):
+        for v in ("alberta", "ab", "alta", "alb"):
+            self.assertEqual(
+                common.convert_province_name(name=v),
+                CanadianProvince.Alberta)
+
+    def test_british_columbia(self):
+        for v in ("britishcolumbia", "colombiebritannique", "bc", "cb"):
+            self.assertEqual(
+                common.convert_province_name(name=v),
+                CanadianProvince.BritishColumbia)
+
+    def test_saskatchewan(self):
+        for v in "saskatchewan", "sk", "sask":
+            self.assertEqual(
+                common.convert_province_name(name=v),
+                CanadianProvince.Saskatchewan)
+
+    def test_manitoba(self):
+        for v in ("manitoba", "mb", "man"):
+            self.assertEqual(
+                common.convert_province_name(name=v),
+                CanadianProvince.Manitoba)
+
+    def test_ontario(self):
+        for v in ("ontario", "on", "ont"):
+            self.assertEqual(
+                common.convert_province_name(name=v),
+                CanadianProvince.Ontario)
+
+    def test_quebec(self):
+        for v in ("quebec", "québec", "qc", "que"):
+            self.assertEqual(
+                common.convert_province_name(name=v),
+                CanadianProvince.Quebec)
+
+    def test_newbrunswick(self):
+        for v in ("newbrunswick", "nouveaubrunswick", "nb"):
+            self.assertEqual(
+                common.convert_province_name(name=v),
+                CanadianProvince.NewBrunswick)
+
+    def test_novascotia(self):
+        for v in ("novascotia", "nouvelleécosse", "nouvelleecosse", "ns", "né", "ne"):
+            self.assertEqual(
+                common.convert_province_name(name=v),
+                CanadianProvince.NovaScotia)
+
+    def test_princeedwardisland(self):
+        for v in ("princeedwardisland", "îleduprinceédouard", "îleduprinceedouard", "ileduprinceédouard",
+                  "ileduprinceedouard", "pe", "pei", "ipe", "ipé", "îpe", "îpé"):
+            self.assertEqual(
+                common.convert_province_name(name=v),
+                CanadianProvince.PrinceEdwardIsland)
+
+    def test_newfoundland(self):
+        for v in ("newfoundlandandlabrador", "terreneuveetlabrador", "nl", "nf", "tnl", "nfld", "newfoundland"):
+            self.assertEqual(
+                common.convert_province_name(name=v),
+                CanadianProvince.NewfoundlandAndLabrador)
+
+    def test_yukon(self):
+        for v in ("yukon", "yt", "yk", "yuk", "yn"):
+            self.assertEqual(
+                common.convert_province_name(name=v),
+                CanadianProvince.Yukon)
+
+    def test_northwest_territories(self):
+        for v in ("northwestterritories", "territoiresdunordouest", "nt", "tno"):
+            self.assertEqual(
+                common.convert_province_name(name=v),
+                CanadianProvince.NorthwestTerritories)
+
+    def test_nunavut(self):
+        for v in ("nunavut", "nu", "nvt"):
+            self.assertEqual(
+                common.convert_province_name(name=v),
+                CanadianProvince.Nunavut)
+
+    def test_default(self):
+        self.assertEqual(
+            common.convert_province_name(name='soMe RanDom nAmE'),
+            CanadianProvince.Alberta)
 
 
 if __name__ == '__main__':

@@ -21,7 +21,6 @@ class TestParseIrrigationData(unittest.TestCase):
             ("Irrigated", [IrrigationType.Irrigated, None, None]),
             ("Rainfed", [IrrigationType.RainFed, None, None])
         ]:
-            print(raw_input)
             self.assertEqual(
                 expected,
                 list(parse_irrigation_data(raw_input=raw_input).__dict__.values()))
