@@ -313,22 +313,22 @@ def set_soil_properties(
         latitude=latitude,
         longitude=longitude,
         geojson_data=django_stuff.load_slc_data(
-            path_slc_geojson_file=PathsSlcData.geojson_file.value))
+            path_slc_geojson_file=PathsSlcData.geojson_file))
     id_polygon = polygon_properties['POLY_ID']
     dominant_component_properties = django_stuff.get_dominant_component_properties(
         id_polygon=id_polygon,
         slc_components_table=django_stuff.read_slc_csv(
-            path_file=PathsSlcData.cmp_file.value,
+            path_file=PathsSlcData.cmp_file,
             usecols=['POLY_ID', 'PROVINCE', 'PERCENT_', 'SOIL_ID']))
     id_soil = dominant_component_properties['SOIL_ID']
     soil_layer_table = django_stuff.get_soil_layer_table(
         id_soil=id_soil,
-        slc_soil_layer_table=django_stuff.read_slc_csv(path_file=PathsSlcData.slt_file.value))
+        slc_soil_layer_table=django_stuff.read_slc_csv(path_file=PathsSlcData.slt_file))
     first_non_litter_layer = django_stuff.get_first_non_litter_layer(
         soil_layer_table=soil_layer_table)
     soil_name_table = django_stuff.get_soil_name_table(
         soil_name_table=django_stuff.read_slc_csv(
-            path_file=PathsSlcData.snt_file.value, usecols=['SOIL_ID', 'PMTEX1', 'G_GROUP3']),
+            path_file=PathsSlcData.snt_file, usecols=['SOIL_ID', 'PMTEX1', 'G_GROUP3']),
         id_soil=id_soil)
 
     province = django_stuff.CanadianProvince.get_name(abbreviation=dominant_component_properties['PROVINCE'])
