@@ -23,13 +23,6 @@ class TestGetSlcPolygonProperties(unittest.TestCase):
             'Shape_Length': 2.0076591152263235,
             'Shape_Area': 0.06119253234576638}
 
-    def test_identify_slc_polygon_id_works_with_default_slc_data(self):
-        self.assertEqual(
-            self.expected_outputs,
-            django_stuff.get_slc_polygon_properties(
-                latitude=49.98,
-                longitude=-98.04))
-
     def test_identify_slc_polygon_id_returns_expected_result(self):
         self.assertEqual(
             self.expected_outputs,
