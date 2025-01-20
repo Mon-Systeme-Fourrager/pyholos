@@ -1,4 +1,6 @@
+
 from holos_service.common import HolosVar
+from holos_service.core_constants import CoreConstants
 
 
 class LandManagementBase:
@@ -24,8 +26,11 @@ class LandManagementBase:
         self.nitrogen_content_in_roots = HolosVar(name='Nitrogen Content In Roots')
         self.nitrogen_content_in_extraroot = HolosVar(name='Nitrogen Content In Extraroot')
         self.nitrogen_fixation = HolosVar(name='Nitrogen Fixation')
-        self.nitrogen_deposit = HolosVar(name='Nitrogen Deposit')
         self.carbon_concentration = HolosVar(name='Carbon Concentration')
+
+        self.nitrogen_deposit = HolosVar(name='Nitrogen Deposit', value=CoreConstants.NitrogenDepositionAmount)
+        """(kg(N) ha-1 year-1) Atmospheric Nitrogen deposition amount"""
+
         self.crop_yield = HolosVar(name='Yield')
         self.harvest_method = HolosVar(name='Harvest Method')
         self.nitrogen_fertilizer_rate = HolosVar(name='Nitrogen Fertilizer Rate')
