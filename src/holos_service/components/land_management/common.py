@@ -19,3 +19,14 @@ class TillageType(AutoNameEnum):
     Intensive = auto()
 
 
+class HarvestMethod(AutoNameEnum):
+    """
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/b183dab99d211158d1fed9da5370ce599ac7c914/H.Core/Enumerations/HarvestMethods.cs#L6
+    """
+    Silage = auto()
+    Swathing = auto()
+    GreenManure = auto()
+    CashCrop = auto()
+    StubbleGrazing = auto()
+    NONE = auto()  # Used for fallow, etc.
