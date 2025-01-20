@@ -29,6 +29,9 @@ class PathsHolosResources:
     Table_62_Fractions_of_swine_N_volatilized = _path_root / (
         'Table_62_Fractions_of_swine_N_volatilized.csv')
 
+    _path_root_large_files = _PATH_MSF_RESOURCES / "large_size_holos_tables"
+    Table_small_area_yields = _path_root_large_files / (
+        'small_area_yields.csv')
 
 
 class PathsSlcData:
