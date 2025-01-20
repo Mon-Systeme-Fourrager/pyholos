@@ -3,6 +3,7 @@ from enum import StrEnum, unique, auto
 from holos_service import django_stuff
 from holos_service.common import Region, get_region
 from holos_service.config import PathsSlcData
+from holos_service.utils import AutoNameEnum
 
 
 @unique
@@ -16,21 +17,20 @@ class SoilTexture(StrEnum):
     Unknown = auto()
 
 
-class SoilFunctionalCategory:
-    NotApplicable: str = "NotApplicable"
-    Brown: str = "Brown"
-    BrownChernozem: str = "BrownChernozem"
-    DarkBrown: str = "DarkBrown"
-    DarkBrownChernozem: str = "DarkBrownChernozem"
-    Black: str = "Black"
-    BlackGrayChernozem: str = "BlackGrayChernozem"
-    Organic: str = "Organic"
-    EasternCanada: str = "EasternCanada"
-    # All: str = "EnumSoilFunctionalAll"
-    Unknown: str = "Unknown"
-
-    Grey: str = "Grey"
-    DarkGrey: str = "DarkGrey"
+class SoilFunctionalCategory(AutoNameEnum):
+    NotApplicable = auto()
+    Brown = auto()
+    BrownChernozem = auto()
+    DarkBrown = auto()
+    DarkBrownChernozem = auto()
+    Black = auto()
+    BlackGrayChernozem = auto()
+    Organic = auto()
+    EasternCanada = auto()
+    # All = auto()
+    Unknown = auto()
+    Grey = auto()
+    DarkGrey = auto()
 
 
 class SoilGreatGroup:
