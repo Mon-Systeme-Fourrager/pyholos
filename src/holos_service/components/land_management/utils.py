@@ -1,6 +1,7 @@
 from holos_service.components.common import convert_province_name
 from holos_service.components.land_management.crop import convert_crop_type_name, CropType
 from holos_service.config import PathsHolosResources
+from holos_service.django_stuff import CanadianProvince
 from holos_service.utils import read_holos_resource_table
 
 
@@ -31,4 +32,34 @@ class LoadedData:
 
         df.columns = columns
         df['PROVINCE'] = df['PROVINCE'].apply(lambda x: convert_province_name(name=x).name)
-        return df
+
+        return df.set_index(['YEAR', 'PROVINCE', 'POLY_ID'])
+
+    def get_yield(
+            self,
+            year: int,
+            polygon_id: int,
+            crop_type: CropType,
+            province: CanadianProvince
+    ) -> float:
+        if crop_type.is_perennial():
+            # Small area yield table only has one perennial type 'tame hay'. Had discussion with team on 8/17/2021  and it was agreed
+            # that we would use tame hay yields as the default for all perennial types until better numbers were found
+            lookup_crop_type = CropType.TamePasture
+
+        elif crop_type == CropType.GrassSilage:
+            lookup_crop_type = CropType.TamePasture
+
+        elif crop_type == CropType.Flax:
+            lookup_crop_type = CropType.FlaxSeed
+
+        elif crop_type == CropType.FieldPeas:
+            lookup_crop_type = CropType.DryPeas
+        else:
+            lookup_crop_type = crop_type
+
+        try:
+            res = self.table_small_yield_area.loc[(year, province.name, polygon_id), lookup_crop_type]
+        except KeyError:
+            res = None
+        return res
