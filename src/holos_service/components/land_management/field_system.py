@@ -1,5 +1,5 @@
-
 from holos_service.common import HolosVar
+from holos_service.components.land_management.common import HarvestMethod
 from holos_service.core_constants import CoreConstants
 
 
@@ -121,3 +121,14 @@ class LandManagementBase:
         self.fuel_energy = HolosVar(name='Fuel Energy')
         self.herbicide_energy = HolosVar(name='Herbicide Energy')
         self.fertilizer_blend = HolosVar(name='Fertilizer Blend')
+
+    def get_default_harvest_method(self):
+        """Returns default harvest method based on the cultivated crop.
+
+        Returns:
+            HarvestMethod class member
+
+        Holos source code:
+            https://github.com/holos-aafc/Holos/blob/b183dab99d211158d1fed9da5370ce599ac7c914/H.Core/Services/Initialization/Crops/CropInitializationService.Harvest.cs#L19
+        """
+        return HarvestMethod.Silage if self.crop_type.value.is_silage_crop() else HarvestMethod.CashCrop
