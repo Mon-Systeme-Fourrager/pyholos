@@ -8,7 +8,7 @@ from holos_service.components.land_management.crop import (CropType, get_valid_c
                                                            get_manitoba_economic_crop_types,
                                                            get_ontario_economic_crop_types, get_grassland_types,
                                                            get_economic_crop_types,
-                                                           convert_crop_type_name)
+                                                           convert_crop_type_name, get_nitrogen_fixation)
 from holos_service.utils import concat_lists
 
 
@@ -1583,6 +1583,21 @@ class TestCropTypeConverter(unittest.TestCase):
             self.assertEqual(
                 crop_type,
                 convert_crop_type_name(name=crop_name))
+
+
+class TestGetNitrogenFixation(unittest.TestCase):
+    def test_returns_expected_value_for_leguminous_crops(self):
+        for crop_type in _CropType.pulse_crop:
+            self.assertEqual(
+                0.7,
+                get_nitrogen_fixation(crop_type=crop_type))
+
+    def test_returns_expected_value_for_non_leguminous_crops(self):
+        for crop_type in CropType:
+            if crop_type not in _CropType.pulse_crop:
+                self.assertEqual(
+                    0,
+                    get_nitrogen_fixation(crop_type=crop_type))
 
 
 if __name__ == '__main__':

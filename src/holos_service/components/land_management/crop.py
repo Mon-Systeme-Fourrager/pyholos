@@ -1217,3 +1217,20 @@ class CropTypeInGui(AutoNameEnum):
     TameLegume = CropType.TameLegume
     TameMixed = CropType.TameMixed
     # endregion
+
+
+def get_nitrogen_fixation(
+        crop_type: CropType
+) -> float:
+    """Returns the nitrogen fixation fraction by the crop
+
+    Args:
+        crop_type: CropType class member
+
+    Returns:
+        (-) nitrogen fixation fraction (between 0 and 1)
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/b183dab99d211158d1fed9da5370ce599ac7c914/H.Core/Providers/Nitrogen/NitogenFixationProvider.cs#L60
+    """
+    return 0.7 if crop_type.is_pulse_crop() else 0
