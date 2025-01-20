@@ -591,7 +591,7 @@ class TestCropTypeConverter(unittest.TestCase):
             CropType.Beans)
 
     def test_beans_dry_field(self):
-        for s in ('beansdryfield', 'dryfieldbeans'):
+        for s in ('beansdryfield', 'dryfieldbeans', "dfbns"):
             self.assertEqual(
                 convert_crop_type_name(name=s),
                 CropType.BeansDryField)
@@ -608,12 +608,13 @@ class TestCropTypeConverter(unittest.TestCase):
                 CropType.BerriesAndGrapes)
 
     def test_buckwheat(self):
-        self.assertEqual(
-            convert_crop_type_name(name="buckwheat"),
-            CropType.Buckwheat)
+        for s in ("buckwheat", "bucwht"):
+            self.assertEqual(
+                convert_crop_type_name(name=s),
+                CropType.Buckwheat)
 
     def test_canary_seed(self):
-        for s in ('canaryseed', 'canaryseeds'):
+        for s in ('canaryseed', 'canaryseeds', "canary"):
             self.assertEqual(
                 convert_crop_type_name(name=s),
                 CropType.CanarySeed)
@@ -644,7 +645,7 @@ class TestCropTypeConverter(unittest.TestCase):
             convert_crop_type_name(name="colouredwhitefababeans"),
             CropType.ColouredWhiteFabaBeans)
 
-    def test_c_p_s_wheat(self):
+    def test_cps_wheat(self):
         self.assertEqual(
             convert_crop_type_name(name="cpswheat"),
             CropType.CPSWheat)
@@ -661,9 +662,10 @@ class TestCropTypeConverter(unittest.TestCase):
                 CropType.DryPeas)
 
     def test_dry_field_peas(self):
-        self.assertEqual(
-            convert_crop_type_name(name="dryfieldpeas"),
-            CropType.DryFieldPeas)
+        for s in ("dryfieldpeas", "dfpeas"):
+            self.assertEqual(
+                convert_crop_type_name(name=s),
+                CropType.DryFieldPeas)
 
     def test_dill(self):
         self.assertEqual(
@@ -671,7 +673,7 @@ class TestCropTypeConverter(unittest.TestCase):
             CropType.Dill)
 
     def test_durum(self):
-        for s in ("durum", "wheatdurum", "durumwheat"):
+        for s in ("durum", "wheatdurum", "durumwheat", "whtdur"):
             self.assertEqual(
                 convert_crop_type_name(name=s),
                 CropType.Durum)
@@ -687,7 +689,7 @@ class TestCropTypeConverter(unittest.TestCase):
             CropType.Fallow)
 
     def test_fall_rye(self):
-        for s in ("fallrye", "ryefallremaining"):
+        for s in ("fallrye", "ryefallremaining", "ryefal"):
             self.assertEqual(
                 convert_crop_type_name(name=s),
                 CropType.FallRye)
@@ -704,9 +706,10 @@ class TestCropTypeConverter(unittest.TestCase):
             CropType.Flax)
 
     def test_flax_seed(self):
-        self.assertEqual(
-            convert_crop_type_name(name="flaxseed"),
-            CropType.FlaxSeed)
+        for s in ("flaxseed", "flaxsd"):
+            self.assertEqual(
+                convert_crop_type_name(name=s),
+                CropType.FlaxSeed)
 
     def test_fresh_corn_sweet(self):
         self.assertEqual(
@@ -734,7 +737,7 @@ class TestCropTypeConverter(unittest.TestCase):
             CropType.ForageForSeed)
 
     def test_grain_corn(self):
-        for s in ("graincorn", "cornforgrain"):
+        for s in ("graincorn", "cornforgrain", "corngr"):
             self.assertEqual(
                 convert_crop_type_name(name=s),
                 CropType.GrainCorn)
@@ -864,7 +867,7 @@ class TestCropTypeConverter(unittest.TestCase):
             CropType.Mint)
 
     def test_mixed_grains(self):
-        for s in ("mixedgrains", "mixedgrain"):
+        for s in ("mixedgrains", "mixedgrain", "mxdgrn"):
             self.assertEqual(
                 convert_crop_type_name(name=s),
                 CropType.MixedGrains)
@@ -875,9 +878,10 @@ class TestCropTypeConverter(unittest.TestCase):
             CropType.Mustard)
 
     def test_mustard_seed(self):
-        self.assertEqual(
-            convert_crop_type_name(name="mustardseed"),
-            CropType.MustardSeed)
+        for s in ("mustardseed",  "mustsd"):
+            self.assertEqual(
+                convert_crop_type_name(name=s),
+                CropType.MustardSeed)
 
     def test_monarda(self):
         self.assertEqual(
@@ -950,7 +954,7 @@ class TestCropTypeConverter(unittest.TestCase):
             CropType.PerennialGrasses)
 
     def test_potatoes(self):
-        for s in ("potatoes", "potato"):
+        for s in ("potatoes", "potato", "potats"):
             self.assertEqual(
                 convert_crop_type_name(name=s),
                 CropType.Potatoes)
@@ -967,9 +971,10 @@ class TestCropTypeConverter(unittest.TestCase):
                 CropType.Rye)
 
     def test_safflower(self):
-        self.assertEqual(
-            convert_crop_type_name(name="safflower"),
-            CropType.Safflower)
+        for s in ("safflower", "safflwr"):
+            self.assertEqual(
+                convert_crop_type_name(name=s),
+                CropType.Safflower)
 
     def test_seed_potato(self):
         self.assertEqual(
@@ -977,7 +982,7 @@ class TestCropTypeConverter(unittest.TestCase):
             CropType.SeedPotato)
 
     def test_silage_corn(self):
-        for s in ("silagecorn", "cornsilage"):
+        for s in ("silagecorn", "cornsilage", "cornslg"):
             self.assertEqual(
                 convert_crop_type_name(name=s),
                 CropType.SilageCorn)
@@ -993,7 +998,7 @@ class TestCropTypeConverter(unittest.TestCase):
             CropType.SoftWheat)
 
     def test_soybeans(self):
-        for s in ("soybeans", "soybean"):
+        for s in ("soybeans", "soybean", "soybns"):
             self.assertEqual(
                 convert_crop_type_name(name=s),
                 CropType.Soybeans)
@@ -1014,21 +1019,22 @@ class TestCropTypeConverter(unittest.TestCase):
             CropType.SmallGrainCereals)
 
     def test_spring_wheat(self):
-        for s in ("springwheat", "wheatspring"):
+        for s in ("springwheat", "wheatspring", "whtspg"):
             self.assertEqual(
                 convert_crop_type_name(name=s),
                 CropType.SpringWheat)
 
     def test_spring_rye(self):
-        for s in ("springrye", "ryespring"):
+        for s in ("springrye", "ryespring", "ryespg"):
             self.assertEqual(
                 convert_crop_type_name(name=s),
                 CropType.SpringRye)
 
     def test_sugar_beets(self):
-        self.assertEqual(
-            convert_crop_type_name(name="sugarbeets"),
-            CropType.SugarBeets)
+        for s in ("sugarbeets", "sugarb"):
+            self.assertEqual(
+                convert_crop_type_name(name=s),
+                CropType.SugarBeets)
 
     def test_summer_fallow(self):
         self.assertEqual(
@@ -1036,9 +1042,10 @@ class TestCropTypeConverter(unittest.TestCase):
             CropType.SummerFallow)
 
     def test_sunflower(self):
-        self.assertEqual(
-            convert_crop_type_name(name="sunflower"),
-            CropType.Sunflower)
+        for s in ("sunflower", "sunfls"):
+            self.assertEqual(
+                convert_crop_type_name(name=s),
+                CropType.Sunflower)
 
     def test_sunflower_seed(self):
         for s in ("sunflowerseed", "sunflowerseeds"):
@@ -1052,9 +1059,10 @@ class TestCropTypeConverter(unittest.TestCase):
             CropType.TamePasture)
 
     def test_timothy_hay(self):
-        self.assertEqual(
-            convert_crop_type_name(name="timothyhay"),
-            CropType.TimothyHay)
+        for s in ("timothyhay", 'ohayfd'):
+            self.assertEqual(
+                convert_crop_type_name(name=s),
+                CropType.TimothyHay)
 
     def test_tobacco(self):
         self.assertEqual(
@@ -1067,9 +1075,10 @@ class TestCropTypeConverter(unittest.TestCase):
             CropType.TreeFruitAndNuts)
 
     def test_triticale(self):
-        self.assertEqual(
-            convert_crop_type_name(name="triticale"),
-            CropType.Triticale)
+        for s in ("triticale", 'tritcl'):
+            self.assertEqual(
+                convert_crop_type_name(name=s),
+                CropType.Triticale)
 
     def test_tubers(self):
         self.assertEqual(
@@ -1102,7 +1111,7 @@ class TestCropTypeConverter(unittest.TestCase):
             CropType.WheatGan)
 
     def test_wheat(self):
-        for s in ("wheat", "wheatall"):
+        for s in ("wheat", "wheatall", "whtall"):
             self.assertEqual(
                 convert_crop_type_name(name=s),
                 CropType.Wheat)
@@ -1113,7 +1122,7 @@ class TestCropTypeConverter(unittest.TestCase):
             CropType.WheatRye)
 
     def test_winter_wheat(self):
-        for s in ("winterwheat", "wheatwinter", "wheatwinterremaining"):
+        for s in ("winterwheat", "wheatwinter", "wheatwinterremaining", "whtwint"):
             self.assertEqual(
                 convert_crop_type_name(name=s),
                 CropType.WinterWheat)

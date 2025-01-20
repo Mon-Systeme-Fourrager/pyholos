@@ -758,15 +758,15 @@ def convert_crop_type_name(name: str) -> CropType:
             return CropType.GrassSilage
         case "beans":
             return CropType.Beans
-        case "beansdryfield" | "dryfieldbeans":
+        case "beansdryfield" | "dryfieldbeans" | "dfbns":
             return CropType.BeansDryField
         case "otherdryfieldbeans":
             return CropType.OtherDryFieldBeans
         case "berriesgrapes":
             return CropType.BerriesAndGrapes
-        case "buckwheat":
+        case "buckwheat" | "bucwht":
             return CropType.Buckwheat
-        case "canaryseed" | "canaryseeds":
+        case "canaryseed" | "canaryseeds" | "canary":
             return CropType.CanarySeed
         case "canola":
             return CropType.Canola
@@ -784,23 +784,23 @@ def convert_crop_type_name(name: str) -> CropType:
             return CropType.DryBean
         case "drypeas" | "drypea" | "peasdry":
             return CropType.DryPeas
-        case "dryfieldpeas":
+        case "dryfieldpeas" | "dfpeas":
             return CropType.DryFieldPeas
         case "dill":
             return CropType.Dill
-        case "durum" | "wheatdurum" | "durumwheat":
+        case "durum" | "wheatdurum" | "durumwheat" | "whtdur":
             return CropType.Durum
         case "fababean":
             return CropType.FabaBeans
         case "fallow":
             return CropType.Fallow
-        case "fallrye" | "ryefallremaining":
+        case "fallrye" | "ryefallremaining" | "ryefal":
             return CropType.FallRye
         case "fieldpea":
             return CropType.FieldPeas
         case "Flaxseed":
             return CropType.Flax
-        case "flaxseed":
+        case "flaxseed" | "flaxsd":
             return CropType.FlaxSeed
         case "freshcornsweet":
             return CropType.FreshCornSweet
@@ -812,7 +812,7 @@ def convert_crop_type_name(name: str) -> CropType:
             return CropType.FodderCorn
         case "forageforseed":
             return CropType.ForageForSeed
-        case "graincorn" | "cornforgrain":
+        case "graincorn" | "cornforgrain" | "corngr":
             return CropType.GrainCorn
         case "grains":
             return CropType.Grains
@@ -862,11 +862,11 @@ def convert_crop_type_name(name: str) -> CropType:
             return CropType.Millet
         case "mint":
             return CropType.Mint
-        case "mixedgrains" | "mixedgrain":
+        case "mixedgrains" | "mixedgrain" | "mxdgrn":
             return CropType.MixedGrains
         case "mustard":
             return CropType.Mustard
-        case "mustardseed":
+        case "mustardseed" | "mustsd":
             return CropType.MustardSeed
         case "monarda":
             return CropType.Monarda
@@ -896,23 +896,23 @@ def convert_crop_type_name(name: str) -> CropType:
             return CropType.PerennialForages
         case "perennialgrasses":
             return CropType.PerennialGrasses
-        case "potatoes" | "potato":
+        case "potatoes" | "potato" | "potats":
             return CropType.Potatoes
         case "rice":
             return CropType.Rice
         case "rye" | "ryeall":
             return CropType.Rye
-        case "safflower":
+        case "safflower" | "safflwr":
             return CropType.Safflower
         case "seedpotato":
             return CropType.SeedPotato
-        case "silagecorn" | "cornsilage":
+        case "silagecorn" | "cornsilage" | "cornslg":
             return CropType.SilageCorn
         case "smallfruit":
             return CropType.SmallFruit
         case "softwheat":
             return CropType.SoftWheat
-        case "soybeans" | "soybean":
+        case "soybeans" | "soybean" | "soybns":
             return CropType.Soybeans
         case "sorghum":
             return CropType.Sorghum
@@ -920,27 +920,27 @@ def convert_crop_type_name(name: str) -> CropType:
             return CropType.SorghumSudanGrass
         case "smallgraincereals":
             return CropType.SmallGrainCereals
-        case "springwheat" | "wheatspring":
+        case "springwheat" | "wheatspring" | "whtspg":
             return CropType.SpringWheat
-        case "springrye" | "ryespring":
+        case "springrye" | "ryespring" | "ryespg":
             return CropType.SpringRye
-        case "sugarbeets":
+        case "sugarbeets" | "sugarb":
             return CropType.SugarBeets
         case "summerfallow":
             return CropType.SummerFallow
-        case "sunflower":
+        case "sunflower" | "sunfls":
             return CropType.Sunflower
         case "sunflowerseed" | "sunflowerseeds":
             return CropType.SunflowerSeed
         case "tamepasture":
             return CropType.TamePasture
-        case "timothyhay":
+        case "timothyhay" | "ohayfd":
             return CropType.TimothyHay
         case "tobacco":
             return CropType.Tobacco
         case "totaltreefruitsnuts":
             return CropType.TreeFruitAndNuts
-        case "triticale":
+        case "triticale" | "tritcl":
             return CropType.Triticale
         case "tubers":
             return CropType.Tubers
@@ -954,11 +954,11 @@ def convert_crop_type_name(name: str) -> CropType:
             return CropType.WheatBolinder
         case "wheatgan":
             return CropType.WheatGan
-        case "wheat" | "wheatall":
+        case "wheat" | "wheatall" | "whtall":
             return CropType.Wheat
         case "wheatrye":
             return CropType.WheatRye
-        case "winterwheat" | "wheatwinter" | "wheatwinterremaining":
+        case "winterwheat" | "wheatwinter" | "wheatwinterremaining" | "whtwint":
             return CropType.WinterWheat
         case "winterweeds":
             return CropType.WinterWeeds
