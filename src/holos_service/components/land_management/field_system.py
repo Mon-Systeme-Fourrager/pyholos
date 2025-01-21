@@ -1,4 +1,5 @@
 from holos_service.common import HolosVar
+from holos_service.defaults import Defaults
 from holos_service.components.land_management.carbon.relative_biomass_information import RelativeBiomassInformationData
 from holos_service.components.land_management.common import TillageType, HarvestMethod, IrrigationType
 from holos_service.components.land_management.crop import get_nitrogen_fixation, CropType
@@ -169,4 +170,58 @@ class LandManagementBase:
                 moisture_content_of_crop_percentage = 12
 
         self.moisture_content_of_crop_percentage.value = moisture_content_of_crop_percentage
+
+    def set_percentage_returns(self):
+        """
+
+        Returns:
+
+        """
+        percentage_of_product_yield_returned_to_soil = 0
+        percentage_of_straw_returned_to_soil = 0
+        percentage_of_roots_returned_to_soil = 0
+
+        # Initialize the view item by checking the crop type
+        crop_type: CropType = self.crop_type.value
+        if crop_type.is_perennial():
+            percentage_of_product_yield_returned_to_soil = Defaults.PercentageOfProductReturnedToSoilForPerennials
+            percentage_of_straw_returned_to_soil = 0
+            percentage_of_roots_returned_to_soil = Defaults.PercentageOfRootsReturnedToSoilForPerennials
+        elif crop_type.is_annual():
+            percentage_of_product_yield_returned_to_soil = Defaults.PercentageOfProductReturnedToSoilForAnnuals
+            percentage_of_straw_returned_to_soil = Defaults.PercentageOfStrawReturnedToSoilForAnnuals
+            percentage_of_roots_returned_to_soil = Defaults.PercentageOfRootsReturnedToSoilForAnnuals
+
+        if crop_type.is_root_crop():
+            percentage_of_product_yield_returned_to_soil = Defaults.PercentageOfProductReturnedToSoilForRootCrops
+            percentage_of_straw_returned_to_soil = Defaults.PercentageOfStrawReturnedToSoilForRootCrops
+
+        if crop_type.is_cover_crop():
+            percentage_of_product_yield_returned_to_soil = 100
+            percentage_of_straw_returned_to_soil = 100
+            percentage_of_roots_returned_to_soil = 100
+
+        # Initialize the view item by checking the harvest method (override any setting based on crop type)
+        harvest_method = self.harvest_method.value
+        if any([
+            crop_type.is_silage_crop(),
+            harvest_method == HarvestMethod.Silage
+        ]):
+            percentage_of_product_yield_returned_to_soil = 2
+            percentage_of_straw_returned_to_soil = 0
+            percentage_of_roots_returned_to_soil = 100
+        elif harvest_method == HarvestMethod.Swathing:
+            percentage_of_product_yield_returned_to_soil = 30
+            percentage_of_straw_returned_to_soil = 0
+            percentage_of_roots_returned_to_soil = 100
+        elif harvest_method == HarvestMethod.GreenManure:
+            percentage_of_product_yield_returned_to_soil = 100
+            percentage_of_straw_returned_to_soil = 0
+            percentage_of_roots_returned_to_soil = 100
+
+        self.percentage_of_product_yield_returned_to_soil.value = percentage_of_product_yield_returned_to_soil
+        self.percentage_of_straw_returned_to_soil.value = percentage_of_straw_returned_to_soil
+        self.percentage_of_roots_returned_to_soil.value = percentage_of_roots_returned_to_soil
+
+        pass
 
