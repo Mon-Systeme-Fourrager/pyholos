@@ -147,3 +147,26 @@ class LandManagementBase:
             https://github.com/holos-aafc/Holos/blob/23a53f1fe6796145cc3ac43c005dbcc560421deb/H.Core/Models/LandManagement/Fields/CropViewItem.cs#L1289
         """
         self.irrigation_type.value = IrrigationType.Irrigated if self.amount_of_irrigation.value > 0 else IrrigationType.RainFed
+
+    def set_moisture_content(self):
+        if any([
+            self.harvest_method == HarvestMethod.GreenManure,
+            self.harvest_method == HarvestMethod.Silage,
+            self.harvest_method == HarvestMethod.Swathing,
+            self.crop_type.value.is_silage_crop()
+        ]):
+            """Sets the moisture percentage of the harvested biomass.
+            
+            Holos source code:
+                https://github.com/holos-aafc/Holos/blob/23a53f1fe6796145cc3ac43c005dbcc560421deb/H.Core/Services/Initialization/Crops/CropInitializationService.Water.cs#L60
+            """
+            moisture_content_of_crop_percentage = 65
+
+        else:
+            if self.moisture_content_of_crop.value != 0:
+                moisture_content_of_crop_percentage = self.moisture_content_of_crop.value
+            else:
+                moisture_content_of_crop_percentage = 12
+
+        self.moisture_content_of_crop_percentage.value = moisture_content_of_crop_percentage
+
