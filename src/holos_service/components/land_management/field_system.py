@@ -36,8 +36,13 @@ class LandManagementBase:
         self.crop_yield = HolosVar(name='Yield')
         self.harvest_method = HolosVar(name='Harvest Method')
         self.nitrogen_fertilizer_rate = HolosVar(name='Nitrogen Fertilizer Rate')
-        self.phosphorous_fertilizer_rate = HolosVar(name='Phosphorous Fertilizer Rate')
-        self.is_irrigated = HolosVar(name='Is Irrigated')
+
+        self.phosphorous_fertilizer_rate = HolosVar(name='Phosphorous Fertilizer Rate', value=0)
+        """Not used/implemented yet in Holos v.4. Future version will utilize"""
+
+        self.is_irrigated = HolosVar(name='Is Irrigated', value="No")
+        """Not used/implemented yet in Holos v.4. Future version will utilize"""
+
         self.irrigation_type = HolosVar(name='Irrigation Type')
         self.amount_of_irrigation = HolosVar(name='Amount Of Irrigation')
         self.moisture_content_of_crop = HolosVar(name='Moisture Content Of Crop')
