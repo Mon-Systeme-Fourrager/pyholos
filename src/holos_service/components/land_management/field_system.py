@@ -127,7 +127,7 @@ class LandManagementBase:
         self.herbicide_energy = HolosVar(name='Herbicide Energy')
         self.fertilizer_blend = HolosVar(name='Fertilizer Blend')
 
-    def get_default_harvest_method(self):
+    def get_default_harvest_method(self) -> HarvestMethod:
         """Returns default harvest method based on the cultivated crop.
 
         Returns:
