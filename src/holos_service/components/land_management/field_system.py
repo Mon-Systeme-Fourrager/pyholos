@@ -1,5 +1,7 @@
 from holos_service.common import HolosVar
-from holos_service.components.land_management.common import HarvestMethod
+from holos_service.components.land_management.carbon.relative_biomass_information import RelativeBiomassInformationData
+from holos_service.components.land_management.common import TillageType, HarvestMethod, IrrigationType
+from holos_service.components.land_management.crop import get_nitrogen_fixation, CropType
 from holos_service.core_constants import CoreConstants
 
 
@@ -137,3 +139,11 @@ class LandManagementBase:
             https://github.com/holos-aafc/Holos/blob/b183dab99d211158d1fed9da5370ce599ac7c914/H.Core/Services/Initialization/Crops/CropInitializationService.Harvest.cs#L19
         """
         return HarvestMethod.Silage if self.crop_type.value.is_silage_crop() else HarvestMethod.CashCrop
+
+    def set_irrigation_type(self):
+        """Sets the irrigation type, irrigated or rainfed, based on the presence or absence of irrigation amount, resp.
+
+        Holos source code:
+            https://github.com/holos-aafc/Holos/blob/23a53f1fe6796145cc3ac43c005dbcc560421deb/H.Core/Models/LandManagement/Fields/CropViewItem.cs#L1289
+        """
+        self.irrigation_type.value = IrrigationType.Irrigated if self.amount_of_irrigation.value > 0 else IrrigationType.RainFed

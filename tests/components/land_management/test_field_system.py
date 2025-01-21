@@ -1,7 +1,7 @@
 import unittest
 
 from holos_service.components.land_management import field_system
-from holos_service.components.land_management.common import HarvestMethod
+from holos_service.components.land_management.common import HarvestMethod, IrrigationType
 from holos_service.components.land_management.crop import CropType
 
 
@@ -34,6 +34,17 @@ class TestLandManagementBase(unittest.TestCase):
                 self.assertEqual(
                     HarvestMethod.CashCrop,
                     self.land_management_base.get_default_harvest_method())
+
+    def test_set_irrigation_type(self):
+        for irrigation_amount, expected_result in [
+            (0, IrrigationType.RainFed),
+            (100, IrrigationType.Irrigated),
+        ]:
+            self.land_management_base.amount_of_irrigation.value = irrigation_amount
+            self.land_management_base.set_irrigation_type()
+            self.assertEqual(
+                expected_result,
+                self.land_management_base.irrigation_type.value)
 
 
 if __name__ == '__main__':
