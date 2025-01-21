@@ -4,6 +4,7 @@ from itertools import product
 from holos_service.components.land_management import field_system
 from holos_service.components.land_management.common import HarvestMethod, IrrigationType
 from holos_service.components.land_management.crop import CropType
+from tests.helpers.utils import CropTypePerCategory
 
 
 class TestLandManagementBase(unittest.TestCase):
@@ -22,7 +23,7 @@ class TestLandManagementBase(unittest.TestCase):
         self.land_management_base = field_system.LandManagementBase()
 
     def test_get_default_harvest_method_for_silage_crops(self):
-        for crop_type in self.silage_crops:
+        for crop_type in CropTypePerCategory.silage_crop:
             self.land_management_base.crop_type.value = crop_type
             self.assertEqual(
                 HarvestMethod.Silage,
@@ -30,7 +31,7 @@ class TestLandManagementBase(unittest.TestCase):
 
     def test_get_default_harvest_method_for_non_silage_crops(self):
         for crop_type in CropType:
-            if crop_type not in self.silage_crops:
+            if crop_type not in CropTypePerCategory.silage_crop:
                 self.land_management_base.crop_type.value = crop_type
                 self.assertEqual(
                     HarvestMethod.CashCrop,
@@ -48,7 +49,7 @@ class TestLandManagementBase(unittest.TestCase):
                 self.land_management_base.irrigation_type.value)
 
     def test_set_moisture_content_fresh_crop_harvest(self):
-        for crop, harvest_method in product(self.silage_crops, [
+        for crop, harvest_method in product(CropTypePerCategory.silage_crop, [
             HarvestMethod.GreenManure,
             HarvestMethod.Silage,
             HarvestMethod.Swathing
@@ -64,7 +65,7 @@ class TestLandManagementBase(unittest.TestCase):
         self.land_management_base.moisture_content_of_crop.value = 15
 
         for crop in CropType:
-            if crop not in self.silage_crops:
+            if crop not in CropTypePerCategory.silage_crop:
                 for harvest_method in HarvestMethod:
                     if harvest_method not in [
                         HarvestMethod.GreenManure,
@@ -81,7 +82,7 @@ class TestLandManagementBase(unittest.TestCase):
     def test_set_moisture_content_default_value(self):
         self.land_management_base.moisture_content_of_crop.value = 0
         for crop in CropType:
-            if crop not in self.silage_crops:
+            if crop not in CropTypePerCategory.silage_crop:
                 for harvest_method in HarvestMethod:
                     if harvest_method not in [
                         HarvestMethod.GreenManure,
