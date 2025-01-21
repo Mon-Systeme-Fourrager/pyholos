@@ -133,5 +133,25 @@ class TestConvertProvinceName(unittest.TestCase):
             CanadianProvince.Alberta)
 
 
+class TestCalcDefaultIrrigationAmount(unittest.TestCase):
+    def test_values_for_water_deficit_conditions(self):
+        precipitation = 500
+        for water_deficit in range(1, 300, 10):
+            self.assertEqual(
+                water_deficit,
+                common.calc_default_irrigation_amount(
+                    precipitation=precipitation,
+                    evapotranspiration=precipitation + water_deficit))
+
+    def test_values_for_no_water_deficit_conditions(self):
+        precipitation = 500
+        for water_excess in range(1, 300, 10):
+            self.assertEqual(
+                0,
+                common.calc_default_irrigation_amount(
+                    precipitation=precipitation,
+                    evapotranspiration=precipitation - water_excess))
+
+
 if __name__ == '__main__':
     unittest.main()

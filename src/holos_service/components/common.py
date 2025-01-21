@@ -151,3 +151,20 @@ def convert_province_name(name: str) -> CanadianProvince:
         case _:
             # Trace.TraceError($"{nameof(ProvinceStringConverter)}.{nameof(ProvinceStringConverter.Convert)}: unknown input '{input}'. Returning default value of {Province.Alberta.GetDescription()}");
             return CanadianProvince.Alberta
+
+
+def calc_default_irrigation_amount(
+        precipitation: float,
+        evapotranspiration: float
+) -> float:
+    """Calculates the default irrigation amount as the gap between water offer and demand.
+
+    Args:
+        precipitation: (mm) precipitation amount
+        evapotranspiration: (mm) evapotranspiration amount
+
+    Returns:
+        (mm) default irrigation amount
+
+    """
+    return max(0., evapotranspiration - precipitation)
