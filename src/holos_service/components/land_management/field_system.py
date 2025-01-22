@@ -62,7 +62,10 @@ class LandManagementBase:
         self.manure_state_type = HolosVar(name='Manure State Type')
         self.manure_location_source_type = HolosVar(name='Manure Location Source Type')
         self.under_sown_crops_used = HolosVar(name='Under Sown Crops Used')
-        self.crop_is_grazed = HolosVar(name='Crop Is Grazed')
+
+        self.crop_is_grazed = HolosVar(name='Crop Is Grazed', value="False")
+        """Not used/implemented yet in Holos v.4. Future version will utilize"""
+
         self.field_system_component_guid = HolosVar(name='Field System Component Guid')
         self.time_period_category_string = HolosVar(name='Time Period Category String')
         self.climate_parameter = HolosVar(name='Climate Parameter')
