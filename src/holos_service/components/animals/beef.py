@@ -276,7 +276,7 @@ class Beef(BeefBase):
         self.number_of_animals.value = number_of_animals
         self.production_stage.value = production_stage.value
         self.number_of_young_animals.value = number_of_young_animals
-        self.animals_are_milk_fed_only.value = str(is_milk_fed_only).upper()
+        self.animals_are_milk_fed_only.value = str(is_milk_fed_only)
 
         self.get_animal_coefficient_data()
         self.maintenance_coefficient.value = self._animal_coefficient_data.baseline_maintenance_coefficient
