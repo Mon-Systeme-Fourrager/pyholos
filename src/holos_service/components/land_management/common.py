@@ -30,3 +30,20 @@ class HarvestMethod(AutoNameEnum):
     CashCrop = auto()
     StubbleGrazing = auto()
     NONE = auto()  # Used for fallow, etc.
+
+
+class ManureApplicationTypes(AutoNameEnum):
+    """
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/c06f6619907fba89c3ddc29b4239a903a8c20a7a/H.Core/Enumerations/ManureApplicationTypes.cs#L9
+    """
+    NotSelected = auto()
+    OptionA = auto()
+    OptionB = auto()
+    OptionC = auto()
+    TilledLandSolidSpread = auto()  # Also known as 'Solid spread (intensive tillage)
+    UntilledLandSolidSpread = auto()  # Also known as 'Solid spread (no tillage or reduced tillage)
+    SlurryBroadcasting = auto()
+    DropHoseBanding = auto()
+    ShallowInjection = auto()
+    DeepInjection = auto()
