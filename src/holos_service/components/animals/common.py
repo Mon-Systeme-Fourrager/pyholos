@@ -473,6 +473,13 @@ class ManureAnimalSourceTypes(AutoNameEnum):
     OtherLivestockManure = auto()
 
 
+class ManureLocationSourceType(AutoNameEnum):
+    NotSelected = auto()
+    Livestock = auto()
+    Imported = auto()
+    OnFarmAnaerobicDigestor = auto()
+
+
 class Milk:
     def __init__(
             self,
