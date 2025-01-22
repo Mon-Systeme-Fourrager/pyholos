@@ -5,7 +5,7 @@
 # The value of "DefaultFinalWeight" was modified from 260 kg to 90 kg, according to the default values set in the GUI.
 #
 AnimalType,BaselineMaintenanceCoefficient,GainCoefficient,DefaultInitialWeight,DefaultFinalWeight
-BeefCalf,-100000.0,-100000.0,39,90
+BeefCalf,-100000.0,-100000.0,39,260
 BeefCowLactating,0.386,0.8,610,610
 BeefCowDry,0.322,0.8,610,610
 BeefBulls,0.37,1.2,900,900

@@ -196,8 +196,7 @@ class TestBeefCowCalfNoneRegression(unittest.TestCase):
                 year=2024,
                 manure_state_type=manure_state_type,
                 **self.manure_emission_kwargs),
-            bedding_material_type=common.BeddingMaterialType.straw,
-            end_weight=90
+            bedding_material_type=common.BeddingMaterialType.straw
         )
         self.run_test(
             group_name="Calves",
