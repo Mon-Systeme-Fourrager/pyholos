@@ -53,5 +53,42 @@ class TestSetSoilProperties(unittest.TestCase):
                     longitude=example_inputs['Longitude']),
                 example_data['outputs'])
 
+
+class TestSoilFunctionalCategory(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.soil_functional_categories = []
+    def test_get_simplified_soil_category_brown(self):
+        for soil_functional_category in [
+            soil.SoilFunctionalCategory.Brown,
+            soil.SoilFunctionalCategory.DarkBrown,
+            soil.SoilFunctionalCategory.BrownChernozem,
+            soil.SoilFunctionalCategory.DarkBrownChernozem
+        ]:
+            self.assertEqual(
+                soil.SoilFunctionalCategory.Brown,
+                soil_functional_category.get_simplified_soil_category())
+            self.soil_functional_categories.append(soil_functional_category)
+
+    def test_get_simplified_soil_category_black(self):
+        for soil_functional_category in [
+            soil.SoilFunctionalCategory.Black,
+            soil.SoilFunctionalCategory.BlackGrayChernozem
+        ]:
+            self.assertEqual(
+                soil.SoilFunctionalCategory.Black,
+                soil_functional_category.get_simplified_soil_category())
+            self.soil_functional_categories.append(soil_functional_category)
+
+
+    def test_z_get_simplified_soil_category_default(self):
+        for soil_functional_category in soil.SoilFunctionalCategory:
+            if soil_functional_category not in self.soil_functional_categories:
+                self.assertEqual(
+                    soil_functional_category,
+                    soil_functional_category.get_simplified_soil_category())
+
+
+
 if __name__ == '__main__':
     unittest.main()

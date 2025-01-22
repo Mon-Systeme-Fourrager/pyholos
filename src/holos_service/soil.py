@@ -32,6 +32,25 @@ class SoilFunctionalCategory(AutoNameEnum):
     Grey = auto()
     DarkGrey = auto()
 
+    def get_simplified_soil_category(self):
+        if self in [
+            self.__class__.Brown,
+            self.__class__.DarkBrown,
+            self.__class__.BrownChernozem,
+            self.__class__.DarkBrownChernozem
+        ]:
+            res = self.__class__.Brown
+        elif self in [
+            self.__class__.Black,
+            self.__class__.BlackGrayChernozem
+        ]:
+            res = SoilFunctionalCategory.Black
+        else:
+            # Other types cannot be reduced/simplified (i.e. Organic, Eastern Canada, etc.)
+            res = self
+
+        return res
+
 
 class SoilGreatGroup:
     def __init__(
