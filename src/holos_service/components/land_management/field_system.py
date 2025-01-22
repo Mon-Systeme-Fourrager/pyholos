@@ -1,7 +1,8 @@
 from holos_service.common import HolosVar
 from holos_service.defaults import Defaults
 from holos_service.components.land_management.carbon.relative_biomass_information import RelativeBiomassInformationData
-from holos_service.components.land_management.common import TillageType, HarvestMethod, IrrigationType
+from holos_service.components.land_management.common import (
+    TillageType, HarvestMethod, IrrigationType, TimePeriodCategory)
 from holos_service.components.land_management.crop import get_nitrogen_fixation, CropType
 from holos_service.core_constants import CoreConstants
 
@@ -67,7 +68,10 @@ class LandManagementBase:
         """Not used/implemented yet in Holos v.4. Future version will utilize"""
 
         self.field_system_component_guid = HolosVar(name='Field System Component Guid')
-        self.time_period_category_string = HolosVar(name='Time Period Category String')
+
+        self.time_period_category = HolosVar(name='Time Period Category String', value=TimePeriodCategory.Current)
+        """Used to indicate time period in field history. Leave as "Current" if not sure"""
+
         self.climate_parameter = HolosVar(name='Climate Parameter')
         self.tillage_factor = HolosVar(name='Tillage Factor')
         self.management_factor = HolosVar(name='Management Factor')
