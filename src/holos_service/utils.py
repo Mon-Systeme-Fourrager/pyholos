@@ -34,3 +34,7 @@ def convert_camel_case_to_space_delimited(s: str) -> str:
 
 def concat_lists(*args) -> list:
     return [v for l in args for v in l]
+
+
+def keep_alphabetical_characters(name: str) -> str:
+    return ''.join(s for s in name if s.isalpha()).lower()
