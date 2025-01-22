@@ -685,36 +685,6 @@ class Diet:
         return res
 
 
-# class HousingSystem:
-#     def __init__(
-#             self,
-#             bedding_rate: float,
-#             total_carbon_kilograms_dry_matter_for_bedding: float
-#     ):
-#         """
-#
-#         Args:
-#             bedding_rate: (kg head-1 day-1) rate of bedding material added to the housing system
-#             total_carbon_kilograms_dry_matter_for_bedding: (kg(C) kg(DM)-1)
-#
-#         """
-#         self.user_defined_bedding_rate = bedding_rate
-#         self.total_carbon_kilograms_dry_matter_for_bedding = total_carbon_kilograms_dry_matter_for_bedding * bedding_rate
-
-
-# class Table_30_Default_Bedding_Material_Composition_Data(EnumGeneric):
-#     ComponentCategory = "ComponentCategory { get; set; }"
-#     AnimalType = " AnimalType { get; set; }"
-#     ComponentCategoryString: str = "ComponentCategory.GetDescription(); }"
-#     BeddingMaterialType = "BeddingMaterial { get; set; }"
-#     BeddingMaterialString: str = "BeddingMaterial.GetDescription()"
-#     MoistureContent: float  # %
-#     TotalNitrogenKilogramsDryMatter: float  # %(kg N/kg DM)
-#     TotalCarbonKilogramsDryMatter: float  # (kg C/kg DM)
-#     TotalPhosphorusKilogramsDryMatter: double
-#     CarbonToNitrogenRatio: float  # (unitless)
-
-
 class HousingType(EnumGeneric):
     not_selected: str = "NotSelected"
     confined_no_barn: str = "ConfinedNoBarn"
