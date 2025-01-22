@@ -460,6 +460,10 @@ def convert_animal_type_name(name: str) -> AnimalType:
 
 
 class ManureAnimalSourceTypes(AutoNameEnum):
+    """
+    Holos source type:
+        https://github.com/holos-aafc/Holos/blob/c06f6619907fba89c3ddc29b4239a903a8c20a7a/H.Core/Enumerations/ManureAnimalSourceTypes.cs#L9
+    """
     NotSelected = auto()
     BeefManure = auto()
     DairyManure = auto()
