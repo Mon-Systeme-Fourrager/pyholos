@@ -7,7 +7,7 @@ from holos_service.config import PathsHolosResources
 from holos_service.core_constants import CoreConstants
 
 
-class HolosTable:
+class _HolosTable:
     def __init__(
             self,
             name: str,
@@ -38,7 +38,7 @@ class HolosTable:
 
 
 def set_table_16():
-    table_16 = HolosTable(
+    table_16 = _HolosTable(
         name='Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider',
         data=[
             # Beef Cattle Data Sources :
@@ -207,7 +207,7 @@ def set_table_30():
                 and wheat straw (9.33%); the moisture content for sawdust is the value for dried sawdust.
 
     """
-    table_30 = HolosTable(
+    table_30 = _HolosTable(
         name='Table_30_Default_Bedding_Material_Composition_Provider',
         data=[
             # Beef
