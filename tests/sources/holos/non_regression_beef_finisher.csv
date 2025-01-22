@@ -3,6 +3,7 @@
 # The value of "Start Weight" was changed from 350 to 300 kg, in agreement with the source code of Holos in Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider
 # The value of "End Weight" was changed from 554 to 580 kg, in agreement with the source code of Holos in Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider
 # The value of "Average Daily Gain" was updated correspondingly from 1.2 to 1.6471 kg/day
+# The "Methane Conversion Factor Of Diet" value was set to 0.065 (which is calculated based on total digestible nutrient) instead of 0.035 (which is a hard-coded value for LabelBarleyGrainBasedDiet in Holos).
 #
 # For Steers:
 # ------------
