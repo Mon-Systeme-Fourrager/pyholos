@@ -1,6 +1,6 @@
 from enum import auto
 
-from holos_service.utils import AutoNameEnum
+from holos_service.utils import AutoNameEnum, keep_alphabetical_characters
 
 
 class IrrigationType(AutoNameEnum):
@@ -17,6 +17,20 @@ class TillageType(AutoNameEnum):
     Reduced = auto()
     NoTill = auto()
     Intensive = auto()
+
+
+def convert_tillage_type_name(
+        name: str
+) -> TillageType:
+    match keep_alphabetical_characters(name=name):
+        case "notill" | "nt":
+            return TillageType.NoTill
+        case "reduced" | "rt":
+            return TillageType.Reduced
+        case "intensive" | "it" | "conventional":
+            return TillageType.Intensive
+        case _:
+            pass
 
 
 class HarvestMethod(AutoNameEnum):
