@@ -1,3 +1,5 @@
+from enum import auto
+
 from pandas import DataFrame
 
 from holos_service import utils
@@ -8,7 +10,7 @@ from holos_service.config import PathsHolosResources
 from holos_service.defaults import Defaults
 from holos_service.django_stuff import CanadianProvince
 from holos_service.soil import SoilTexture
-from holos_service.utils import read_holos_resource_table
+from holos_service.utils import read_holos_resource_table, AutoNameEnum
 
 
 class DietAdditiveType(EnumGeneric):
@@ -457,14 +459,14 @@ def convert_animal_type_name(name: str) -> AnimalType:
             return AnimalType.beef_backgrounder
 
 
-class ManureAnimalSourceTypes(EnumGeneric):
-    not_selected: str = "NotSelected"
-    beef_manure: str = "BeefManure"
-    dairy_manure: str = "DairyManure"
-    swine_manure: str = "SwineManure"
-    poultry_manure: str = "PoultryManure"
-    sheep_manure: str = "SheepManure"
-    other_livestock_manure: str = "OtherLivestockManure"
+class ManureAnimalSourceTypes(AutoNameEnum):
+    NotSelected = auto()
+    BeefManure = auto()
+    DairyManure = auto()
+    SwineManure = auto()
+    PoultryManure = auto()
+    SheepManure = auto()
+    OtherLivestockManure = auto()
 
 
 class Milk:
