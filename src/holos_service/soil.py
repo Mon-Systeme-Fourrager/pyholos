@@ -3,7 +3,7 @@ from enum import StrEnum, unique, auto
 from holos_service import django_stuff
 from holos_service.common import Region, get_region
 from holos_service.config import PathsSlcData
-from holos_service.utils import AutoNameEnum
+from holos_service.utils import AutoNameEnum, keep_alphabetical_characters
 
 
 @unique
@@ -27,7 +27,7 @@ class SoilFunctionalCategory(AutoNameEnum):
     BlackGrayChernozem = auto()
     Organic = auto()
     EasternCanada = auto()
-    # All = auto()
+    All = auto()
     Unknown = auto()
     Grey = auto()
     DarkGrey = auto()
@@ -50,6 +50,33 @@ class SoilFunctionalCategory(AutoNameEnum):
             res = self
 
         return res
+
+
+def convert_soil_functional_category_name(
+        name: str
+) -> SoilFunctionalCategory:
+    match keep_alphabetical_characters(name=name):
+        case "brownchernozem":
+            return SoilFunctionalCategory.BrownChernozem
+        case "darkbrownchernozem":
+            return SoilFunctionalCategory.DarkBrownChernozem
+        case "blackgraychernozem":
+            return SoilFunctionalCategory.BlackGrayChernozem
+        case "all":
+            return SoilFunctionalCategory.All
+        case "brown":
+            return SoilFunctionalCategory.Brown
+        case "darkbrown":
+            return SoilFunctionalCategory.DarkBrown
+        case "black":
+            return SoilFunctionalCategory.Black
+        case "organic":
+            return SoilFunctionalCategory.Organic
+        case "easterncanada" | "east":
+            return SoilFunctionalCategory.EasternCanada
+        case _:
+            # Trace.TraceError($"{nameof(SoilFunctionalCategoryStringConverter)}: Soil functional category '{input}' not mapped, returning default value.")
+            return SoilFunctionalCategory.NotApplicable
 
 
 class SoilGreatGroup:
