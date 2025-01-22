@@ -29,7 +29,7 @@ class TestBeef(unittest.TestCase):
             self.beef.component_type.value)
 
 
-class TestBeefCowCalfNoneRegression(unittest.TestCase):
+class TestBeefCowCalfNonRegression(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.non_regression_data = read_holos_resource_table(
