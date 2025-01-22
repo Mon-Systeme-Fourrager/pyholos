@@ -47,3 +47,13 @@ class ManureApplicationTypes(AutoNameEnum):
     DropHoseBanding = auto()
     ShallowInjection = auto()
     DeepInjection = auto()
+
+
+class TimePeriodCategory(AutoNameEnum):
+    """
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/c06f6619907fba89c3ddc29b4239a903a8c20a7a/H.Core/Enumerations/TimePeriodCategory.cs#L3C4-L7C16
+    """
+    Past = auto()
+    Current = auto()
+    Future = auto()
