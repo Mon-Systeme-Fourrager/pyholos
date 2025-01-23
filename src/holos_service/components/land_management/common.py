@@ -1,8 +1,7 @@
+from enum import auto
 from pathlib import Path
-from enum import auto, Enum
 
-from pandas import MultiIndex
-from pandas import DataFrame
+from pandas import DataFrame, MultiIndex
 
 from holos_service.common import get_region, Region
 from holos_service.components.common import convert_province_name
@@ -81,6 +80,36 @@ class TimePeriodCategory(AutoNameEnum):
     Past = auto()
     Current = auto()
     Future = auto()
+
+
+class FertilizerBlends(AutoNameEnum):
+    """
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/771f74699faafb12e5efe53157b03e0d29579f4b/H.Core/Enumerations/FertilizerBlends.cs#L6
+    """
+    Urea = auto()
+    Ammonia = auto()
+    UreaAmmoniumNitrate = auto()
+    AmmoniumNitrate = auto()
+    CalciumAmmoniumNitrate = auto()
+    AmmoniumSulphate = auto()
+    MesS15 = auto()
+    MonoAmmoniumPhosphate = auto()
+    DiAmmoniumPhosphate = auto()
+    TripleSuperPhosphate = auto()
+    Potash = auto()
+    Npk = auto()
+    CalciumNitrate = auto()
+    AmmoniumNitroSulphate = auto()
+    Custom = auto()  # Custom synthetic (there is also a custom organic)
+    Lime = auto()
+    CustomOrganic = auto()  # Custom organic
+    AmmoniumNitratePrilled = auto()
+    AmmoniumNitrateGranulated = auto()
+    SuperPhosphate = auto()
+    NpkMixedAcid = auto()
+    NpkNitrophosphate = auto()
+    PotassiumSulphate = auto()
 
 
 def read_energy_table(path_table: Path) -> DataFrame:
