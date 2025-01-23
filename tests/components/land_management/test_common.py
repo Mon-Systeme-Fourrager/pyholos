@@ -1,6 +1,10 @@
 import unittest
 
 from holos_service.components.land_management import common
+from holos_service.components.land_management.common import TillageType
+from holos_service.components.land_management.crop import CropType
+from holos_service.django_stuff import CanadianProvince
+from holos_service.soil import SoilFunctionalCategory
 
 
 class TestConvertTillageTypeName(unittest.TestCase):
@@ -27,6 +31,34 @@ class TestConvertTillageTypeName(unittest.TestCase):
             self.assertEqual(
                 None,
                 common.convert_tillage_type_name(name=s))
+
+
+class TestGetFuelEnergyEstimate(unittest.TestCase):
+    def test_existing_values(self):
+        self.assertEqual(
+            1.42,
+            common.get_fuel_energy_estimate(
+                province=CanadianProvince.Saskatchewan,
+                soil_category=SoilFunctionalCategory.BrownChernozem,
+                tillage_type=TillageType.NoTill,
+                crop_type=CropType.SunflowerSeed))
+
+        self.assertEqual(
+            0,
+            common.get_fuel_energy_estimate(
+                province=CanadianProvince.Ontario,
+                soil_category=SoilFunctionalCategory.Black,
+                tillage_type=TillageType.Reduced,
+                crop_type=CropType.Fallow))
+
+    def test_non_existing_values(self):
+        self.assertEqual(
+            0,
+            common.get_fuel_energy_estimate(
+                province=CanadianProvince.Quebec,
+                soil_category=SoilFunctionalCategory.BrownChernozem,
+                tillage_type=TillageType.Intensive,
+                crop_type=CropType.TimothyHay))
 
 
 if __name__ == '__main__':

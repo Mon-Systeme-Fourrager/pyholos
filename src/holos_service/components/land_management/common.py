@@ -1,6 +1,14 @@
 from enum import auto
 
-from holos_service.utils import AutoNameEnum, keep_alphabetical_characters
+from pandas import MultiIndex
+
+from holos_service.common import get_region, Region
+from holos_service.components.common import convert_province_name
+from holos_service.components.land_management.crop import convert_crop_type_name, CropType
+from holos_service.config import PathsHolosResources
+from holos_service.django_stuff import CanadianProvince
+from holos_service.soil import convert_soil_functional_category_name, SoilFunctionalCategory
+from holos_service.utils import AutoNameEnum, keep_alphabetical_characters, read_holos_resource_table
 
 
 class IrrigationType(AutoNameEnum):
@@ -71,3 +79,55 @@ class TimePeriodCategory(AutoNameEnum):
     Past = auto()
     Current = auto()
     Future = auto()
+
+
+def read_table_50():
+    df = read_holos_resource_table(
+        PathsHolosResources.Table_50_Fuel_Energy_Requirement_Estimates_By_Region,
+        header=[0, 1, 2])
+    df.index = [convert_crop_type_name(s) for s in df.pop(('Unnamed: 0_level_0', 'Unnamed: 0_level_1', 'CROP'))]
+    df.columns = MultiIndex.from_tuples(
+        [(convert_province_name(p), convert_soil_functional_category_name(s), convert_tillage_type_name(t))
+         for p, s, t in df.columns])
+
+    return df
+
+
+class HolosTables:
+    Table_50_Fuel_Energy_Requirement_Estimates_By_Region = read_table_50()
+
+
+def get_fuel_energy_estimate(
+        province: CanadianProvince,
+        soil_category: SoilFunctionalCategory,
+        tillage_type: TillageType,
+        crop_type: CropType
+) -> float:
+    """Returns the fuel energy estimate.
+
+    Args:
+        province: CanadianProvince member
+        soil_category: SoilFunctionalCategory member
+        tillage_type: TillageType member
+        crop_type: CropType member
+    Returns:
+        (GJ ha-1) fuel energy estimate
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/e6e79c3185b68999eaea1e68dbf77c89d1764b53/H.Core/Providers/Energy/Table_50_Fuel_Energy_Estimates_Provider.cs#L62
+    """
+    soil_lookup_type = (
+        SoilFunctionalCategory.EasternCanada if get_region(province=province) == Region.EasternCanada
+        else soil_category.get_simplified_soil_category())
+
+    # No summer fallow in table
+    if crop_type.is_fallow():
+        crop_type = CropType.Fallow
+
+    try:
+        res = HolosTables.Table_50_Fuel_Energy_Requirement_Estimates_By_Region.loc[
+            crop_type, (province, soil_lookup_type, tillage_type.value)]
+    except KeyError:
+        res = 0.
+
+    return 0. if res is None else res

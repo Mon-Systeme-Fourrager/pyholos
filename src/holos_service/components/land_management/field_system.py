@@ -1,10 +1,15 @@
-from holos_service.common import HolosVar
-from holos_service.defaults import Defaults
-from holos_service.components.land_management.carbon.relative_biomass_information import RelativeBiomassInformationData
+from holos_service.common import HolosVar, Region, get_region
 from holos_service.components.land_management.common import (
-    TillageType, HarvestMethod, IrrigationType, TimePeriodCategory)
-from holos_service.components.land_management.crop import get_nitrogen_fixation, CropType
+    HarvestMethod, IrrigationType, TimePeriodCategory, read_table_50)
+from holos_service.components.land_management.crop import CropType
 from holos_service.core_constants import CoreConstants
+from holos_service.defaults import Defaults
+from holos_service.django_stuff import CanadianProvince
+from holos_service.soil import SoilFunctionalCategory
+
+
+class HolosTables:
+    Table_50_Fuel_Energy_Requirement_Estimates_By_Region = read_table_50()
 
 
 class LandManagementBase:
@@ -232,3 +237,37 @@ class LandManagementBase:
 
         pass
 
+    def get_fuel_energy_estimate(
+            self,
+            province: CanadianProvince,
+            soil_category: SoilFunctionalCategory
+    ) -> float:
+        """Returns the fuel energy estimate.
+
+        Args:
+            province: CanadianProvince class instance
+            soil_category: SoilFunctionalCategory class instance
+
+        Returns:
+            (GJ ha-1) fuel energy estimate
+
+        Holos source code:
+            https://github.com/holos-aafc/Holos/blob/e6e79c3185b68999eaea1e68dbf77c89d1764b53/H.Core/Providers/Energy/Table_50_Fuel_Energy_Estimates_Provider.cs#L62
+        """
+        soil_lookup_type = (
+            SoilFunctionalCategory.EasternCanada if get_region(province=province) == Region.EasternCanada
+            else soil_category.get_simplified_soil_category())
+
+        crop_type = self.crop_type.value
+
+        # No summer fallow in table
+        if crop_type.is_fallow():
+            crop_type = CropType.Fallow
+
+        try:
+            res = HolosTables.Table_50_Fuel_Energy_Requirement_Estimates_By_Region.loc[
+                crop_type, (province, soil_lookup_type, self.tillage_type.value)]
+        except KeyError:
+            res = 0.
+
+        return 0. if res is None else res
