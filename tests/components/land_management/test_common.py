@@ -60,11 +60,11 @@ class TestGetFuelEnergyEstimate(unittest.TestCase):
                 tillage_type=TillageType.Intensive,
                 crop_type=CropType.TimothyHay))
 
-class TestGetPesticideEnergyEstimate(unittest.TestCase):
+class TestGetHerbicideEnergyEstimate(unittest.TestCase):
     def test_existing_values(self):
         self.assertEqual(
             0.46,
-            common.get_pesticide_energy_estimate(
+            common.get_herbicide_energy_estimate(
                 province=CanadianProvince.BritishColumbia,
                 soil_category=SoilFunctionalCategory.DarkBrown,
                 tillage_type=TillageType.NoTill,
@@ -72,7 +72,7 @@ class TestGetPesticideEnergyEstimate(unittest.TestCase):
 
         self.assertEqual(
             0,
-            common.get_pesticide_energy_estimate(
+            common.get_herbicide_energy_estimate(
                 province=CanadianProvince.Quebec,
                 soil_category=SoilFunctionalCategory.Black,
                 tillage_type=TillageType.Reduced,
@@ -81,7 +81,7 @@ class TestGetPesticideEnergyEstimate(unittest.TestCase):
     def test_non_existing_values(self):
         self.assertEqual(
             0,
-            common.get_pesticide_energy_estimate(
+            common.get_herbicide_energy_estimate(
                 province=CanadianProvince.Quebec,
                 soil_category=SoilFunctionalCategory.BrownChernozem,
                 tillage_type=TillageType.Intensive,

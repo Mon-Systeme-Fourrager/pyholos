@@ -164,13 +164,13 @@ def get_fuel_energy_estimate(
         **locals())
 
 
-def get_pesticide_energy_estimate(
+def get_herbicide_energy_estimate(
         province: CanadianProvince,
         soil_category: SoilFunctionalCategory,
         tillage_type: TillageType,
         crop_type: CropType
 ) -> float:
-    """Returns the pesticide energy estimate.
+    """Returns the herbicide energy estimate.
 
     Args:
         province: CanadianProvince member
@@ -178,7 +178,7 @@ def get_pesticide_energy_estimate(
         tillage_type: TillageType member
         crop_type: CropType member
     Returns:
-        (GJ ha-1) pesticide energy estimate
+        (GJ ha-1) herbicide energy estimate
 
     Holos source code:
         https://github.com/holos-aafc/Holos/blob/e6e79c3185b68999eaea1e68dbf77c89d1764b53/H.Core/Providers/Energy/Table_51_Herbicide_Energy_Estimates_Provider.cs#L60
