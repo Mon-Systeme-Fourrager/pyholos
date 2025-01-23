@@ -1687,7 +1687,7 @@ def get_land_application_factors(
         (1) https://github.com/RamiALBASHA/Holos/blob/71638efd97c84c6ded45e342ce664477df6f803f/H.Core/Providers/Animals/Table_36_Livestock_Emission_Conversion_Factors_Provider.cs#L41
         (2) https://github.com/holos-aafc/Holos/blob/267abf1066bb5494e5ec6a4085a85ab42dfa76c7/H.Core/Services/Initialization/Animals/AnimalInitializationService.Ammonia.cs#L55
     """
-    region = get_region(province=province.name)
+    region = get_region(province=province)
     climate_dependent_emission_factor_for_volatilization = get_emission_factor_for_volatilization_based_on_climate(
         mean_annual_precipitation=mean_annual_precipitation,
         mean_annual_potential_evapotranspiration=mean_annual_evapotranspiration)

@@ -3,6 +3,7 @@ from enum import StrEnum, unique, auto
 from holos_service import django_stuff
 from holos_service.common import Region, get_region
 from holos_service.config import PathsSlcData
+from holos_service.django_stuff import CanadianProvince
 from holos_service.utils import AutoNameEnum, keep_alphabetical_characters
 
 
@@ -294,7 +295,7 @@ def get_soil_great_group_table() -> list[SoilGreatGroup]:
 
 
 def seek_soil_functional_category(
-        province: str,
+        province: django_stuff.CanadianProvince,
         soil_great_group: str
 ) -> str:
     region = get_region(province=province)
@@ -305,7 +306,7 @@ def seek_soil_functional_category(
 
 
 def get_soil_functional_category(
-        province: str,
+        province: django_stuff.CanadianProvince,
         soil_great_group: str
 ) -> str:
     soil_functional_category = seek_soil_functional_category(
@@ -387,7 +388,7 @@ def set_soil_properties(
         ecodistrict_id=polygon_properties['ECO_ID'],
         soil_great_group=soil_great_group,
         soil_functional_category=get_soil_functional_category(
-            province=province,
+            province=getattr(CanadianProvince, province),
             soil_great_group=soil_great_group),
         bulk_density=first_non_litter_layer['BD'],
         soil_texture=set_soil_texture_according_to_holos(
