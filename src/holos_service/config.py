@@ -24,6 +24,8 @@ class PathsHolosResources:
         "Table_29_Percentage_Total_Manure_Produced_In_Systems.csv")
     Table_30_Default_Bedding_Material_Composition_Provider = _path_root / (
         'Table_30_Default_Bedding_Material_Composition_Provider.csv')
+    Table_50_Fuel_Energy_Requirement_Estimates_By_Region = _path_root / (
+        'Table_50_Fuel_Energy_Requirement_Estimates_By_Region.csv')
     Table_61_Fractions_of_dairy_cattle_N_volatilized = _path_root / (
         'Table_61_Fractions_of_dairy_cattle_N_volatilized.csv')
     Table_62_Fractions_of_swine_N_volatilized = _path_root / (
