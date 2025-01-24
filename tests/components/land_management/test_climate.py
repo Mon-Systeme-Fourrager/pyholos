@@ -112,5 +112,40 @@ class TestCalculateSandFactor(unittest.TestCase):
         assert_is_ascending([climate.calculate_sand_factor(sand_content=v) for v in range(100)])
 
 
+class TestCalculateWiltingPoint(unittest.TestCase):
+    def test_basal_value_of_volumetric_water_content_at_wilting_point_for_all_zero_inputs(self):
+        self.assertAlmostEqual(
+            (14.2568 + 7.36318 * 0.06865) / 100.,
+            climate.calculate_wilting_point(
+                organic_carbon_factor=0,
+                clay_factor=0,
+                sand_factor=0),
+            places=3)
+
+    def test_volumetric_water_content_at_wilting_point_decreases_with_organic_carbon(self):
+        assert_is_ascending([climate.calculate_wilting_point(
+            organic_carbon_factor=v,
+            clay_factor=1,
+            sand_factor=1)
+            for v in range(20)
+        ])
+
+    def test_volumetric_water_content_at_wilting_point_increases_with_sand(self):
+        assert_is_ascending([climate.calculate_wilting_point(
+            organic_carbon_factor=1,
+            clay_factor=1,
+            sand_factor=v)
+            for v in range(20)
+        ])
+
+    def test_volumetric_water_content_at_wilting_point_decreases_with_clay(self):
+        assert_is_ascending([climate.calculate_wilting_point(
+            organic_carbon_factor=1,
+            clay_factor=v,
+            sand_factor=1)
+            for v in range(20)
+        ])
+
+
 if __name__ == '__main__':
     unittest.main()

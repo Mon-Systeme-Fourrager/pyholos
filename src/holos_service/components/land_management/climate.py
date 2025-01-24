@@ -109,3 +109,45 @@ def calculate_sand_factor(
         https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L494
     """
     return -1.51866 + 0.0393284 * sand_content * 100
+
+
+def calculate_wilting_point(
+        organic_carbon_factor: float,
+        clay_factor: float,
+        sand_factor: float
+) -> float:
+    """Calculates the volumetric water content at wilting point
+
+    Args:
+        organic_carbon_factor: (-) organic carbon factor (OrgC_factor)
+        clay_factor: (-) clay factor
+        sand_factor: (-) sand factor
+
+    Returns:
+        (mm3/mm3) volumetric water content at wilting point
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L504
+    """
+    wilting_point_percent = 14.2568 + 7.36318 * (
+            0.06865 + 0.108713 * organic_carbon_factor -
+            0.0157225 * organic_carbon_factor ** 2 +
+            0.00102805 * organic_carbon_factor ** 3 +
+            0.886569 * clay_factor -
+            0.223581 * organic_carbon_factor * clay_factor +
+            0.0126379 * organic_carbon_factor ** 2 * clay_factor -
+            0.017059 * clay_factor ** 2 +
+            0.0135266 * organic_carbon_factor * clay_factor ** 2 -
+            0.0334434 * clay_factor ** 3 -
+            0.0535182 * sand_factor -
+            0.0354271 * organic_carbon_factor * sand_factor -
+            0.00261313 * organic_carbon_factor ** 2 * sand_factor -
+            0.154563 * clay_factor * sand_factor -
+            0.0160219 * organic_carbon_factor * clay_factor * sand_factor -
+            0.0400606 * clay_factor ** 2 * sand_factor -
+            0.104875 * sand_factor ** 2 +
+            0.0159857 * organic_carbon_factor * sand_factor ** 2 -
+            0.0671656 * clay_factor * sand_factor ** 2 -
+            0.0260699 * sand_factor ** 3)
+
+    return wilting_point_percent / 100.
