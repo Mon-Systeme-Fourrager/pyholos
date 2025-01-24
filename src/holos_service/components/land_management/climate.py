@@ -151,3 +151,43 @@ def calculate_wilting_point(
             0.0260699 * sand_factor ** 3)
 
     return wilting_point_percent / 100.
+
+
+def calculate_field_capacity(
+        organic_carbon_factor: float,
+        clay_factor: float,
+        sand_factor: float
+) -> float:
+    """Calculates the volumetric water content at field capacity
+
+    Args:
+        organic_carbon_factor: (-) organic carbon factor (OrgC_factor)
+        clay_factor: (-) clay factor
+        sand_factor: (-) sand factor
+
+    Returns:
+        (mm3/mm3) volumetric water content at field capacity
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L543
+    """
+    field_capacity_percent = 29.7528 + 10.3544 * (
+            0.0461615 + 0.290955 * organic_carbon_factor -
+            0.0496845 * organic_carbon_factor * organic_carbon_factor +
+            0.00704802 * organic_carbon_factor * organic_carbon_factor * organic_carbon_factor +
+            0.269101 * clay_factor -
+            0.176528 * organic_carbon_factor * clay_factor +
+            0.0543138 * organic_carbon_factor * organic_carbon_factor * clay_factor +
+            0.1982 * clay_factor * clay_factor -
+            0.060699 * clay_factor * clay_factor * clay_factor -
+            0.320249 * sand_factor -
+            0.0111693 * organic_carbon_factor * organic_carbon_factor * sand_factor +
+            0.14104 * clay_factor * sand_factor +
+            0.0657345 * organic_carbon_factor * clay_factor * sand_factor -
+            0.102026 * clay_factor * clay_factor * sand_factor -
+            0.04012 * sand_factor * sand_factor +
+            0.160838 * organic_carbon_factor * sand_factor * sand_factor -
+            0.121392 * clay_factor * sand_factor * sand_factor -
+            0.061667 * sand_factor * sand_factor * sand_factor)
+
+    return field_capacity_percent / 100.

@@ -147,5 +147,40 @@ class TestCalculateWiltingPoint(unittest.TestCase):
         ])
 
 
+class TestCalculateFieldCapacity(unittest.TestCase):
+    def test_basal_value_of_volumetric_water_content_at_field_capacity_for_all_zero_inputs(self):
+        self.assertAlmostEqual(
+            (29.7528 + 10.3544 * 0.0461615) / 100,
+            climate.calculate_field_capacity(
+                organic_carbon_factor=0,
+                clay_factor=0,
+                sand_factor=0),
+            places=3)
+
+    def test_volumetric_water_content_at_field_capacity_decreases_with_organic_carbon(self):
+        assert_is_ascending([climate.calculate_field_capacity(
+            organic_carbon_factor=v,
+            clay_factor=1,
+            sand_factor=1)
+            for v in range(20)
+        ])
+
+    def test_volumetric_water_content_at_field_capacity_increases_with_sand(self):
+        assert_is_ascending([climate.calculate_field_capacity(
+            organic_carbon_factor=1,
+            clay_factor=1,
+            sand_factor=v)
+            for v in range(20)
+        ])
+
+    def test_volumetric_water_content_at_field_capacity_decreases_with_clay(self):
+        assert_is_ascending([climate.calculate_field_capacity(
+            organic_carbon_factor=1,
+            clay_factor=v,
+            sand_factor=1)
+            for v in range(20)
+        ])
+
+
 if __name__ == '__main__':
     unittest.main()
