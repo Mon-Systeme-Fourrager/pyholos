@@ -97,5 +97,20 @@ class TestCalculateClayFactor(unittest.TestCase):
         assert_is_ascending([climate.calculate_clay_factor(clay_content=v) for v in range(100)])
 
 
+class TestCalculateSandFactor(unittest.TestCase):
+    def test_calculate_sand_factor_returns_expected_value_for_zero_sand_content(self):
+        self.assertEqual(
+            -1.51866,
+            climate.calculate_sand_factor(sand_content=0))
+
+    def test_calculate_sand_factor_returns_zero_at_specific_value_of_sand_content(self):
+        self.assertEqual(
+            0,
+            climate.calculate_sand_factor(sand_content=1.51866 / (0.0393284 * 100)))
+
+    def test_calculate_sand_factor_returns_increasing_values_with_sand_content(self):
+        assert_is_ascending([climate.calculate_sand_factor(sand_content=v) for v in range(100)])
+
+
 if __name__ == '__main__':
     unittest.main()

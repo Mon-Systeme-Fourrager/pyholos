@@ -92,3 +92,20 @@ def calculate_clay_factor(
         https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L484
     """
     return -1.40744 + 0.0661969 * clay_content * 100
+
+
+def calculate_sand_factor(
+        sand_content: float
+) -> float:
+    """Calculates the sand factor
+
+    Args:
+        sand_content: proportion of sand in soil (Sand_factor)
+
+    Returns:
+        (-) sand factor
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L494
+    """
+    return -1.51866 + 0.0393284 * sand_content * 100
