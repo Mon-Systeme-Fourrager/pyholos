@@ -312,3 +312,24 @@ def calculate_crop_evapotranspiration(
         https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L656
     """
     return evapotranspiration * crop_coefficient
+
+
+def calculate_crop_interception(
+        total_daily_precipitation: float,
+        green_area_index: float,
+        crop_evapotranspiration: float
+) -> float:
+    """Calculates crop interception
+
+    Args:
+        total_daily_precipitation: (mm/d) daily precipitation
+        green_area_index: (m2(green area)/m2(ground)) green area index
+        crop_evapotranspiration: (mm/d) crop evapotranspiration
+
+    Returns:
+        (mm/d) crop interception
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L668
+    """
+    return min(crop_evapotranspiration, min(0.2 * green_area_index, total_daily_precipitation))

@@ -308,5 +308,37 @@ class TestCalculateCropEvapotranspiration(unittest.TestCase):
         ])
 
 
+class TestCalculateCropInterception(unittest.TestCase):
+    def test_values_for_weak_precipitation_compared_to_interception_capacity(self):
+        gai = 10
+        for p in range(int(0.2 * gai)):
+            self.assertEqual(
+                p,
+                climate.calculate_crop_interception(
+                    total_daily_precipitation=p,
+                    green_area_index=gai,
+                    crop_evapotranspiration=p))
+
+    def test_values_for_strong_precipitation_compared_to_interception_capacity(self):
+        gai = 1
+        for p in range(1, 100):
+            self.assertEqual(
+                0.2 * gai,
+                climate.calculate_crop_interception(
+                    total_daily_precipitation=p,
+                    green_area_index=gai,
+                    crop_evapotranspiration=p))
+
+    def test_values_for_strong_precipitation_compared_to_interception_capacity_and_evapotranspiration_rate(self):
+        gai = 10
+        for p in range(5, 100):
+            self.assertEqual(
+                0.2 * gai,
+                climate.calculate_crop_interception(
+                    total_daily_precipitation=p,
+                    green_area_index=gai,
+                    crop_evapotranspiration=2))
+
+
 if __name__ == '__main__':
     unittest.main()
