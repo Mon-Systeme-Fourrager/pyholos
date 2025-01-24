@@ -1,3 +1,4 @@
+from holos_service.defaults import Defaults
 import math
 
 
@@ -191,3 +192,18 @@ def calculate_field_capacity(
             0.061667 * sand_factor * sand_factor * sand_factor)
 
     return field_capacity_percent / 100.
+
+
+def calculate_soil_mean_depth() -> float:
+    """Calculates the soil top layer mean depth
+
+    Returns:
+        (mm) soil top layer mean depth
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L581
+
+    Note:
+        Holos assumes the value of layer_thickness constant to 250 mm
+    """
+    return Defaults.TopLayerThickness / 20.
