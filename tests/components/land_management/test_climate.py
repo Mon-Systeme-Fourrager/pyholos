@@ -1,6 +1,7 @@
 import unittest
 
 from holos_service.components.land_management import climate
+from tests.helpers.utils import assert_is_ascending, assert_is_descending
 
 
 class TestCalculateGreenAreaIndexMax(unittest.TestCase):
@@ -27,6 +28,42 @@ class TestCalculateMidSeason(unittest.TestCase):
                 climate.calculate_mid_season(
                     emergence_day=emergence_day,
                     ripening_day=ripening_day))
+
+
+class TestCalculateGreenAreaIndex(unittest.TestCase):
+    def test_calculate_green_area_index_returns_green_area_index_max_at_mid_season(self):
+        gai_max = 1
+        self.assertEqual(
+            gai_max,
+            climate.calculate_green_area_index(
+                green_area_index_max=gai_max,
+                julian_day=100,
+                mid_season=100,
+                variance=1))
+
+    def test_calculate_green_area_index_returns_increasing_values_towards_mid_season(self):
+        mid_season = 100
+        gai = [climate.calculate_green_area_index(
+            green_area_index_max=1,
+            julian_day=v,
+            mid_season=mid_season,
+            variance=1)
+            for v in range(mid_season)
+        ]
+
+        assert_is_ascending(gai)
+
+    def test_calculate_green_area_index_returns_decreasing_values_after_mid_season(self):
+        mid_season = 100
+        gai = [climate.calculate_green_area_index(
+            green_area_index_max=1,
+            julian_day=v,
+            mid_season=mid_season,
+            variance=1)
+            for v in range(mid_season, mid_season + 100)
+        ]
+
+        assert_is_descending(gai)
 
 
 if __name__ == '__main__':

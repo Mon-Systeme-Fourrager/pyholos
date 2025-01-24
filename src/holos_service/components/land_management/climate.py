@@ -1,3 +1,6 @@
+import math
+
+
 def calculate_green_area_index_max(
         crop_yield: float
 ) -> float:
@@ -32,3 +35,26 @@ def calculate_mid_season(
         https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L453
     """
     return emergence_day + (ripening_day - emergence_day) / 2
+
+
+def calculate_green_area_index(
+        green_area_index_max: float,
+        julian_day: int,
+        mid_season: float,
+        variance: float
+) -> float:
+    """Calculates the green area index at a given day
+
+    Args:
+        green_area_index_max: (m2(green area)/m2(ground)) maximum amplitude of green area index
+        julian_day: (julian day) day
+        mid_season: (Julian day) median day of the growing season
+        variance: width of distribution function
+
+    Returns:
+        (m2(green area)/m2(ground)) green area index
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L463
+    """
+    return green_area_index_max * math.exp((-1 * (julian_day - mid_season) ** 2) / (2 * variance))
