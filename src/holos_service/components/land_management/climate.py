@@ -75,3 +75,20 @@ def calculate_organic_carbon_factor(
         https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L474
     """
     return -0.837531 + 0.430183 * percent_organic_carbon
+
+
+def calculate_clay_factor(
+        clay_content: float
+) -> float:
+    """Calculates the clay factor
+
+    Args:
+        clay_content: proportion of clay in soil (Clay_factor)
+
+    Returns:
+        (-) clay factor
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L484
+    """
+    return -1.40744 + 0.0661969 * clay_content * 100

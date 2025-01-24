@@ -82,5 +82,20 @@ class TestCalculateOrganicCarbonFactor(unittest.TestCase):
                              for v in range(20)])
 
 
+class TestCalculateClayFactor(unittest.TestCase):
+    def test_calculate_clay_factor_returns_expected_value_for_zero_clay_content(self):
+        self.assertEqual(
+            -1.40744,
+            climate.calculate_clay_factor(clay_content=0))
+
+    def test_calculate_clay_factor_returns_zero_at_specific_value_of_clay_content(self):
+        self.assertEqual(
+            0,
+            climate.calculate_clay_factor(clay_content=1.40744 / (0.0661969 * 100)))
+
+    def test_calculate_clay_factor_returns_increasing_values_with_clay_content(self):
+        assert_is_ascending([climate.calculate_clay_factor(clay_content=v) for v in range(100)])
+
+
 if __name__ == '__main__':
     unittest.main()
