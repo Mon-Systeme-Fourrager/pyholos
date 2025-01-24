@@ -351,5 +351,32 @@ class TestCalculateSoilAvailableWater(unittest.TestCase):
                     crop_interception=crop_interception))
 
 
+class TestCalculateVolumetricSoilWaterContent(unittest.TestCase):
+    def test_min_value(self):
+        wilting_point = 1
+        self.assertEqual(
+            wilting_point,
+            climate.calculate_volumetric_soil_water_content(
+                water_storage_previous=0,
+                layer_thickness=randint(1, 100),
+                wilting_point=wilting_point))
+
+    def test_values_increase_with_water_storage(self):
+        assert_is_ascending([
+            climate.calculate_volumetric_soil_water_content(
+                water_storage_previous=v,
+                layer_thickness=1,
+                wilting_point=1)
+            for v in range(50)])
+
+    def test_values_decrease_with_sol_thickness(self):
+        assert_is_ascending([
+            climate.calculate_volumetric_soil_water_content(
+                water_storage_previous=1,
+                layer_thickness=v,
+                wilting_point=1)
+            for v in range(1, 50)])
+
+
 if __name__ == '__main__':
     unittest.main()

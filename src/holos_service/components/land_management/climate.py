@@ -1,4 +1,5 @@
 import math
+import sys
 
 from holos_service.defaults import Defaults
 
@@ -352,3 +353,29 @@ def calculate_soil_available_water(
         https://github.com/RamiALBASHA/Holos/blob/06918a38b63407808e06683036639ca4afe04332/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L694
     """
     return total_daily_precipitation - crop_interception
+
+
+def calculate_volumetric_soil_water_content(
+        water_storage_previous: float,
+        layer_thickness: float,
+        wilting_point: float
+) -> float:
+    """Calculates the volumetric water content of soil
+
+    Args:
+        water_storage_previous: (mm day-1) soil available water of the previous day
+        layer_thickness: (mm) soil layer thickness
+        wilting_point: (mm3/mm3) volumetric water content at wilting point
+
+    Returns:
+        (mm3/mm3) volumetric water content
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L713
+    """
+    volumetric_soil_water_content = water_storage_previous / layer_thickness
+
+    if abs(volumetric_soil_water_content) < sys.float_info.epsilon:
+        volumetric_soil_water_content = wilting_point
+
+    return volumetric_soil_water_content
