@@ -279,5 +279,17 @@ class TestCalculateSoilTemperatures(unittest.TestCase):
         ])
 
 
+class TestCalculateCropCoefficient(unittest.TestCase):
+    def test_value_for_no_green_area_index(self):
+        self.assertEqual(
+            0.8,
+            climate.calculate_crop_coefficient(green_area_index=0))
+
+    def test_values_increase_with_green_area_index(self):
+        assert_is_ascending([
+            climate.calculate_crop_coefficient(green_area_index=gai)
+            for gai in range(10)])
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -276,3 +276,20 @@ def calculate_soil_temperatures(
                 0.24 * math.exp(-soil_mean_depth * 0.017) * math.exp(-0.15 * green_area_index))
 
     return current_soil_temperature
+
+
+def calculate_crop_coefficient(
+        green_area_index: float
+) -> float:
+    """Calculates the crop coefficient
+
+    Args:
+        green_area_index: (m2(green area)/m2(ground)) green area index
+
+    Returns:
+        (-) crop coefficient
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L646
+    """
+    return 1.3 - (1.3 - 0.8) * math.exp(-0.17 * green_area_index)
