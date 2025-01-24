@@ -15,5 +15,19 @@ class TestCalculateGreenAreaIndexMax(unittest.TestCase):
             climate.calculate_green_area_index_max(crop_yield=1000))
 
 
+class TestCalculateMidSeason(unittest.TestCase):
+    def test_calculate_mid_season_returns_expected_results(self):
+        for emergence_day, ripening_day in [
+            (0, 100),
+            (50, 150),
+            (50, 50)
+        ]:
+            self.assertEqual(
+                (emergence_day + ripening_day) / 2.,
+                climate.calculate_mid_season(
+                    emergence_day=emergence_day,
+                    ripening_day=ripening_day))
+
+
 if __name__ == '__main__':
     unittest.main()
