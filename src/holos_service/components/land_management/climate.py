@@ -293,3 +293,22 @@ def calculate_crop_coefficient(
         https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L646
     """
     return 1.3 - (1.3 - 0.8) * math.exp(-0.17 * green_area_index)
+
+
+def calculate_crop_evapotranspiration(
+        evapotranspiration: float,
+        crop_coefficient: float
+) -> float:
+    """Calculates crop evapotranspiration
+
+    Args:
+        evapotranspiration: (mm/d) reference crop evapotranspiration
+        crop_coefficient: (-) crop coefficient
+
+    Returns:
+        (mm/d) crop evapotranspiration
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L656
+    """
+    return evapotranspiration * crop_coefficient

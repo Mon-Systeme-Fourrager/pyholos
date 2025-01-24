@@ -291,5 +291,22 @@ class TestCalculateCropCoefficient(unittest.TestCase):
             for gai in range(10)])
 
 
+class TestCalculateCropEvapotranspiration(unittest.TestCase):
+    def test_value_at_unity(self):
+        self.assertEqual(
+            1,
+            climate.calculate_crop_evapotranspiration(
+                evapotranspiration=1,
+                crop_coefficient=1))
+
+    def test_values_increase_with_crop_coefficient(self):
+        assert_is_ascending([
+            climate.calculate_crop_evapotranspiration(
+                evapotranspiration=1,
+                crop_coefficient=kc)
+            for kc in range(2)
+        ])
+
+
 if __name__ == '__main__':
     unittest.main()
