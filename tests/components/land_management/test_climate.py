@@ -189,5 +189,13 @@ class TestCalculateSoilMeanDepth(unittest.TestCase):
             climate.calculate_soil_mean_depth())
 
 
+class TestCalculateLeafAreaIndex(unittest.TestCase):
+    def test_values_are_asa_expected(self):
+        for gai in range(10):
+            self.assertEqual(
+                0.8 * gai,
+                climate.calculate_leaf_area_index(green_area_index=gai))
+
+
 if __name__ == '__main__':
     unittest.main()

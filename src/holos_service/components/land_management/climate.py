@@ -1,5 +1,6 @@
-from holos_service.defaults import Defaults
 import math
+
+from holos_service.defaults import Defaults
 
 
 def calculate_green_area_index_max(
@@ -207,3 +208,20 @@ def calculate_soil_mean_depth() -> float:
         Holos assumes the value of layer_thickness constant to 250 mm
     """
     return Defaults.TopLayerThickness / 20.
+
+
+def calculate_leaf_area_index(
+        green_area_index: float
+) -> float:
+    """Calculates the leaf area index
+
+    Args:
+        green_area_index: (m2(green area)/m2(ground)) green area index
+
+    Returns:
+        (m2(leaf)/m2(ground)) leaf area index
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L591
+    """
+    return 0.8 * green_area_index
