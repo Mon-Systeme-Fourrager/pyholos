@@ -66,5 +66,21 @@ class TestCalculateGreenAreaIndex(unittest.TestCase):
         assert_is_descending(gai)
 
 
+class TestCalculateOrganicCarbonFactor(unittest.TestCase):
+    def test_calculate_organic_carbon_factor_returns_expected_value_for_no_organic_carbon_in_soil(self):
+        self.assertEqual(
+            -0.837531,
+            climate.calculate_organic_carbon_factor(percent_organic_carbon=0))
+
+    def test_calculate_organic_carbon_factor_returns_zero_for_a_specific_value_of_organic_carbon_in_soil(self):
+        self.assertEqual(
+            0,
+            climate.calculate_organic_carbon_factor(percent_organic_carbon=0.837531 / 0.430183))
+
+    def test_calculate_organic_carbon_factor_returns_increasing_values_with_organic_carbon_in_soil(self):
+        assert_is_ascending([climate.calculate_organic_carbon_factor(percent_organic_carbon=v)
+                             for v in range(20)])
+
+
 if __name__ == '__main__':
     unittest.main()

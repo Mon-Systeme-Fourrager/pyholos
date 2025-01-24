@@ -58,3 +58,20 @@ def calculate_green_area_index(
         https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L463
     """
     return green_area_index_max * math.exp((-1 * (julian_day - mid_season) ** 2) / (2 * variance))
+
+
+def calculate_organic_carbon_factor(
+        percent_organic_carbon: float
+) -> float:
+    """Calculates the organic carbon factor (OrgC_factor)
+
+    Args:
+        percent_organic_carbon: (%) percentage of organic C in soil, by weight
+
+    Returns:
+        (-) organic carbon factor (OrgC_factor)
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L474
+    """
+    return -0.837531 + 0.430183 * percent_organic_carbon
