@@ -333,3 +333,22 @@ def calculate_crop_interception(
         https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L668
     """
     return min(crop_evapotranspiration, min(0.2 * green_area_index, total_daily_precipitation))
+
+
+def calculate_soil_available_water(
+        total_daily_precipitation: float,
+        crop_interception: float
+) -> float:
+    """Calculates the available daily water for soil
+
+    Args:
+        total_daily_precipitation: (mm/d) total precipitation
+        crop_interception: (mm/d) crop interception
+
+    Returns:
+        (mm) available daily water for soil
+
+    Holos source code:
+        https://github.com/RamiALBASHA/Holos/blob/06918a38b63407808e06683036639ca4afe04332/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L694
+    """
+    return total_daily_precipitation - crop_interception

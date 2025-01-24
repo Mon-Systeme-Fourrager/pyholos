@@ -340,5 +340,16 @@ class TestCalculateCropInterception(unittest.TestCase):
                     crop_evapotranspiration=2))
 
 
+class TestCalculateSoilAvailableWater(unittest.TestCase):
+    def test_values_are_as_expected(self):
+        total_precipitation = 20
+        for crop_interception in range(total_precipitation):
+            self.assertEqual(
+                total_precipitation - crop_interception,
+                climate.calculate_soil_available_water(
+                    total_daily_precipitation=total_precipitation,
+                    crop_interception=crop_interception))
+
+
 if __name__ == '__main__':
     unittest.main()
