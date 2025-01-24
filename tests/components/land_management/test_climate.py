@@ -197,5 +197,30 @@ class TestCalculateLeafAreaIndex(unittest.TestCase):
                 climate.calculate_leaf_area_index(green_area_index=gai))
 
 
+class TestCalculateSurfaceTemperature(unittest.TestCase):
+    def test_soil_surface_temperature_for_zero_daily_average_air_temperature(self):
+        self.assertEqual(
+            0,
+            climate.calculate_surface_temperature(temperature=0, leaf_area_index=1))
+
+    def test_soil_surface_temperature_for_negative_daily_average_air_temperature(self):
+        for t in range(-20, 0):
+            self.assertEqual(
+                0.2 * t,
+                climate.calculate_surface_temperature(temperature=t, leaf_area_index=1))
+
+    def test_soil_surface_temperature_for_positive_daily_average_air_temperature_and_covering_leaf_area_index(self):
+        for t in range(0, 20):
+            self.assertEqual(
+                t,
+                climate.calculate_surface_temperature(temperature=t, leaf_area_index=3))
+
+    def test_soil_surface_temperature_decreases_from_air_temperature_as_leaf_area_index_increases_over_covering_point(
+            self):
+        for t in range(0, 20):
+            assert_is_ascending([climate.calculate_surface_temperature(temperature=t, leaf_area_index=lai) - t
+                                 for lai in range(3, 7)])
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -225,3 +225,23 @@ def calculate_leaf_area_index(
         https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L591
     """
     return 0.8 * green_area_index
+
+
+def calculate_surface_temperature(
+        temperature: float,
+        leaf_area_index: float
+) -> float:
+    """Calculates the soil surface temperature
+
+    Args:
+        temperature: (degrees Celsius) daily mean air temperature by month
+        leaf_area_index: (m2(leaf)/m2(ground)) leaf area index
+
+    Returns:
+        (degrees Celsius) soil surface temperature
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L602
+    """
+    return 0.20 * temperature if temperature < 0 else (
+            temperature * (0.95 + 0.05 * math.exp(-0.4 * (leaf_area_index - 3))))
