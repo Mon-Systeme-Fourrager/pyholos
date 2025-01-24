@@ -1,4 +1,5 @@
 import unittest
+from random import random, randint
 
 from holos_service.components.land_management import climate
 from tests.helpers.utils import assert_is_ascending, assert_is_descending
@@ -220,6 +221,62 @@ class TestCalculateSurfaceTemperature(unittest.TestCase):
         for t in range(0, 20):
             assert_is_ascending([climate.calculate_surface_temperature(temperature=t, leaf_area_index=lai) - t
                                  for lai in range(3, 7)])
+
+
+class TestCalculateSoilTemperatures(unittest.TestCase):
+    def test_value_at_first_day_of_year(self):
+        self.assertEqual(
+            0,
+            climate.calculate_soil_temperatures(
+                julian_day=1,
+                soil_mean_depth=random(),
+                green_area_index=random(),
+                surface_temperature=random(),
+                soil_temperature_previous=random()))
+
+    def test_value_for_equal_temperature_values_of_two_consecutive_days(self):
+        t = 20
+        self.assertEqual(
+            t,
+            climate.calculate_soil_temperatures(
+                julian_day=randint(2, 365),
+                soil_mean_depth=random(),
+                green_area_index=random(),
+                surface_temperature=t,
+                soil_temperature_previous=t))
+
+    def test_values_increase_with_increasing_temperature_gap_between_two_consecutive_days(self):
+        assert_is_ascending([
+            climate.calculate_soil_temperatures(
+                julian_day=randint(2, 365),
+                soil_mean_depth=12.5,
+                green_area_index=3,
+                surface_temperature=delta_t,
+                soil_temperature_previous=0)
+            for delta_t in range(25)
+        ])
+
+    def test_values_decreases_with_increasing_soil_depth(self):
+        assert_is_ascending([
+            climate.calculate_soil_temperatures(
+                julian_day=randint(2, 365),
+                soil_mean_depth=d,
+                green_area_index=3,
+                surface_temperature=1,
+                soil_temperature_previous=0)
+            for d in range(50)
+        ])
+
+    def test_values_decreases_with_increasing_green_area_index(self):
+        assert_is_ascending([
+            climate.calculate_soil_temperatures(
+                julian_day=randint(2, 365),
+                soil_mean_depth=12.5,
+                green_area_index=gai,
+                surface_temperature=1,
+                soil_temperature_previous=0)
+            for gai in range(10)
+        ])
 
 
 if __name__ == '__main__':

@@ -245,3 +245,34 @@ def calculate_surface_temperature(
     """
     return 0.20 * temperature if temperature < 0 else (
             temperature * (0.95 + 0.05 * math.exp(-0.4 * (leaf_area_index - 3))))
+
+
+def calculate_soil_temperatures(
+        julian_day: int,
+        soil_mean_depth: float,
+        green_area_index: float,
+        surface_temperature: float,
+        soil_temperature_previous: float
+) -> float:
+    """calculates the soil temperature
+
+    Args:
+        julian_day: (julian day) day
+        soil_mean_depth: (mm) soil top layer mean depth
+        green_area_index: (m2(green area)/m2(ground)) green area index
+        surface_temperature: (degrees Celsius) soil surface temperature
+        soil_temperature_previous: (degrees Celsius) soil surface temperature of the previous day
+
+    Returns:
+        (degrees Celsius) soil temperature
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L621
+    """
+    if julian_day == 1:
+        current_soil_temperature = 0
+    else:
+        current_soil_temperature = soil_temperature_previous + (surface_temperature - soil_temperature_previous) * (
+                0.24 * math.exp(-soil_mean_depth * 0.017) * math.exp(-0.15 * green_area_index))
+
+    return current_soil_temperature
