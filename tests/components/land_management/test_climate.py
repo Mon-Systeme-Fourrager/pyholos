@@ -1,4 +1,5 @@
 import unittest
+from itertools import product
 from random import random, randint
 
 from holos_service.components.land_management import climate
@@ -431,6 +432,19 @@ class TestCalculateSoilCoefficient(unittest.TestCase):
                 wilting_point=wilting_point,
                 alfa=0.7)
                 for v in range(int(field_capacity * 10))])
+
+
+class TestCalculateActualEvapotranspiration(unittest.TestCase):
+    def test_values_are_as_expected(self):
+        for soil_coefficient, crop_evapotranspiration in product(
+                [v / 100. for v in range(0, 110, 10)],
+                range(11)
+        ):
+            self.assertEqual(
+                soil_coefficient * crop_evapotranspiration,
+                climate.calculate_actual_evapotranspiration(
+                    crop_potential_evapotranspiration=crop_evapotranspiration,
+                    soil_coefficient=soil_coefficient))
 
 
 if __name__ == '__main__':

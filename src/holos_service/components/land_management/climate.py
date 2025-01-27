@@ -407,3 +407,22 @@ def calculate_soil_coefficient(
                         0.95 * field_capacity - alfa * wilting_point)) ** 2))
 
     return 0 if (volumetric_soil_water_content < alfa / 100 * wilting_point) else soil_coefficient
+
+
+def calculate_actual_evapotranspiration(
+        crop_potential_evapotranspiration: float,
+        soil_coefficient: float
+) -> float:
+    """Calculates the actual evapotranspiration of the crop
+
+    Args:
+        crop_potential_evapotranspiration: (mm/d) crop potential evapotranspiration
+        soil_coefficient: (-) soil coefficient
+
+    Returns:
+        (mm/d) actual crop evapotranspiration
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L762
+    """
+    return soil_coefficient * crop_potential_evapotranspiration
