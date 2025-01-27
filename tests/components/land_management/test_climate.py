@@ -378,5 +378,60 @@ class TestCalculateVolumetricSoilWaterContent(unittest.TestCase):
             for v in range(1, 50)])
 
 
+class TestCalculateSoilCoefficient(unittest.TestCase):
+    def test_values_for_low_volumetric_water_content_values(self):
+        wilting_point = 0.05
+        alfa = 0.7
+        lower_threshold = alfa * wilting_point / 100
+        self.assertEqual(
+            0,
+            climate.calculate_soil_coefficient(
+                field_capacity=random(),
+                volumetric_soil_water_content=random() * lower_threshold,
+                wilting_point=wilting_point,
+                alfa=alfa))
+
+    def test_values_for_volumetric_water_content_value_at_field_capacity(self):
+        field_capacity = random()
+        self.assertEqual(
+            1,
+            climate.calculate_soil_coefficient(
+                field_capacity=field_capacity,
+                volumetric_soil_water_content=field_capacity,
+                wilting_point=field_capacity ** 2,
+                alfa=1))
+
+    def test_values_increase_with_field_capacity(self):
+        wilting_point = 0.01
+        soil_water_content = wilting_point
+        assert_is_ascending(
+            [climate.calculate_soil_coefficient(
+                field_capacity=v / 100.,
+                volumetric_soil_water_content=soil_water_content,
+                wilting_point=wilting_point,
+                alfa=0.7)
+                for v in range(int(wilting_point * 100), 101)])
+
+    def test_values_increase_with_alfa(self):
+        assert_is_ascending(
+            [climate.calculate_soil_coefficient(
+                field_capacity=0.5,
+                volumetric_soil_water_content=0.45,
+                wilting_point=0.01,
+                alfa=v / 10.)
+                for v in range(11)])
+
+    def test_values_increase_with_volumetric_water_content(self):
+        field_capacity = 0.5
+        wilting_point = 0
+        assert_is_ascending(
+            [climate.calculate_soil_coefficient(
+                field_capacity=field_capacity,
+                volumetric_soil_water_content=v,
+                wilting_point=wilting_point,
+                alfa=0.7)
+                for v in range(int(field_capacity * 10))])
+
+
 if __name__ == '__main__':
     unittest.main()

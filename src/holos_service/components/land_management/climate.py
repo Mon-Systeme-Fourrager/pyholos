@@ -379,3 +379,31 @@ def calculate_volumetric_soil_water_content(
         volumetric_soil_water_content = wilting_point
 
     return volumetric_soil_water_content
+
+
+def calculate_soil_coefficient(
+        field_capacity: float,
+        volumetric_soil_water_content: float,
+        wilting_point: float,
+        alfa: float = 0.7
+) -> float:
+    """Calculates the soil coefficient of the actual crop evapotranspiration
+
+    Args:
+        field_capacity: (mm3/mm3) volumetric water content at field capacity
+        volumetric_soil_water_content: (mm3/mm3) volumetric water content
+        wilting_point: (mm3/mm3) volumetric water content at wilting point
+        alfa: (-) minimum water storage fraction of wilting_point
+
+    Returns:
+        (-) soil coefficient for evapotranspiration
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L732
+    """
+    soil_coefficient = min(
+        1., max(0.,
+                (1 - (0.95 * field_capacity - volumetric_soil_water_content) / (
+                        0.95 * field_capacity - alfa * wilting_point)) ** 2))
+
+    return 0 if (volumetric_soil_water_content < alfa / 100 * wilting_point) else soil_coefficient
