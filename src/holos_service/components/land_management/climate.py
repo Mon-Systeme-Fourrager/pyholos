@@ -426,3 +426,24 @@ def calculate_actual_evapotranspiration(
         https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L762
     """
     return soil_coefficient * crop_potential_evapotranspiration
+
+
+def calculate_deep_percolation(
+    field_capacity: float,
+    layer_thickness: float,
+    previous_water_storage: float
+) -> float:
+    """Calculates the deep percolation due to excess water beyond field capacity.
+
+    Args:
+        field_capacity: (mm3/mm3) volumetric water content at field capacity
+        layer_thickness: (mm) thickness of the soil top layer
+        previous_water_storage: (mm) water storage of the previous day
+
+    Returns:
+        (mm/d) water lost to percolation down the soil profile
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L773
+    """
+    return max(0., previous_water_storage - field_capacity * layer_thickness)

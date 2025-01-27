@@ -447,5 +447,30 @@ class TestCalculateActualEvapotranspiration(unittest.TestCase):
                     soil_coefficient=soil_coefficient))
 
 
+class TestCalculateDeepPercolation(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.field_capacity = 0.5
+        cls.layer_thickness = 1000
+        cls.soil_holding_capacity = cls.field_capacity * cls.layer_thickness
+
+    def test_deep_percolation_does_not_occur_below_soil_holding_capacity(self):
+        self.assertEqual(
+            0,
+            climate.calculate_deep_percolation(
+                field_capacity=self.field_capacity,
+                layer_thickness=self.layer_thickness,
+                previous_water_storage=random() * self.soil_holding_capacity))
+
+    def test_deep_percolation_does_occur_for_excess_water_beyond_soil_holding_capacity(self):
+        water_storage = (1 + random()) * self.soil_holding_capacity
+        self.assertEqual(
+            water_storage - self.soil_holding_capacity,
+            climate.calculate_deep_percolation(
+                field_capacity=self.field_capacity,
+                layer_thickness=self.layer_thickness,
+                previous_water_storage=water_storage))
+
+
 if __name__ == '__main__':
     unittest.main()
