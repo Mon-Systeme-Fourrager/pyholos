@@ -472,5 +472,32 @@ class TestCalculateDeepPercolation(unittest.TestCase):
                 previous_water_storage=water_storage))
 
 
+class test_calculate_julian_day_water_storage(unittest.TestCase):
+    def test_soil_water_stores_all_available_water_in_dry_conditions(self):
+        available_water = random()
+        self.assertEqual(
+            available_water,
+            climate.calculate_julian_day_water_storage(
+                deep_percolation=0,
+                previous_water_storage=0,
+                soil_available_water=available_water,
+                actual_evapotranspiration=0))
+
+    def test_soil_water_storage_equals_that_of_the_previous_day_minos_deep_percolation_under_high_interception_conditions(
+            self):
+        actual_evapotranspiration = random()
+        soil_available_water = actual_evapotranspiration
+        previous_water_storage = random()
+        deep_percolation = random()
+        self.assertAlmostEqual(
+            previous_water_storage - deep_percolation,
+            climate.calculate_julian_day_water_storage(
+                deep_percolation=deep_percolation,
+                previous_water_storage=previous_water_storage,
+                soil_available_water=soil_available_water,
+                actual_evapotranspiration=actual_evapotranspiration),
+            places=3)
+
+
 if __name__ == '__main__':
     unittest.main()

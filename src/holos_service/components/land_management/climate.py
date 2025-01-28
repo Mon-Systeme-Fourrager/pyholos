@@ -447,3 +447,26 @@ def calculate_deep_percolation(
         https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L773
     """
     return max(0., previous_water_storage - field_capacity * layer_thickness)
+
+
+def calculate_julian_day_water_storage(
+        deep_percolation: float,
+        previous_water_storage: float,
+        soil_available_water: float,
+        actual_evapotranspiration: float
+) -> float:
+    """Calculates the water storage of a given day.
+
+    Args:
+        deep_percolation: (mm/d) water lost to percolation down the soil profile
+        previous_water_storage: (mm) water storage of the previous day
+        soil_available_water:  (mm) soil available water
+        actual_evapotranspiration: (mm/d) actual evapotranspiration
+
+    Returns:
+        (mm) soil water storage of the current day
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L796
+    """
+    return previous_water_storage + soil_available_water - actual_evapotranspiration - deep_percolation
