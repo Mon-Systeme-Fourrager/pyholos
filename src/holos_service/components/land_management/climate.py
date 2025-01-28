@@ -530,3 +530,22 @@ def calculate_moisture_response_factor(
         moisture_response_factor = reference_wilting_point * volumetric_water_content / wilting_point
 
     return max(0., min(1., moisture_response_factor))
+
+
+def calculate_climate_factor(
+        moisture_response_factor: float,
+        temperature_response_factor: float
+) -> float:
+    """Calculates the climate parameter (re_crop_daily)
+
+    Args:
+        moisture_response_factor: (-) moisture response factor
+        temperature_response_factor: (-) temperature response factor
+
+    Returns:
+        (-) climate response factor
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L901
+    """
+    return moisture_response_factor * temperature_response_factor / 0.10516

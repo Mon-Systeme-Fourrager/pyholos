@@ -569,5 +569,25 @@ class TestCalculateMoistureResponseFactor(unittest.TestCase):
         ])
 
 
+class TestCalculateClimateFactor(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.adjustment_factor = 0.10516
+
+    def test_values_are_as_expected(self):
+        for temperature_factor, moisture_factor, expected_value in [
+            (1, 0, 0),
+            (0, 1, 0),
+            (0, 0, 0),
+            (1, self.adjustment_factor, 1),
+            (self.adjustment_factor, 1, 1)
+        ]:
+            self.assertEqual(
+                expected_value,
+                climate.calculate_climate_factor(
+                    moisture_response_factor=moisture_factor,
+                    temperature_response_factor=temperature_factor))
+
+
 if __name__ == '__main__':
     unittest.main()
