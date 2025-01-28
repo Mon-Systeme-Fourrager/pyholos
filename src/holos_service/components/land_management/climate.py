@@ -406,7 +406,7 @@ def calculate_soil_coefficient(
                 (1 - (0.95 * field_capacity - volumetric_soil_water_content) / (
                         0.95 * field_capacity - alfa * wilting_point)) ** 2))
 
-    return 0 if (volumetric_soil_water_content < alfa / 100 * wilting_point) else soil_coefficient
+    return 0 if (volumetric_soil_water_content < alfa * wilting_point) else soil_coefficient
 
 
 def calculate_actual_evapotranspiration(
@@ -429,9 +429,9 @@ def calculate_actual_evapotranspiration(
 
 
 def calculate_deep_percolation(
-    field_capacity: float,
-    layer_thickness: float,
-    previous_water_storage: float
+        field_capacity: float,
+        layer_thickness: float,
+        previous_water_storage: float
 ) -> float:
     """Calculates the deep percolation due to excess water beyond field capacity.
 
