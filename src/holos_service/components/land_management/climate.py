@@ -493,3 +493,40 @@ def calculate_temperature_response_factor(
     return 0 if soil_temperature_previous < -3.78 else (
             ((soil_temperature_previous - decomposition_minimum_temperature) / (
                     decomposition_maximum_temperature - decomposition_minimum_temperature)) ** 2)
+
+
+def calculate_moisture_response_factor(
+        volumetric_water_content: float,
+        field_capacity: float,
+        wilting_point: float,
+        reference_saturation_point: float,
+        reference_wilting_point: float
+) -> float:
+    """Calculates the water response factor (re_water)
+
+    Args:
+        volumetric_water_content: (mm3/mm3) soil volumetric water content
+        field_capacity: (mm3/mm3) soil volumetric water content at field capacity
+        wilting_point: (mm3/mm3) soil volumetric water content at the wilting point
+        reference_saturation_point: (mm3/mm3) soil volumetric water content at reference saturation
+        reference_wilting_point: (mm3/mm3) soil volumetric water content at reference wilting point
+
+    Returns:
+        (-) moisture response factor
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L851
+    """
+    saturation_point = 1.2 * field_capacity
+    optimum_water_content = 0.9 * field_capacity
+
+    if volumetric_water_content > optimum_water_content:
+        moisture_response_factor = 1 - (1 - reference_saturation_point) * (
+                (volumetric_water_content - optimum_water_content) / (saturation_point - optimum_water_content))
+    elif volumetric_water_content >= wilting_point:
+        moisture_response_factor = reference_wilting_point + (1 - reference_wilting_point) * (
+                (volumetric_water_content - wilting_point) / (optimum_water_content - wilting_point))
+    else:
+        moisture_response_factor = reference_wilting_point * volumetric_water_content / wilting_point
+
+    return max(0., min(1., moisture_response_factor))

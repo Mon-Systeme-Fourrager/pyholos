@@ -529,5 +529,45 @@ class TestCalculateTemperatureResponseFactor(unittest.TestCase):
         ])
 
 
+class TestCalculateMoistureResponseFactor(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.args = dict(
+            field_capacity=0.4,
+            wilting_point=0.2,
+            reference_saturation_point=0.42,
+            reference_wilting_point=0.18)
+
+    def test_value_at_saturation_moisture_content(self):
+        self.assertAlmostEqual(
+            self.args['reference_saturation_point'],
+            climate.calculate_moisture_response_factor(
+                volumetric_water_content=1.2 * self.args['field_capacity'],
+                **self.args),
+            places=3)
+
+    def test_value_at_optimal_moisture_content(self):
+        self.assertEqual(
+            1,
+            climate.calculate_moisture_response_factor(
+                volumetric_water_content=0.9 * self.args['field_capacity'],
+                **self.args))
+
+    def test_value_at_wilting_point(self):
+        self.assertEqual(
+            self.args['reference_wilting_point'],
+            climate.calculate_moisture_response_factor(
+                volumetric_water_content=self.args['wilting_point'],
+                **self.args))
+
+    def test_values_increase_with_soil_water_content(self):
+        assert_is_ascending([
+            climate.calculate_moisture_response_factor(
+                volumetric_water_content=v / 10,
+                **self.args)
+            for v in range(int(self.args['wilting_point'] * 10), int(self.args['field_capacity'] * 10) + 5)
+        ])
+
+
 if __name__ == '__main__':
     unittest.main()
