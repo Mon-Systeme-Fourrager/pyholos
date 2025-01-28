@@ -499,5 +499,35 @@ class test_calculate_julian_day_water_storage(unittest.TestCase):
             places=3)
 
 
+class TestCalculateTemperatureResponseFactor(unittest.TestCase):
+    def test_value_below_temperature_threshold(self):
+        self.assertEqual(
+            0,
+            climate.calculate_temperature_response_factor(
+                soil_temperature_previous=randint(-10, -4),
+                decomposition_minimum_temperature=random(),
+                decomposition_maximum_temperature=random()))
+
+    def test_value_at_minimum_cardinal_temperature(self):
+        decomposition_minimum_temperature = randint(-3, 25)
+        self.assertEqual(
+            0,
+            climate.calculate_temperature_response_factor(
+                soil_temperature_previous=decomposition_minimum_temperature,
+                decomposition_minimum_temperature=decomposition_minimum_temperature,
+                decomposition_maximum_temperature=random()))
+
+    def test_value_increases_with_soil_temperature(self):
+        decomposition_minimum_temperature = -1
+        decomposition_maximum_temperature = 15
+
+        assert_is_ascending([climate.calculate_temperature_response_factor(
+            soil_temperature_previous=v,
+            decomposition_minimum_temperature=decomposition_minimum_temperature,
+            decomposition_maximum_temperature=decomposition_maximum_temperature)
+            for v in range(decomposition_minimum_temperature, decomposition_maximum_temperature + 1)
+        ])
+
+
 if __name__ == '__main__':
     unittest.main()

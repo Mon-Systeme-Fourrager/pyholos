@@ -470,3 +470,26 @@ def calculate_julian_day_water_storage(
         https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L796
     """
     return previous_water_storage + soil_available_water - actual_evapotranspiration - deep_percolation
+
+
+def calculate_temperature_response_factor(
+        soil_temperature_previous: float,
+        decomposition_minimum_temperature: float,
+        decomposition_maximum_temperature: float
+) -> float:
+    """Calculates the temperature response factor (re_temp)
+
+    Args:
+        soil_temperature_previous: (degree Celsius) soil temperature of the previous day
+        decomposition_minimum_temperature: (degree Celsius) minimum cardinal temperature
+        decomposition_maximum_temperature: (degree Celsius) maximum cardinal temperature
+
+    Returns:
+        (-) temperature response factor
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L826
+    """
+    return 0 if soil_temperature_previous < -3.78 else (
+            ((soil_temperature_previous - decomposition_minimum_temperature) / (
+                    decomposition_maximum_temperature - decomposition_minimum_temperature)) ** 2)
