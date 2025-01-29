@@ -605,5 +605,34 @@ class TestNonRegressionCalculateDailyClimateParameter(unittest.TestCase):
                 places=2)
 
 
+class TestNonRegressionCalculateDailyClimateParameters(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        with open(r'../../sources/holos/non_regression_climate_calculator.json', mode='r') as f:
+            cls.non_regression_data = load(f)['calculate_daily_climate_parameters']
+
+    def test_values(self):
+        """
+        Notes:
+            This test did not include a day-to-day comparison since input data taken from Holos
+            (evapotranspirations, tempreatures, precipitations) were rounded to 2-decimals, which makes the outputs
+            of this function not identical to those from Holos.
+        """
+        res = climate.calculate_daily_climate_parameters(**self.non_regression_data['inputs'])
+        values_holos = self.non_regression_data['outputs']
+        self.assertEqual(
+            len(values_holos),
+            len(res))
+
+        self.assertLessEqual(
+            sum([abs(v_res - v_holos) for v_res, v_holos in zip(res, values_holos)]) / len(res),
+            0.02)
+
+        self.assertAlmostEqual(
+            sum(values_holos) / len(values_holos),
+            sum(res) / len(res),
+            places=2)
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -703,3 +703,80 @@ def calculate_daily_climate_parameter(
         SoilTemperature=soil_temperature_current,
         SoilWaterStorage=current_water_storage,
         ClimateParameter=climate_factor)
+
+
+def calculate_daily_climate_parameters(
+        emergence_day: int,
+        ripening_day: int,
+        crop_yield: float,
+        clay: float,
+        sand: float,
+        layer_thickness_in_millimeters: float,
+        percentage_soil_organic_carbon: float,
+        variance: float,
+        alfa: float,
+        decomposition_minimum_temperature: float,
+        decomposition_maximum_temperature: float,
+        moisture_response_function_at_wilting_point: float,
+        moisture_response_function_at_saturation: float,
+        evapotranspirations: list[float],
+        precipitations: list[float],
+        temperatures: list[float]
+) -> list[float]:
+    green_area_index_max = calculate_green_area_index_max(
+        crop_yield=crop_yield)
+
+    mid_season = calculate_mid_season(
+        emergence_day=emergence_day,
+        ripening_day=ripening_day)
+
+    organic_carbon_factor = calculate_organic_carbon_factor(
+        percent_organic_carbon=percentage_soil_organic_carbon)
+
+    clay_factor = calculate_clay_factor(clay_content=clay)
+    sand_factor = calculate_sand_factor(sand_content=sand)
+
+    wilting_point = calculate_wilting_point(
+        organic_carbon_factor=organic_carbon_factor,
+        clay_factor=clay_factor,
+        sand_factor=sand_factor)
+
+    field_capacity = calculate_field_capacity(
+        organic_carbon_factor=organic_carbon_factor,
+        clay_factor=clay_factor,
+        sand_factor=sand_factor)
+
+    soil_mean_depth = calculate_soil_mean_depth()
+
+    soil_temperature_previous = 0
+    soil_water_storage_previous = field_capacity * layer_thickness_in_millimeters
+
+    daily_climate_parameter_list = []
+
+    for julian_day, temperature, precipitation, evapotranspiration in zip(
+            _get_julian_days(), temperatures, precipitations, evapotranspirations):
+        daily_climate_parameter = calculate_daily_climate_parameter(
+            julian_day=julian_day,
+            mid_season=mid_season,
+            temperature=temperature,
+            precipitation=precipitation,
+            evapotranspiration=evapotranspiration,
+            variance=variance,
+            field_capacity=field_capacity,
+            wilting_point=wilting_point,
+            layer_thickness=layer_thickness_in_millimeters,
+            soil_mean_depth=soil_mean_depth,
+            green_area_index_max=green_area_index_max,
+            alfa=alfa,
+            decomposition_minimum_temperature=decomposition_minimum_temperature,
+            decomposition_maximum_temperature=decomposition_maximum_temperature,
+            moisture_response_function_at_saturation=moisture_response_function_at_saturation,
+            moisture_response_function_at_wilting_point=moisture_response_function_at_wilting_point,
+            soil_temperature_previous=soil_temperature_previous,
+            soil_water_storage_previous=soil_water_storage_previous)
+
+        daily_climate_parameter_list.append(daily_climate_parameter.ClimateParameter)
+        soil_temperature_previous = daily_climate_parameter.SoilTemperature
+        soil_water_storage_previous = daily_climate_parameter.SoilWaterStorage
+
+    return daily_climate_parameter_list
