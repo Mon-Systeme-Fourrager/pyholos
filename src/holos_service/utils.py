@@ -1,6 +1,7 @@
 import re
 from enum import StrEnum
 from pathlib import Path
+from typing import Iterable
 
 from pandas import read_csv, DataFrame
 
@@ -38,3 +39,8 @@ def concat_lists(*args) -> list:
 
 def keep_alphabetical_characters(name: str) -> str:
     return ''.join(s for s in name if s.isalpha()).lower()
+
+
+def calc_average(values: Iterable[int | float]) -> float:
+    values = list(values)
+    return sum(values) / len(list(values))
