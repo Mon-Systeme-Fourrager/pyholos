@@ -606,8 +606,8 @@ def calculate_daily_climate_parameter(
         soil_mean_depth: (mm) soil top layer mean depth
         green_area_index_max: (m2(green area)/m2(ground)) maximum amplitude of green area index
         alfa: (-) minimum water storage fraction of wilting_point
-        decomposition_minimum_temperature: (degree Celsius) minimum cardinal temperature
-        decomposition_maximum_temperature: (degree Celsius) maximum cardinal temperature
+        decomposition_minimum_temperature: (degree Celsius) minimum cardinal temperature for decomposition
+        decomposition_maximum_temperature: (degree Celsius) maximum cardinal temperature for decomposition
         moisture_response_function_at_saturation: (mm3/mm3) soil volumetric water content at reference saturation
         moisture_response_function_at_wilting_point: (mm3/mm3) soil volumetric water content at reference wilting point
         soil_temperature_previous: (degrees Celsius) soil surface temperature of the previous day
@@ -723,6 +723,32 @@ def calculate_daily_climate_parameters(
         precipitations: list[float],
         temperatures: list[float]
 ) -> list[float]:
+    """Calculates all daily values of the climate parameter.
+
+    Args:
+        emergence_day: (julian day) day of plant emergence
+        ripening_day: (julian day) day of plant ripening
+        crop_yield: (kg(DM)/ha) crop yield
+        clay: proportion of clay in soil
+        sand: proportion of sand in soil
+        layer_thickness_in_millimeters: (mm) soil layer thickness
+        percentage_soil_organic_carbon: (%) percentage of organic C in soil, by weight
+        variance: width of distribution function
+        alfa: (-) minimum water storage fraction of wilting_point
+        decomposition_minimum_temperature: (degree Celsius) minimum cardinal temperature for decomposition
+        decomposition_maximum_temperature: (degree Celsius) maximum cardinal temperature for decomposition
+        moisture_response_function_at_wilting_point: (mm3/mm3) soil volumetric water content at reference wilting point
+        moisture_response_function_at_saturation: (mm3/mm3) soil volumetric water content at reference saturation
+        evapotranspirations: (mm/d) all-year values of reference crop evapotranspiration
+        precipitations: (mm/d) all-year values of precipitation
+        temperatures: (mm/d) all-year values of air temperature
+
+    Returns:
+        values of the climate parameter for all days of the year.
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L112
+    """
     green_area_index_max = calculate_green_area_index_max(
         crop_yield=crop_yield)
 
@@ -775,8 +801,9 @@ def calculate_daily_climate_parameters(
             soil_temperature_previous=soil_temperature_previous,
             soil_water_storage_previous=soil_water_storage_previous)
 
-        daily_climate_parameter_list.append(daily_climate_parameter.ClimateParameter)
         soil_temperature_previous = daily_climate_parameter.SoilTemperature
         soil_water_storage_previous = daily_climate_parameter.SoilWaterStorage
+
+        daily_climate_parameter_list.append(daily_climate_parameter.ClimateParameter)
 
     return daily_climate_parameter_list
