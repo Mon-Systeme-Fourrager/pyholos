@@ -1,7 +1,15 @@
 import math
 import sys
+from dataclasses import dataclass
 
 from holos_service.defaults import Defaults
+
+
+@dataclass
+class DailClimateParams:
+    SoilTemperature: float
+    SoilWaterStorage: float
+    ClimateParameter: float
 
 
 def calculate_green_area_index_max(
@@ -549,3 +557,137 @@ def calculate_climate_factor(
         https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L901
     """
     return moisture_response_factor * temperature_response_factor / 0.10516
+
+
+def calculate_daily_climate_parameter(
+        julian_day: int,
+        mid_season: float,
+        temperature: float,
+        precipitation: float,
+        evapotranspiration: float,
+        variance: float,
+        field_capacity: float,
+        wilting_point: float,
+        layer_thickness: float,
+        soil_mean_depth: float,
+        green_area_index_max: float,
+        alfa: float,
+        decomposition_minimum_temperature: float,
+        decomposition_maximum_temperature: float,
+        moisture_response_function_at_saturation: float,
+        moisture_response_function_at_wilting_point: float,
+        soil_temperature_previous: float,
+        soil_water_storage_previous: float
+) -> DailClimateParams:
+    """Calculates the daily variables required to estimate the ClimateParameter
+
+    Args:
+        julian_day: Julian day
+        mid_season: (Julian day) median day of the growing season
+        temperature: (degrees Celsius) air temperature
+        precipitation: (mm/d) total precipitation
+        evapotranspiration: (mm/d) reference crop evapotranspiration
+        variance: width of distribution function
+        field_capacity: (mm3/mm3) soil volumetric water content at field capacity
+        wilting_point: (mm3/mm3) soil volumetric water content at the wilting point
+        layer_thickness: (mm) thickness of the soil top layer
+        soil_mean_depth: (mm) soil top layer mean depth
+        green_area_index_max: (m2(green area)/m2(ground)) maximum amplitude of green area index
+        alfa: (-) minimum water storage fraction of wilting_point
+        decomposition_minimum_temperature: (degree Celsius) minimum cardinal temperature
+        decomposition_maximum_temperature: (degree Celsius) maximum cardinal temperature
+        moisture_response_function_at_saturation: (mm3/mm3) soil volumetric water content at reference saturation
+        moisture_response_function_at_wilting_point: (mm3/mm3) soil volumetric water content at reference wilting point
+        soil_temperature_previous: (degrees Celsius) soil surface temperature of the previous day
+        soil_water_storage_previous: (degrees Celsius) soil water storage of the previous day
+
+    Returns:
+        SoilTemperature: (degrees Celsius) soil surface temperature of the current day
+        SoilWaterStorage: (degrees Celsius) soil water storage of the current day
+        ClimateFactor: (-) climate factor of the current day
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L348
+    """
+    green_area_index = calculate_green_area_index(
+        green_area_index_max=green_area_index_max,
+        julian_day=julian_day,
+        mid_season=mid_season,
+        variance=variance)
+
+    leaf_area_index = calculate_leaf_area_index(
+        green_area_index=green_area_index)
+
+    surface_temperature = calculate_surface_temperature(
+        temperature=temperature,
+        leaf_area_index=leaf_area_index)
+
+    soil_temperature_current = calculate_soil_temperatures(
+        julian_day=julian_day,
+        surface_temperature=surface_temperature,
+        soil_mean_depth=soil_mean_depth,
+        green_area_index=green_area_index,
+        soil_temperature_previous=soil_temperature_previous)
+
+    crop_coefficient = calculate_crop_coefficient(
+        green_area_index=green_area_index)
+
+    crop_evapotranspiration = calculate_crop_evapotranspiration(
+        evapotranspiration=evapotranspiration,
+        crop_coefficient=crop_coefficient)
+
+    crop_interception = calculate_crop_interception(
+        total_daily_precipitation=precipitation,
+        green_area_index=green_area_index,
+        crop_evapotranspiration=crop_evapotranspiration)
+
+    soil_available_water = calculate_soil_available_water(
+        total_daily_precipitation=precipitation,
+        crop_interception=crop_interception)
+
+    volumetric_soil_water_content = calculate_volumetric_soil_water_content(
+        water_storage_previous=soil_water_storage_previous,
+        layer_thickness=layer_thickness,
+        wilting_point=wilting_point)
+
+    soil_coefficient = calculate_soil_coefficient(
+        field_capacity=field_capacity,
+        volumetric_soil_water_content=volumetric_soil_water_content,
+        wilting_point=wilting_point,
+        alfa=alfa)
+
+    actual_evapotranspiration = calculate_actual_evapotranspiration(
+        crop_potential_evapotranspiration=crop_evapotranspiration,
+        soil_coefficient=soil_coefficient)
+
+    deep_percolation = calculate_deep_percolation(
+        field_capacity=field_capacity,
+        layer_thickness=layer_thickness,
+        previous_water_storage=soil_water_storage_previous)
+
+    current_water_storage = calculate_julian_day_water_storage(
+        deep_percolation=deep_percolation,
+        previous_water_storage=soil_water_storage_previous,
+        soil_available_water=soil_available_water,
+        actual_evapotranspiration=actual_evapotranspiration)
+
+    temperature_response_factor = calculate_temperature_response_factor(
+        soil_temperature_previous=soil_temperature_previous,
+        decomposition_minimum_temperature=decomposition_minimum_temperature,
+        decomposition_maximum_temperature=decomposition_maximum_temperature)
+
+    moisture_response_factor = calculate_moisture_response_factor(
+        volumetric_water_content=volumetric_soil_water_content,
+        field_capacity=field_capacity,
+        wilting_point=wilting_point,
+        reference_saturation_point=moisture_response_function_at_saturation,
+        reference_wilting_point=moisture_response_function_at_wilting_point)
+
+    climate_factor = calculate_climate_factor(
+        moisture_response_factor=moisture_response_factor,
+        temperature_response_factor=temperature_response_factor)
+
+    return DailClimateParams(
+        SoilTemperature=soil_temperature_current,
+        SoilWaterStorage=current_water_storage,
+        ClimateParameter=climate_factor)

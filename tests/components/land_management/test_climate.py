@@ -1,5 +1,6 @@
 import unittest
 from itertools import product
+from json import load
 from random import random, randint
 
 from holos_service.components.land_management import climate
@@ -587,6 +588,21 @@ class TestCalculateClimateFactor(unittest.TestCase):
                 climate.calculate_climate_factor(
                     moisture_response_factor=moisture_factor,
                     temperature_response_factor=temperature_factor))
+
+
+class TestNonRegressionCalculateDailyClimateParameter(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        with open(r'../../sources/holos/non_regression_climate_calculator.json', mode='r') as f:
+            cls.non_regression_data = load(f)['calculate_daily_climate_parameter']
+
+    def test_values(self):
+        res = climate.calculate_daily_climate_parameter(**self.non_regression_data['inputs']).__dict__
+        for k, v in self.non_regression_data['outputs'].items():
+            self.assertAlmostEqual(
+                v,
+                res[k],
+                places=2)
 
 
 if __name__ == '__main__':

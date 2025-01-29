@@ -1,0 +1,30 @@
+{
+  "comment": "The values included here come from outputs obtained with the Holos source code.",
+  "calculate_daily_climate_parameter": {
+    "inputs": {
+      "julian_day": 2,
+      "mid_season": 169,
+      "temperature": -5.95,
+      "precipitation": 0.06,
+      "evapotranspiration": 0,
+      "variance": 300,
+      "field_capacity": 0.3092,
+      "wilting_point": 0.1559,
+      "layer_thickness": 150,
+      "soil_mean_depth": 7.5,
+      "green_area_index_max": 1.835,
+      "alfa": 0.7,
+      "decomposition_minimum_temperature": -3.78,
+      "decomposition_maximum_temperature": 30,
+      "moisture_response_function_at_saturation": 0.42,
+      "moisture_response_function_at_wilting_point": 0.18,
+      "soil_temperature_previous": 0,
+      "soil_water_storage_previous": 46.454
+    },
+    "outputs": {
+      "SoilTemperature": -0.2514,
+      "SoilWaterStorage": 46.4438,
+      "ClimateParameter": 0.0957
+    }
+  }
+}
