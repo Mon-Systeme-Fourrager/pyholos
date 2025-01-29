@@ -618,7 +618,8 @@ class TestNonRegressionCalculateDailyClimateParameters(unittest.TestCase):
             (evapotranspirations, tempreatures, precipitations) were rounded to 2-decimals, which makes the outputs
             of this function not identical to those from Holos.
         """
-        res = climate.calculate_daily_climate_parameters(**self.non_regression_data['inputs'])
+        func_inputs = self.non_regression_data['inputs']
+        res = climate.calculate_daily_climate_parameters(**func_inputs)
         values_holos = self.non_regression_data['outputs']
         self.assertEqual(
             len(values_holos),
@@ -630,6 +631,11 @@ class TestNonRegressionCalculateDailyClimateParameters(unittest.TestCase):
 
         self.assertAlmostEqual(
             sum(values_holos) / len(values_holos),
+            sum(res) / len(res),
+            places=2)
+
+        self.assertAlmostEqual(
+            climate.calculate_climate_parameter(**func_inputs),
             sum(res) / len(res),
             places=2)
 
