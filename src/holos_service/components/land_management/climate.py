@@ -12,6 +12,18 @@ class DailClimateParams:
     ClimateParameter: float
 
 
+def _get_julian_days() -> list[int]:
+    """Returns the number of days in a common year (non-bissextile year).
+
+    Returns:
+        Julian days of a common year (365 days)
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L340
+    """
+    return list(range(1, Defaults.DaysInYear + 1))
+
+
 def calculate_green_area_index_max(
         crop_yield: float
 ) -> float:
