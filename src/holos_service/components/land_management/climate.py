@@ -217,8 +217,13 @@ def calculate_field_capacity(
     return field_capacity_percent / 100.
 
 
-def calculate_soil_mean_depth() -> float:
+def calculate_soil_mean_depth(
+        layer_thickness: float
+) -> float:
     """Calculates the soil top layer mean depth
+
+    Args:
+        layer_thickness: (mm) top layer thickness
 
     Returns:
         (mm) soil top layer mean depth
@@ -229,7 +234,7 @@ def calculate_soil_mean_depth() -> float:
     Note:
         Holos assumes the value of layer_thickness constant to 250 mm
     """
-    return Defaults.TopLayerThickness / 20.
+    return layer_thickness / 20.
 
 
 def calculate_leaf_area_index(
@@ -773,7 +778,8 @@ def calculate_daily_climate_parameters(
         clay_factor=clay_factor,
         sand_factor=sand_factor)
 
-    soil_mean_depth = calculate_soil_mean_depth()
+    soil_mean_depth = calculate_soil_mean_depth(
+        layer_thickness=layer_thickness_in_millimeters)
 
     soil_temperature_previous = 0
     soil_water_storage_previous = field_capacity * layer_thickness_in_millimeters

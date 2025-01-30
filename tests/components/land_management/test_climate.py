@@ -189,7 +189,7 @@ class TestCalculateSoilMeanDepth(unittest.TestCase):
     def test_constant_value(self):
         self.assertEqual(
             12.5,
-            climate.calculate_soil_mean_depth())
+            climate.calculate_soil_mean_depth(layer_thickness=250))
 
 
 class TestCalculateLeafAreaIndex(unittest.TestCase):
