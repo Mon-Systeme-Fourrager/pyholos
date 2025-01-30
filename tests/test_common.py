@@ -28,6 +28,26 @@ class TestGetRegion(unittest.TestCase):
                     common.Region.EasternCanada,
                     common.get_region(province=province))
 
+
+class TestVerifyIsPrairieProvince(unittest.TestCase):
+    def test_prairie_provinces(self):
+        for province in [
+            CanadianProvince.Alberta,
+            CanadianProvince.Saskatchewan,
+            CanadianProvince.Manitoba
+        ]:
+            self.assertTrue(common.verify_is_prairie_province(province=province))
+
+    def test_non_prairie_provinces(self):
+        for province in CanadianProvince:
+            if province not in [
+                CanadianProvince.Alberta,
+                CanadianProvince.Saskatchewan,
+                CanadianProvince.Manitoba
+            ]:
+                self.assertFalse(common.verify_is_prairie_province(province=province))
+
+
 class TestGetClimateZone(unittest.TestCase):
     def test_high_temperature_high_ratio_precipitation_to_evapotranspiration(self):
         self.assertEqual(

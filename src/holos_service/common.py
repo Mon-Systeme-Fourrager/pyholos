@@ -57,6 +57,15 @@ def get_region(
     return res
 
 
+def verify_is_prairie_province(
+        province: CanadianProvince
+) -> bool:
+    return province in [
+        CanadianProvince.Alberta,
+        CanadianProvince.Saskatchewan,
+        CanadianProvince.Manitoba]
+
+
 @unique
 class ClimateZones(StrEnum):
     CoolTemperateMoist = auto()
