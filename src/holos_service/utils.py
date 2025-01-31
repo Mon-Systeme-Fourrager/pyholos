@@ -16,7 +16,7 @@ class AutoNameEnum(StrEnum):
 
 
 def read_holos_resource_table(
-        path_file: Path,
+        path_file: Path | str,
         **kwargs
 ) -> DataFrame:
     return read_csv(path_file, sep=',', decimal='.', comment='#', **kwargs
