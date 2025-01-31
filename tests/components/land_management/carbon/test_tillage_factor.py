@@ -1,9 +1,9 @@
 import unittest
-
-from numpy.random import choice
+from random import choice
 
 from holos_service.components.land_management.carbon import tillage_factor
 from holos_service.components.land_management.common import TillageType
+from holos_service.django_stuff import CanadianProvince
 from holos_service.soil import SoilFunctionalCategory
 
 
@@ -45,6 +45,37 @@ class TestCalculateCropTillageFactor(unittest.TestCase):
                         tillage_type=choice(list(TillageType))
                     )
                 )
+
+
+class TestCalculateTillageFactorForPerennials(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.prairie_provinces = [
+            CanadianProvince.Alberta,
+            CanadianProvince.Saskatchewan,
+            CanadianProvince.Manitoba]
+
+    def test_value_for_prairie_provinces(self):
+        for province in self.prairie_provinces:
+            for soil_functional_category, expected_value in [
+                (SoilFunctionalCategory.Brown, 0.8),
+                (SoilFunctionalCategory.DarkBrown, 0.7),
+                (SoilFunctionalCategory.Black, 0.6),
+            ]:
+                self.assertEqual(
+                    expected_value,
+                    tillage_factor.calculate_tillage_factor_for_perennials(
+                        soil_functional_category=soil_functional_category,
+                        province=province))
+
+    def test_value_for_non_prairie_provinces(self):
+        for province in CanadianProvince:
+            if province not in self.prairie_provinces:
+                self.assertEqual(
+                    0.9,
+                    tillage_factor.calculate_tillage_factor_for_perennials(
+                        soil_functional_category=choice(list(SoilFunctionalCategory)),
+                        province=province))
 
 
 if __name__ == '__main__':
