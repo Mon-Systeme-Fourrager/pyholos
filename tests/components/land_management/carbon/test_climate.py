@@ -3,7 +3,7 @@ from itertools import product
 from json import load
 from random import random, randint
 
-from holos_service.components.land_management import climate
+from holos_service.components.land_management.carbon import climate
 from tests.helpers.utils import assert_is_ascending, assert_is_descending
 
 
@@ -593,7 +593,7 @@ class TestCalculateClimateFactor(unittest.TestCase):
 class TestNonRegressionCalculateDailyClimateParameter(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        with open(r'../../sources/holos/non_regression_climate_calculator.json', mode='r') as f:
+        with open(r'../../../sources/holos/non_regression_climate_calculator.json', mode='r') as f:
             cls.non_regression_data = load(f)['calculate_daily_climate_parameter']
 
     def test_values(self):
@@ -608,7 +608,7 @@ class TestNonRegressionCalculateDailyClimateParameter(unittest.TestCase):
 class TestNonRegressionCalculateDailyClimateParameters(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        with open(r'../../sources/holos/non_regression_climate_calculator.json', mode='r') as f:
+        with open(r'../../../sources/holos/non_regression_climate_calculator.json', mode='r') as f:
             cls.non_regression_data = load(f)['calculate_daily_climate_parameters']
 
     def test_values(self):
