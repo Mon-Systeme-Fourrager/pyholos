@@ -1,15 +1,19 @@
-from holos_service.common import HolosVar, Region, get_region
+from uuid import UUID
+
+from holos_service.common import HolosVar
+from holos_service.components.animals.common import ManureAnimalSourceTypes, ManureStateType, ManureLocationSourceType
+from holos_service.components.land_management.carbon.climate import calculate_climate_parameter
+from holos_service.components.land_management.carbon.management import calculate_management_factor
+from holos_service.components.land_management.carbon.relative_biomass_information import RelativeBiomassInformationData
+from holos_service.components.land_management.carbon.tillage import calculate_tillage_factor
 from holos_service.components.land_management.common import (
-    HarvestMethod, IrrigationType, TimePeriodCategory, read_table_50)
-from holos_service.components.land_management.crop import CropType
+    TillageType, HarvestMethod, IrrigationType, ManureApplicationTypes, TimePeriodCategory, get_fuel_energy_estimate,
+    get_herbicide_energy_estimate, FertilizerBlends)
+from holos_service.components.land_management.crop import get_nitrogen_fixation, CropType
 from holos_service.core_constants import CoreConstants
 from holos_service.defaults import Defaults
 from holos_service.django_stuff import CanadianProvince
 from holos_service.soil import SoilFunctionalCategory
-
-
-class HolosTables:
-    Table_50_Fuel_Energy_Requirement_Estimates_By_Region = read_table_50()
 
 
 class LandManagementBase:
@@ -237,37 +241,159 @@ class LandManagementBase:
 
         pass
 
-    def get_fuel_energy_estimate(
+
+class CropViewItem(LandManagementBase):
+    def __init__(
             self,
+            name: str,
+            field_area: float,
+            current_year: int,
+            crop_year: int,
+            year_in_perennial_stand: int,
+            crop_type: CropType,
+            tillage_type: TillageType,
+            perennial_stand_id: UUID,
+            perennial_stand_length: int,
+            relative_biomass_information_data: RelativeBiomassInformationData,
+            crop_yield: float,
+            harvest_method: HarvestMethod,
+            nitrogen_fertilizer_rate: float,
+            under_sown_crops_used: bool,
+            field_system_component_guid: UUID,
             province: CanadianProvince,
-            soil_category: SoilFunctionalCategory
-    ) -> float:
-        """Returns the fuel energy estimate.
+            clay_content: float,
+            sand_content: float,
+            organic_carbon_percentage: float,
+            soil_top_layer_thickness: float,
+            soil_functional_category: SoilFunctionalCategory,
+            fertilizer_blend: FertilizerBlends,
+            evapotranspiration: list[float],
+            precipitation: list[float],
+            temperature: list[float],
+
+            amount_of_irrigation: float = 0,
+            number_of_pesticide_passes: int = 0,
+            amount_of_manure_applied: float = 0,
+            manure_application_type: ManureApplicationTypes = ManureApplicationTypes.NotSelected,
+            manure_animal_source_type: ManureAnimalSourceTypes = ManureAnimalSourceTypes.NotSelected,
+            manure_state_type: ManureStateType = ManureStateType.not_selected,
+            manure_location_source_type: ManureLocationSourceType = ManureLocationSourceType.NotSelected
+
+    ):
+        """
 
         Args:
-            province: CanadianProvince class instance
-            soil_category: SoilFunctionalCategory class instance
-
-        Returns:
-            (GJ ha-1) fuel energy estimate
-
-        Holos source code:
-            https://github.com/holos-aafc/Holos/blob/e6e79c3185b68999eaea1e68dbf77c89d1764b53/H.Core/Providers/Energy/Table_50_Fuel_Energy_Estimates_Provider.cs#L62
+            name:
+            field_area:
+            current_year:
+            crop_year:
+            year_in_perennial_stand:
+            crop_type:
+            tillage_type:
+            perennial_stand_id:
+            perennial_stand_length:
+            relative_biomass_information_data:
+            crop_yield:
+            harvest_method:
+            nitrogen_fertilizer_rate:
+            under_sown_crops_used:
+            field_system_component_guid:
+            province:
+            clay_content:
+            sand_content:
+            organic_carbon_percentage:
+            soil_top_layer_thickness:
+            soil_functional_category:
+            fertilizer_blend:
+            evapotranspiration:
+            precipitation:
+            temperature:
+            amount_of_irrigation:
+            number_of_pesticide_passes:
+            amount_of_manure_applied:
+            manure_application_type:
+            manure_animal_source_type:
+            manure_state_type:
+            manure_location_source_type:
         """
-        soil_lookup_type = (
-            SoilFunctionalCategory.EasternCanada if get_region(province=province) == Region.EasternCanada
-            else soil_category.get_simplified_soil_category())
+        super().__init__()
 
-        crop_type = self.crop_type.value
+        self.name.value = name
+        self.area.value = field_area
+        self.current_year.value = current_year
+        self.crop_year.value = crop_year
+        self.crop_type.value = crop_type
+        self.tillage_type.value = tillage_type
+        self.year_in_perennial_stand.value = year_in_perennial_stand
+        self.perennial_stand_id.value = str(perennial_stand_id)
+        self.perennial_stand_length.value = perennial_stand_length
 
-        # No summer fallow in table
-        if crop_type.is_fallow():
-            crop_type = CropType.Fallow
+        self.biomass_coefficient_product.value = relative_biomass_information_data.RelativeBiomassProduct
+        self.biomass_coefficient_straw.value = relative_biomass_information_data.RelativeBiomassStraw
+        self.biomass_coefficient_roots.value = relative_biomass_information_data.RelativeBiomassRoot
+        self.biomass_coefficient_extraroot.value = relative_biomass_information_data.RelativeBiomassExtraroot
+        self.nitrogen_content_in_product.value = relative_biomass_information_data.NitrogenContentProduct
+        self.nitrogen_content_in_straw.value = relative_biomass_information_data.NitrogenContentStraw
+        self.nitrogen_content_in_roots.value = relative_biomass_information_data.NitrogenContentRoot
+        self.nitrogen_content_in_extraroot.value = relative_biomass_information_data.NitrogenContentExtraroot
+        self.nitrogen_fixation.value = get_nitrogen_fixation(crop_type=crop_type)
+        self.crop_yield.value = crop_yield
+        self.harvest_method.value = harvest_method if harvest_method is not None else self.get_default_harvest_method()
+        self.nitrogen_fertilizer_rate.value = nitrogen_fertilizer_rate
 
-        try:
-            res = HolosTables.Table_50_Fuel_Energy_Requirement_Estimates_By_Region.loc[
-                crop_type, (province, soil_lookup_type, self.tillage_type.value)]
-        except KeyError:
-            res = 0.
+        self.amount_of_irrigation.value = amount_of_irrigation
+        self.set_irrigation_type()
 
-        return 0. if res is None else res
+        self.moisture_content_of_crop.value = relative_biomass_information_data.MoistureContentOfProduct
+        self.set_moisture_content()
+        self.set_percentage_returns()
+        self.number_of_pesticide_passes.value = number_of_pesticide_passes
+        self.is_pesticide_used.value = number_of_pesticide_passes > 0
+
+        self.amount_of_manure_applied.value = amount_of_manure_applied
+        self.manure_applied.value = amount_of_manure_applied > 0
+        self.manure_application_type.value = manure_application_type
+        self.manure_animal_source_type.value = manure_animal_source_type
+        self.manure_state_type.value = manure_state_type
+        self.manure_location_source_type.value = manure_location_source_type
+        self.under_sown_crops_used.value = str(under_sown_crops_used)
+        self.field_system_component_guid.value = str(field_system_component_guid)
+
+        self.fuel_energy.value = get_fuel_energy_estimate(
+            province=province,
+            soil_category=soil_functional_category,
+            tillage_type=tillage_type,
+            crop_type=crop_type)
+        self.herbicide_energy.value = get_herbicide_energy_estimate(
+            province=province,
+            soil_category=soil_functional_category,
+            tillage_type=tillage_type,
+            crop_type=crop_type)
+        self.fertilizer_blend.value = fertilizer_blend
+
+        is_perennial = crop_type.is_perennial()
+        self.climate_parameter.value = calculate_climate_parameter(
+            emergence_day=Defaults.EmergenceDayForPerennials if is_perennial else Defaults.EmergenceDay,
+            ripening_day=Defaults.RipeningDayForPerennials if is_perennial else Defaults.RipeningDay,
+            crop_yield=crop_yield,
+            clay=clay_content,
+            sand=sand_content,
+            layer_thickness_in_millimeters=soil_top_layer_thickness,
+            percentage_soil_organic_carbon=organic_carbon_percentage,
+            variance=Defaults.VarianceForPerennials if is_perennial else Defaults.Variance,
+            alfa=Defaults.Alfa,
+            decomposition_minimum_temperature=Defaults.DecompositionMinimumTemperature,
+            decomposition_maximum_temperature=Defaults.DecompositionMaximumTemperature,
+            moisture_response_function_at_wilting_point=Defaults.MoistureResponseFunctionAtWiltingPoint,
+            moisture_response_function_at_saturation=Defaults.MoistureResponseFunctionAtSaturation,
+            evapotranspirations=evapotranspiration,
+            precipitations=precipitation,
+            temperatures=temperature)
+        self.tillage_factor.value = calculate_tillage_factor(
+            province=province,
+            soil_functional_category=soil_functional_category,
+            tillage_type=tillage_type,
+            crop_type=crop_type)
+        self.management_factor.value = calculate_management_factor(
+            climate_parameter=self.climate_parameter.value,
+            tillage_factor=self.tillage_factor.value)
