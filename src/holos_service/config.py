@@ -10,6 +10,8 @@ _PATH_MSF_RESOURCES = Path(environ['PATH_HOLOS_SERVICE_RESOURCES'])
 
 class PathsHolosResources:
     _path_root = _PATH_HOLOS_SERVICE_RESOURCES / 'holos'
+    Table_Tillage_Factor = _path_root / (
+        'Table_Tillage_Factor.csv')
     Table_6_Manure_Types_And_Default_Composition = _path_root / (
         'Table_6_Manure_Types_And_Default_Composition.csv')
     Table_7_Relative_Biomass_Information = _path_root / (

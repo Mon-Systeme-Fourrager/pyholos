@@ -1,5 +1,6 @@
 from holos_service.common import verify_is_prairie_province
 from holos_service.components.land_management.common import TillageType
+from holos_service.components.land_management.crop import CropType
 from holos_service.config import PathsHolosResources
 from holos_service.django_stuff import CanadianProvince
 from holos_service.soil import SoilFunctionalCategory
@@ -59,4 +60,29 @@ def calculate_tillage_factor_for_perennials(
         res = calculate_crop_tillage_factor(
             soil_functional_category=soil_functional_category,
             tillage_type=TillageType.NoTill)
+    return res
+
+
+def calculate_tillage_factor(
+        province: CanadianProvince,
+        soil_functional_category: SoilFunctionalCategory,
+        tillage_type: TillageType,
+        crop_type: CropType
+) -> float:
+    if crop_type.is_root_crop():
+        res = 1.13
+    elif crop_type.is_annual() and not verify_is_prairie_province(province=province):
+        res = 1
+    else:
+        simplified_soil_category = soil_functional_category.get_simplified_soil_category()
+        if crop_type.is_perennial():
+            res = calculate_tillage_factor_for_perennials(
+                soil_functional_category=simplified_soil_category,
+                province=province)
+
+        else:
+            res = calculate_crop_tillage_factor(
+                soil_functional_category=simplified_soil_category,
+                tillage_type=tillage_type)
+
     return res
