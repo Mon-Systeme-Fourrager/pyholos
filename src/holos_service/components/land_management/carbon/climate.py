@@ -2,7 +2,7 @@ import math
 import sys
 from dataclasses import dataclass
 
-from holos_service.defaults import Defaults
+from holos_service.core_constants import CoreConstants
 from holos_service.utils import calc_average
 
 
@@ -22,7 +22,7 @@ def _get_julian_days() -> list[int]:
     Holos source code:
         https://github.com/holos-aafc/Holos/blob/8a3d8fb047c2058a3dbe273f5a8550ae63a54f14/H.Core/Calculators/Climate/ClimateParameterCalculator.cs#L340
     """
-    return list(range(1, Defaults.DaysInYear + 1))
+    return list(range(1, CoreConstants.DaysInYear + 1))
 
 
 def calculate_green_area_index_max(

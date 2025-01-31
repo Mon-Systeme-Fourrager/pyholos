@@ -1,6 +1,8 @@
 class CoreConstants:
     DefaultNumberOfDecimalPlaces: int = 3
 
+    DaysInYear: int = 365
+
     NotApplicable = -100000
 
     NitrogenDepositionAmount = 5

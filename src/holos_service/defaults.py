@@ -24,4 +24,4 @@ class Defaults:
     """(%) percentage of the root crops straw biomass returned to soil after harvest"""
 
 
-    DaysInYear: int = 365
+
