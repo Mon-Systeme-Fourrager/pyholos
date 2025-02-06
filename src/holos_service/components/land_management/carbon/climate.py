@@ -107,7 +107,7 @@ def calculate_clay_factor(
     """Calculates the clay factor
 
     Args:
-        clay_content: proportion of clay in soil (Clay_factor)
+        clay_content: fraction of clay in soil (between 0 and 1)
 
     Returns:
         (-) clay factor
@@ -124,7 +124,7 @@ def calculate_sand_factor(
     """Calculates the sand factor
 
     Args:
-        sand_content: proportion of sand in soil (Sand_factor)
+        sand_content: fraction of sand in soil (between 0 and 1)
 
     Returns:
         (-) sand factor
@@ -735,10 +735,10 @@ def calculate_daily_climate_parameters(
         emergence_day: (julian day) day of plant emergence
         ripening_day: (julian day) day of plant ripening
         crop_yield: (kg(DM)/ha) crop yield
-        clay: proportion of clay in soil
-        sand: proportion of sand in soil
+        clay: fraction of clay in soil (between 0 and 1)
+        sand: fraction of sand in soil (between 0 and 1)
         layer_thickness_in_millimeters: (mm) soil layer thickness
-        percentage_soil_organic_carbon: (%) percentage of organic C in soil, by weight
+        percentage_soil_organic_carbon: (%) percentage of organic C in soil (between 0 and 100), by weight
         variance: width of distribution function
         alfa: (-) minimum water storage fraction of wilting_point
         decomposition_minimum_temperature: (degree Celsius) minimum cardinal temperature for decomposition
@@ -840,10 +840,10 @@ def calculate_climate_parameter(
         emergence_day: (julian day) day of plant emergence
         ripening_day: (julian day) day of plant ripening
         crop_yield: (kg(DM)/ha) crop yield
-        clay: proportion of clay in soil
-        sand: proportion of sand in soil
+        clay: fraction of clay in soil (between 0 and 1)
+        sand: fraction of sand in soil (between 0 and 1)
         layer_thickness_in_millimeters: (mm) soil layer thickness
-        percentage_soil_organic_carbon: (%) percentage of organic C in soil, by weight
+        percentage_soil_organic_carbon: (%) percentage of organic C in soil (between 0 and 100), by weight
         variance: width of distribution function
         alfa: (-) minimum water storage fraction of wilting_point
         decomposition_minimum_temperature: (degree Celsius) minimum cardinal temperature for decomposition
