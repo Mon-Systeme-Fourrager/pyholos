@@ -4,6 +4,8 @@ from json import load
 from random import random, randint
 
 from holos_service.components.land_management.carbon import climate
+from holos_service.defaults import Defaults
+from holos_service.utils import read_holos_resource_table
 from tests.helpers.utils import assert_is_ascending, assert_is_descending
 
 
@@ -638,6 +640,152 @@ class TestNonRegressionCalculateDailyClimateParameters(unittest.TestCase):
             climate.calculate_climate_parameter(**func_inputs),
             sum(res) / len(res),
             places=2)
+
+
+class TestNonRegressionCalculateClimateParameter(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.weather_data = read_holos_resource_table(
+            r'../../../sources/holos/daily_weather_data_example.csv',
+            usecols=['Year', 'Mean Daily Air Temperature', 'Mean Daily Precipitation', 'Mean Daily Pet'])
+
+    def test_values_of_monoculture_field_of_annual_crop(self):
+        # Values reported for the climate parameter were exported from the GUI for a wheat field
+        for year, crop_yield, expected_value in [
+            (1985, 3490, 1.208),
+            (1986, 3100, 1.17),
+            (1987, 2800, 1.332),
+            (1988, 2600, 1.282),
+            (1989, 3100, 1.284),
+            (1990, 3100, 1.344),
+            (1991, 2900, 1.356),
+            (1992, 3300, 1.149),
+            (1993, 3000, 1.319),
+            (1994, 2500, 1.467),
+            (1995, 2800, 1.413),
+            (1996, 2800, 1.366),
+            (1997, 3100, 1.307),
+            (1998, 2900, 1.569),
+            (1999, 3000, 1.5),
+            (2000, 3300, 1.26),
+            (2001, 3200, 1.413),
+            (2002, 3300, 1.367),
+            (2003, 3100, 1.378),
+            (2004, 3300, 1.356),
+            (2005, 2900, 1.495),
+            (2006, 2900, 1.442),
+            (2007, 2800, 1.405),
+            (2008, 2200, 1.374),
+            (2009, 2500, 1.293),
+            (2010, 2900, 1.518),
+            (2011, 2800, 1.519),
+            (2012, 3100, 1.448),
+            (2013, 3300, 1.433),
+            (2014, 3400, 1.381),
+            (2015, 3500, 1.497),
+            (2016, 3400, 1.463),
+            (2017, 3020, 1.449),
+            (2018, 3210, 1.442),
+            (2019, 3030, 1.372),
+            (2020, 3030, 1.364),
+            (2021, 3030, 1.478),
+            (2022, 3030, 1.574),
+            (2023, 3030, 1.584),
+            (2024, 3030, 1.741),
+        ]:
+            df = self.weather_data[self.weather_data['Year'] == year]
+            res = climate.calculate_climate_parameter(
+                emergence_day=Defaults.EmergenceDay,
+                ripening_day=Defaults.RipeningDay,
+                crop_yield=crop_yield,
+                clay=0.26,
+                sand=0.28,
+                percentage_soil_organic_carbon=3.2,
+                layer_thickness_in_millimeters=230,
+                variance=Defaults.Variance,
+                alfa=0.7,
+                decomposition_minimum_temperature=-3.78,
+                decomposition_maximum_temperature=30,
+                moisture_response_function_at_wilting_point=0.18,
+                moisture_response_function_at_saturation=0.42,
+                evapotranspirations=df['Mean Daily Pet'],
+                precipitations=df['Mean Daily Precipitation'],
+                temperatures=df['Mean Daily Air Temperature'])
+
+            self.assertAlmostEqual(
+                expected_value,
+                res,
+                places=3
+            )
+
+    def test_values_of_a_crop_rotation_without_cover_crops(self):
+        # Values reported for the climate parameter were exported from the GUI for a field with a
+        # soybean/wheat/grain corn rotation
+        for year, crop_yield, expected_value in [
+            (1985, 2500, 1.226),
+            (1986, 3100, 1.17),
+            (1987, 6734, 1.245),
+            (1988, 1900, 1.3),
+            (1989, 3100, 1.284),
+            (1990, 6911, 1.261),
+            (1991, 2600, 1.365),
+            (1992, 3300, 1.149),
+            (1993, 5973, 1.222),
+            (1994, 2829, 1.461),
+            (1995, 2800, 1.413),
+            (1996, 7039, 1.255),
+            (1997, 2632, 1.326),
+            (1998, 2900, 1.569),
+            (1999, 7939, 1.353),
+            (2000, 2094, 1.277),
+            (2001, 3200, 1.413),
+            (2002, 7225, 1.241),
+            (2003, 2647, 1.393),
+            (2004, 3300, 1.356),
+            (2005, 7403, 1.335),
+            (2006, 3301, 1.43),
+            (2007, 2800, 1.405),
+            (2008, 7194, 1.264),
+            (2009, 2101, 1.301),
+            (2010, 2900, 1.518),
+            (2011, 7332, 1.399),
+            (2012, 3172, 1.445),
+            (2013, 3300, 1.433),
+            (2014, 8660, 1.225),
+            (2015, 3137, 1.506),
+            (2016, 3400, 1.463),
+            (2017, 8730, 1.326),
+            (2018, 2880, 1.456),
+            (2019, 3030, 1.372),
+            (2020, 8628.3, 1.147),
+            (2021, 2877.8, 1.483),
+            (2022, 3030, 1.574),
+            (2023, 8628.3, 1.41),
+            (2024, 2877.8, 1.747),
+        ]:
+            df = self.weather_data[self.weather_data['Year'] == year]
+            res = climate.calculate_climate_parameter(
+                emergence_day=Defaults.EmergenceDay,
+                ripening_day=Defaults.RipeningDay,
+                crop_yield=crop_yield,
+                clay=0.26,
+                sand=0.28,
+                percentage_soil_organic_carbon=3.2,
+                layer_thickness_in_millimeters=230,
+                variance=Defaults.Variance,
+                alfa=0.7,
+                decomposition_minimum_temperature=-3.78,
+                decomposition_maximum_temperature=30,
+                moisture_response_function_at_wilting_point=0.18,
+                moisture_response_function_at_saturation=0.42,
+                evapotranspirations=df['Mean Daily Pet'],
+                precipitations=df['Mean Daily Precipitation'],
+                temperatures=df['Mean Daily Air Temperature'])
+
+            self.assertAlmostEqual(
+                expected_value,
+                res,
+                places=3)
 
 
 if __name__ == '__main__':
