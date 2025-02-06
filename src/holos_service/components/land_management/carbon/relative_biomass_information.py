@@ -75,7 +75,6 @@ class BiogasAndMethaneProductionParametersData:
         return self.__dict__ == other.__dict__ if isinstance(other, self.__class__) else False
 
 
-
 class RelativeBiomassInformationData:
     def __init__(
             self,
@@ -280,3 +279,10 @@ def parse_relative_biomass_information_data(
                                                                             raw_inputs=columns[17:22])
     )
 
+
+def read_table_7():
+    with PathsHolosResources.Table_7_Relative_Biomass_Information.open(mode='r') as f:
+        return [l for l in f.readlines()[5:] if all([
+            not len(l.replace(' ', '').replace(',', '').replace('\n', '')) == 0,
+            not l.startswith('#')
+        ])][2:]

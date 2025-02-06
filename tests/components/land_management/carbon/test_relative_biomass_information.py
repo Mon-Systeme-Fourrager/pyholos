@@ -4,10 +4,9 @@ from random import random, randint, choice
 from holos_service.components.land_management.carbon.relative_biomass_information import (
     parse_irrigation_data, parse_province_data, parse_carbon_residue_data, parse_nitrogen_residue_data,
     parse_lignin_content_data, parse_biomethane_data, RelativeBiomassInformationData,
-    BiogasAndMethaneProductionParametersData, parse_relative_biomass_information_data)
+    BiogasAndMethaneProductionParametersData, parse_relative_biomass_information_data, read_table_7)
 from holos_service.components.land_management.common import IrrigationType
 from holos_service.components.land_management.crop import CropType
-from holos_service.config import PathsHolosResources
 from holos_service.django_stuff import CanadianProvince
 
 
@@ -136,12 +135,7 @@ class TestParseBiomethaneData(unittest.TestCase):
 class TestParseRelativeBiomassInformationData(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        with open(PathsHolosResources.Table_7_Relative_Biomass_Information, mode='r') as f:
-            with PathsHolosResources.Table_7_Relative_Biomass_Information.open(mode='r') as f:
-                cls.lines = [l for l in f.readlines()[5:] if all([
-                    not len(l.replace(' ', '').replace(',', '').replace('\n', '')) == 0,
-                    not l.startswith('#')
-                ])][2:]
+        cls.lines = read_table_7()
 
     def test_summer_fallow(self):
         crop_type = CropType.SummerFallow
