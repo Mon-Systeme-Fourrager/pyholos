@@ -280,9 +280,62 @@ def parse_relative_biomass_information_data(
     )
 
 
-def read_table_7():
+def parse_table_7():
     with PathsHolosResources.Table_7_Relative_Biomass_Information.open(mode='r') as f:
         return [l for l in f.readlines()[5:] if all([
             not len(l.replace(' ', '').replace(',', '').replace('\n', '')) == 0,
             not l.startswith('#')
         ])][2:]
+
+
+def read_table_7() -> list[RelativeBiomassInformationData]:
+    return [parse_relative_biomass_information_data(raw_input=l) for l in parse_table_7()]
+
+
+def get_relative_biomass_information_data(
+        table_7: list[RelativeBiomassInformationData],
+        crop_type: CropType,
+        irrigation_type: IrrigationType,
+        irrigation_amount: float,
+        province: CanadianProvince
+) -> RelativeBiomassInformationData:
+    if any([
+        crop_type == CropType.NotSelected,
+        crop_type.is_fallow()
+    ]):
+        return RelativeBiomassInformationData()
+
+    if crop_type.is_grassland():
+        # Only have values for grassland (native). If type is grassland (broken) or grassland (seeded), return values for grassland (native)
+        crop_type = CropType.RangelandNative
+
+    by_crop_type = [v for v in table_7 if v.CropType == crop_type]
+    if len(by_crop_type) == 0:
+        # Trace.TraceError($"{nameof(Table_7_Relative_Biomass_Information_Provider)}.{nameof(this.GetResidueData)}: unknown crop type: '{cropType.GetDescription()}'. Returning default values.");
+        return RelativeBiomassInformationData()
+
+    elif len(by_crop_type) == 1:
+        return by_crop_type[0]
+
+    else:
+        by_crop_type_and_irrigation_amount = [v for v in by_crop_type if all(
+            [irrigation_amount >= v.IrrigationLowerRangeLimit,
+             irrigation_amount < v.IrrigationUpperRangeLimit])]
+        if len(by_crop_type_and_irrigation_amount) >= 1:
+            return by_crop_type_and_irrigation_amount[0]
+        else:
+            by_crop_type_and_irrigation_type = [v for v in by_crop_type if v.IrrigationType == irrigation_type]
+            if len(by_crop_type_and_irrigation_type) >= 1:
+                return by_crop_type_and_irrigation_type[0]
+
+    # Potato is a special case
+    by_province = [v for v in by_crop_type if all([
+        v.Province is not None,
+        v.Province == province
+    ])]
+    if len(by_province) >= 1:
+        return by_province[0]
+
+    # Return the 'Canada' entry
+    # [new comment]: this part of the code is not reachable
+    return [v for v in by_crop_type if v.Province is None][0]

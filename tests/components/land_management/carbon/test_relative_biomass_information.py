@@ -4,7 +4,8 @@ from random import random, randint, choice
 from holos_service.components.land_management.carbon.relative_biomass_information import (
     parse_irrigation_data, parse_province_data, parse_carbon_residue_data, parse_nitrogen_residue_data,
     parse_lignin_content_data, parse_biomethane_data, RelativeBiomassInformationData,
-    BiogasAndMethaneProductionParametersData, parse_relative_biomass_information_data, parse_table_7)
+    BiogasAndMethaneProductionParametersData, parse_relative_biomass_information_data, parse_table_7, read_table_7,
+    get_relative_biomass_information_data)
 from holos_service.components.land_management.common import IrrigationType
 from holos_service.components.land_management.crop import CropType
 from holos_service.django_stuff import CanadianProvince
@@ -339,6 +340,149 @@ class TestParseRelativeBiomassInformationData(unittest.TestCase):
                 total_nitrogen=0
             ))
         self.assertDictEqual(actual.__dict__, expected.__dict__)
+
+
+class TestGetRelativeBiomassInformationData(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.table_7 = read_table_7()
+        cls.included_crops = [v.CropType for v in cls.table_7]
+        cls.irrigation_type = choice(list(IrrigationType))
+        cls.irrigation_amount = random()
+        cls.province = choice(list(CanadianProvince))
+
+    def setUp(self):
+        self.irrigation_type = choice(list(IrrigationType))
+        self.irrigation_amount = random()
+        self.province = choice(list(CanadianProvince))
+
+    def test_values_for_fallow_or_undefined_crops(self):
+        for crop_type in CropType:
+            if any([
+                crop_type == CropType.NotSelected,
+                crop_type.is_fallow()
+            ]):
+                self.assertEqual(
+                    RelativeBiomassInformationData(),
+                    get_relative_biomass_information_data(
+                        table_7=self.table_7,
+                        crop_type=crop_type,
+                        irrigation_type=self.irrigation_type,
+                        irrigation_amount=self.irrigation_amount,
+                        province=choice(list(CanadianProvince))
+                    ))
+
+    def test_values_for_grassland_crops(self):
+        expected = get_relative_biomass_information_data(
+            table_7=self.table_7,
+            crop_type=CropType.RangelandNative,
+            irrigation_type=self.irrigation_type,
+            irrigation_amount=self.irrigation_amount,
+            province=self.province)
+
+        for crop_type in CropType:
+            if crop_type.is_grassland():
+                self.assertEqual(
+                    expected,
+                    get_relative_biomass_information_data(
+                        table_7=self.table_7,
+                        crop_type=crop_type,
+                        irrigation_type=self.irrigation_type,
+                        irrigation_amount=self.irrigation_amount,
+                        province=self.province))
+
+    def test_values_for_crops_outside_table(self):
+        for crop_type in CropType:
+            if not any([
+                crop_type in self.included_crops,
+                crop_type.is_fallow(),
+                crop_type.is_grassland()
+            ]):
+                self.assertEqual(
+                    RelativeBiomassInformationData(),
+                    get_relative_biomass_information_data(
+                        table_7=self.table_7,
+                        crop_type=crop_type,
+                        irrigation_type=self.irrigation_type,
+                        irrigation_amount=self.irrigation_amount,
+                        province=self.province))
+
+    def test_values_for_wheat(self):
+        for i, irrigation_amount in [
+            (2, 100),
+            (3, 250),
+            (4, 400)
+        ]:
+            self.assertEqual(
+                self.table_7[i],
+                get_relative_biomass_information_data(
+                    table_7=self.table_7,
+                    crop_type=CropType.Wheat,
+                    irrigation_type=self.irrigation_type,
+                    irrigation_amount=irrigation_amount,
+                    province=self.province))
+
+    def test_values_for_canola(self):
+        for i, irrigation_amount in [
+            (29, 100),
+            (30, 250),
+            (31, 400)
+        ]:
+            self.assertEqual(
+                self.table_7[i],
+                get_relative_biomass_information_data(
+                    table_7=self.table_7,
+                    crop_type=CropType.Canola,
+                    irrigation_type=self.irrigation_type,
+                    irrigation_amount=irrigation_amount,
+                    province=self.province))
+
+    def test_values_for_some_crops_having_one_data_row(self):
+        for i, crop in [
+            (8, CropType.UndersownBarley),
+            (38, CropType.Soybeans),
+            (49, CropType.Safflower),
+            (59, CropType.CrimsonCloverTrifoliumIncarnatum),
+        ]:
+            self.assertEqual(
+                self.table_7[i],
+                get_relative_biomass_information_data(
+                    table_7=self.table_7,
+                    crop_type=crop,
+                    irrigation_type=self.irrigation_type,
+                    irrigation_amount=self.irrigation_amount,
+                    province=self.province))
+
+    def test_values_for_crops_having_specified_irrigation_types(self):
+        for i, crop, irrigation_type in [
+            (1, CropType.SmallGrainCereals, IrrigationType.RainFed),
+            (26, CropType.Oilseeds, IrrigationType.RainFed),
+            (27, CropType.Oilseeds, IrrigationType.Irrigated),
+            (36, CropType.PulseCrops, IrrigationType.RainFed),
+            (37, CropType.PulseCrops, IrrigationType.Irrigated)
+        ]:
+            self.assertEqual(
+                self.table_7[i],
+                get_relative_biomass_information_data(
+                    table_7=self.table_7,
+                    crop_type=crop,
+                    irrigation_type=irrigation_type,
+                    irrigation_amount=self.irrigation_amount,
+                    province=self.province))
+
+    def test_values_for_potato(self):
+        for i, province in [
+            (46, self.province),
+            (47, CanadianProvince.Alberta)
+        ]:
+            self.assertEqual(
+                self.table_7[i],
+                get_relative_biomass_information_data(
+                    table_7=self.table_7,
+                    crop_type=CropType.Potatoes,
+                    irrigation_type=self.irrigation_type,
+                    irrigation_amount=self.irrigation_amount,
+                    province=province))
 
 
 if __name__ == '__main__':
