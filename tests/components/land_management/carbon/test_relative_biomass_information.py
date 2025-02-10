@@ -4,7 +4,7 @@ from random import random, randint, choice
 from holos_service.components.land_management.carbon.relative_biomass_information import (
     parse_irrigation_data, parse_province_data, parse_carbon_residue_data, parse_nitrogen_residue_data,
     parse_lignin_content_data, parse_biomethane_data, RelativeBiomassInformationData,
-    BiogasAndMethaneProductionParametersData, parse_relative_biomass_information_data, read_table_7)
+    BiogasAndMethaneProductionParametersData, parse_relative_biomass_information_data, parse_table_7)
 from holos_service.components.land_management.common import IrrigationType
 from holos_service.components.land_management.crop import CropType
 from holos_service.django_stuff import CanadianProvince
@@ -22,10 +22,10 @@ class TestParseIrrigationData(unittest.TestCase):
             (">750", [None, 750, float_inf]),
             ("200 -350 mm", [None, 200, 350]),
             ("350-750", [None, 350, 750]),
-            ("AB", [None, None, None]),
-            ("Canada", [None, None, None]),
-            ("Irrigated", [IrrigationType.Irrigated, None, None]),
-            ("Rainfed", [IrrigationType.RainFed, None, None])
+            ("AB", [None, 0, 0]),
+            ("Canada", [None, 0, 0]),
+            ("Irrigated", [IrrigationType.Irrigated, 0, 0]),
+            ("Rainfed", [IrrigationType.RainFed, 0, 0])
         ]:
             self.assertEqual(
                 expected,
@@ -64,12 +64,12 @@ class TestParseCarbonResidueData(unittest.TestCase):
             base_columns = [str(v) for v in [random()] * 3]
             base_columns.insert(i, "")
             self.assertEqual(
-                None,
+                0,
                 list(parse_carbon_residue_data(raw_inputs=base_columns).__dict__.values())[i])
 
     def test_all_empty_columns(self):
         self.assertEqual(
-            {None},
+            {0},
             set(parse_carbon_residue_data(raw_inputs=[''] * 4).__dict__.values()))
 
 
@@ -84,12 +84,12 @@ class TestParseNitrogenResidueData(unittest.TestCase):
             base_columns = [str(v) for v in [randint(0, 100)] * 2]
             base_columns.insert(i, "")
             self.assertEqual(
-                None,
+                0,
                 list(parse_nitrogen_residue_data(raw_inputs=base_columns).__dict__.values())[i])
 
     def test_all_empty_columns(self):
         self.assertEqual(
-            {None},
+            {0},
             set(parse_nitrogen_residue_data(raw_inputs=[''] * 3).__dict__.values()))
 
 
@@ -101,7 +101,7 @@ class TestParseLigninContentData(unittest.TestCase):
 
     def test_empty_column(self):
         self.assertEqual(
-            None,
+            0,
             parse_lignin_content_data(raw_input=""))
 
 
@@ -119,14 +119,14 @@ class TestParseBiomethaneData(unittest.TestCase):
             base_columns = [str(v) for v in [random()] * 4]
             base_columns.insert(i, "")
             self.assertEqual(
-                None,
+                0,
                 list(parse_biomethane_data(
                     crop_type=choice(list(CropType)),
                     raw_inputs=base_columns).__dict__.values())[i + 1])
 
     def test_all_empty_columns(self):
         self.assertEqual(
-            {None},
+            {0},
             set(list(parse_biomethane_data(
                 crop_type=choice(list(CropType)),
                 raw_inputs=[''] * 5).__dict__.values())[1:]))
@@ -135,7 +135,7 @@ class TestParseBiomethaneData(unittest.TestCase):
 class TestParseRelativeBiomassInformationData(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.lines = read_table_7()
+        cls.lines = parse_table_7()
 
     def test_summer_fallow(self):
         crop_type = CropType.SummerFallow
