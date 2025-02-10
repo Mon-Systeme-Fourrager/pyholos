@@ -47,12 +47,12 @@ class _NitrogenResidueData:
 class BiogasAndMethaneProductionParametersData:
     def __init__(
             self,
-            crop_type: CropType,
-            bio_methane_potential: float = None,
-            methane_fraction: float = None,
-            volatile_solids: float = None,
-            total_solids: float = None,
-            total_nitrogen: float = None
+            crop_type: CropType = CropType.NotSelected,
+            bio_methane_potential: float = 0,
+            methane_fraction: float = 0,
+            volatile_solids: float = 0,
+            total_solids: float = 0,
+            total_nitrogen: float = 0
     ):
         """Table_46_Biogas_Methane_Production_CropResidue_Data
 
@@ -78,25 +78,25 @@ class BiogasAndMethaneProductionParametersData:
 class RelativeBiomassInformationData:
     def __init__(
             self,
-            crop_type: CropType,
-            irrigation_type: IrrigationType | None,
-            irrigation_lower_range_limit: float,
-            irrigation_upper_range_limit: float,
+            crop_type: CropType = CropType.NotSelected,
+            irrigation_type: IrrigationType = None,
+            irrigation_lower_range_limit: float = 0,
+            irrigation_upper_range_limit: float = 0,
             # irrigation_amount: float,
-            moisture_content_of_product: float,
-            relative_biomass_product: float,
-            relative_biomass_straw: float,
-            relative_biomass_root: float,
-            relative_biomass_extraroot: float,
-            nitrogen_content_product: float,
-            nitrogen_content_straw: float,
-            nitrogen_content_root: float,
-            nitrogen_content_extraroot: float,
+            moisture_content_of_product: float = 0,
+            relative_biomass_product: float = 0,
+            relative_biomass_straw: float = 0,
+            relative_biomass_root: float = 0,
+            relative_biomass_extraroot: float = 0,
+            nitrogen_content_product: float = 0,
+            nitrogen_content_straw: float = 0,
+            nitrogen_content_root: float = 0,
+            nitrogen_content_extraroot: float = 0,
             # nitrogen_fertilizer_rate: float,
             # phosphorus_fertilizer_rate: float,
-            lignin_content: float,
-            province: CanadianProvince | None,
-            biogas_and_methane_production_parameters_data: BiogasAndMethaneProductionParametersData
+            lignin_content: float = 0,
+            province: CanadianProvince = None,
+            biogas_and_methane_production_parameters_data: BiogasAndMethaneProductionParametersData = BiogasAndMethaneProductionParametersData()
     ):
         """Table_7_Relative_Biomass_Information_Data
 
