@@ -472,7 +472,7 @@ class TestGetRelativeBiomassInformationData(unittest.TestCase):
 
     def test_values_for_potato(self):
         for i, province in [
-            (46, self.province),
+            (46, choice([v for v in CanadianProvince if v != CanadianProvince.Alberta])),
             (47, CanadianProvince.Alberta)
         ]:
             self.assertEqual(

@@ -336,6 +336,4 @@ def get_relative_biomass_information_data(
     if len(by_province) >= 1:
         return by_province[0]
 
-    # Return the 'Canada' entry
-    # [new comment]: this part of the code is not reachable
     return [v for v in by_crop_type if v.Province is None][0]
