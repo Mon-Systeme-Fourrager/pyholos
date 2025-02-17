@@ -31,5 +31,36 @@ class TestCalcAverage(unittest.TestCase):
                 utils.calc_average(values=values))
 
 
+class TestCleanString(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.raw_input = "This is a sentence. (once a day) [twice a day]"
+
+    def test_values(self):
+        self.assertEqual(
+            "Thisisasentence",
+            utils.clean_string(input_string=self.raw_input))
+
+        self.assertEqual(
+            "This is a sentence.  ",
+            utils.clean_string(
+                input_string=self.raw_input,
+                characters_to_remove=''))
+
+        self.assertEqual(
+            "This is a sentence.  [twice a day]",
+            utils.clean_string(
+                input_string=self.raw_input,
+                characters_to_remove='',
+                is_remove_text_between_brackets=False))
+
+        self.assertEqual(
+            "This is a sentence. (once a day) ",
+            utils.clean_string(
+                input_string=self.raw_input,
+                characters_to_remove='',
+                is_remove_text_between_parentheses=False))
+
+
 if __name__ == '__main__':
     unittest.main()

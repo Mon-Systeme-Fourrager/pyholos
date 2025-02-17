@@ -44,3 +44,24 @@ def keep_alphabetical_characters(name: str) -> str:
 def calc_average(values: Iterable[int | float]) -> float:
     values = list(values)
     return sum(values) / len(list(values))
+
+
+def clean_string(
+        input_string: str,
+        characters_to_remove: str | list[str] = (',', '.', ' ', ';'),
+        is_remove_text_between_parentheses: bool = True,
+        is_remove_text_between_brackets: bool = True
+) -> str:
+    if not isinstance(characters_to_remove, (str, tuple)):
+        characters_to_remove = [characters_to_remove]
+
+    for s in characters_to_remove:
+        input_string = input_string.replace(s, '')
+
+    if is_remove_text_between_parentheses:
+        input_string = re.sub("[(].*?[)]", "", input_string)
+
+    if is_remove_text_between_brackets:
+        input_string = re.sub("[[].*?[]]", "", input_string)
+
+    return input_string
