@@ -48,7 +48,7 @@ def calc_average(values: Iterable[int | float]) -> float:
 
 def clean_string(
         input_string: str,
-        characters_to_remove: str | list[str] = (',', '.', ' ', ';'),
+        characters_to_remove: str | list[str] = (',', ' ', ';'),
         is_remove_text_between_parentheses: bool = True,
         is_remove_text_between_brackets: bool = True
 ) -> str:

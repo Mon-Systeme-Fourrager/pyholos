@@ -38,7 +38,7 @@ class TestCleanString(unittest.TestCase):
 
     def test_values(self):
         self.assertEqual(
-            "Thisisasentence",
+            "Thisisasentence.",
             utils.clean_string(input_string=self.raw_input))
 
         self.assertEqual(
