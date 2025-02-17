@@ -114,7 +114,7 @@ class RelativeBiomassInformationData:
             nitrogen_content_straw: (g(N)/kg) straw Nitrogen content
             nitrogen_content_root: (g(N)/kg) root Nitrogen content
             nitrogen_content_extraroot: (g(N)/kg) extraroot Nitrogen content
-            lignin_content:
+            lignin_content: (-) fraction of lignin content in the carbon input (on dry basis, between 0 and 1)
             province: CanadianProvince class instance
 
         Holos Source Code:
