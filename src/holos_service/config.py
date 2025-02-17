@@ -16,6 +16,8 @@ class PathsHolosResources:
         'Table_6_Manure_Types_And_Default_Composition.csv')
     Table_7_Relative_Biomass_Information = _path_root / (
         'Table_7_Relative_Biomass_Information.csv')
+    Table_9_Default_Values_For_Nitrogen_Lignin_In_Crops = _path_root / (
+        'Table_9_Default_Values_For_Nitrogen_Lignin_In_Crops.csv')
     Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider = _path_root / (
         'Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider.csv')
     Table_21_Average_Milk_Production_For_Dairy_Cows_By_Province = _path_root / (

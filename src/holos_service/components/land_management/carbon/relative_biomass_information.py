@@ -1,8 +1,11 @@
+from dataclasses import dataclass, field
+
 from holos_service.components.common import convert_province_name
 from holos_service.components.land_management.common import IrrigationType
 from holos_service.components.land_management.crop import CropType, convert_crop_type_name
 from holos_service.config import PathsHolosResources
 from holos_service.django_stuff import CanadianProvince
+from holos_service.utils import clean_string
 
 
 class _IrrigationData:
@@ -337,3 +340,94 @@ def get_relative_biomass_information_data(
         return by_province[0]
 
     return [v for v in by_crop_type if v.Province is None][0]
+
+
+@dataclass
+class NitrogenLigninContentInCropsData:
+    """
+    Args:
+        CropType: CropType instance, the crop type for which we need the various information and values.
+        InterceptValue: The intercept value given the crop type. Taken from national inventory numbers.
+        SlopeValue: The slop value given the crop type. Taken from national inventory numbers.
+        RSTRatio: Shoot to root ratio of the crop. The ratio of below-ground root biomass to above-ground shoot
+        NitrogenContentResidues: Nitrogen Content of residues. Unit of measurement = Proportion of Carbon content
+        LigninContentResidues: Lignin content of residue. Unit of measurement = Proportion of Carbon content
+        MoistureContent: (%) Moisture content of crop
+        # BiomethaneData: Table_46_Biogas_Methane_Production_CropResidue_Data
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/d62072ff1362eb356ba00f2736293e3fe0f8acc2/H.Core/Providers/Plants/Table_9_Nitrogen_Lignin_Content_In_Crops_Data.cs#L9
+    """
+    CropType: CropType = CropType.NotSelected
+    InterceptValue: float = 0
+    SlopeValue: float = 0
+    RSTRatio: float = 0
+    NitrogenContentResidues: float = 0
+    LigninContentResidues: float = 0
+    MoistureContent: float = 0
+    BiomethaneData: BiogasAndMethaneProductionParametersData = field(
+        default_factory=BiogasAndMethaneProductionParametersData)
+
+
+def parse_nitrogen_lignin_content_in_crops_data(
+        raw_input: str
+) -> NitrogenLigninContentInCropsData:
+    """
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/d62072ff1362eb356ba00f2736293e3fe0f8acc2/H.Core/Providers/Plants/Table_9_Nitrogen_Lignin_Content_In_Crops_Provider.cs#L104
+    """
+    columns = raw_input.replace('\n', '').split(',')
+    crop_type = parse_crop_type(raw_input=columns[1])
+
+    columns = [clean_string(input_string=v) for v in columns]
+    biomethane_data = BiogasAndMethaneProductionParametersData() if (''.join(columns[8:]) == '') else (
+        BiogasAndMethaneProductionParametersData(crop_type, *[float(v) if v != '' else 0 for v in columns[8:]]))
+
+    return NitrogenLigninContentInCropsData(
+        CropType=crop_type,
+        InterceptValue=float(columns[2]),
+        SlopeValue=float(columns[3]),
+        RSTRatio=float(columns[4]),
+        NitrogenContentResidues=float(columns[5]),
+        LigninContentResidues=float(columns[6]),
+        MoistureContent=float(columns[7]),
+        BiomethaneData=biomethane_data
+    )
+
+
+def read_table_9() -> list[str]:
+    with PathsHolosResources.Table_9_Default_Values_For_Nitrogen_Lignin_In_Crops.open(mode='r') as f:
+        return [l for l in f.readlines() if all([
+            not len(l.replace(' ', '').replace(',', '').replace('\n', '')) == 0,
+            not l.startswith('#')
+        ])][1:]
+
+
+def parse_table_9() -> list[NitrogenLigninContentInCropsData]:
+    """
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/d62072ff1362eb356ba00f2736293e3fe0f8acc2/H.Core/Providers/Plants/Table_9_Nitrogen_Lignin_Content_In_Crops_Provider.cs#L104
+    """
+    return [parse_nitrogen_lignin_content_in_crops_data(raw_input=v) for v in read_table_9()]
+
+
+def get_nitrogen_lignin_content_in_crops_data(
+        table_9: list[NitrogenLigninContentInCropsData],
+        crop_type: CropType
+) -> NitrogenLigninContentInCropsData:
+    """
+
+    Args:
+        table_9: parsed data of table 9
+        crop_type: CropType class member
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/d62072ff1362eb356ba00f2736293e3fe0f8acc2/H.Core/Providers/Plants/Table_9_Nitrogen_Lignin_Content_In_Crops_Provider.cs#L57
+    """
+
+    lookup_type = CropType.Durum if (crop_type == CropType.Wheat) else (
+        CropType.Rye if crop_type == CropType.RyeSecaleCerealeWinterRyeCerealRye else crop_type)
+
+    res = [v for v in table_9 if v.CropType == lookup_type]
+
+    return res[0] if len(res) > 0 else NitrogenLigninContentInCropsData()

@@ -5,9 +5,10 @@ from holos_service.components.land_management.carbon.relative_biomass_informatio
     parse_irrigation_data, parse_province_data, parse_carbon_residue_data, parse_nitrogen_residue_data,
     parse_lignin_content_data, parse_biomethane_data, RelativeBiomassInformationData,
     BiogasAndMethaneProductionParametersData, parse_relative_biomass_information_data, read_table_7, parse_table_7,
-    get_relative_biomass_information_data)
+    get_relative_biomass_information_data, read_table_9, parse_table_9, NitrogenLigninContentInCropsData,
+    parse_nitrogen_lignin_content_in_crops_data, get_nitrogen_lignin_content_in_crops_data)
 from holos_service.components.land_management.common import IrrigationType
-from holos_service.components.land_management.crop import CropType
+from holos_service.components.land_management.crop import CropType, convert_crop_type_name
 from holos_service.django_stuff import CanadianProvince
 
 
@@ -483,6 +484,128 @@ class TestGetRelativeBiomassInformationData(unittest.TestCase):
                     irrigation_type=self.irrigation_type,
                     irrigation_amount=self.irrigation_amount,
                     province=province))
+
+
+class TestParseNitrogenLigninContentInCropsData(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.lines = read_table_9()
+
+    def test_values_for_summer_fallow(self):
+        crop_type = CropType.SummerFallow
+        self.assertEqual(
+            NitrogenLigninContentInCropsData(
+                CropType=crop_type),
+            parse_nitrogen_lignin_content_in_crops_data(
+                raw_input=self.lines[0]))
+
+    def test_values_for_sorghum(self):
+        crop_type = CropType.Sorghum
+        self.assertEqual(
+            NitrogenLigninContentInCropsData(
+                CropType=crop_type,
+                InterceptValue=-9,
+                SlopeValue=-9,
+                RSTRatio=-9,
+                NitrogenContentResidues=0.0065,
+                LigninContentResidues=0.06,
+                MoistureContent=12),
+            parse_nitrogen_lignin_content_in_crops_data(
+                raw_input=self.lines[6]))
+
+    def test_values_for_wheat(self):
+        crop_type = CropType.Durum
+        self.assertEqual(
+            NitrogenLigninContentInCropsData(
+                CropType=crop_type,
+                InterceptValue=0.344,
+                SlopeValue=0.015,
+                RSTRatio=0.229,
+                NitrogenContentResidues=0.007,
+                LigninContentResidues=0.053,
+                MoistureContent=12,
+                BiomethaneData=BiogasAndMethaneProductionParametersData(
+                    crop_type=crop_type,
+                    bio_methane_potential=162,
+                    methane_fraction=0.6,
+                    volatile_solids=90,
+                    total_solids=880,
+                    total_nitrogen=7.8)),
+            parse_nitrogen_lignin_content_in_crops_data(
+                raw_input=self.lines[12]))
+
+    def test_values_for_fall_rye(self):
+        for i in [
+            11,  # Rye,
+            40,  # Fall Rye
+        ]:
+            self.assertEqual(
+                NitrogenLigninContentInCropsData(
+                    CropType=CropType.Rye,
+                    InterceptValue=0.344,
+                    SlopeValue=0.015,
+                    RSTRatio=0.229,
+                    NitrogenContentResidues=0.007,
+                    LigninContentResidues=0.053,
+                    MoistureContent=12,
+                    BiomethaneData=BiogasAndMethaneProductionParametersData(
+                        crop_type=CropType.Rye,
+                        bio_methane_potential=241,
+                        methane_fraction=0.44,
+                        volatile_solids=94,
+                        total_solids=880,
+                        total_nitrogen=6)),
+                parse_nitrogen_lignin_content_in_crops_data(
+                    raw_input=self.lines[i]))
+
+
+class TestGetNitrogenLigninContentInCropsData(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.table_9 = parse_table_9()
+        cls.included_crops = [(i, v.CropType) for i, v in enumerate(cls.table_9)]
+
+    def test_values_for_wheat(self):
+        for crop_type in [
+            CropType.Wheat,
+            CropType.Durum,
+        ]:
+            self.assertEqual(
+                self.table_9[12],
+                get_nitrogen_lignin_content_in_crops_data(
+                    table_9=self.table_9,
+                    crop_type=crop_type))
+
+    def test_values_for_rye(self):
+        for crop_type in [
+            CropType.Rye,
+            CropType.RyeSecaleCerealeWinterRyeCerealRye,
+        ]:
+            self.assertEqual(
+                self.table_9[11],
+                get_nitrogen_lignin_content_in_crops_data(
+                    table_9=self.table_9,
+                    crop_type=crop_type))
+
+    def test_values_for_all_existing_crop_types(self):
+        for i, crop_type in self.included_crops:
+            self.assertEqual(
+                self.table_9[i],
+                get_nitrogen_lignin_content_in_crops_data(
+                    crop_type=crop_type,
+                    table_9=self.table_9))
+
+    def test_values_for_crops_outside_table(self):
+        _, included_crops = zip(*self.included_crops)
+        for crop_type in CropType:
+            if convert_crop_type_name(name=crop_type.name) not in (
+                    list(included_crops) + [CropType.RyeSecaleCerealeWinterRyeCerealRye,
+                                            CropType.Wheat]):
+                self.assertEqual(
+                    NitrogenLigninContentInCropsData(),
+                    get_nitrogen_lignin_content_in_crops_data(
+                        crop_type=crop_type,
+                        table_9=self.table_9))
 
 
 if __name__ == '__main__':
