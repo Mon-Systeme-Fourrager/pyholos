@@ -4,7 +4,7 @@ from random import random, randint, choice
 from holos_service.components.land_management.carbon.relative_biomass_information import (
     parse_irrigation_data, parse_province_data, parse_carbon_residue_data, parse_nitrogen_residue_data,
     parse_lignin_content_data, parse_biomethane_data, RelativeBiomassInformationData,
-    BiogasAndMethaneProductionParametersData, parse_relative_biomass_information_data, parse_table_7, read_table_7,
+    BiogasAndMethaneProductionParametersData, parse_relative_biomass_information_data, read_table_7, parse_table_7,
     get_relative_biomass_information_data)
 from holos_service.components.land_management.common import IrrigationType
 from holos_service.components.land_management.crop import CropType
@@ -136,7 +136,7 @@ class TestParseBiomethaneData(unittest.TestCase):
 class TestParseRelativeBiomassInformationData(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.lines = parse_table_7()
+        cls.lines = read_table_7()
 
     def test_summer_fallow(self):
         crop_type = CropType.SummerFallow
@@ -345,7 +345,7 @@ class TestParseRelativeBiomassInformationData(unittest.TestCase):
 class TestGetRelativeBiomassInformationData(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.table_7 = read_table_7()
+        cls.table_7 = parse_table_7()
         cls.included_crops = [v.CropType for v in cls.table_7]
         cls.irrigation_type = choice(list(IrrigationType))
         cls.irrigation_amount = random()

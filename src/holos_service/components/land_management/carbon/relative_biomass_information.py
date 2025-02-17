@@ -58,7 +58,7 @@ class BiogasAndMethaneProductionParametersData:
 
         Args:
             crop_type: CropType class member
-            bio_methane_potential: (Nm3 ton-1 VS) Biomethane potential given a subtrate type (BMP)
+            bio_methane_potential: (Nm3 ton-1 VS) biomethane potential given a substrate type (BMP)
             methane_fraction: (-) fraction of methane in biogas (f_CH4)
             volatile_solids: (%) percentage of total solids
             total_solids: (kg t^-1)^3 total solids in the substrate type (TS)
@@ -280,7 +280,7 @@ def parse_relative_biomass_information_data(
     )
 
 
-def parse_table_7():
+def read_table_7():
     with PathsHolosResources.Table_7_Relative_Biomass_Information.open(mode='r') as f:
         return [l for l in f.readlines()[5:] if all([
             not len(l.replace(' ', '').replace(',', '').replace('\n', '')) == 0,
@@ -288,8 +288,8 @@ def parse_table_7():
         ])][2:]
 
 
-def read_table_7() -> list[RelativeBiomassInformationData]:
-    return [parse_relative_biomass_information_data(raw_input=l) for l in parse_table_7()]
+def parse_table_7() -> list[RelativeBiomassInformationData]:
+    return [parse_relative_biomass_information_data(raw_input=l) for l in read_table_7()]
 
 
 def get_relative_biomass_information_data(
