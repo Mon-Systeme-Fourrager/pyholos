@@ -892,7 +892,7 @@ def convert_crop_type_name(name: str) -> CropType:
             return CropType.PerennialForages
         case "perennialgrasses":
             return CropType.PerennialGrasses
-        case "potatoes" | "potato" | "potats":
+        case "potatoes" | "potato" | "potats" | "potatos":
             return CropType.Potatoes
         case "rice":
             return CropType.Rice
