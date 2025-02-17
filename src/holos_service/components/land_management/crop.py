@@ -238,7 +238,7 @@ class CropType(AutoNameEnum):
         return self.is_perennial() or self.is_grassland()
 
     def is_cover_crop(self):
-        return [
+        return self in [
             self.__class__.RedCloverTrifoliumPratenseL,
             self.__class__.BerseemCloverTrifoliumAlexandriumL,
             self.__class__.SweetCloverMelilotusOfficinalis,
