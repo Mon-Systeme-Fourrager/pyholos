@@ -189,9 +189,8 @@ class LandManagementBase:
 
     def set_percentage_returns(self):
         """
-
-        Returns:
-
+        Holos source code:
+            https://github.com/holos-aafc/Holos/blob/bf38e27113cd965442cafb118f7ce156c8065701/H.Core/Services/Initialization/Crops/CropInitializationService.Returns.cs#L24
         """
         percentage_of_product_yield_returned_to_soil = 0
         percentage_of_straw_returned_to_soil = 0
