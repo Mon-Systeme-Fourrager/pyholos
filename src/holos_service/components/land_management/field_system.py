@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from holos_service.common import HolosVar
+from holos_service.common import HolosVar, Component
 from holos_service.components.animals.common import ManureAnimalSourceTypes, ManureStateType, ManureLocationSourceType
 from holos_service.components.land_management.carbon.climate import calculate_climate_parameter
 from holos_service.components.land_management.carbon.management import calculate_management_factor
@@ -16,8 +16,9 @@ from holos_service.django_stuff import CanadianProvince
 from holos_service.soil import SoilFunctionalCategory
 
 
-class LandManagementBase:
+class LandManagementBase(Component):
     def __init__(self):
+        super().__init__()
         self.phase_number = HolosVar(name='Phase Number', value=0)
         """deprecated"""
 
