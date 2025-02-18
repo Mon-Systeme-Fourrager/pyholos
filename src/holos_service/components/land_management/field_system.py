@@ -122,8 +122,8 @@ class LandManagementBase(Component):
         self.sand = HolosVar(name='Sand')
         """(-) fraction of sand in soil (between 0 and 1)"""
 
-        self.lignin = HolosVar(name='Lignin', value=0)
-        """deprecated"""
+        self.lignin = HolosVar(name='Lignin')
+        """(-) fraction of lignin content in the carbon input (on dry basis, between 0 and 1)"""
 
         self.w_fac = HolosVar(name='WFac', value=0)
         """deprecated"""
@@ -436,3 +436,4 @@ class CropViewItem(LandManagementBase):
             tillage_factor=self.tillage_factor.value)
 
         self.sand.value = sand_content
+        self.lignin.value = relative_biomass_information_data.LigninContent
