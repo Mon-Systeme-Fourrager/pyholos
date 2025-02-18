@@ -348,7 +348,7 @@ class CropViewItem(LandManagementBase):
         self.set_moisture_content()
         self.set_percentage_returns()
         self.number_of_pesticide_passes.value = number_of_pesticide_passes
-        self.is_pesticide_used.value = number_of_pesticide_passes > 0
+        self.is_pesticide_used.value = "Yes" if number_of_pesticide_passes > 0 else "No"
 
         self.amount_of_manure_applied.value = amount_of_manure_applied
         self.manure_applied.value = amount_of_manure_applied > 0
