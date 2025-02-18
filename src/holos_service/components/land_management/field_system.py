@@ -241,6 +241,48 @@ class LandManagementBase(Component):
 
         pass
 
+    def initialize_biomass_coefficients(
+            self,
+            residue_data: RelativeBiomassInformationData
+    ):
+        self.biomass_coefficient_product.value = residue_data.RelativeBiomassProduct
+        self.biomass_coefficient_straw.value = residue_data.RelativeBiomassStraw
+        self.biomass_coefficient_roots.value = residue_data.RelativeBiomassRoot
+        self.biomass_coefficient_extraroot.value = residue_data.RelativeBiomassExtraroot
+
+        if self.harvest_method.value in [
+            HarvestMethod.Swathing,
+            HarvestMethod.GreenManure,
+            HarvestMethod.Silage
+        ]:
+            self.biomass_coefficient_product.value = residue_data.RelativeBiomassProduct + residue_data.RelativeBiomassStraw
+            self.biomass_coefficient_straw.value = 0
+            self.biomass_coefficient_roots.value = residue_data.RelativeBiomassRoot
+            self.biomass_coefficient_extraroot.value = residue_data.RelativeBiomassExtraroot
+
+    def initialize_nitrogen_content(
+            self,
+            residue_data: RelativeBiomassInformationData
+    ):
+        """
+
+        Args:
+            residue_data: RelativeBiomassInformationData instance
+
+        Holos source code:
+            https://github.com/holos-aafc/Holos/blob/71638efd97c84c6ded45e342ce664477df6f803f/H.Core/Services/Initialization/Crops/CropInitializationService.Nitrogen.cs#L42
+        """
+        # Assign N content values used for the ICBM methodology
+
+        # Table has values in grams but unit of display is kg
+        self.nitrogen_content_in_product.value = residue_data.NitrogenContentProduct / 1000
+        self.nitrogen_content_in_straw.value = residue_data.NitrogenContentStraw / 1000
+        self.nitrogen_content_in_roots.value = residue_data.NitrogenContentRoot / 1000
+        self.nitrogen_content_in_extraroot.value = residue_data.NitrogenContentExtraroot / 1000
+
+        if self.crop_type.value.is_perennial():
+            self.nitrogen_content_in_straw.value = 0
+
 
 class CropViewItem(LandManagementBase):
     def __init__(
@@ -328,14 +370,9 @@ class CropViewItem(LandManagementBase):
         self.perennial_stand_id.value = str(perennial_stand_id)
         self.perennial_stand_length.value = perennial_stand_length
 
-        self.biomass_coefficient_product.value = relative_biomass_information_data.RelativeBiomassProduct
-        self.biomass_coefficient_straw.value = relative_biomass_information_data.RelativeBiomassStraw
-        self.biomass_coefficient_roots.value = relative_biomass_information_data.RelativeBiomassRoot
-        self.biomass_coefficient_extraroot.value = relative_biomass_information_data.RelativeBiomassExtraroot
-        self.nitrogen_content_in_product.value = relative_biomass_information_data.NitrogenContentProduct
-        self.nitrogen_content_in_straw.value = relative_biomass_information_data.NitrogenContentStraw
-        self.nitrogen_content_in_roots.value = relative_biomass_information_data.NitrogenContentRoot
-        self.nitrogen_content_in_extraroot.value = relative_biomass_information_data.NitrogenContentExtraroot
+        self.initialize_biomass_coefficients(residue_data=relative_biomass_information_data)
+        self.initialize_nitrogen_content(residue_data=relative_biomass_information_data)
+
         self.nitrogen_fixation.value = get_nitrogen_fixation(crop_type=crop_type)
         self.crop_yield.value = crop_yield
         self.harvest_method.value = harvest_method if harvest_method is not None else self.get_default_harvest_method()
