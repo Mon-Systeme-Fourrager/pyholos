@@ -182,7 +182,7 @@ class LandManagementBase(Component):
 
         else:
             if self.moisture_content_of_crop.value != 0:
-                moisture_content_of_crop_percentage = self.moisture_content_of_crop.value
+                moisture_content_of_crop_percentage = self.moisture_content_of_crop.value * 100.
             else:
                 moisture_content_of_crop_percentage = 12
 
@@ -344,7 +344,7 @@ class CropViewItem(LandManagementBase):
         self.amount_of_irrigation.value = amount_of_irrigation
         self.set_irrigation_type()
 
-        self.moisture_content_of_crop.value = relative_biomass_information_data.MoistureContentOfProduct
+        self.moisture_content_of_crop.value = relative_biomass_information_data.MoistureContentOfProduct / 100
         self.set_moisture_content()
         self.set_percentage_returns()
         self.number_of_pesticide_passes.value = number_of_pesticide_passes
