@@ -119,8 +119,8 @@ class LandManagementBase(Component):
         self.total_carbon_inputs = HolosVar(name='Total Carbon Inputs', value=0)
         """deprecated"""
 
-        self.sand = HolosVar(name='Sand', value=0)
-        """deprecated"""
+        self.sand = HolosVar(name='Sand')
+        """(-) fraction of sand in soil (between 0 and 1)"""
 
         self.lignin = HolosVar(name='Lignin', value=0)
         """deprecated"""
@@ -397,3 +397,5 @@ class CropViewItem(LandManagementBase):
         self.management_factor.value = calculate_management_factor(
             climate_parameter=self.climate_parameter.value,
             tillage_factor=self.tillage_factor.value)
+
+        self.sand.value = sand_content
