@@ -4,7 +4,8 @@ from holos_service.common import HolosVar, Component
 from holos_service.components.animals.common import ManureAnimalSourceTypes, ManureStateType, ManureLocationSourceType
 from holos_service.components.land_management.carbon.climate import calculate_climate_parameter
 from holos_service.components.land_management.carbon.management import calculate_management_factor
-from holos_service.components.land_management.carbon.relative_biomass_information import RelativeBiomassInformationData
+from holos_service.components.land_management.carbon.relative_biomass_information import (
+    RelativeBiomassInformationData, get_nitrogen_lignin_content_in_crops_data, parse_table_9)
 from holos_service.components.land_management.carbon.tillage import calculate_tillage_factor
 from holos_service.components.land_management.common import (
     TillageType, HarvestMethod, IrrigationType, ManureApplicationTypes, TimePeriodCategory, get_fuel_energy_estimate,
@@ -14,6 +15,8 @@ from holos_service.core_constants import CoreConstants
 from holos_service.defaults import Defaults
 from holos_service.django_stuff import CanadianProvince
 from holos_service.soil import SoilFunctionalCategory
+
+TABLE_9 = parse_table_9()
 
 
 class LandManagementBase(Component):
@@ -134,8 +137,8 @@ class LandManagementBase(Component):
         self.total_nitrogen_inputs_for_ipcc_tier2 = HolosVar(name='Total Nitrogen Inputs For Ipcc Tier 2', value=0)
         """deprecated"""
 
-        self.nitrogen_content = HolosVar(name='Nitrogen Content', value=0)
-        """deprecated"""
+        self.nitrogen_content = HolosVar(name='Nitrogen Content')
+        """(-) Nitrogen fraction of the carbon input (from IPCC Tier 2, between 0 and 1)"""
 
         self.above_ground_residue_dry_matter = HolosVar(name='Above Ground Residue Dry Matter', value=0)
         """deprecated"""
@@ -282,6 +285,13 @@ class LandManagementBase(Component):
 
         if self.crop_type.value.is_perennial():
             self.nitrogen_content_in_straw.value = 0
+
+        # Assign N content values used for IPCC Tier 2
+        crop_data = get_nitrogen_lignin_content_in_crops_data(
+            crop_type=self.crop_type.value,
+            table_9=TABLE_9)
+
+        self.nitrogen_content.value = crop_data.NitrogenContentResidues
 
 
 class CropViewItem(LandManagementBase):
