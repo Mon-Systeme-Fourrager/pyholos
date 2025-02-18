@@ -354,7 +354,7 @@ class CropViewItem(LandManagementBase):
         self.manure_applied.value = amount_of_manure_applied > 0
         self.manure_application_type.value = manure_application_type
         self.manure_animal_source_type.value = manure_animal_source_type
-        self.manure_state_type.value = manure_state_type
+        self.manure_state_type.value = manure_state_type.value
         self.manure_location_source_type.value = manure_location_source_type
         self.under_sown_crops_used.value = str(under_sown_crops_used)
         self.field_system_component_guid.value = str(field_system_component_guid)
