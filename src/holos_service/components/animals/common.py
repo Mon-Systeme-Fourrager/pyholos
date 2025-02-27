@@ -1701,7 +1701,7 @@ def get_land_application_factors(
         volatilization_fraction=0.21,
         emission_factor_volatilization=climate_dependent_emission_factor_for_volatilization)
 
-    factors.EmissionFactorLeach = Defaults.EmissionFactorForLeachingAndRunoff.value
+    factors.EmissionFactorLeach = Defaults.EmissionFactorForLeachingAndRunoff
 
     if region == Region.WesternCanada:
         factors.N2ODirectEmissionFactor = 0.00043
