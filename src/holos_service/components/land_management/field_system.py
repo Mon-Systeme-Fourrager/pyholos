@@ -125,7 +125,6 @@ class LandManagementBase(Component):
         self.sand = HolosVar(name='Sand')
         """(-) Fraction of 0-30 cm soil mass that is sand (0.050 – 2mm particles) (between 0 and 1)"""
 
-
         self.lignin = HolosVar(name='Lignin')
         """(-) fraction of lignin content in the carbon input (on dry basis, between 0 and 1)"""
 
@@ -215,6 +214,7 @@ class LandManagementBase(Component):
         if crop_type.is_root_crop():
             percentage_of_product_yield_returned_to_soil = Defaults.PercentageOfProductReturnedToSoilForRootCrops
             percentage_of_straw_returned_to_soil = Defaults.PercentageOfStrawReturnedToSoilForRootCrops
+            percentage_of_roots_returned_to_soil = 0  # different from original code
 
         if crop_type.is_cover_crop():
             percentage_of_product_yield_returned_to_soil = 100
