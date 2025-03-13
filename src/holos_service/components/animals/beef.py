@@ -346,6 +346,9 @@ class Beef(BeefBase):
 
 
 class Bulls(Beef):
+    animal_type = AnimalType.beef_bulls
+    component_type = ComponentType.cow_calf
+
     def __init__(
             self,
             management_period_name: str,
@@ -386,15 +389,18 @@ class Bulls(Beef):
         """
         super().__init__(
             name='Cow-Calf',
-            component_type=ComponentType.cow_calf,
+            component_type=self.component_type,
             group_name=GroupNames.bulls,
-            animal_type=AnimalType.beef_bulls,
+            animal_type=self.animal_type,
 
             **utils.get_local_args(locals())
         )
 
 
 class ReplacementHeifers(Beef):
+    animal_type = AnimalType.beef_replacement_heifers
+    component_type = ComponentType.cow_calf
+
     def __init__(
             self,
             management_period_name: str,
@@ -435,15 +441,18 @@ class ReplacementHeifers(Beef):
         """
         super().__init__(
             name='Cow-Calf',
-            component_type=ComponentType.cow_calf,
+            component_type=self.component_type,
             group_name=GroupNames.replacement_heifers,
-            animal_type=AnimalType.beef_replacement_heifers,
+            animal_type=self.animal_type,
 
             **utils.get_local_args(locals())
         )
 
 
 class Cows(Beef):
+    animal_type = AnimalType.beef_cow_lactating
+    component_type = ComponentType.cow_calf
+
     def __init__(
             self,
             management_period_name: str,
@@ -484,15 +493,18 @@ class Cows(Beef):
         """
         super().__init__(
             name='Cow-Calf',
-            component_type=ComponentType.cow_calf,
+            component_type=self.component_type,
             group_name=GroupNames.cows,
-            animal_type=AnimalType.beef_cow_lactating,
+            animal_type=self.animal_type,
 
             **utils.get_local_args(locals())
         )
 
 
 class Calves(Beef):
+    animal_type = AnimalType.beef_calf
+    component_type = ComponentType.cow_calf
+
     def __init__(
             self,
             management_period_name: str,
@@ -533,15 +545,18 @@ class Calves(Beef):
         """
         super().__init__(
             name='Cow-Calf',
-            component_type=ComponentType.cow_calf,
+            component_type=self.component_type,
             group_name=GroupNames.calves,
-            animal_type=AnimalType.beef_calf,
+            animal_type=self.animal_type,
 
             **utils.get_local_args(locals())
         )
 
 
 class FinishingHeifers(Beef):
+    animal_type = AnimalType.beef_finishing_heifer
+    component_type = ComponentType.finishing
+
     def __init__(
             self,
             management_period_name: str,
@@ -582,15 +597,18 @@ class FinishingHeifers(Beef):
         """
         super().__init__(
             name='Finisher',
-            component_type=ComponentType.finishing,
+            component_type=self.component_type,
             group_name=GroupNames.heifers,
-            animal_type=AnimalType.beef_finishing_heifer,
+            animal_type=self.animal_type,
 
             **utils.get_local_args(locals())
         )
 
 
 class FinishingSteers(Beef):
+    animal_type = AnimalType.beef_finishing_steer
+    component_type = ComponentType.finishing
+
     def __init__(
             self,
             management_period_name: str,
@@ -631,15 +649,18 @@ class FinishingSteers(Beef):
         """
         super().__init__(
             name='Finisher',
-            component_type=ComponentType.finishing,
+            component_type=self.component_type,
             group_name=GroupNames.steers,
-            animal_type=AnimalType.beef_finishing_steer,
+            animal_type=self.animal_type,
 
             **utils.get_local_args(locals())
         )
 
 
 class BackgrounderHeifer(Beef):
+    animal_type = AnimalType.beef_backgrounder_heifer
+    component_type = ComponentType.backgrounding
+
     def __init__(
             self,
             management_period_name: str,
@@ -680,15 +701,18 @@ class BackgrounderHeifer(Beef):
         """
         super().__init__(
             name='Stockers & Backgrounders',
-            component_type=ComponentType.backgrounding,
+            component_type=self.component_type,
             group_name=GroupNames.heifers,
-            animal_type=AnimalType.beef_backgrounder_heifer,
+            animal_type=self.animal_type,
 
             **utils.get_local_args(locals())
         )
 
 
 class BackgrounderSteer(Beef):
+    animal_type = AnimalType.beef_backgrounder_steer
+    component_type = ComponentType.backgrounding
+
     def __init__(
             self,
             management_period_name: str,
@@ -729,9 +753,9 @@ class BackgrounderSteer(Beef):
         """
         super().__init__(
             name='Stockers & Backgrounders',
-            component_type=ComponentType.backgrounding,
+            component_type=self.component_type,
             group_name=GroupNames.steers,
-            animal_type=AnimalType.beef_backgrounder_steer,
+            animal_type=self.animal_type,
 
             **utils.get_local_args(locals())
         )
