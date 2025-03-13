@@ -93,7 +93,7 @@ class LandManagementBase(Component):
         """deprecated"""
 
         self.carbon_input_from_product = HolosVar(name='Carbon Input From Product', value=0)
-        """deprecated"""
+        """(kg(C)/ha) carbon input from product (C_ptoSoil)"""
 
         self.carbon_input_from_straw = HolosVar(name='Carbon Input From Straw', value=0)
         """deprecated"""
@@ -107,8 +107,8 @@ class LandManagementBase(Component):
         self.size_of_first_rotation_for_field = HolosVar(name='Size Of First Rotation For Field', value=1)
         """deprecated"""
 
-        self.above_ground_carbon_input = HolosVar(name='Above Ground Carbon Input', value=0)
-        """deprecated"""
+        self.above_ground_carbon_input = HolosVar(name='Above Ground Carbon Input')
+        """(kg(C)/ha) above-ground carbon input(C_ag)"""
 
         self.below_ground_carbon_input = HolosVar(name='Below Ground Carbon Input', value=0)
         """deprecated"""
@@ -123,16 +123,17 @@ class LandManagementBase(Component):
         """deprecated"""
 
         self.sand = HolosVar(name='Sand')
-        """(-) fraction of sand in soil (between 0 and 1)"""
+        """(-) Fraction of 0-30 cm soil mass that is sand (0.050 – 2mm particles) (between 0 and 1)"""
+
 
         self.lignin = HolosVar(name='Lignin')
         """(-) fraction of lignin content in the carbon input (on dry basis, between 0 and 1)"""
 
         self.w_fac = HolosVar(name='WFac', value=0)
-        """deprecated"""
+        """(deprecated) Annual water effect on decomposition."""
 
         self.t_fac = HolosVar(name='TFac', value=0)
-        """deprecated"""
+        """(deprecated) Annual average air temperature effect on decomposition"""
 
         self.total_nitrogen_inputs_for_ipcc_tier2 = HolosVar(name='Total Nitrogen Inputs For Ipcc Tier 2', value=0)
         """deprecated"""
