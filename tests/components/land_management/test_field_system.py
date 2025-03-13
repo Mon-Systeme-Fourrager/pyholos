@@ -63,7 +63,7 @@ class TestLandManagementBase(unittest.TestCase):
                 self.land_management_base.moisture_content_of_crop_percentage.value)
 
     def test_set_moisture_content_default_non_fresh_crop_harvest_methods(self):
-        self.land_management_base.moisture_content_of_crop.value = 15
+        self.land_management_base.moisture_content_of_crop.value = .15
 
         for crop in CropType:
             if crop not in CropTypePerCategory.silage_crop:
@@ -77,7 +77,7 @@ class TestLandManagementBase(unittest.TestCase):
                         self.land_management_base.harvest_method.value = harvest_method
                         self.land_management_base.set_moisture_content()
                         self.assertEqual(
-                            self.land_management_base.moisture_content_of_crop.value,
+                            self.land_management_base.moisture_content_of_crop.value * 100.,
                             self.land_management_base.moisture_content_of_crop_percentage.value)
 
     def test_set_moisture_content_default_value(self):
@@ -115,12 +115,7 @@ class TestLandManagementBase(unittest.TestCase):
 
     def test_set_percentage_returns_for_perennial_crops(self):
         for crop_type in CropType:
-            if not any([
-                crop_type.is_annual(),
-                crop_type.is_root_crop(),
-                crop_type.is_cover_crop(),
-                crop_type.is_silage_crop()
-            ]):
+            if crop_type.is_perennial():
                 for harvest_method in HarvestMethod:
                     if harvest_method not in [
                         HarvestMethod.GreenManure,
@@ -137,11 +132,11 @@ class TestLandManagementBase(unittest.TestCase):
 
     def test_set_percentage_returns_for_annual_crops(self):
         for crop_type in CropType:
-            if not any([
-                crop_type.is_perennial(),
-                crop_type.is_root_crop(),
-                crop_type.is_cover_crop(),
-                crop_type.is_silage_crop()
+            if all([
+                crop_type.is_annual(),
+                not crop_type.is_root_crop(),
+                not crop_type.is_cover_crop(),
+                not crop_type.is_silage_crop(),
             ]):
                 for harvest_method in HarvestMethod:
                     if harvest_method not in [
@@ -159,12 +154,7 @@ class TestLandManagementBase(unittest.TestCase):
 
     def test_set_percentage_returns_for_root_crops(self):
         for crop_type in CropType:
-            if not any([
-                crop_type.is_perennial(),
-                crop_type.is_annual(),
-                crop_type.is_cover_crop(),
-                crop_type.is_silage_crop()
-            ]):
+            if crop_type.is_root_crop():
                 for harvest_method in HarvestMethod:
                     if harvest_method not in [
                         HarvestMethod.GreenManure,
@@ -181,12 +171,7 @@ class TestLandManagementBase(unittest.TestCase):
 
     def test_set_percentage_returns_for_cover_crops(self):
         for crop_type in CropType:
-            if not any([
-                crop_type.is_perennial(),
-                crop_type.is_annual(),
-                crop_type.is_root_crop(),
-                crop_type.is_silage_crop()
-            ]):
+            if crop_type.is_cover_crop():
                 for harvest_method in HarvestMethod:
                     if harvest_method not in [
                         HarvestMethod.GreenManure,
@@ -203,12 +188,7 @@ class TestLandManagementBase(unittest.TestCase):
 
     def test_set_percentage_returns_for_silage_crops(self):
         for crop_type in CropType:
-            if not any([
-                crop_type.is_perennial(),
-                crop_type.is_annual(),
-                crop_type.is_root_crop(),
-                crop_type.is_cover_crop()
-            ]):
+            if crop_type.is_silage_crop():
                 for harvest_method in HarvestMethod:
                     if harvest_method not in [
                         HarvestMethod.GreenManure,
