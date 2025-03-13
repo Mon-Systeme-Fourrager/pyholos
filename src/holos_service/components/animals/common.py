@@ -25,7 +25,7 @@ class DietAdditiveType(EnumGeneric):
     ionophore_plus_four_percent_fat: str = "InonophorePlusFourPercentFat"
     ionophore_plus_five_percent_fat: str = "IonophorePlusFivePercentFat"
     custom: str = "Custom"
-    NONE = None
+    NONE: str = "None"
 
 
 class ProductionStage(EnumGeneric):

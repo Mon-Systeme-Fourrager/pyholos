@@ -375,6 +375,7 @@ class Ewes(Sheep):
             **utils.get_local_args(locals())
         )
 
+
 class Lambs(Sheep):
     def __init__(
             self,
