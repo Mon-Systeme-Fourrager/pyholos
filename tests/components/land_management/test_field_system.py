@@ -1,10 +1,16 @@
 import unittest
 from itertools import product
+from uuid import UUID
 
 from holos_service.components.land_management import field_system
-from holos_service.components.land_management.common import HarvestMethod, IrrigationType
+from holos_service.components.land_management.carbon.relative_biomass_information import parse_table_7, \
+    get_relative_biomass_information_data
+from holos_service.components.land_management.common import HarvestMethod, IrrigationType, TillageType, FertilizerBlends
 from holos_service.components.land_management.crop import CropType
 from holos_service.defaults import Defaults
+from holos_service.django_stuff import CanadianProvince
+from holos_service.soil import SoilFunctionalCategory
+from holos_service.utils import read_holos_resource_table
 from tests.helpers.utils import CropTypePerCategory
 
 
@@ -234,6 +240,80 @@ class TestLandManagementBase(unittest.TestCase):
                     expected_percentage_of_product_yield_returned_to_soil=100,
                     expected_percentage_of_straw_returned_to_soil=0,
                     expected_percentage_of_roots_returned_to_soil=100)
+
+
+class TestCropViewItem(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.field_data = read_holos_resource_table(r'../../sources/holos/non_regression_crop_view_item/field_data.csv')
+        cls.weather_data = read_holos_resource_table(
+            r'../../sources/holos/non_regression_crop_view_item/daily_weather.csv',
+            usecols=['Year', 'Mean Daily Air Temperature', 'Mean Daily Precipitation', 'Mean Daily Pet'])
+        cls.year = 2025
+        cls.crop_type = CropType.Wheat
+        cls.irrigation_type = IrrigationType.RainFed
+        cls.irrigation_amount = 0
+        cls.province = CanadianProvince.Quebec
+        cls.relative_biomass_data = get_relative_biomass_information_data(
+            table_7=parse_table_7(),
+            crop_type=cls.crop_type,
+            irrigation_type=cls.irrigation_type,
+            irrigation_amount=cls.irrigation_amount + cls.weather_data.loc[cls.year, 'Mean Daily Precipitation'] * 365,
+            province=cls.province
+        )
+        cls.excepted_columns = [
+            "Above Ground Carbon Input",
+            "Below Ground Carbon Input",
+            "Total Carbon Inputs",
+            "Above Ground Residue Dry Matter",
+            "Below Ground Residue Dry Matter",
+            "Climate Parameter",
+            "Tillage Factor",
+            "Management Factor"
+        ]
+
+    def test_values(self):
+        for _, annual_data in self.field_data.iterrows():
+            crop_view_item = field_system.CropViewItem(
+                name='field_1',
+                field_area=1,
+                current_year=self.year,
+                crop_year=annual_data['Crop Year'],
+                year_in_perennial_stand=0,
+                crop_type=self.crop_type,
+                tillage_type=TillageType.Reduced,
+                perennial_stand_id=UUID('00000000-0000-0000-0000-000000000000'),
+                perennial_stand_length=1,
+                relative_biomass_information_data=self.relative_biomass_data,
+                crop_yield=annual_data['Yield'],
+                harvest_method=HarvestMethod.CashCrop,
+                nitrogen_fertilizer_rate=0,
+                under_sown_crops_used=False,
+                field_system_component_guid=UUID('21d4222f-fc6c-439f-b606-a896abc1c38f'),
+                province=self.province,
+                clay_content=0.26,
+                sand_content=0.28,
+                organic_carbon_percentage=3.2,
+                soil_top_layer_thickness=230,
+                soil_functional_category=SoilFunctionalCategory.EasternCanada,
+                fertilizer_blend=FertilizerBlends.Custom,
+                evapotranspiration=self.weather_data['Mean Daily Pet'],
+                precipitation=self.weather_data['Mean Daily Precipitation'],
+                temperature=self.weather_data['Mean Daily Air Temperature'],
+                amount_of_irrigation=self.irrigation_amount
+            )
+
+            res = crop_view_item.to_dict()
+            for k, v in annual_data.to_dict().items():
+                if k not in self.excepted_columns:
+                    actual = res[k]
+                    if any([isinstance(v, bool), isinstance(actual, bool)]):
+                        v = str(v)
+                        actual = str(v)
+                        self.assertEqual(
+                            v,
+                            actual
+                        )
 
 
 if __name__ == '__main__':
