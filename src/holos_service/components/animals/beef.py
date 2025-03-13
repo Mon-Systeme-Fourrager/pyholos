@@ -207,9 +207,12 @@ class BeefBase(Component):
     def update_component_type(self, component_type: str):
         self.component_type.value = '.'.join((self.component_type.value, component_type))
 
-    def set_feeding_activity_coefficient(self):
+    def set_feeding_activity_coefficient(
+            self,
+            housing_type: HousingType
+    ):
         self.activity_coefficient_of_feeding_situation.value = get_beef_and_dairy_cattle_feeding_activity_coefficient(
-            housing_type=self.housing_type.value)
+            housing_type=housing_type)
 
 
 class Beef(BeefBase):
@@ -318,7 +321,7 @@ class Beef(BeefBase):
         self.total_nitrogen_kilograms_dry_matter_for_bedding.value = bedding.total_nitrogen_kilograms_dry_matter_for_bedding.value
         self.moisture_content_of_bedding_material.value = bedding.moisture_content_of_bedding_material.value
 
-        self.set_feeding_activity_coefficient()
+        self.set_feeding_activity_coefficient(housing_type=housing_type)
 
         self.methane_producing_capacity_of_manure.value = get_default_methane_producing_capacity_of_manure(
             is_pasture=housing_type.is_pasture(),
