@@ -1,17 +1,4 @@
-﻿# For Heifers:
-# ------------
-# The value of "End Weight" was changed from 361 to 360 kg, in agreement with the source code of Holos in Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider
-# The value of "Average Daily Gain" was updated correspondingly from 1.1 to 1.091 kg/day
-# The "Methane Conversion Factor Of Diet" value was set to 0.065 (which is calculated based on total digestible nutrient) instead of 0.063 (which is a hard-coded value for LabelMediumGrowthDiet in Holos).
-# The "Dietary Net Energy Concentration" value was set to 13.642 (which is calculated based on metabolizable energy) instead of 0 (which is a hard-coded (wrongly initialized?)).
-# The value of "Gain coefficient" was changed from 1.0 to 0.8, in agreement with the source code of Holos in Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider
-#
-# For Steers:
-# ------------
-# The value of "Start Weight" was changed from 240 to 250 kg, in agreement with the source code of Holos in Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider
-# The value of "End Weight" was changed from 361 to 380 kg, in agreement with the source code of Holos in Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider
-# The value of "Average Daily Gain" was updated correspondingly from 1.1 to 1.1818 kg/day
-# The "Methane Conversion Factor Of Diet" value was set to 0.065 (which is calculated based on total digestible nutrient) instead of 0.063 (which is a hard-coded value for LabelMediumGrowthDiet in Holos).
+﻿# The "Methane Conversion Factor Of Diet" value was set to 0.065 (which is calculated based on total digestible nutrient) instead of 0.063 (which is a hard-coded value for LabelMediumGrowthDiet in Holos).
 # The "Dietary Net Energy Concentration" value was set to 13.642 (which is calculated based on metabolizable energy) instead of 0 (which is a hard-coded (wrongly initialized?)).
 #
 Name,Component Type,Group Name,Group Type,Management Period Name,Group Pairing Number,Management Period Start Date,Management Period Days,Number Of Animals,Production Stage,Number Of Young Animals,Animals Are Milk Fed Only,Start Weight,End Weight,Average Daily Gain,Milk Production,Milk Fat Content,Milk Protein Content As Percentage,Diet Additive Type,Methane Conversion Factor Of Diet,Methane Conversion Factor Adjusted,Feed Intake,Crude Protein,Forage,TDN,Ash Content Of Diet,Starch,Fat,ME,NDF,Dietary Net Energy Concentration,Housing Type,Gain Coefficient,User Defined Bedding Rate,Total Carbon Kilograms Dry Matter For Bedding,Total Nitrogen Kilograms Dry Matter For Bedding,Moisture Content Of Bedding Material,Activity Coefficient Of Feeding Situation,Maintenance Coefficient,Methane Conversion Factor Of Manure,N2O Direct Emission Factor,Emission Factor Volatilization,Volatilization Fraction,Emission Factor Leaching,Fraction Leaching,Ash Content,Methane Producing Capacity Of Manure,Fraction Of Organic Nitrogen Immobilized,Fraction Of Organic Nitrogen Nitrified,Fraction Of Organic Nitrogen Mineralized,Manure State Type,Ammonia Emission Factor For Manure Storage

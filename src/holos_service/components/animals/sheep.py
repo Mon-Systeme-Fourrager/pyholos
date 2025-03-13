@@ -114,14 +114,20 @@ class SheepBase(Component):
         https://github.com/holos-aafc/Holos/blob/97331845af308fe8aab6267edad4bbda6f5938b6/H.Core/Services/Initialization/Animals/AnimalInitializationService.Sheep.cs#L28
         """
 
+        self.wool_production = HolosVar(name="Wool Production", value=None)
+
         self.energy_required_to_produce_milk = HolosVar(name="Energy Required To Produce Milk", value=4.6)
         """(MJ kg-1)
         Holos Source Code:
         https://github.com/holos-aafc/Holos/blob/97331845af308fe8aab6267edad4bbda6f5938b6/H.Core/Services/Initialization/Animals/AnimalInitializationService.Sheep.cs#L28
         """
 
-        self.wool_production = HolosVar(name="Wool Production", value=None)
         self.diet_additive_type = HolosVar(name="Diet Additive Type", value=None)
+
+        self.methane_conversion_factor_of_diet = HolosVar(name="Methane Conversion Factor Of Diet", value=None)
+
+        self.methane_conversion_factor_adjusted = HolosVar(name="Methane Conversion Factor Adjusted", value=0)
+        """deprecated"""
 
         self.feed_intake = HolosVar(name="Feed Intake", value=0)
         """only for swine"""
@@ -151,16 +157,13 @@ class SheepBase(Component):
         self.volatilization_fraction = HolosVar(name="Volatilization Fraction", value=None)
         self.emission_factor_leaching = HolosVar(name="Emission Factor Leaching", value=None)
         self.fraction_leaching = HolosVar(name="Fraction Leaching", value=None)
-        self.methane_conversion_factor_of_diet = HolosVar(name="Methane Conversion Factor Of Diet", value=None)
-        self.methane_producing_capacity_of_manure = HolosVar(name="Methane Producing Capacity Of Manure", value=None)
-        self.manure_excretion_rate = HolosVar(name="Manure Excretion Rate", value=None)
-        self.fraction_of_carbon_in_manure = HolosVar(name="Fraction Of Carbon In Manure", value=None)
-
-        self.methane_conversion_factor_adjusted = HolosVar(name="Methane Conversion Factor Adjusted", value=0)
-        """deprecated"""
 
         self.ash_content = HolosVar(name="Ash Content", value=8.0)
         """deprecated"""
+
+        self.methane_producing_capacity_of_manure = HolosVar(name="Methane Producing Capacity Of Manure", value=None)
+        self.manure_excretion_rate = HolosVar(name="Manure Excretion Rate", value=None)
+        self.fraction_of_carbon_in_manure = HolosVar(name="Fraction Of Carbon In Manure", value=None)
 
     def update_component_type(self, component_type: str):
         self.component_type.value = '.'.join((self.component_type.value, component_type))

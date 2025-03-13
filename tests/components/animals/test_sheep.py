@@ -90,7 +90,7 @@ class TestGetFeedingActivityCoefficient(unittest.TestCase):
                     sheep.get_feeding_activity_coefficient(housing_type=housing_type)
 
 
-class TestSheepFeedlotNoneRegression(unittest.TestCase):
+class TestSheepFeedlotNonRegression(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.non_regression_data = read_holos_resource_table(
@@ -142,7 +142,7 @@ class TestSheepFeedlotNoneRegression(unittest.TestCase):
                 places=3)
 
 
-class TestRamsNoneRegression(unittest.TestCase):
+class TestRamsNonRegression(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.non_regression_data = read_holos_resource_table(
@@ -194,7 +194,7 @@ class TestRamsNoneRegression(unittest.TestCase):
                 places=3)
 
 
-class TestEwesNoneRegression(unittest.TestCase):
+class TestEwesNonRegression(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.non_regression_data = read_holos_resource_table(

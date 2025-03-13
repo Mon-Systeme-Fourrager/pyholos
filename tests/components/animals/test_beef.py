@@ -29,13 +29,12 @@ class TestBeef(unittest.TestCase):
             self.beef.component_type.value)
 
 
-class TestBeefCowCalfNoneRegression(unittest.TestCase):
+class TestBeefCowCalfNonRegression(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.non_regression_data = read_holos_resource_table(
-            path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_beef_cow_calf.csv')
-        cls.non_regression_data.loc[:, 'Animals Are Milk Fed Only'] = (
-            cls.non_regression_data['Animals Are Milk Fed Only'].apply(lambda x: str(x).upper()))
+            path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_beef_cow_calf.csv',
+        dtype={"Animals Are Milk Fed Only": str})
         cls.non_regression_data.set_index("Group Name", inplace=True)
 
         cls.animal_type = common.AnimalType.beef_bulls
@@ -196,8 +195,7 @@ class TestBeefCowCalfNoneRegression(unittest.TestCase):
                 year=2024,
                 manure_state_type=manure_state_type,
                 **self.manure_emission_kwargs),
-            bedding_material_type=common.BeddingMaterialType.straw,
-            end_weight=90
+            bedding_material_type=common.BeddingMaterialType.straw
         )
         self.run_test(
             group_name="Calves",

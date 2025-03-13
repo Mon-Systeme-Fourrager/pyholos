@@ -55,7 +55,7 @@ def set_table_16():
                 BaselineMaintenanceCoefficient=CoreConstants.NotApplicable,
                 GainCoefficient=CoreConstants.NotApplicable,
                 DefaultInitialWeight=39,
-                DefaultFinalWeight=90
+                DefaultFinalWeight=260
             ),
             dict(
                 AnimalType=AnimalType.beef_cow_lactating.value,

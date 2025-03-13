@@ -87,6 +87,11 @@ class BeefBase(Component):
             name="Methane Conversion Factor Of Diet",
             value=None)
 
+        self.methane_conversion_factor_adjusted = HolosVar(
+            name="Methane Conversion Factor Adjusted",
+            value=0)
+        """deprecated"""
+
         self.feed_intake = HolosVar(
             name="Feed Intake",
             value=None)
@@ -167,6 +172,11 @@ class BeefBase(Component):
             name="Fraction Leaching",
             value=None)
 
+        self.ash_content = HolosVar(
+            name="Ash Content",
+            value=8.0)
+        """deprecated"""
+
         self.methane_producing_capacity_of_manure = HolosVar(
             name="Methane Producing Capacity Of Manure",
             value=None)
@@ -185,16 +195,6 @@ class BeefBase(Component):
         self.ammonia_emission_factor_for_manure_storage = HolosVar(
             name="Ammonia Emission Factor For Manure Storage",
             value=None)
-
-        self.methane_conversion_factor_adjusted = HolosVar(
-            name="Methane Conversion Factor Adjusted",
-            value=0)
-        """deprecated"""
-
-        self.ash_content = HolosVar(
-            name="Ash Content",
-            value=8.0)
-        """deprecated"""
 
         self._animal_coefficient_data: AnimalCoefficientData | None = None
 
@@ -276,7 +276,7 @@ class Beef(BeefBase):
         self.number_of_animals.value = number_of_animals
         self.production_stage.value = production_stage.value
         self.number_of_young_animals.value = number_of_young_animals
-        self.animals_are_milk_fed_only.value = str(is_milk_fed_only).upper()
+        self.animals_are_milk_fed_only.value = str(is_milk_fed_only)
 
         self.get_animal_coefficient_data()
         self.maintenance_coefficient.value = self._animal_coefficient_data.baseline_maintenance_coefficient
