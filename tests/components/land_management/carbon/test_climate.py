@@ -617,7 +617,7 @@ class TestNonRegressionCalculateDailyClimateParameters(unittest.TestCase):
         """
         Notes:
             This test did not include a day-to-day comparison since input data taken from Holos
-            (evapotranspirations, tempreatures, precipitations) were rounded to 2-decimals, which makes the outputs
+            (evapotranspirations, temperatures, precipitations) were rounded to 2-decimals, which makes the outputs
             of this function not identical to those from Holos.
         """
         func_inputs = self.non_regression_data['inputs']
