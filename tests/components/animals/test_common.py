@@ -852,11 +852,11 @@ class TestBedding(unittest.TestCase):
             dict(
                 AnimalType=common.AnimalType.dairy.value,
                 BeddingMaterial=common.BeddingMaterialType.sand.value,
-                TotalNitrogenKilogramsDryMatter=None,
-                TotalCarbonKilogramsDryMatter=None,
-                TotalPhosphorusKilogramsDryMatter=None,
-                CarbonToNitrogenRatio=None,
-                MoistureContent=None
+                TotalNitrogenKilogramsDryMatter=0,
+                TotalCarbonKilogramsDryMatter=0,
+                TotalPhosphorusKilogramsDryMatter=0,
+                CarbonToNitrogenRatio=0,
+                MoistureContent=0
             ),
             common.Bedding.get_bedding_material_composition(
                 animal_type=common.AnimalType.dairy,

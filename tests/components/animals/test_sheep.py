@@ -278,8 +278,6 @@ class TestEwesNonRegression(unittest.TestCase):
         )
         res = ewes.to_dict()
         for k, v in self.non_regression_data.loc[1].to_dict().items():
-            print(k, v, res[k])
-
             self.assertAlmostEqual(
                 v,
                 res[k],

@@ -1,3 +1,5 @@
+from enum import auto
+
 from pandas import DataFrame
 
 from holos_service import utils
@@ -8,7 +10,7 @@ from holos_service.config import PathsHolosResources
 from holos_service.defaults import Defaults
 from holos_service.django_stuff import CanadianProvince
 from holos_service.soil import SoilTexture
-from holos_service.utils import read_holos_resource_table
+from holos_service.utils import read_holos_resource_table, AutoNameEnum
 
 
 class DietAdditiveType(EnumGeneric):
@@ -457,14 +459,25 @@ def convert_animal_type_name(name: str) -> AnimalType:
             return AnimalType.beef_backgrounder
 
 
-class ManureAnimalSourceTypes(EnumGeneric):
-    not_selected: str = "NotSelected"
-    beef_manure: str = "BeefManure"
-    dairy_manure: str = "DairyManure"
-    swine_manure: str = "SwineManure"
-    poultry_manure: str = "PoultryManure"
-    sheep_manure: str = "SheepManure"
-    other_livestock_manure: str = "OtherLivestockManure"
+class ManureAnimalSourceTypes(AutoNameEnum):
+    """
+    Holos source type:
+        https://github.com/holos-aafc/Holos/blob/c06f6619907fba89c3ddc29b4239a903a8c20a7a/H.Core/Enumerations/ManureAnimalSourceTypes.cs#L9
+    """
+    NotSelected = auto()
+    BeefManure = auto()
+    DairyManure = auto()
+    SwineManure = auto()
+    PoultryManure = auto()
+    SheepManure = auto()
+    OtherLivestockManure = auto()
+
+
+class ManureLocationSourceType(AutoNameEnum):
+    NotSelected = auto()
+    Livestock = auto()
+    Imported = auto()
+    OnFarmAnaerobicDigestor = auto()
 
 
 class Milk:
@@ -670,36 +683,6 @@ class Diet:
             res = None
 
         return res
-
-
-# class HousingSystem:
-#     def __init__(
-#             self,
-#             bedding_rate: float,
-#             total_carbon_kilograms_dry_matter_for_bedding: float
-#     ):
-#         """
-#
-#         Args:
-#             bedding_rate: (kg head-1 day-1) rate of bedding material added to the housing system
-#             total_carbon_kilograms_dry_matter_for_bedding: (kg(C) kg(DM)-1)
-#
-#         """
-#         self.user_defined_bedding_rate = bedding_rate
-#         self.total_carbon_kilograms_dry_matter_for_bedding = total_carbon_kilograms_dry_matter_for_bedding * bedding_rate
-
-
-# class Table_30_Default_Bedding_Material_Composition_Data(EnumGeneric):
-#     ComponentCategory = "ComponentCategory { get; set; }"
-#     AnimalType = " AnimalType { get; set; }"
-#     ComponentCategoryString: str = "ComponentCategory.GetDescription(); }"
-#     BeddingMaterialType = "BeddingMaterial { get; set; }"
-#     BeddingMaterialString: str = "BeddingMaterial.GetDescription()"
-#     MoistureContent: float  # %
-#     TotalNitrogenKilogramsDryMatter: float  # %(kg N/kg DM)
-#     TotalCarbonKilogramsDryMatter: float  # (kg C/kg DM)
-#     TotalPhosphorusKilogramsDryMatter: double
-#     CarbonToNitrogenRatio: float  # (unitless)
 
 
 class HousingType(EnumGeneric):
@@ -1001,8 +984,7 @@ class Bedding:
             # Other animals have a value for animal group (Horses, Goats, etc.)
             animal_lookup_type = animal_type
 
-        df = read_holos_resource_table(
-            path_file=PathsHolosResources.Table_30_Default_Bedding_Material_Composition_Provider)
+        df = HolosTables.Table_30_Default_Bedding_Material_Composition_Provider
 
         result = df[
             (df['BeddingMaterial'] == bedding_material_type.value) &
@@ -1617,7 +1599,7 @@ def get_volatilization_fractions_from_land_applied_manure_data_for_swine_type(
     Holos Source Code:
         https://github.com/holos-aafc/Holos/blob/396f1ab9bc7247e6d78766f9445c14d2eb7c0d9d/H.Core/Providers/Animals/Table%2070/Table_62_Volatilization_Fractions_From_Land_Applied_Swine_Manure_Provider.cs#L23
     """
-    df = read_holos_resource_table(path_file=PathsHolosResources.Table_62_Fractions_of_swine_N_volatilized)
+    df = HolosTables.Table_62_Fractions_of_swine_N_volatilized
     return df.iloc[(df['Year'] - year).abs().idxmin()][province.value.abbreviation]
 
 
@@ -1637,7 +1619,7 @@ def get_volatilization_fractions_from_land_applied_manure_data_for_dairy_cattle_
     Holos Source Code:
         https://github.com/holos-aafc/Holos/blob/396f1ab9bc7247e6d78766f9445c14d2eb7c0d9d/H.Core/Providers/Animals/Table%2069/Table_61_Volatilization_Fractions_From_Land_Applied_Dairy_Manure_Provider.cs#L48
     """
-    df = read_holos_resource_table(path_file=PathsHolosResources.Table_61_Fractions_of_dairy_cattle_N_volatilized)
+    df = HolosTables.Table_61_Fractions_of_dairy_cattle_N_volatilized
     return df.iloc[(df['Year'] - year).abs().idxmin()][province.value.abbreviation]
 
 
@@ -1704,7 +1686,7 @@ def get_land_application_factors(
         (1) https://github.com/RamiALBASHA/Holos/blob/71638efd97c84c6ded45e342ce664477df6f803f/H.Core/Providers/Animals/Table_36_Livestock_Emission_Conversion_Factors_Provider.cs#L41
         (2) https://github.com/holos-aafc/Holos/blob/267abf1066bb5494e5ec6a4085a85ab42dfa76c7/H.Core/Services/Initialization/Animals/AnimalInitializationService.Ammonia.cs#L55
     """
-    region = get_region(province=province.name)
+    region = get_region(province=province)
     climate_dependent_emission_factor_for_volatilization = get_emission_factor_for_volatilization_based_on_climate(
         mean_annual_precipitation=mean_annual_precipitation,
         mean_annual_potential_evapotranspiration=mean_annual_evapotranspiration)
@@ -1719,7 +1701,7 @@ def get_land_application_factors(
         volatilization_fraction=0.21,
         emission_factor_volatilization=climate_dependent_emission_factor_for_volatilization)
 
-    factors.EmissionFactorLeach = Defaults.EmissionFactorForLeachingAndRunoff.value
+    factors.EmissionFactorLeach = Defaults.EmissionFactorForLeachingAndRunoff
 
     if region == Region.WesternCanada:
         factors.N2ODirectEmissionFactor = 0.00043
@@ -2096,9 +2078,7 @@ def get_manure_excretion_rate(
         https://github.com/holos-aafc/Holos/blob/97331845af308fe8aab6267edad4bbda6f5938b6/H.Core/Providers/Animals/Table_29_Default_Manure_Excreted_Provider.cs#L100
 
     """
-    _excretionRates = read_holos_resource_table(
-        path_file=PathsHolosResources.Table_29_Percentage_Total_Manure_Produced_In_Systems)
-    _excretionRates.index = _excretionRates.pop('Animal group').apply(lambda x: convert_animal_type_name(name=x))
+    _excretionRates = HolosTables.Table_29_Percentage_Total_Manure_Produced_In_Systems
 
     animal_type_lookup = animal_type
     if animal_type.is_beef_cattle_type():
@@ -2219,25 +2199,14 @@ def get_default_manure_composition_data(
         # Other animals have a value for animal group (Horses, Goats, etc.)
         animal_lookup_type = animal_type
 
-    manure_composition_data = read_holos_resource_table(
-        path_file=PathsHolosResources.Table_6_Manure_Types_And_Default_Composition)
-    manure_composition_data['animal_type'] = manure_composition_data['animal_type'].apply(
-        lambda x: convert_animal_type_name(name=x))
-    manure_composition_data['manure_state_type'] = manure_composition_data['manure_state_type'].apply(
-        lambda x: convert_manure_state_type_name(name=x))
-    manure_composition_data.set_index(['animal_type', 'manure_state_type'], inplace=True)
-
-    res = manure_composition_data.loc[(animal_lookup_type, manure_state_type)]
-
-    return ManureComposition(**res)
+    return ManureComposition(
+        **HolosTables.Table_6_Manure_Types_And_Default_Composition.loc[(animal_lookup_type, manure_state_type)])
 
 
 def get_beef_and_dairy_cattle_coefficient_data(
         animal_type: str
 ) -> AnimalCoefficientData:
-    df = read_holos_resource_table(
-        path_file=PathsHolosResources.Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider,
-        index_col="AnimalType")
+    df = HolosTables.Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider
 
     if animal_type in df.index:
         _df = df.loc[animal_type]
@@ -2286,9 +2255,7 @@ def get_average_milk_production_for_dairy_cows_value(
     References:
         Holos source code: https://github.com/holos-aafc/Holos/blob/396f1ab9bc7247e6d78766f9445c14d2eb7c0d9d/H.Core/Providers/Animals/Table_21_Average_Milk_Production_Dairy_Cows_Provider.cs#L56
     """
-    df = utils.read_holos_resource_table(
-        path_file=PathsHolosResources.Table_21_Average_Milk_Production_For_Dairy_Cows_By_Province,
-        index_col='Year')
+    df = HolosTables.Table_21_Average_Milk_Production_For_Dairy_Cows_By_Province
     year_min = min(df.index)
     year_max = max(df.index)
 
@@ -2296,3 +2263,37 @@ def get_average_milk_production_for_dairy_cows_value(
     df.interpolate(method="linear", inplace=True)
 
     return df.loc[max(year_min, min(year_max, year)), province.value.abbreviation]
+
+
+def read_table_6():
+    manure_composition_data = read_holos_resource_table(
+        path_file=PathsHolosResources.Table_6_Manure_Types_And_Default_Composition)
+    manure_composition_data['animal_type'] = manure_composition_data['animal_type'].apply(
+        lambda x: convert_animal_type_name(name=x))
+    manure_composition_data['manure_state_type'] = manure_composition_data['manure_state_type'].apply(
+        lambda x: convert_manure_state_type_name(name=x))
+    return manure_composition_data.set_index(['animal_type', 'manure_state_type'])
+
+
+def read_table_29():
+    excretion_rates = read_holos_resource_table(
+        path_file=PathsHolosResources.Table_29_Percentage_Total_Manure_Produced_In_Systems)
+    excretion_rates.index = excretion_rates.pop('Animal group').apply(lambda x: convert_animal_type_name(name=x))
+    return excretion_rates
+
+
+class HolosTables:
+    Table_6_Manure_Types_And_Default_Composition: DataFrame = read_table_6()
+    Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider = read_holos_resource_table(
+        path_file=PathsHolosResources.Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider,
+        index_col="AnimalType")
+    Table_21_Average_Milk_Production_For_Dairy_Cows_By_Province = utils.read_holos_resource_table(
+        path_file=PathsHolosResources.Table_21_Average_Milk_Production_For_Dairy_Cows_By_Province,
+        index_col='Year')
+    Table_29_Percentage_Total_Manure_Produced_In_Systems = read_table_29()
+    Table_30_Default_Bedding_Material_Composition_Provider = read_holos_resource_table(
+        path_file=PathsHolosResources.Table_30_Default_Bedding_Material_Composition_Provider)
+    Table_61_Fractions_of_dairy_cattle_N_volatilized = read_holos_resource_table(
+        path_file=PathsHolosResources.Table_61_Fractions_of_dairy_cattle_N_volatilized)
+    Table_62_Fractions_of_swine_N_volatilized = read_holos_resource_table(
+        path_file=PathsHolosResources.Table_62_Fractions_of_swine_N_volatilized)

@@ -1,7 +1,8 @@
 from enum import Enum, unique, StrEnum, auto
 from typing import Any
 
-from holos_service import django_stuff
+from holos_service.django_stuff import CanadianProvince
+from holos_service.utils import AutoNameEnum
 
 
 class EnumGeneric(Enum):
@@ -18,7 +19,7 @@ class HolosVar:
     def __init__(
             self,
             name: str,
-            value: Any
+            value: Any = None
     ):
         self.name = name
         self.value = value
@@ -32,21 +33,21 @@ class Component:
         return {v.name: v.value for k, v in self.__dict__.items() if isinstance(v, HolosVar)}
 
 
-class Region:
-    EasternCanada: str = "EasternCanada"
-    WesternCanada: str = "WesternCanada"
+class Region(AutoNameEnum):
+    EasternCanada = auto()
+    WesternCanada = auto()
 
 
 def get_region(
-        province: str
+        province: CanadianProvince
 ) -> str:
-    if any([
-        province == django_stuff.CanadianProvince.Alberta.name,
-        province == django_stuff.CanadianProvince.BritishColumbia.name,
-        province == django_stuff.CanadianProvince.Manitoba.name,
-        province == django_stuff.CanadianProvince.Saskatchewan.name,
-        province == django_stuff.CanadianProvince.NorthwestTerritories.name,
-        province == django_stuff.CanadianProvince.Nunavut.name]):
+    if province in [
+        CanadianProvince.Alberta,
+        CanadianProvince.BritishColumbia,
+        CanadianProvince.Manitoba,
+        CanadianProvince.Saskatchewan,
+        CanadianProvince.NorthwestTerritories,
+        CanadianProvince.Nunavut]:
 
         res = Region.WesternCanada
 
@@ -54,6 +55,15 @@ def get_region(
         res = Region.EasternCanada
 
     return res
+
+
+def verify_is_prairie_province(
+        province: CanadianProvince
+) -> bool:
+    return province in [
+        CanadianProvince.Alberta,
+        CanadianProvince.Saskatchewan,
+        CanadianProvince.Manitoba]
 
 
 @unique

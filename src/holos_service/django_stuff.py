@@ -1,11 +1,9 @@
-from enum import Enum, unique, StrEnum
+from enum import Enum
 from pathlib import Path
 
 from geojson import load, FeatureCollection
 from pandas import read_csv, DataFrame
 from shapely.geometry import shape, Point
-
-from holos_service.config import PathsSlcData
 
 
 class MapNamesGeneric(Enum):
@@ -19,7 +17,6 @@ class MapNamesGeneric(Enum):
     def get_name(cls, abbreviation: str) -> str:
         res = cls._get_name(abbreviation=abbreviation)
         return res if res is not None else "NotApplicable"
-
 
 
 class NameSlc:
@@ -85,7 +82,6 @@ class SoilGreatGroupNamesSlc(MapNamesGeneric):
     Unknown: NameSlc = NameSlc(name="NotApplicable", abbreviation='NA')
 
 
-
 class ParentMaterialTextureNamesSlc(MapNamesGeneric):
     VeryCoarse: NameSlc = NameSlc(name='Very Coarse', abbreviation="VC")
     Coarse: NameSlc = NameSlc(name='Coarse', abbreviation="C")
@@ -121,11 +117,8 @@ def load_slc_data(path_slc_geojson_file: Path) -> FeatureCollection:
 def get_slc_polygon_properties(
         latitude: float | str,
         longitude: float | str,
-        geojson_data: FeatureCollection = None
+        geojson_data: FeatureCollection
 ) -> dict | None:
-    if geojson_data is None:
-        geojson_data = load_slc_data(path_slc_geojson_file=PathsSlcData.geojson_file.value)
-
     point = Point(longitude, latitude)
 
     for feature in geojson_data['features']:

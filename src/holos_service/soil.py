@@ -3,6 +3,8 @@ from enum import StrEnum, unique, auto
 from holos_service import django_stuff
 from holos_service.common import Region, get_region
 from holos_service.config import PathsSlcData
+from holos_service.django_stuff import CanadianProvince
+from holos_service.utils import AutoNameEnum, keep_alphabetical_characters
 
 
 @unique
@@ -16,21 +18,66 @@ class SoilTexture(StrEnum):
     Unknown = auto()
 
 
-class SoilFunctionalCategory:
-    NotApplicable: str = "NotApplicable"
-    Brown: str = "Brown"
-    BrownChernozem: str = "BrownChernozem"
-    DarkBrown: str = "DarkBrown"
-    DarkBrownChernozem: str = "DarkBrownChernozem"
-    Black: str = "Black"
-    BlackGrayChernozem: str = "BlackGrayChernozem"
-    Organic: str = "Organic"
-    EasternCanada: str = "EasternCanada"
-    # All: str = "EnumSoilFunctionalAll"
-    Unknown: str = "Unknown"
+class SoilFunctionalCategory(AutoNameEnum):
+    NotApplicable = auto()
+    Brown = auto()
+    BrownChernozem = auto()
+    DarkBrown = auto()
+    DarkBrownChernozem = auto()
+    Black = auto()
+    BlackGrayChernozem = auto()
+    Organic = auto()
+    EasternCanada = auto()
+    All = auto()
+    Unknown = auto()
+    Grey = auto()
+    DarkGrey = auto()
 
-    Grey: str = "Grey"
-    DarkGrey: str = "DarkGrey"
+    def get_simplified_soil_category(self):
+        if self in [
+            self.__class__.Brown,
+            self.__class__.DarkBrown,
+            self.__class__.BrownChernozem,
+            self.__class__.DarkBrownChernozem
+        ]:
+            res = self.__class__.Brown
+        elif self in [
+            self.__class__.Black,
+            self.__class__.BlackGrayChernozem
+        ]:
+            res = SoilFunctionalCategory.Black
+        else:
+            # Other types cannot be reduced/simplified (i.e. Organic, Eastern Canada, etc.)
+            res = self
+
+        return res
+
+
+def convert_soil_functional_category_name(
+        name: str
+) -> SoilFunctionalCategory:
+    match keep_alphabetical_characters(name=name):
+        case "brownchernozem":
+            return SoilFunctionalCategory.BrownChernozem
+        case "darkbrownchernozem":
+            return SoilFunctionalCategory.DarkBrownChernozem
+        case "blackgraychernozem":
+            return SoilFunctionalCategory.BlackGrayChernozem
+        case "all":
+            return SoilFunctionalCategory.All
+        case "brown":
+            return SoilFunctionalCategory.Brown
+        case "darkbrown":
+            return SoilFunctionalCategory.DarkBrown
+        case "black":
+            return SoilFunctionalCategory.Black
+        case "organic":
+            return SoilFunctionalCategory.Organic
+        case "easterncanada" | "east":
+            return SoilFunctionalCategory.EasternCanada
+        case _:
+            # Trace.TraceError($"{nameof(SoilFunctionalCategoryStringConverter)}: Soil functional category '{input}' not mapped, returning default value.")
+            return SoilFunctionalCategory.NotApplicable
 
 
 class SoilGreatGroup:
@@ -248,7 +295,7 @@ def get_soil_great_group_table() -> list[SoilGreatGroup]:
 
 
 def seek_soil_functional_category(
-        province: str,
+        province: django_stuff.CanadianProvince,
         soil_great_group: str
 ) -> str:
     region = get_region(province=province)
@@ -259,7 +306,7 @@ def seek_soil_functional_category(
 
 
 def get_soil_functional_category(
-        province: str,
+        province: django_stuff.CanadianProvince,
         soil_great_group: str
 ) -> str:
     soil_functional_category = seek_soil_functional_category(
@@ -313,22 +360,22 @@ def set_soil_properties(
         latitude=latitude,
         longitude=longitude,
         geojson_data=django_stuff.load_slc_data(
-            path_slc_geojson_file=PathsSlcData.geojson_file.value))
+            path_slc_geojson_file=PathsSlcData.geojson_file))
     id_polygon = polygon_properties['POLY_ID']
     dominant_component_properties = django_stuff.get_dominant_component_properties(
         id_polygon=id_polygon,
         slc_components_table=django_stuff.read_slc_csv(
-            path_file=PathsSlcData.cmp_file.value,
+            path_file=PathsSlcData.cmp_file,
             usecols=['POLY_ID', 'PROVINCE', 'PERCENT_', 'SOIL_ID']))
     id_soil = dominant_component_properties['SOIL_ID']
     soil_layer_table = django_stuff.get_soil_layer_table(
         id_soil=id_soil,
-        slc_soil_layer_table=django_stuff.read_slc_csv(path_file=PathsSlcData.slt_file.value))
+        slc_soil_layer_table=django_stuff.read_slc_csv(path_file=PathsSlcData.slt_file))
     first_non_litter_layer = django_stuff.get_first_non_litter_layer(
         soil_layer_table=soil_layer_table)
     soil_name_table = django_stuff.get_soil_name_table(
         soil_name_table=django_stuff.read_slc_csv(
-            path_file=PathsSlcData.snt_file.value, usecols=['SOIL_ID', 'PMTEX1', 'G_GROUP3']),
+            path_file=PathsSlcData.snt_file, usecols=['SOIL_ID', 'PMTEX1', 'G_GROUP3']),
         id_soil=id_soil)
 
     province = django_stuff.CanadianProvince.get_name(abbreviation=dominant_component_properties['PROVINCE'])
@@ -341,7 +388,7 @@ def set_soil_properties(
         ecodistrict_id=polygon_properties['ECO_ID'],
         soil_great_group=soil_great_group,
         soil_functional_category=get_soil_functional_category(
-            province=province,
+            province=getattr(CanadianProvince, province),
             soil_great_group=soil_great_group),
         bulk_density=first_non_litter_layer['BD'],
         soil_texture=set_soil_texture_according_to_holos(

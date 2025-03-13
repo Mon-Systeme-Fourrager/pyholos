@@ -3,11 +3,13 @@ from pathlib import Path
 from pandas import DataFrame
 
 from holos_service.components.animals.common import AnimalType, BeddingMaterialType
+from holos_service.components.land_management.common import TillageType
 from holos_service.config import PathsHolosResources
 from holos_service.core_constants import CoreConstants
+from holos_service.soil import SoilFunctionalCategory
 
 
-class HolosTable:
+class _HolosTable:
     def __init__(
             self,
             name: str,
@@ -38,7 +40,7 @@ class HolosTable:
 
 
 def set_table_16():
-    table_16 = HolosTable(
+    table_16 = _HolosTable(
         name='Table_16_Livestock_Coefficients_BeefAndDairy_Cattle_Provider',
         data=[
             # Beef Cattle Data Sources :
@@ -207,7 +209,7 @@ def set_table_30():
                 and wheat straw (9.33%); the moisture content for sawdust is the value for dried sawdust.
 
     """
-    table_30 = HolosTable(
+    table_30 = _HolosTable(
         name='Table_30_Default_Bedding_Material_Composition_Provider',
         data=[
             # Beef
@@ -235,11 +237,11 @@ def set_table_30():
                 BeddingMaterial=BeddingMaterialType.sand.value,  # Footnote 4
 
                 # set all following values to 0 to mimic the behavior in cs code
-                TotalNitrogenKilogramsDryMatter = 0,
-                TotalCarbonKilogramsDryMatter = 0,
-                TotalPhosphorusKilogramsDryMatter = 0,
-                CarbonToNitrogenRatio = 0,
-                MoistureContent = 0  # Footnote12
+                TotalNitrogenKilogramsDryMatter=0,
+                TotalCarbonKilogramsDryMatter=0,
+                TotalPhosphorusKilogramsDryMatter=0,
+                CarbonToNitrogenRatio=0,
+                MoistureContent=0  # Footnote12
             ),
             dict(
                 AnimalType=AnimalType.dairy.value,
@@ -435,6 +437,57 @@ def set_table_30():
     pass
 
 
+def set_tillage_factor_table():
+    table_tillage = _HolosTable(
+        name='Table_Tillage_Factor',
+        data=[
+            dict(
+                SoilFunctionalCategory=SoilFunctionalCategory.Brown,
+                TillageType=TillageType.Intensive,
+                TillageFactor=1),
+            dict(
+                SoilFunctionalCategory=SoilFunctionalCategory.Brown,
+                TillageType=TillageType.Reduced,
+                TillageFactor=0.9),
+            dict(
+                SoilFunctionalCategory=SoilFunctionalCategory.Brown,
+                TillageType=TillageType.NoTill,
+                TillageFactor=0.8),
+            dict(
+                SoilFunctionalCategory=SoilFunctionalCategory.DarkBrown,
+                TillageType=TillageType.Intensive,
+                TillageFactor=1),
+            dict(
+                SoilFunctionalCategory=SoilFunctionalCategory.DarkBrown,
+                TillageType=TillageType.Reduced,
+                TillageFactor=0.85),
+            dict(
+                SoilFunctionalCategory=SoilFunctionalCategory.DarkBrown,
+                TillageType=TillageType.NoTill,
+                TillageFactor=0.7),
+            dict(
+                SoilFunctionalCategory=SoilFunctionalCategory.Black,
+                TillageType=TillageType.Intensive,
+                TillageFactor=1),
+            dict(
+                SoilFunctionalCategory=SoilFunctionalCategory.Black,
+                TillageType=TillageType.Reduced,
+                TillageFactor=0.8),
+            dict(
+                SoilFunctionalCategory=SoilFunctionalCategory.Black,
+                TillageType=TillageType.NoTill,
+                TillageFactor=0.6)
+
+        ],
+        path=PathsHolosResources.Table_Tillage_Factor)
+
+    table_tillage.write_data_to_csv(
+        comments=[
+            'Holos source code: https://github.com/holos-aafc/Holos/blob/e644d8e52446faefe3d7503565a723563bba61fe/H.Core/Calculators/Tillage/TillageFactorCalculator.cs#L27',
+        ])
+
+
 if __name__ == '__main__':
     set_table_16()
     set_table_30()
+    set_tillage_factor_table()

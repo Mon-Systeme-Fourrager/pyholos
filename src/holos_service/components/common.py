@@ -1,6 +1,7 @@
 from enum import StrEnum, unique, auto
 
 from holos_service.common import EnumGeneric
+from holos_service.django_stuff import CanadianProvince
 
 
 @unique
@@ -55,7 +56,7 @@ class ComponentType(EnumGeneric):
     sheep_feedlot: str = "SheepFeedlot"
     rams: str = "Rams"
     lambs_and_ewes: str = "LambsAndEwes"
-    ewes_and_lambs: str = "EwesAndLambs" # added to the original code for convenience
+    ewes_and_lambs: str = "EwesAndLambs"  # added to the original code for convenience
     other_livestock: str = "OtherLivestock"
     alpaca: str = "Alpaca"
     elk: str = "Elk"
@@ -101,3 +102,69 @@ def calculate_fraction_of_nitrogen_lost_by_leaching_and_runoff(
     fraction_of_nitrogen_lost_by_leaching_and_runoff = 0.3247 * (
             growing_season_precipitation / growing_season_evapotranspiration) - 0.0247
     return min(0.3, max(0.05, fraction_of_nitrogen_lost_by_leaching_and_runoff))
+
+
+def convert_province_name(name: str) -> CanadianProvince:
+    """Returns a CanadianProvince instance based on the given name or abbreviation.
+
+    Args:
+        name: name of abbreviation of the canadian province
+
+    Returns:
+        CanadianProvince member
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/b183dab99d211158d1fed9da5370ce599ac7c914/H.Core/Converters/ProvinceStringConverter.cs#L9
+
+    Notes:
+        The province name "Newfoundland" in the original holos source code was changed to
+            "NewfoundlandAndLabrador" to that to agree with the official name of the Province
+
+    """
+    match name.lower():
+        case "alberta" | "ab" | "alta" | "alb":
+            return CanadianProvince.Alberta
+        case "britishcolumbia" | "colombiebritannique" | "bc" | "cb":
+            return CanadianProvince.BritishColumbia
+        case "saskatchewan" | "sk" | "sask":
+            return CanadianProvince.Saskatchewan
+        case "manitoba" | "mb" | "man":
+            return CanadianProvince.Manitoba
+        case "ontario" | "on" | "ont":
+            return CanadianProvince.Ontario
+        case "quebec" | "québec" | "qc" | "que":
+            return CanadianProvince.Quebec
+        case "newbrunswick" | "nouveaubrunswick" | "nb":
+            return CanadianProvince.NewBrunswick
+        case "novascotia" | "nouvelleécosse" | "nouvelleecosse" | "ns" | "né" | "ne":
+            return CanadianProvince.NovaScotia
+        case "princeedwardisland" | "îleduprinceédouard" | "îleduprinceedouard" | "ileduprinceédouard" | "ileduprinceedouard" | "pe" | "pei" | "ipe" | "ipé" | "îpe" | "îpé":
+            return CanadianProvince.PrinceEdwardIsland
+        case "newfoundlandandlabrador" | "terreneuveetlabrador" | "nl" | "nf" | "tnl" | "nfld" | "newfoundland":
+            return CanadianProvince.NewfoundlandAndLabrador
+        case "yukon" | "yt" | "yk" | "yuk" | "yn":
+            return CanadianProvince.Yukon
+        case "northwestterritories" | "territoiresdunordouest" | "nt" | "tno":
+            return CanadianProvince.NorthwestTerritories;
+        case "nunavut" | "nu" | "nvt":
+            return CanadianProvince.Nunavut
+        case _:
+            # Trace.TraceError($"{nameof(ProvinceStringConverter)}.{nameof(ProvinceStringConverter.Convert)}: unknown input '{input}'. Returning default value of {Province.Alberta.GetDescription()}");
+            return CanadianProvince.Alberta
+
+
+def calc_default_irrigation_amount(
+        precipitation: float,
+        evapotranspiration: float
+) -> float:
+    """Calculates the default irrigation amount as the gap between water offer and demand.
+
+    Args:
+        precipitation: (mm) precipitation amount
+        evapotranspiration: (mm) evapotranspiration amount
+
+    Returns:
+        (mm) default irrigation amount
+
+    """
+    return max(0., evapotranspiration - precipitation)
