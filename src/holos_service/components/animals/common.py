@@ -2222,7 +2222,21 @@ def get_beef_and_dairy_cattle_coefficient_data(
 
 def get_beef_and_dairy_cattle_feeding_activity_coefficient(
         housing_type: HousingType
-):
+) -> float:
+    """Returns the coefficient corresponding to animal’s feeding situation (Ca in IPCC's tables)
+
+    Args:
+        housing_type: HousingType class instance
+
+    Returns:
+        (MJ day-1 kg-1) coefficient corresponding to animal’s feeding situation (Ca)
+
+    References:
+        Table 10.5 in https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/4_Volume4/V4_10_Ch10_Livestock.pdf
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/a84060af0e699de25158a1a9030dc9d78edd0e00/H.Core/Providers/Animals/Table_17_Beef_Dairy_Cattle_Feeding_Activity_Coefficient_Provider.cs#L21
+    """
     match housing_type:
         case HousingType.housed_in_barn | HousingType.confined | HousingType.confined_no_barn:
             res = 0
