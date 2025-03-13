@@ -107,7 +107,7 @@ class LandManagementBase(Component):
         self.size_of_first_rotation_for_field = HolosVar(name='Size Of First Rotation For Field', value=1)
         """deprecated"""
 
-        self.above_ground_carbon_input = HolosVar(name='Above Ground Carbon Input')
+        self.above_ground_carbon_input = HolosVar(name='Above Ground Carbon Input', value=0)
         """(kg(C)/ha) above-ground carbon input(C_ag)"""
 
         self.below_ground_carbon_input = HolosVar(name='Below Ground Carbon Input', value=0)
