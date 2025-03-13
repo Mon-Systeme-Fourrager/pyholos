@@ -291,7 +291,7 @@ class Beef(BeefBase):
         self.milk_protein_content_as_percentage.value = milk_data.protein_content_as_percentage
 
         self.diet_additive_type.value = diet_additive_type.value
-        # self.methane_conversion_factor_adjusted.value = 0
+        self.methane_conversion_factor_adjusted.value = 0
         self.feed_intake.value = 0
 
         self.crude_protein.value = diet.crude_protein_percentage
