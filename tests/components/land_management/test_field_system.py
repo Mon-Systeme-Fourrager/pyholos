@@ -254,11 +254,13 @@ class TestCropViewItem(unittest.TestCase):
         cls.irrigation_type = IrrigationType.RainFed
         cls.irrigation_amount = 0
         cls.province = CanadianProvince.Quebec
+        nearest_year = (cls.weather_data['Year'][cls.weather_data['Year'] <= cls.year]).max()
+        precipitation = (cls.weather_data[cls.weather_data['Year'] == nearest_year]['Mean Daily Precipitation']).sum()
         cls.relative_biomass_data = get_relative_biomass_information_data(
             table_7=parse_table_7(),
             crop_type=cls.crop_type,
             irrigation_type=cls.irrigation_type,
-            irrigation_amount=cls.irrigation_amount + cls.weather_data.loc[cls.year, 'Mean Daily Precipitation'] * 365,
+            irrigation_amount=cls.irrigation_amount + precipitation,
             province=cls.province
         )
         cls.excepted_columns = [
