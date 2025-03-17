@@ -4,7 +4,7 @@ from typing import Any
 from holos_service.common import HolosVar
 from holos_service.core_constants import CoreConstants
 from holos_service.defaults import Defaults
-from holos_service.farm.enums import YieldAssignmentMethod
+from holos_service.farm.enums import YieldAssignmentMethod, CarbonModellingStrategies
 from holos_service.soil import set_soil_properties
 
 
@@ -242,7 +242,7 @@ class ParamsFodderCorn(ParamGeneric):
             value=denitrification)
         self.carbon_modelling_strategy = FarmSettingsVar(
             name="Carbon modelling strategy",
-            value="ICBM")
+            value=CarbonModellingStrategies.ICBM.name)
         self.run_in_period_years = FarmSettingsVar(
             name="Run In Period Years",
             value=run_in_period_years)
