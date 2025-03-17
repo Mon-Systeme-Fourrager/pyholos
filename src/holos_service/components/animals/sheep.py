@@ -287,6 +287,7 @@ class Sheep(SheepBase):
 
 
 class SheepFeedlot(Sheep):
+    animal_type = AnimalType.sheep_feedlot
     def __init__(
             self,
             management_period_name: str,
@@ -308,7 +309,7 @@ class SheepFeedlot(Sheep):
         _group_name = GroupNames.sheep_feedlot.value
         super().__init__(
             name=_group_name,
-            animal_type=AnimalType.sheep_feedlot,
+            animal_type=self.animal_type,
             group_name=_group_name,
             component_type=ComponentType.sheep_feedlot,
 
@@ -317,6 +318,7 @@ class SheepFeedlot(Sheep):
 
 
 class Rams(Sheep):
+    animal_type = AnimalType.ram
     def __init__(
             self,
             management_period_name: str,
@@ -339,7 +341,7 @@ class Rams(Sheep):
 
         super().__init__(
             name=_group_name,
-            animal_type=AnimalType.ram,
+            animal_type=self.animal_type,
             group_name=_group_name,
             component_type=ComponentType.rams,
 
@@ -348,6 +350,8 @@ class Rams(Sheep):
 
 
 class Ewes(Sheep):
+    animal_type = AnimalType.ewes
+
     def __init__(
             self,
             management_period_name: str,
@@ -368,7 +372,7 @@ class Ewes(Sheep):
     ):
         super().__init__(
             name=GroupNames.lambs_and_ewes.value,
-            animal_type=AnimalType.ewes,
+            animal_type=self.animal_type,
             group_name=GroupNames.ewes.value,
             component_type=ComponentType.ewes_and_lambs,
 
@@ -377,6 +381,8 @@ class Ewes(Sheep):
 
 
 class Lambs(Sheep):
+    animal_type = AnimalType.lambs
+
     def __init__(
             self,
             management_period_name: str,
@@ -397,7 +403,7 @@ class Lambs(Sheep):
     ):
         super().__init__(
             name=GroupNames.lambs_and_ewes.value,
-            animal_type=AnimalType.lambs,
+            animal_type=self.animal_type,
             group_name=GroupNames.lambs.value,
             component_type=ComponentType.ewes_and_lambs,
 
