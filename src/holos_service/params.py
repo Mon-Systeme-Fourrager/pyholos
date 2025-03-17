@@ -290,17 +290,17 @@ class MonthlyWeather(ParamGeneric):
     ):
         super().__init__(title=title)
 
-        self.months_of_growing_season = months_of_growing_season
+        self._months_of_growing_season = months_of_growing_season
         self._months = ["january", "february", "march", "april", "may", "june",
                         "july", "august", "september", "october", "november", "december"]
         for month, value in zip(self._months, variable_monthly_values):
             setattr(self, month, FarmSettingsVar(name=f'{month.capitalize()} {variable_name}', value=value))
 
     def calc_seasonal_sum(self) -> float:
-        return sum([getattr(self, month).value for month in self.months_of_growing_season])
+        return sum([getattr(self, month).value for month in self._months_of_growing_season])
 
     def calc_seasonal_average(self) -> float:
-        return self.calc_seasonal_sum() / len(self.months_of_growing_season)
+        return self.calc_seasonal_sum() / len(self._months_of_growing_season)
 
     def calc_annual_sum(self) -> float:
         return sum([getattr(self, month).value for month in self._months])
