@@ -353,7 +353,8 @@ class ParamsFarmSettings:
             monthly_precipitation: list,
             monthly_potential_evapotranspiration: list,
             monthly_temperature: list,
-            run_in_period_years: int,
+
+            run_in_period_years: int = Defaults.DefaultRunInPeriod,
 
             carbon_concentration: float = CoreConstants.CarbonConcentration,
             emergence_day: int = Defaults.EmergenceDay,

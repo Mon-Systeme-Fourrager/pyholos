@@ -75,6 +75,8 @@ class Defaults:
     HumificationCoefficientBelowGround = 0.3
     HumificationCoefficientManure = 0.31
 
+    DefaultRunInPeriod = 15
+
     CarbonConcentration = CoreConstants.CarbonConcentration
 
     # for annual crops
