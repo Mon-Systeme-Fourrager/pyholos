@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Any
 
 from holos_service.common import HolosVar
+from holos_service.farm.enums import YieldAssignmentMethod
 from holos_service.soil import set_soil_properties
 
 
@@ -47,7 +48,8 @@ class ParamsGeneral(ParamGeneric):
     ):
         super().__init__(title="General")
 
-        self.yield_assignment_method = FarmSettingsVar(name="Yield Assignment Method", value="SmallAreaData")
+        self.yield_assignment_method = FarmSettingsVar(
+            name="Yield Assignment Method", value=YieldAssignmentMethod.SmallAreaData.name)
         self.polygon_number = FarmSettingsVar(name="Polygon Number", value=polygon_id)
         self.latitude = FarmSettingsVar(name="Latitude", value=latitude)
         self.Longitude = FarmSettingsVar(name="Longitude", value=longitude)
