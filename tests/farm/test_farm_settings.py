@@ -1,19 +1,19 @@
 import unittest
 from pathlib import Path
 
-from holos_service import params
+from holos_service.farm import farm_settings
 
 
 class TestFarmSettingsVar(unittest.TestCase):
     def test_farm_settings_variable_works_accepts_any_type_for_values(self):
         for v in (1, 1.0, 'str', Path):
-            self.assertEqual(v, params.FarmSettingsVar(name='test_variable', value=v).value)
+            self.assertEqual(v, farm_settings.FarmSettingsVar(name='test_variable', value=v).value)
 
 
 class TestParamGeneric(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.param_generic = params.ParamGeneric(title='test')
+        cls.param_generic = farm_settings.ParamGeneric(title='test')
 
     def test_param_generic_has_expected_title(self):
         self.assertEqual('# test', self.param_generic.title)
@@ -25,7 +25,7 @@ class TestParamGeneric(unittest.TestCase):
 class TestParamsFarmSettings(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.params_farm_settings = params.ParamsFarmSettings(
+        cls.params_farm_settings = farm_settings.ParamsFarmSettings(
             year=1,
             latitude=50,
             longitude=-98,
@@ -33,7 +33,7 @@ class TestParamsFarmSettings(unittest.TestCase):
             monthly_potential_evapotranspiration=list(range(12)),
             monthly_temperature=list(range(12)),
             run_in_period_years=15)
-        cls.path_farm_settings = Path(__file__).parent / 'sources/Farm.settings'
+        cls.path_farm_settings = Path(__file__).parents[1] / 'sources/Farm.settings'
 
     @classmethod
     def tearDownClass(cls):
