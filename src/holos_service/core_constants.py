@@ -3,6 +3,7 @@ class CoreConstants:
 
     DaysInYear: int = 365
 
+    ValueNotDetermined = 0
     NotApplicable = -100000
 
     NitrogenDepositionAmount = 5
