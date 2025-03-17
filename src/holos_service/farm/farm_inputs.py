@@ -77,6 +77,9 @@ class WeatherSummary:
     mean_annual_evapotranspiration: float
     growing_season_precipitation: float
     growing_season_evapotranspiration: float
+    monthly_precipitation: list[float]
+    monthly_potential_evapotranspiration: list[float]
+    monthly_temperature: list[float]
 
 
 @dataclass
