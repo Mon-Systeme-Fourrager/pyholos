@@ -33,3 +33,22 @@ class CarbonModellingStrategies(StrEnum):
     """
     IPCCTier2 = auto()
     ICBM = auto()
+
+
+class ChosenClimateAcquisition(StrEnum):
+    """
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/768b3d8fe2565dad0ba01fb8490974f1047a114f/H.Core/Models/Farm.cs#L36C1-L58C10
+    """
+    SLC = auto()
+    """Uses the 'old' default (non-daily) temperatures where normals were used to extract daily values.
+    This is deprecated in favor of NASA climate data"""
+
+    Custom = auto()
+    """Used with the CLI where the user can specify default monthly values in a climate settings file"""
+
+    NASA = auto()
+    """Daily climate data is downloaded from NASA website API"""
+
+    InputFile = auto()
+    """Used with the CLI where the user can specify default daily values in a custom CSV file"""

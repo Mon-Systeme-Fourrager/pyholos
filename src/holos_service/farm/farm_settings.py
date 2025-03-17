@@ -4,7 +4,7 @@ from typing import Any
 from holos_service.common import HolosVar
 from holos_service.core_constants import CoreConstants
 from holos_service.defaults import Defaults
-from holos_service.farm.enums import YieldAssignmentMethod, CarbonModellingStrategies
+from holos_service.farm.enums import YieldAssignmentMethod, CarbonModellingStrategies, ChosenClimateAcquisition
 from holos_service.soil import set_soil_properties
 
 
@@ -403,7 +403,7 @@ class ParamsFarmSettings:
             humification_coefficient_below_ground: float = Defaults.HumificationCoefficientBelowGround,
             humification_coefficient_manure: float = Defaults.HumificationCoefficientManure,
             climate_filename: str = "climate.csv",
-            climate_data_acquisition: str = "NASA",
+            climate_data_acquisition: str = ChosenClimateAcquisition.NASA.name,
             enable_carbon_modelling: bool = True,
     ):
         """
