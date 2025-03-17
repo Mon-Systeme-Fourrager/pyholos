@@ -1,9 +1,10 @@
 from datetime import date
 
-from example.farm_infos import WEATHER_SUMMARY
+from example.farm_infos import FARM_INFO
 from holos_service.components.animals.common import ProductionStage, Diet, HousingType, ManureStateType
 from holos_service.farm import farm_inputs
 
+_WEATHER_SUMMARY = FARM_INFO.weather_summary
 
 def _set_beef_bulls_data() -> list[farm_inputs.BeefManagementPeriod]:
     return [
@@ -27,7 +28,7 @@ def _set_beef_bulls_data() -> list[farm_inputs.BeefManagementPeriod]:
                 metabolizable_energy=2.2),
             housing_type=HousingType.pasture,
             manure_handling_system=ManureStateType.pasture,
-            weather_summary=WEATHER_SUMMARY),
+            weather_summary=_WEATHER_SUMMARY),
         farm_inputs.BeefManagementPeriod(
             name='extended fall grazing',
             start_date=date(2024, 11, 1),
@@ -48,7 +49,7 @@ def _set_beef_bulls_data() -> list[farm_inputs.BeefManagementPeriod]:
                 metabolizable_energy=1.965),
             housing_type=HousingType.pasture,
             manure_handling_system=ManureStateType.pasture,
-            weather_summary=WEATHER_SUMMARY),
+            weather_summary=_WEATHER_SUMMARY),
         farm_inputs.BeefManagementPeriod(
             name='winter feeding',
             start_date=date(2024, 1, 1),
@@ -69,7 +70,7 @@ def _set_beef_bulls_data() -> list[farm_inputs.BeefManagementPeriod]:
                 metabolizable_energy=2.1),
             housing_type=HousingType.confined_no_barn,
             manure_handling_system=ManureStateType.deep_bedding,
-            weather_summary=WEATHER_SUMMARY)
+            weather_summary=_WEATHER_SUMMARY)
     ]
 
 
@@ -95,7 +96,7 @@ def _set_beef_cows_data() -> list[farm_inputs.BeefManagementPeriod]:
                 metabolizable_energy=2.2),
             housing_type=HousingType.pasture,
             manure_handling_system=ManureStateType.pasture,
-            weather_summary=WEATHER_SUMMARY),
+            weather_summary=_WEATHER_SUMMARY),
         farm_inputs.BeefManagementPeriod(
             name='extended fall grazing',
             start_date=date(2024, 11, 1),
@@ -116,7 +117,7 @@ def _set_beef_cows_data() -> list[farm_inputs.BeefManagementPeriod]:
                 metabolizable_energy=1.965),
             housing_type=HousingType.pasture,
             manure_handling_system=ManureStateType.pasture,
-            weather_summary=WEATHER_SUMMARY),
+            weather_summary=_WEATHER_SUMMARY),
         farm_inputs.BeefManagementPeriod(
             name='winter feeding',
             start_date=date(2024, 1, 1),
@@ -137,7 +138,7 @@ def _set_beef_cows_data() -> list[farm_inputs.BeefManagementPeriod]:
                 metabolizable_energy=2.1),
             housing_type=HousingType.confined_no_barn,
             manure_handling_system=ManureStateType.deep_bedding,
-            weather_summary=WEATHER_SUMMARY)
+            weather_summary=_WEATHER_SUMMARY)
     ]
 
 
@@ -163,7 +164,7 @@ def _set_beef_calf_data() -> list[farm_inputs.BeefManagementPeriod]:
                 metabolizable_energy=1.965),
             housing_type=HousingType.confined_no_barn,
             manure_handling_system=ManureStateType.deep_bedding,
-            weather_summary=WEATHER_SUMMARY),
+            weather_summary=_WEATHER_SUMMARY),
         farm_inputs.BeefManagementPeriod(
             name='grazing',
             start_date=date(2024, 5, 1),
@@ -184,7 +185,7 @@ def _set_beef_calf_data() -> list[farm_inputs.BeefManagementPeriod]:
                 metabolizable_energy=2.2),
             housing_type=HousingType.pasture,
             manure_handling_system=ManureStateType.pasture,
-            weather_summary=WEATHER_SUMMARY)
+            weather_summary=_WEATHER_SUMMARY)
     ]
 
 
@@ -209,7 +210,7 @@ def _set_beef_finisher_data() -> list[farm_inputs.BeefManagementPeriod]:
             metabolizable_energy=2.92),
         housing_type=HousingType.confined_no_barn,
         manure_handling_system=ManureStateType.deep_bedding,
-        weather_summary=WEATHER_SUMMARY)
+        weather_summary=_WEATHER_SUMMARY)
 
     return [management_period]
 
@@ -235,7 +236,7 @@ def _set_beef_stocker_and_backgrounder_data() -> list[farm_inputs.BeefManagement
             metabolizable_energy=2.48),
         housing_type=HousingType.confined_no_barn,
         manure_handling_system=ManureStateType.deep_bedding,
-        weather_summary=WEATHER_SUMMARY)
+        weather_summary=_WEATHER_SUMMARY)
     return [management_period]
 
 

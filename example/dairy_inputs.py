@@ -1,10 +1,11 @@
 from datetime import date
 
-from example.farm_infos import WEATHER_SUMMARY
+from example.farm_infos import FARM_INFO
 from holos_service.components.animals.common import (ProductionStage, Diet, HousingType, ManureStateType, Milk,
                                                      BeddingMaterialType)
 from holos_service.farm import farm_inputs
 
+_WEATHER_SUMMARY = FARM_INFO.weather_summary
 _DIET = Diet(
     crude_protein_percentage=16.146,
     forage_percentage=77.8,
@@ -35,7 +36,7 @@ def _set_dairy_heifers_data() -> list[farm_inputs.DairyManagementPeriod]:
             diet=_DIET,
             housing_type=_HOUSING_TYPE,
             manure_handling_system=ManureStateType.daily_spread,
-            weather_summary=WEATHER_SUMMARY,
+            weather_summary=_WEATHER_SUMMARY,
             bedding_material_type=_BEDDING_MATERIAL_TYPE
         )
     ]
@@ -51,7 +52,7 @@ def _set_dairy_lactating_cow_data() -> list[farm_inputs.DairyManagementPeriod]:
         diet=_DIET,
         housing_type=_HOUSING_TYPE,
         manure_handling_system=ManureStateType.pasture,
-        weather_summary=WEATHER_SUMMARY,
+        weather_summary=_WEATHER_SUMMARY,
         bedding_material_type=_BEDDING_MATERIAL_TYPE)
 
     return [
@@ -72,6 +73,7 @@ def _set_dairy_lactating_cow_data() -> list[farm_inputs.DairyManagementPeriod]:
             **kwargs),
     ]
 
+
 def _set_dairy_calves_data() -> list[farm_inputs.DairyManagementPeriod]:
     return [
         farm_inputs.DairyManagementPeriod(
@@ -86,7 +88,7 @@ def _set_dairy_calves_data() -> list[farm_inputs.DairyManagementPeriod]:
             diet=_DIET,
             housing_type=_HOUSING_TYPE,
             manure_handling_system=ManureStateType.solid_storage,
-            weather_summary=WEATHER_SUMMARY,
+            weather_summary=_WEATHER_SUMMARY,
             bedding_material_type=_BEDDING_MATERIAL_TYPE
         )
     ]
@@ -106,10 +108,11 @@ def _set_dairy_dry_cow_data() -> list[farm_inputs.DairyManagementPeriod]:
             diet=_DIET,
             housing_type=_HOUSING_TYPE,
             manure_handling_system=ManureStateType.solid_storage,
-            weather_summary=WEATHER_SUMMARY,
+            weather_summary=_WEATHER_SUMMARY,
             bedding_material_type=_BEDDING_MATERIAL_TYPE
         )
     ]
+
 
 def set_dairy_data():
     return farm_inputs.DairyCattleInput(

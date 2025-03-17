@@ -1,6 +1,6 @@
 from datetime import date
 
-from example.farm_infos import WEATHER_SUMMARY
+from example.farm_infos import FARM_INFO
 from holos_service.components.animals.common import (ProductionStage, Diet, HousingType, ManureStateType,
                                                      BeddingMaterialType)
 from holos_service.farm import farm_inputs
@@ -28,7 +28,7 @@ kwargs = dict(
     housing_type=_HOUSING_TYPE,
     manure_handling_system=_MANURE_HANDLING_SYSTEM,
     bedding_material_type=BeddingMaterialType.straw,
-    weather_summary=WEATHER_SUMMARY
+    weather_summary=FARM_INFO.weather_summary
 )
 
 
