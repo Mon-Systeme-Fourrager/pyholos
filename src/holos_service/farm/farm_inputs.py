@@ -11,8 +11,8 @@ from holos_service.django_stuff import CanadianProvince
 from holos_service.soil import SoilTexture
 from holos_service.utils import concat_lists
 
-type ManagementPeriods = list[BeefManagementPeriod | DairyManagementPeriod]
-from holos_service.components.animals import beef, dairy
+type ManagementPeriods = list[BeefManagementPeriod | DairyManagementPeriod | SheepManagementPeriod]
+from holos_service.components.animals import beef, dairy, sheep
 
 
 class AnimalInputBase:
@@ -117,6 +117,25 @@ class DairyManagementPeriod:
     end_weight: float = None
     diet_additive_type: DietAdditiveType = DietAdditiveType.NONE
     bedding_material_type: BeddingMaterialType = BeddingMaterialType.straw
+
+
+@dataclass
+class SheepManagementPeriod:
+    name: str
+    start_date: date
+    days: int
+    group_pairing_number: int
+    number_of_animals: int
+    production_stage: ProductionStage
+    number_of_young_animals: int
+    diet: Diet
+    housing_type: HousingType
+    manure_handling_system: ManureStateType
+    weather_summary: WeatherSummary
+    start_weight: float = None
+    end_weight: float = None
+    diet_additive_type: DietAdditiveType = DietAdditiveType.NONE
+    bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE
 
 
 @dataclass
@@ -297,8 +316,74 @@ class DairyCattleInput(AnimalInputBase):
 
 
 @dataclass
-class SheepFlockInput:
+class SheepFlockInput(AnimalInputBase):
     SheepFeedlot: ManagementPeriods = None
     Rams: ManagementPeriods = None
     Ewes: ManagementPeriods = None
     Lambs: ManagementPeriods = None
+
+    component_types: ClassVar = Union[
+        sheep.SheepFeedlot,
+        sheep.Rams,
+        sheep.Ewes,
+        sheep.Lambs]
+
+    @staticmethod
+    def map_component(
+            component_name: str
+    ) -> component_types:
+
+        match component_name:
+            case 'SheepFeedlot':
+                res = sheep.SheepFeedlot
+            case 'Rams':
+                res = sheep.Rams
+            case 'Ewes':
+                res = sheep.Ewes
+            case 'Lambs':
+                res = sheep.Lambs
+            case _:
+                raise ValueError(f'Unrecognized component name "({component_name})."')
+
+        return res
+
+    def filter_inputs(self) -> list[list[str]]:
+        return self._filter_inputs(animal_groups=[
+            ["SheepFeedlot"],
+            ["Rams"],
+            ["Ewes", "Lambs"],
+        ])
+
+    @staticmethod
+    def _create_component(
+            province: CanadianProvince,
+            soil_texture: SoilTexture,
+            component_class: [component_types],
+            management_period: SheepManagementPeriod
+    ) -> component_types:
+        return component_class(
+            management_period_name=management_period.name,
+            management_period_start_date=management_period.start_date,
+            management_period_days=management_period.days,
+            group_pairing_number=management_period.group_pairing_number,
+            number_of_animals=management_period.number_of_animals,
+            production_stage=management_period.production_stage,
+            number_of_young_animals=management_period.number_of_young_animals,
+            diet=management_period.diet,
+            housing_type=management_period.housing_type,
+            manure_handling_system=management_period.manure_handling_system,
+            diet_additive_type=management_period.diet_additive_type,
+            bedding_material_type=management_period.bedding_material_type,
+
+            manure_emission_factors=get_manure_emission_factors(
+                manure_state_type=management_period.manure_handling_system,
+                mean_annual_precipitation=management_period.weather_summary.mean_annual_precipitation,
+                mean_annual_temperature=management_period.weather_summary.mean_annual_temperature,
+                mean_annual_evapotranspiration=management_period.weather_summary.mean_annual_evapotranspiration,
+                growing_season_precipitation=management_period.weather_summary.growing_season_precipitation,
+                growing_season_evapotranspiration=management_period.weather_summary.growing_season_evapotranspiration,
+                animal_type=component_class.animal_type,
+                province=province,
+                year=management_period.weather_summary.year,
+                soil_texture=soil_texture)
+        )
