@@ -15,60 +15,6 @@ type ManagementPeriods = list[BeefManagementPeriod | DairyManagementPeriod | She
 from holos_service.components.animals import beef, dairy, sheep
 
 
-class AnimalInputBase:
-    def __init__(self):
-        pass
-
-    def __iter__(self):
-        for k, v in self.__dict__.items():
-            if v is not None:
-                yield k, v
-
-    def _filter_inputs(
-            self,
-            animal_groups: list[list[str]]
-    ) -> list[list[str]]:
-        res = []
-        for component_type_animals in animal_groups:
-            animal_data = [s for s in component_type_animals if getattr(self, s) is not None]
-            if len(animal_data) > 0:
-                res.append(animal_data)
-        return res
-
-    def filter_inputs(self) -> list[list[str]]:
-        pass
-
-    @staticmethod
-    def map_component(**kwargs):
-        pass
-
-    @staticmethod
-    def _create_component(**kwargs):
-        pass
-
-    def create_components(
-            self,
-            province: CanadianProvince,
-            soil_texture: SoilTexture,
-    ) -> list[DataFrame]:
-        res = []
-        for non_empty_entry in self.filter_inputs():
-            animal_components = []
-            for animal_type in non_empty_entry:
-                management_periods = getattr(self, animal_type)
-                component_type = self.map_component(component_name=animal_type)
-                animal_components.append(
-                    [self._create_component(
-                        province=province,
-                        soil_texture=soil_texture,
-                        component_class=component_type,
-                        management_period=management_period).to_dict()
-                     for management_period in management_periods])
-
-            res.append(DataFrame.from_records(concat_lists(*animal_components)))
-        return res
-
-
 @dataclass
 class WeatherSummary:
     year: int
@@ -139,6 +85,60 @@ class SheepManagementPeriod:
     end_weight: float = None
     diet_additive_type: DietAdditiveType = DietAdditiveType.NONE
     bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE
+
+
+class AnimalInputBase:
+    def __init__(self):
+        pass
+
+    def __iter__(self):
+        for k, v in self.__dict__.items():
+            if v is not None:
+                yield k, v
+
+    def _filter_inputs(
+            self,
+            animal_groups: list[list[str]]
+    ) -> list[list[str]]:
+        res = []
+        for component_type_animals in animal_groups:
+            animal_data = [s for s in component_type_animals if getattr(self, s) is not None]
+            if len(animal_data) > 0:
+                res.append(animal_data)
+        return res
+
+    def filter_inputs(self) -> list[list[str]]:
+        pass
+
+    @staticmethod
+    def map_component(**kwargs):
+        pass
+
+    @staticmethod
+    def _create_component(**kwargs):
+        pass
+
+    def create_components(
+            self,
+            province: CanadianProvince,
+            soil_texture: SoilTexture,
+    ) -> list[DataFrame]:
+        res = []
+        for non_empty_entry in self.filter_inputs():
+            animal_components = []
+            for animal_type in non_empty_entry:
+                management_periods = getattr(self, animal_type)
+                component_type = self.map_component(component_name=animal_type)
+                animal_components.append(
+                    [self._create_component(
+                        province=province,
+                        soil_texture=soil_texture,
+                        component_class=component_type,
+                        management_period=management_period).to_dict()
+                     for management_period in management_periods])
+
+            res.append(DataFrame.from_records(concat_lists(*animal_components)))
+        return res
 
 
 @dataclass
