@@ -1,10 +1,11 @@
 from datetime import date
 
-from example.farm_infos import FARM_INFO
 from holos_service.components.animals.common import (ProductionStage, Diet, HousingType, ManureStateType,
                                                      BeddingMaterialType)
 from holos_service.farm import farm_inputs
+from holos_service.farm.farm_inputs import WeatherSummary
 
+global kwargs
 _NUMBER_ANIMALS = 100
 _NUMBER_YOUNG_ANIMALS = 0
 _GROUP_PAIRING_NUMBER = 1
@@ -19,17 +20,6 @@ _DIET = Diet(
     metabolizable_energy=0)
 _MANURE_HANDLING_SYSTEM = ManureStateType.pasture
 _HOUSING_TYPE = HousingType.confined
-
-kwargs = dict(
-    group_pairing_number=_GROUP_PAIRING_NUMBER,
-    number_of_animals=_NUMBER_ANIMALS,
-    number_of_young_animals=_NUMBER_YOUNG_ANIMALS,
-    diet=_DIET,
-    housing_type=_HOUSING_TYPE,
-    manure_handling_system=_MANURE_HANDLING_SYSTEM,
-    bedding_material_type=BeddingMaterialType.straw,
-    weather_summary=FARM_INFO.weather_summary
-)
 
 
 def _set_ewes_data() -> list[farm_inputs.SheepManagementPeriod]:
@@ -84,7 +74,19 @@ def _set_feedlot_data() -> list[farm_inputs.SheepManagementPeriod]:
     ]
 
 
-def set_sheep_data():
+def set_sheep_data(weather_summary: WeatherSummary):
+    global kwargs
+    kwargs = dict(
+        group_pairing_number=_GROUP_PAIRING_NUMBER,
+        number_of_animals=_NUMBER_ANIMALS,
+        number_of_young_animals=_NUMBER_YOUNG_ANIMALS,
+        diet=_DIET,
+        housing_type=_HOUSING_TYPE,
+        manure_handling_system=_MANURE_HANDLING_SYSTEM,
+        bedding_material_type=BeddingMaterialType.straw,
+        weather_summary=weather_summary
+    )
+
     return farm_inputs.SheepFlockInput(
         SheepFeedlot=_set_feedlot_data(),
         Rams=_set_rams_data(),

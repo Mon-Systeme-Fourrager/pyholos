@@ -1,10 +1,11 @@
 from datetime import date
 
-from example.farm_infos import FARM_INFO
 from holos_service.components.animals.common import ProductionStage, Diet, HousingType, ManureStateType
 from holos_service.farm import farm_inputs
+from holos_service.farm.farm_inputs import WeatherSummary
 
-_WEATHER_SUMMARY = FARM_INFO.weather_summary
+global _WEATHER_SUMMARY
+
 
 def _set_beef_bulls_data() -> list[farm_inputs.BeefManagementPeriod]:
     return [
@@ -240,7 +241,9 @@ def _set_beef_stocker_and_backgrounder_data() -> list[farm_inputs.BeefManagement
     return [management_period]
 
 
-def set_beef_data():
+def set_beef_data(weather_summary: WeatherSummary):
+    global _WEATHER_SUMMARY
+    _WEATHER_SUMMARY = weather_summary
     return farm_inputs.BeefCattleInput(
         Bulls=_set_beef_bulls_data(),
         Cows=_set_beef_cows_data(),
