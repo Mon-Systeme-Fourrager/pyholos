@@ -38,6 +38,28 @@ class TestSetSoilTextureAccordingToHolos(unittest.TestCase):
             self.assertEqual(soil.set_soil_texture_according_to_holos(s), 'Medium')
 
 
+class TestConvertSoilTextureName(unittest.TestCase):
+    def test_fine_soil(self):
+        self.assertEqual(
+            soil.SoilTexture.Fine,
+            soil.convert_soil_texture_name(name='fine'))
+
+    def test_coarse_soil(self):
+        self.assertEqual(
+            soil.SoilTexture.Coarse,
+            soil.convert_soil_texture_name(name='coarse'))
+
+    def test_medium_soil(self):
+        self.assertEqual(
+            soil.SoilTexture.Medium,
+            soil.convert_soil_texture_name(name='medium'))
+
+    def test_unknown_soil(self):
+        self.assertEqual(
+            soil.SoilTexture.Unknown,
+            soil.convert_soil_texture_name(name='any_other_soil_type'))
+
+
 class TestSetSoilProperties(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

@@ -53,6 +53,32 @@ class SoilFunctionalCategory(AutoNameEnum):
         return res
 
 
+def convert_soil_texture_name(
+        name: str
+) -> SoilTexture:
+    """Returns a SoilTexture member as a function of the soil name.
+
+    Args:
+        name: soil name
+
+    Returns:
+        SoilTexture member
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/768b3d8fe2565dad0ba01fb8490974f1047a114f/H.Core/Converters/SoilTextureStringConverter.cs#L9
+    """
+    match keep_alphabetical_characters(name=name):
+        case "fine":
+            return SoilTexture.Fine
+        case "coarse":
+            return SoilTexture.Coarse
+        case "medium":
+            return SoilTexture.Medium
+        case _:
+            # throw new Exception(string.Format(Resources.ExceptionUnknownSoilTextureString, input));
+            return SoilTexture.Unknown
+
+
 def convert_soil_functional_category_name(
         name: str
 ) -> SoilFunctionalCategory:
