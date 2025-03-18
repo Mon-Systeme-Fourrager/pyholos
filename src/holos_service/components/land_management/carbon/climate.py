@@ -852,7 +852,7 @@ def calculate_climate_parameter(
         moisture_response_function_at_saturation: (mm3/mm3) soil volumetric water content at reference saturation
         evapotranspirations: (mm/d) all-year daily values of reference crop evapotranspiration
         precipitations: (mm/d) all-year values of precipitation
-        temperatures: (mm/d) all-year values of air temperature
+        temperatures: (degrees Celsius) all-year values of air temperature
 
     Returns:
         average value of the climate parameter of all days of the year.
