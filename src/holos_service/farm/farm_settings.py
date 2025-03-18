@@ -510,19 +510,19 @@ class ParamsFarmSettings:
         self.params_weather_precipitation = MonthlyWeather(
             title="Precipitation Data (mm)",
             variable_name="Precipitation",
-            variable_monthly_values=monthly_precipitation)
+            variable_monthly_values=[int(round(v, 0)) for v in monthly_precipitation])
 
         # Precipitation Data (mm)
         self.params_weather_potential_evapotranspiration = MonthlyWeather(
             title="Evapotranspiration Data (mm year^-1)",
             variable_name="Potential Evapotranspiration",
-            variable_monthly_values=monthly_potential_evapotranspiration)
+            variable_monthly_values=[int(round(v, 0)) for v in monthly_potential_evapotranspiration])
 
         # Temperature Data (°C)
         self.params_weather_temperature = MonthlyWeather(
             title="Temperature Data (°C)",
             variable_name="Mean Temperature",
-            variable_monthly_values=monthly_temperature)
+            variable_monthly_values=[round(v, 2) for v in monthly_temperature])
 
         # Soil Data
         self.params_soil = ParamsSoil(
