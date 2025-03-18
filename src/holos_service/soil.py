@@ -56,6 +56,17 @@ class SoilFunctionalCategory(AutoNameEnum):
 def convert_soil_functional_category_name(
         name: str
 ) -> SoilFunctionalCategory:
+    """Returns a SoilFunctionalCategory member as a function of the soil functional category name.
+
+    Args:
+        name: soil functional category name
+
+    Returns:
+        SoilFunctionalCategory member
+
+    Holos source code:
+        https://github.com/holos-aafc/Holos/blob/768b3d8fe2565dad0ba01fb8490974f1047a114f/H.Core/Converters/SoilFunctionalCategoryStringConverter.cs#L10
+    """
     match keep_alphabetical_characters(name=name):
         case "brownchernozem":
             return SoilFunctionalCategory.BrownChernozem
