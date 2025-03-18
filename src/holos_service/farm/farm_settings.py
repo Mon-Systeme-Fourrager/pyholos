@@ -522,7 +522,7 @@ class ParamsFarmSettings:
         self.params_weather_temperature = MonthlyWeather(
             title="Temperature Data (°C)",
             variable_name="Mean Temperature",
-            variable_monthly_values=monthly_potential_evapotranspiration)
+            variable_monthly_values=monthly_temperature)
 
         # Soil Data
         self.params_soil = ParamsSoil(
