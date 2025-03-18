@@ -336,38 +336,38 @@ class CropViewItem(LandManagementBase):
         """
 
         Args:
-            name:
-            field_area:
-            current_year:
-            crop_year:
-            year_in_perennial_stand:
-            crop_type:
-            tillage_type:
-            perennial_stand_id:
-            perennial_stand_length:
-            relative_biomass_information_data:
-            crop_yield:
-            harvest_method:
-            nitrogen_fertilizer_rate:
-            under_sown_crops_used:
-            field_system_component_guid:
-            province:
-            clay_content:
-            sand_content:
-            organic_carbon_percentage:
-            soil_top_layer_thickness:
-            soil_functional_category:
-            fertilizer_blend:
-            evapotranspiration:
-            precipitation:
-            temperature:
-            amount_of_irrigation:
-            number_of_pesticide_passes:
-            amount_of_manure_applied:
-            manure_application_type:
-            manure_animal_source_type:
-            manure_state_type:
-            manure_location_source_type:
+            name: field name
+            field_area: (ha) area of the field
+            current_year: current year of simulation (constant for all years of a crop rotation)
+            crop_year: simulated year (each row in input file must correspond to a certain year)
+            year_in_perennial_stand: year within the perennial stand (if any). Each year of a perennial stand must have the year identified in the row of the input file. E.g. a six year perennial stand would have one row with this value set 1 for the first year, 2 for the second year, etc
+            crop_type: CropType instance
+            tillage_type: TillageType instance
+            perennial_stand_id: Used to group all years of a perennial stand together. Each year in a distinct perennial stand must have this value set. All years in the same perennial stand must have this same ID/value. Can be thought of as a 'group' ID
+            perennial_stand_length: (-) number of years a perennial crop is grown
+            relative_biomass_information_data: RelativeBiomassInformationData instance
+            crop_yield: (kg(DM)/ha) crop yield
+            harvest_method: HarvestMethod
+            nitrogen_fertilizer_rate: (kg(N)/ha) applied nitrogen
+            under_sown_crops_used: Set to True when this view item is a perennial crop and the previous year is an annual crop and the user wants to indicate that this year's crop (the perennial) is undersown into the previous year's crop (the annual)
+            field_system_component_guid: Unique ID for each field component on the farm
+            province: CanadianProvince instance
+            clay_content: (-) fraction of clay in soil (between 0 and 1)
+            sand_content: (-) fraction of sand in soil (between 0 and 1)
+            organic_carbon_percentage: (%) percentage of organic C in soil (between 0 and 100)
+            soil_top_layer_thickness: (mm) thickness of the soil top layer
+            soil_functional_category: SoilFunctionalCategory instance
+            fertilizer_blend: FertilizerBlends instance
+            evapotranspiration: (mm/d) all-year daily values of reference crop evapotranspiration
+            precipitation: (mm/d) all-year values of precipitation
+            temperature: (degrees Celsius) all-year values of air temperature
+            amount_of_irrigation: (mm/ha) total amount of irrigation
+            number_of_pesticide_passes: number of pesticide passes
+            amount_of_manure_applied: (kg/ha) amount of manure applied to the field
+            manure_application_type: ManureApplicationTypes instance
+            manure_animal_source_type: ManureAnimalSourceTypes instance
+            manure_state_type: ManureStateType instance
+            manure_location_source_type: ManureLocationSourceType instance
         """
         super().__init__()
 
