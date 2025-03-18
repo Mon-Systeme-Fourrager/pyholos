@@ -8,7 +8,6 @@ from holos_service.components.animals.common import (ProductionStage, Diet, Hous
                                                      DietAdditiveType, BeddingMaterialType, Milk,
                                                      get_manure_emission_factors)
 from holos_service.django_stuff import CanadianProvince
-from holos_service.farm import farm_settings
 from holos_service.soil import SoilTexture
 from holos_service.utils import concat_lists
 
@@ -27,26 +26,6 @@ class WeatherSummary:
     monthly_precipitation: list[float]
     monthly_potential_evapotranspiration: list[float]
     monthly_temperature: list[float]
-
-
-@dataclass()
-class FarmGeneralInfo:
-    latitude: float
-    longitude: float
-    province: CanadianProvince
-    soil_texture: SoilTexture
-    weather_summary: WeatherSummary
-
-    def set_farm_settings(self) -> farm_settings.ParamsFarmSettings:
-        return farm_settings.ParamsFarmSettings(
-            year=self.weather_summary.year,
-            latitude=self.latitude,
-            longitude=self.longitude,
-            monthly_precipitation=self.weather_summary.monthly_precipitation,
-            monthly_potential_evapotranspiration=self.weather_summary.monthly_potential_evapotranspiration,
-            monthly_temperature=self.weather_summary.monthly_temperature,
-            run_in_period_years=15
-        )
 
 
 @dataclass

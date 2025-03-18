@@ -1,8 +1,10 @@
 from pathlib import Path
 
+from holos_service.components.common import convert_province_name
 from holos_service.django_stuff import CanadianProvince
-from holos_service.farm.farm_inputs import BeefCattleInput, DairyCattleInput, SheepFlockInput, FarmGeneralInfo
-from holos_service.soil import SoilTexture
+from holos_service.farm.farm_inputs import (BeefCattleInput, DairyCattleInput, SheepFlockInput, WeatherSummary)
+from holos_service.farm.farm_settings import ParamsFarmSettings
+from holos_service.soil import SoilTexture, convert_soil_texture_name
 
 
 def write_animal_input_csv(
@@ -23,7 +25,9 @@ def write_animal_input_csv(
 
 
 def create_farm(
-        farm_general_info: FarmGeneralInfo,
+        latitude: float,
+        longitude: float,
+        weather_summary: WeatherSummary,
         path_dir_farm: Path,
         beef_cattle_data: BeefCattleInput = None,
         dairy_cattle_data: DairyCattleInput = None,
@@ -31,7 +35,18 @@ def create_farm(
         field_data=None,
 ) -> None:
     path_dir_farm.mkdir(parents=True, exist_ok=True)
-    farm_general_info.set_farm_settings().write(path_dir_farm=path_dir_farm)
+    farm_settings = ParamsFarmSettings(
+        latitude=latitude,
+        longitude=longitude,
+        year=weather_summary.year,
+        monthly_precipitation=weather_summary.monthly_precipitation,
+        monthly_potential_evapotranspiration=weather_summary.monthly_potential_evapotranspiration,
+        monthly_temperature=weather_summary.monthly_temperature)
+
+    farm_settings.write(path_dir_farm=path_dir_farm)
+
+    province = convert_province_name(name=farm_settings.params_soil.province.value)
+    soil_texture = convert_soil_texture_name(name=farm_settings.params_soil.soil_texture.value)
 
     for animal_data, dir_name in [
         (beef_cattle_data, 'Beef'),
@@ -43,8 +58,8 @@ def create_farm(
 
             write_animal_input_csv(
                 animal_data=animal_data,
-                province=farm_general_info.province,
-                soil_texture=farm_general_info.soil_texture,
+                province=province,
+                soil_texture=soil_texture,
                 path_dir_animal=path_dir_farm / dir_name
             )
 
