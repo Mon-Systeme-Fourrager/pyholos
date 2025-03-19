@@ -1,17 +1,21 @@
 from datetime import datetime, timedelta
 from pathlib import Path
 
-from pandas import read_csv
+from pandas import read_csv, DataFrame
 
-from example.beef_inputs import set_beef_data
-from example.dairy_inputs import set_dairy_data
-from example.sheep_inputs import set_sheep_data
+from example.field_inputs import set_field_data
 from holos_service.farm.farm import create_farm
-from holos_service.farm.farm_inputs import WeatherSummary
+from holos_service.farm.farm_inputs import WeatherSummary, WeatherData
 
 
-def set_weather_summary() -> WeatherSummary:
-    df = read_csv('weather_data.csv', sep=',', decimal='.', comment='#')
+def get_weather_data(df: DataFrame) -> WeatherData:
+    return WeatherData(
+        year=df.loc[0, "year"],
+        precipitation=df['precipitation'],
+        potential_evapotranspiration=df['potential_evapotranspiration'],
+        temperature=df['air_temperature'])
+
+def get_weather_summary(df: DataFrame) -> WeatherSummary:
     year = df.loc[0, 'year']
     date_base = datetime(year - 1, 12, 31)
     df['date'] = df['day_of_year'].apply(lambda x: date_base + timedelta(x))
@@ -32,13 +36,15 @@ def set_weather_summary() -> WeatherSummary:
 
 if __name__ == '__main__':
     path_root = Path(__file__).parent
-    weather_summary = set_weather_summary()
+    weather_df = read_csv('weather_data.csv', sep=',', decimal='.', comment='#')
+    weather_summary = get_weather_summary(weather_df)
     create_farm(
         latitude=49.98,
         longitude=-98.04,
-        weather_summary=set_weather_summary(),
+        weather_summary=get_weather_summary(df=weather_df),
         path_dir_farm=path_root / 'example_farm',
-        beef_cattle_data=set_beef_data(weather_summary=weather_summary),
-        dairy_cattle_data=set_dairy_data(weather_summary=weather_summary),
-        sheep_flock_data=set_sheep_data(weather_summary=weather_summary)
+        # beef_cattle_data=set_beef_data(weather_summary=weather_summary),
+        # dairy_cattle_data=set_dairy_data(weather_summary=weather_summary),
+        # sheep_flock_data=set_sheep_data(weather_summary=weather_summary),
+        fields_data=set_field_data(weather_data=get_weather_data(df=weather_df))
     )
