@@ -1,18 +1,37 @@
 from dataclasses import dataclass
 from datetime import date
 from typing import Union, ClassVar
+from uuid import UUID, uuid4
 
 from pandas import DataFrame
 
 from holos_service.components.animals.common import (ProductionStage, Diet, HousingType, ManureStateType,
                                                      DietAdditiveType, BeddingMaterialType, Milk,
-                                                     get_manure_emission_factors)
+                                                     get_manure_emission_factors, ManureAnimalSourceTypes,
+                                                     ManureLocationSourceType)
+from holos_service.components.land_management.carbon.relative_biomass_information import (
+    RelativeBiomassInformationData, parse_table_7, get_relative_biomass_information_data)
+from holos_service.components.land_management.common import (
+    TillageType, HarvestMethod, FertilizerBlends, ManureApplicationTypes, IrrigationType)
+from holos_service.components.land_management.crop import CropType
+from holos_service.components.land_management.field_system import CropViewItem
 from holos_service.django_stuff import CanadianProvince
-from holos_service.soil import SoilTexture
+from holos_service.soil import SoilTexture, SoilFunctionalCategory
 from holos_service.utils import concat_lists
 
 type ManagementPeriods = list[BeefManagementPeriod | DairyManagementPeriod | SheepManagementPeriod]
 from holos_service.components.animals import beef, dairy, sheep
+
+
+@dataclass
+class WeatherData:
+    """A class that holds daily values for precipitation (mm), potential_evapotranspiration (mm) and temperature (°C)
+    for one year.
+    """
+    year: int
+    precipitation: list[float]
+    potential_evapotranspiration: list[float]
+    temperature: list[float]
 
 
 @dataclass
@@ -390,3 +409,213 @@ class SheepFlockInput(AnimalInputBase):
                 year=management_period.weather_summary.year,
                 soil_texture=soil_texture)
         )
+
+
+@dataclass
+class FieldAnnualData:
+    name: str
+    field_area: float
+    weather_data: WeatherData
+    crop_type: CropType
+    crop_yield: float
+    crop_year: int
+    under_sown_crops_used: bool
+    tillage_type: TillageType
+    harvest_method: HarvestMethod
+    nitrogen_fertilizer_rate: float
+    fertilizer_blend: FertilizerBlends
+    irrigation_type: IrrigationType = IrrigationType.RainFed
+    amount_of_irrigation: float = 0
+    number_of_pesticide_passes: int = 0
+    amount_of_manure_applied: float = 0
+    manure_application_type: ManureApplicationTypes = ManureApplicationTypes.NotSelected
+    manure_animal_source_type: ManureAnimalSourceTypes = ManureAnimalSourceTypes.NotSelected
+    manure_state_type: ManureStateType = ManureStateType.not_selected
+    manure_location_source_type: ManureLocationSourceType = ManureLocationSourceType.NotSelected
+
+    year_in_perennial_stand: int = None
+    field_system_component_guid: UUID = None
+    current_year: int = None
+    relative_biomass_information_data: RelativeBiomassInformationData = None
+    province: CanadianProvince = None
+    clay_content: float = None
+    sand_content: float = None
+    organic_carbon_percentage: float = None
+    soil_top_layer_thickness: float = None
+    soil_functional_category: SoilFunctionalCategory = None
+    evapotranspiration: list[float] = None
+    precipitation: list[float] = None
+    temperature: list[float] = None
+
+
+class FieldsInput:
+    def __init__(
+            self,
+            fields: dict[str, FieldAnnualData | list[FieldAnnualData]] = None
+    ):
+        self.fields = fields
+        self.table_7 = parse_table_7()
+
+    @staticmethod
+    def calc_year_in_perennial_stand(
+            crops: list[CropType]
+    ) -> list[int]:
+        v = 0
+        res = []
+        for i, crop in enumerate(crops):
+            v = (v + 1) if crop.is_perennial() else 0
+            res.append(v)
+        return res
+
+    @staticmethod
+    def calc_perennial_stand_lengths(
+            years_in_perennial_stand: list[int]
+    ) -> list[int]:
+        res = [max(1, years_in_perennial_stand[-1])]
+        for v in reversed(years_in_perennial_stand[:-1]):
+            res.append(max(v, res[-1]) if v != 0 else 1)
+        return list(reversed(res))
+
+    @staticmethod
+    def set_perennial_stand_id(
+            crops: list[CropType],
+    ) -> list[UUID]:
+        id_for_annual = UUID("00000000-0000-0000-0000-000000000000")
+        perennial_stand_id = None
+
+        crop_prev = None
+        res = []
+        for crop in crops:
+            if not crop.is_perennial():
+                perennial_stand_id = id_for_annual
+            else:
+                if crop != crop_prev:
+                    perennial_stand_id = uuid4()
+            crop_prev = crop
+
+            res.append(perennial_stand_id)
+
+        return res
+
+    def _create_one_year_component(
+            self,
+            province: CanadianProvince,
+            clay_content: float,
+            sand_content: float,
+            organic_carbon_percentage: float,
+            soil_top_layer_thickness: float,
+            soil_functional_category: SoilFunctionalCategory,
+            perennial_stand_id: UUID,
+            field_system_component_guid: UUID,
+            perennial_stand_length: int,
+            field_one_year_data: FieldAnnualData,
+            year_in_perennial_stand: int,
+    ) -> CropViewItem:
+        weather_data = field_one_year_data.weather_data
+
+        return CropViewItem(
+            name=field_one_year_data.name,
+            field_area=field_one_year_data.field_area,
+            current_year=weather_data.year,
+            crop_year=field_one_year_data.crop_year,
+            year_in_perennial_stand=year_in_perennial_stand,
+            crop_type=field_one_year_data.crop_type,
+            tillage_type=field_one_year_data.tillage_type,
+            perennial_stand_id=perennial_stand_id,
+            perennial_stand_length=perennial_stand_length,
+            relative_biomass_information_data=get_relative_biomass_information_data(
+                table_7=self.table_7,
+                crop_type=field_one_year_data.crop_type,
+                irrigation_type=field_one_year_data.irrigation_type,
+                irrigation_amount=sum(weather_data.precipitation),
+                province=province),
+            crop_yield=field_one_year_data.crop_yield,
+            harvest_method=field_one_year_data.harvest_method,
+            nitrogen_fertilizer_rate=field_one_year_data.nitrogen_fertilizer_rate,
+            under_sown_crops_used=field_one_year_data.under_sown_crops_used,
+            field_system_component_guid=field_system_component_guid,
+            province=province,
+            clay_content=clay_content,
+            sand_content=sand_content,
+            organic_carbon_percentage=organic_carbon_percentage,
+            soil_top_layer_thickness=soil_top_layer_thickness,
+            soil_functional_category=soil_functional_category,
+            fertilizer_blend=field_one_year_data.fertilizer_blend,
+            evapotranspiration=weather_data.potential_evapotranspiration,
+            precipitation=weather_data.precipitation,
+            temperature=weather_data.temperature,
+
+            amount_of_irrigation=field_one_year_data.amount_of_irrigation,
+            number_of_pesticide_passes=field_one_year_data.number_of_pesticide_passes,
+            amount_of_manure_applied=field_one_year_data.amount_of_manure_applied,
+            manure_application_type=field_one_year_data.manure_application_type,
+            manure_animal_source_type=field_one_year_data.manure_animal_source_type,
+            manure_state_type=field_one_year_data.manure_state_type,
+            manure_location_source_type=field_one_year_data.manure_location_source_type
+        )
+
+    def _create_field_component(
+            self,
+            field_data: list[FieldAnnualData],
+            province: CanadianProvince,
+            clay_content: float,
+            sand_content: float,
+            organic_carbon_percentage: float,
+            soil_top_layer_thickness: float,
+            soil_functional_category: SoilFunctionalCategory,
+    ) -> list[dict]:
+
+        field_system_component_guid = uuid4()
+        crops = [v.crop_type for v in field_data]
+        years_in_perennial_stand = self.calc_year_in_perennial_stand(crops=crops)
+        ids_perennial = self.set_perennial_stand_id(crops=crops)
+        perennial_stand_lengths = self.calc_perennial_stand_lengths(years_in_perennial_stand=years_in_perennial_stand)
+
+        res = []
+        for annual_data, year_in_perennial_stand, perennial_stand_length, id_perennial in zip(
+                field_data,
+                years_in_perennial_stand,
+                perennial_stand_lengths,
+                ids_perennial
+        ):
+            one_year_component = self._create_one_year_component(
+                province=province,
+                clay_content=clay_content,
+                sand_content=sand_content,
+                organic_carbon_percentage=organic_carbon_percentage,
+                soil_top_layer_thickness=soil_top_layer_thickness,
+                soil_functional_category=soil_functional_category,
+                perennial_stand_id=id_perennial,
+                field_system_component_guid=field_system_component_guid,
+                perennial_stand_length=perennial_stand_length,
+                field_one_year_data=annual_data,
+                year_in_perennial_stand=year_in_perennial_stand,
+            )
+
+            res.append(one_year_component.to_dict())
+
+        return res
+
+    def create_components(
+            self,
+            province: CanadianProvince,
+            clay_content: float,
+            sand_content: float,
+            organic_carbon_percentage: float,
+            soil_top_layer_thickness: float,
+            soil_functional_category: SoilFunctionalCategory,
+    ) -> list[DataFrame]:
+        res = []
+        for _, field_data in self.fields.items():
+            field_component = self._create_field_component(
+                field_data=field_data,
+                province=province,
+                clay_content=clay_content,
+                sand_content=sand_content,
+                organic_carbon_percentage=organic_carbon_percentage,
+                soil_top_layer_thickness=soil_top_layer_thickness,
+                soil_functional_category=soil_functional_category
+            )
+            res.append(DataFrame.from_records(field_component))
+
+        return res
