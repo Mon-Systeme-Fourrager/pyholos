@@ -4,7 +4,18 @@ from holos_service.components.common import convert_province_name
 from holos_service.django_stuff import CanadianProvince
 from holos_service.farm.farm_inputs import (BeefCattleInput, DairyCattleInput, SheepFlockInput, WeatherSummary)
 from holos_service.farm.farm_settings import ParamsFarmSettings
-from holos_service.soil import SoilTexture, convert_soil_texture_name
+from holos_service.soil import (SoilTexture, convert_soil_texture_name, convert_soil_functional_category_name,
+                                SoilFunctionalCategory)
+
+
+def write_input_csv(
+        dfs: list[DataFrame],
+        path_dir: Path
+) -> None:
+    for df in dfs:
+        name_output_file = df['Name'].unique()[0]
+        df.to_csv(path_dir / f'{name_output_file}.csv', index=False)
+    pass
 
 
 def write_animal_input_csv(
@@ -13,11 +24,12 @@ def write_animal_input_csv(
         soil_texture: SoilTexture,
         path_dir_animal: Path,
 ) -> None:
-    dfs = animal_data.create_components(
-        province=province,
-        soil_texture=soil_texture)
-    for df in dfs:
-        name_output_file = df['Name'].unique()[0]
+    write_input_csv(
+        dfs=animal_data.create_components(
+            province=province,
+            soil_texture=soil_texture),
+        path_dir=path_dir_animal
+    )
 
         df.to_csv(path_dir_animal / f'{name_output_file}.csv', index=False)
 
@@ -45,8 +57,10 @@ def create_farm(
 
     farm_settings.write(path_dir_farm=path_dir_farm)
 
-    province = convert_province_name(name=farm_settings.params_soil.province.value)
-    soil_texture = convert_soil_texture_name(name=farm_settings.params_soil.soil_texture.value)
+    params_soil = farm_settings.params_soil
+
+    province = convert_province_name(name=params_soil.province.value)
+    soil_texture = convert_soil_texture_name(name=params_soil.soil_texture.value)
 
     for animal_data, dir_name in [
         (beef_cattle_data, 'Beef'),
