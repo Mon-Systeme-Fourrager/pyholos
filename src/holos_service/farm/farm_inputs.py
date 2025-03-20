@@ -6,6 +6,7 @@ from uuid import UUID, uuid4
 from pandas import DataFrame
 from pydantic import BaseModel, conlist, Field, confloat
 
+from holos_service.core_constants import CoreConstants
 from holos_service.components.animals.common import (ProductionStage, Diet, HousingType, ManureStateType,
                                                      DietAdditiveType, BeddingMaterialType, Milk,
                                                      get_manure_emission_factors, ManureAnimalSourceTypes,
@@ -33,7 +34,7 @@ class WeatherData(BaseModel):
     """
     spec_daily_data: ClassVar = dict(min_length=365, max_length=366)
 
-    year: int = Field(gt=1970)
+    year: int = Field(gt=CoreConstants.MinimumYear)
     precipitation: conlist(item_type=TypeWaterData, **spec_daily_data)
     potential_evapotranspiration: conlist(item_type=TypeWaterData, **spec_daily_data)
     temperature: conlist(item_type=TypeTemperatureData, **spec_daily_data)
