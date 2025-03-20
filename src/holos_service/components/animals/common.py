@@ -1,6 +1,8 @@
 from enum import auto
+from typing import ClassVar
 
 from pandas import DataFrame
+from pydantic import BaseModel, NonNegativeFloat, Field
 
 from holos_service import utils
 from holos_service.common import EnumGeneric, HolosVar, Region, get_region, get_climate_zone, ClimateZones
@@ -502,20 +504,9 @@ class Milk:
         self.protein_content_as_percentage = protein_content_as_percentage
 
 
-class Diet:
-    def __init__(
-            self,
-            crude_protein_percentage: float,
-            forage_percentage: float,
-            total_digestible_nutrient_percentage: float,
-            ash_percentage: float,
-            starch_percentage: float,
-            fat_percentage: float,
-            neutral_detergent_fiber_percentage: float,
-            metabolizable_energy: float,
-            # dietary_net_energy_concentration: float
-    ):
-        """Diet composition data
+class Diet(BaseModel):
+    specs: ClassVar = Field(NonNegativeFloat, ge=0, le=100)
+    """Diet composition data
 
         Args:
             crude_protein_percentage: (-) percentage of crude protein in the diet dry matter (between 0 and 100)
@@ -527,15 +518,16 @@ class Diet:
             neutral_detergent_fiber_percentage: (-) percentage of neutral detergent fiber in the diet dry matter (between 0 and 100)
             metabolizable_energy: (Mcal kg-1) metabolizable energy of the diet
         """
-        self.crude_protein_percentage = crude_protein_percentage
-        self.forage_percentage = forage_percentage
-        self.total_digestible_nutrient_percentage = total_digestible_nutrient_percentage
-        self.ash_percentage = ash_percentage
-        self.starch_percentage = starch_percentage
-        self.fat_percentage = fat_percentage
-        self.neutral_detergent_fiber_percentage = neutral_detergent_fiber_percentage
-        self.metabolizable_energy = metabolizable_energy
-        # self.dietary_net_energy_concentration = dietary_net_energy_concentration
+    crude_protein_percentage: NonNegativeFloat
+    forage_percentage: NonNegativeFloat
+    total_digestible_nutrient_percentage: NonNegativeFloat
+    ash_percentage: NonNegativeFloat
+    starch_percentage: NonNegativeFloat
+    fat_percentage: NonNegativeFloat
+    neutral_detergent_fiber_percentage: NonNegativeFloat
+    metabolizable_energy: NonNegativeFloat
+
+    # dietary_net_energy_concentration: float
 
     @staticmethod
     def calc_dietary_net_energy_concentration(
