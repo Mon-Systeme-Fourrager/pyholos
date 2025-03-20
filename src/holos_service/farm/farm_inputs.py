@@ -4,6 +4,7 @@ from typing import Union, ClassVar, Generator
 from uuid import UUID, uuid4
 
 from pandas import DataFrame
+from pydantic import BaseModel, conlist, Field, confloat
 
 from holos_service.components.animals.common import (ProductionStage, Diet, HousingType, ManureStateType,
                                                      DietAdditiveType, BeddingMaterialType, Milk,
@@ -22,29 +23,34 @@ from holos_service.utils import concat_lists
 type ManagementPeriods = list[BeefManagementPeriod | DairyManagementPeriod | SheepManagementPeriod]
 from holos_service.components.animals import beef, dairy, sheep
 
+TypeWaterData = confloat(strict=True, ge=0, allow_inf_nan=False)
+TypeTemperatureData = confloat(strict=True, allow_inf_nan=False)
 
-@dataclass
-class WeatherData:
+
+class WeatherData(BaseModel):
     """A class that holds daily values for precipitation (mm), potential_evapotranspiration (mm) and temperature (°C)
     for one year.
     """
-    year: int
-    precipitation: list[float]
-    potential_evapotranspiration: list[float]
-    temperature: list[float]
+    spec_daily_data: ClassVar = dict(min_length=365, max_length=366)
+
+    year: int = Field(gt=1970)
+    precipitation: conlist(item_type=TypeWaterData, **spec_daily_data)
+    potential_evapotranspiration: conlist(item_type=TypeWaterData, **spec_daily_data)
+    temperature: conlist(item_type=TypeTemperatureData, **spec_daily_data)
 
 
-@dataclass
-class WeatherSummary:
-    year: int
-    mean_annual_precipitation: float
-    mean_annual_temperature: float
-    mean_annual_evapotranspiration: float
-    growing_season_precipitation: float
-    growing_season_evapotranspiration: float
-    monthly_precipitation: list[float]
-    monthly_potential_evapotranspiration: list[float]
-    monthly_temperature: list[float]
+class WeatherSummary(BaseModel):
+    spec_monthly_data: ClassVar = dict(min_length=12, max_length=12)
+
+    year: int = Field(gt=1970)
+    mean_annual_precipitation: TypeWaterData
+    mean_annual_temperature: TypeTemperatureData
+    mean_annual_evapotranspiration: TypeWaterData
+    growing_season_precipitation: TypeWaterData
+    growing_season_evapotranspiration: TypeWaterData
+    monthly_precipitation: conlist(item_type=TypeWaterData, **spec_monthly_data)
+    monthly_potential_evapotranspiration: conlist(item_type=TypeWaterData, **spec_monthly_data)
+    monthly_temperature: conlist(item_type=TypeTemperatureData, **spec_monthly_data)
 
 
 @dataclass
