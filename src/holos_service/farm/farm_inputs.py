@@ -7,6 +7,7 @@ from pandas import DataFrame
 from pydantic import BaseModel, conlist, Field, confloat
 
 from holos_service.core_constants import CoreConstants
+from holos_service.components.animals import beef, dairy, sheep
 from holos_service.components.animals.common import (ProductionStage, Diet, HousingType, ManureStateType,
                                                      DietAdditiveType, BeddingMaterialType, Milk,
                                                      get_manure_emission_factors, ManureAnimalSourceTypes,
@@ -54,13 +55,13 @@ class WeatherSummary(BaseModel):
     monthly_temperature: conlist(item_type=TypeTemperatureData, **spec_monthly_data)
 
 
-@dataclass
-class BeefManagementPeriod:
-    name: str
+
+class BeefManagementPeriod(BaseModel):
+    name: str = Field(min_length=1)
     start_date: date
-    days: int
-    group_pairing_number: int
-    number_of_animals: int
+    days: conint(gt=0)
+    group_pairing_number: conint(ge=0)
+    number_of_animals: conint(ge=0)
     production_stage: ProductionStage
     number_of_young_animals: int
     is_milk_fed_only: bool
@@ -68,10 +69,18 @@ class BeefManagementPeriod:
     housing_type: HousingType
     manure_handling_system: ManureStateType
     weather_summary: WeatherSummary
-    start_weight: float = None
-    end_weight: float = None
+    start_weight: float = confloat(ge=0, allow_inf_nan=False)
+    end_weight: float = NonNegativeFloat
     diet_additive_type: DietAdditiveType = DietAdditiveType.NONE
     bedding_material_type: BeddingMaterialType = BeddingMaterialType.straw
+
+    @field_validator('start_date')
+    @classmethod
+    def verify_date_in_period(cls, v: date) -> date:
+        date_base = date(CoreConstants.MinimumYear, 1, 1)
+        assert v >= date_base, f"Input 'start_date' should be greater than {date_base}, actual is {v}"
+        return v
+
 
 
 @dataclass
