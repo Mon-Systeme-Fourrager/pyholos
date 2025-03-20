@@ -56,7 +56,7 @@ class TestCalcPerennialStandLengths(unittest.TestCase):
     ):
         self.assertEqual(
             list(expected),
-            self.calc_perennial_stand_lengths(year_in_perennial_stand=years_data))
+            self.calc_perennial_stand_lengths(years_in_perennial_stand=years_data))
 
     def test_all_annual(self):
         years_data, expected = zip(*[
