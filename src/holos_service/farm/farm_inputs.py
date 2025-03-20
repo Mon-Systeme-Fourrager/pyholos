@@ -4,7 +4,7 @@ from typing import Union, ClassVar, Generator
 from uuid import UUID, uuid4
 
 from pandas import DataFrame
-from pydantic import BaseModel, conlist, Field, confloat
+from pydantic import BaseModel, conlist, conint, Field, confloat, field_validator, NonNegativeFloat
 
 from holos_service.core_constants import CoreConstants
 from holos_service.components.animals import beef, dairy, sheep
@@ -23,7 +23,6 @@ from holos_service.soil import SoilTexture, SoilFunctionalCategory
 from holos_service.utils import concat_lists
 
 type ManagementPeriods = list[BeefManagementPeriod | DairyManagementPeriod | SheepManagementPeriod]
-from holos_service.components.animals import beef, dairy, sheep
 
 TypeWaterData = confloat(strict=True, ge=0, allow_inf_nan=False)
 TypeTemperatureData = confloat(strict=True, allow_inf_nan=False)
