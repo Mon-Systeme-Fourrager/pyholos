@@ -482,26 +482,20 @@ class ManureLocationSourceType(AutoNameEnum):
     OnFarmAnaerobicDigestor = auto()
 
 
-class Milk:
-    def __init__(
-            self,
-            production_amount: float = 0,
-            fat_content: float = 4,
-            protein_content_as_percentage: float = 3.5,
-    ):
-        """Milk production data
+class Milk(BaseModel):
+    """Milk production data
 
-        Args:
-            production_amount: (kg) average milk production value based on the province and year specified by user
-            fat_content: (%) fat content of milk
-            protein_content_as_percentage: (%) protein content of milk
+    Args:
+        production: (kg) average milk production value based on the province and year specified by user
+        fat_content: (%) fat content of milk
+        protein_content_as_percentage: (%) protein content of milk
 
-        Notes:
-            arg 'protein_content_as_percentage' is deprecated and will be removed in future version.
-        """
-        self.production = production_amount
-        self.fat_content = fat_content
-        self.protein_content_as_percentage = protein_content_as_percentage
+    Notes:
+        arg 'protein_content_as_percentage' is deprecated and will be removed in future version.
+    """
+    production: float = 0
+    fat_content: float = 4
+    protein_content_as_percentage: float = 3.5
 
 
 class Diet(BaseModel):
