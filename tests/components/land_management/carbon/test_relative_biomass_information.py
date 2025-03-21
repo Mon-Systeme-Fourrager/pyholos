@@ -535,13 +535,13 @@ class TestParseNitrogenLigninContentInCropsData(unittest.TestCase):
                 raw_input=self.lines[12]))
 
     def test_values_for_fall_rye(self):
-        for i in [
-            11,  # Rye,
-            40,  # Fall Rye
+        for i, crop_type in [
+            (11, CropType.Rye),
+            (40, CropType.FallRye)
         ]:
             self.assertEqual(
                 NitrogenLigninContentInCropsData(
-                    CropType=CropType.Rye,
+                    CropType=crop_type,
                     InterceptValue=0.344,
                     SlopeValue=0.015,
                     RSTRatio=0.229,
@@ -549,7 +549,7 @@ class TestParseNitrogenLigninContentInCropsData(unittest.TestCase):
                     LigninContentResidues=0.053,
                     MoistureContent=12,
                     BiomethaneData=BiogasAndMethaneProductionParametersData(
-                        crop_type=CropType.Rye,
+                        crop_type=crop_type,
                         bio_methane_potential=241,
                         methane_fraction=0.44,
                         volatile_solids=94,
