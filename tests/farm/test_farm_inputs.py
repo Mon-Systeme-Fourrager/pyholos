@@ -13,6 +13,19 @@ from holos_service.components.land_management.crop import CropType
 from holos_service.farm import farm_inputs
 
 
+def get_weather_summary_example() -> farm_inputs.WeatherSummary:
+    return farm_inputs.WeatherSummary(
+            year=2025,
+            mean_annual_precipitation=uniform(0, 1000),
+            mean_annual_temperature=uniform(-5, 5),
+            mean_annual_evapotranspiration=uniform(0, 1000),
+            growing_season_precipitation=uniform(0, 1000),
+            growing_season_evapotranspiration=uniform(0, 1000),
+            monthly_precipitation=[uniform(0, 100) for _ in range(12)],
+            monthly_potential_evapotranspiration=[uniform(0, 100) for _ in range(12)],
+            monthly_temperature=[uniform(-30, 30) for _ in range(12)]
+        )
+
 class TestCalcYearInPerennialStand(unittest.TestCase):
     @staticmethod
     def calc_year_in_perennial_stand(**kwargs):
@@ -391,17 +404,7 @@ class TestInputBeefManagementPeriod(unittest.TestCase):
     def setUpClass(cls):
         cls.BeefManagementPeriod = farm_inputs.BeefManagementPeriod
 
-        cls.weather_summary = farm_inputs.WeatherSummary(
-            year=2025,
-            mean_annual_precipitation=uniform(0, 1000),
-            mean_annual_temperature=uniform(-5, 5),
-            mean_annual_evapotranspiration=uniform(0, 1000),
-            growing_season_precipitation=uniform(0, 1000),
-            growing_season_evapotranspiration=uniform(0, 1000),
-            monthly_precipitation=[uniform(0, 100) for _ in range(12)],
-            monthly_potential_evapotranspiration=[uniform(0, 100) for _ in range(12)],
-            monthly_temperature=[uniform(-30, 30) for _ in range(12)]
-        )
+        cls.weather_summary = get_weather_summary_example()
 
     def get_kwargs(self) -> dict:
         return dict(
@@ -612,17 +615,7 @@ class TestInputDairyManagementPeriod(unittest.TestCase):
     def setUpClass(cls):
         cls.DairyManagementPeriod = farm_inputs.DairyManagementPeriod
 
-        cls.weather_summary = farm_inputs.WeatherSummary(
-            year=2025,
-            mean_annual_precipitation=uniform(0, 1000),
-            mean_annual_temperature=uniform(-5, 5),
-            mean_annual_evapotranspiration=uniform(0, 1000),
-            growing_season_precipitation=uniform(0, 1000),
-            growing_season_evapotranspiration=uniform(0, 1000),
-            monthly_precipitation=[uniform(0, 100) for _ in range(12)],
-            monthly_potential_evapotranspiration=[uniform(0, 100) for _ in range(12)],
-            monthly_temperature=[uniform(-30, 30) for _ in range(12)]
-        )
+        cls.weather_summary = get_weather_summary_example()
 
     def get_kwargs(self) -> dict:
         return dict(
@@ -833,17 +826,7 @@ class TestInputSheepManagementPeriod(unittest.TestCase):
     def setUpClass(cls):
         cls.SheepManagementPeriod = farm_inputs.SheepManagementPeriod
 
-        cls.weather_summary = farm_inputs.WeatherSummary(
-            year=2025,
-            mean_annual_precipitation=uniform(0, 1000),
-            mean_annual_temperature=uniform(-5, 5),
-            mean_annual_evapotranspiration=uniform(0, 1000),
-            growing_season_precipitation=uniform(0, 1000),
-            growing_season_evapotranspiration=uniform(0, 1000),
-            monthly_precipitation=[uniform(0, 100) for _ in range(12)],
-            monthly_potential_evapotranspiration=[uniform(0, 100) for _ in range(12)],
-            monthly_temperature=[uniform(-30, 30) for _ in range(12)]
-        )
+        cls.weather_summary = get_weather_summary_example()
 
     def get_kwargs(self) -> dict:
         return dict(
