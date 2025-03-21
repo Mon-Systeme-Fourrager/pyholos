@@ -99,7 +99,7 @@ class RelativeBiomassInformationData:
             # phosphorus_fertilizer_rate: float,
             lignin_content: float = 0,
             province: CanadianProvince = None,
-            biogas_and_methane_production_parameters_data: BiogasAndMethaneProductionParametersData = BiogasAndMethaneProductionParametersData()
+#            biogas_and_methane_production_parameters_data: BiogasAndMethaneProductionParametersData = BiogasAndMethaneProductionParametersData()
     ):
         """Table_7_Relative_Biomass_Information_Data
 
@@ -147,7 +147,7 @@ class RelativeBiomassInformationData:
         # public Dictionary<Province, Dictionary<SoilFunctionalCategory, double>> PhosphorusFertilizerRateTable { get; set; } = new Dictionary<Province, Dictionary<SoilFunctionalCategory, double>>();
         # public Dictionary<Province, TillageType> TillageTypeTable { get; set; } = new Dictionary<Province, TillageType>();
         self.Province = province
-        self.BiomethaneData = biogas_and_methane_production_parameters_data
+        # self.BiomethaneData = biogas_and_methane_production_parameters_data
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__ if isinstance(other, self.__class__) else False
@@ -278,8 +278,8 @@ def parse_relative_biomass_information_data(
         nitrogen_content_extraroot=nitrogen_residue_data.nitrogen_content_extraroot,
         lignin_content=parse_lignin_content_data(raw_input=columns[16]),
         province=parse_province_data(raw_input=columns[2]),
-        biogas_and_methane_production_parameters_data=parse_biomethane_data(crop_type=crop_type,
-                                                                            raw_inputs=columns[17:22])
+        # biogas_and_methane_production_parameters_data=parse_biomethane_data(crop_type=crop_type,
+        #                                                                     raw_inputs=columns[17:22])
     )
 
 
