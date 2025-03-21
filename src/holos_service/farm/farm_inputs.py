@@ -62,14 +62,14 @@ class BeefManagementPeriod(BaseModel):
     group_pairing_number: conint(ge=0)
     number_of_animals: conint(ge=0)
     production_stage: ProductionStage
-    number_of_young_animals: int
+    number_of_young_animals: conint(ge=0)
     is_milk_fed_only: bool
     diet: Diet
     housing_type: HousingType
     manure_handling_system: ManureStateType
     weather_summary: WeatherSummary
     start_weight: float = confloat(ge=0, allow_inf_nan=False)
-    end_weight: float = NonNegativeFloat
+    end_weight: float = confloat(ge=0, allow_inf_nan=False)
     diet_additive_type: DietAdditiveType = DietAdditiveType.NONE
     bedding_material_type: BeddingMaterialType = BeddingMaterialType.straw
 
