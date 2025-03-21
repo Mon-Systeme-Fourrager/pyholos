@@ -6,28 +6,28 @@ from holos_service.defaults import Defaults
 class MyDefaults(unittest.TestCase):
     def test_values(self):
         self.assertEqual(
-            Defaults.EmissionFactorForLeachingAndRunoff.value,
+            Defaults.EmissionFactorForLeachingAndRunoff,
             0.011)
         self.assertEqual(
-            Defaults.PercentageOfProductReturnedToSoilForPerennials.value,
+            Defaults.PercentageOfProductReturnedToSoilForPerennials,
             35)
         self.assertEqual(
-            Defaults.PercentageOfRootsReturnedToSoilForPerennials.value,
+            Defaults.PercentageOfRootsReturnedToSoilForPerennials,
             100)
         self.assertEqual(
-            Defaults.PercentageOfProductReturnedToSoilForAnnuals.value,
+            Defaults.PercentageOfProductReturnedToSoilForAnnuals,
             2)
         self.assertEqual(
-            Defaults.PercentageOfRootsReturnedToSoilForAnnuals.value,
+            Defaults.PercentageOfRootsReturnedToSoilForAnnuals,
             100)
         self.assertEqual(
-            Defaults.PercentageOfStrawReturnedToSoilForAnnuals.value,
+            Defaults.PercentageOfStrawReturnedToSoilForAnnuals,
             100)
         self.assertEqual(
-            Defaults.PercentageOfProductReturnedToSoilForRootCrops.value,
+            Defaults.PercentageOfProductReturnedToSoilForRootCrops,
             0)
         self.assertEqual(
-            Defaults.PercentageOfStrawReturnedToSoilForRootCrops.value,
+            Defaults.PercentageOfStrawReturnedToSoilForRootCrops,
             100)
 
 
