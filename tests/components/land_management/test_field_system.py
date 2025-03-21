@@ -1,3 +1,4 @@
+from pathlib import Path
 import unittest
 from itertools import product
 from uuid import UUID
@@ -245,9 +246,10 @@ class TestLandManagementBase(unittest.TestCase):
 class TestCropViewItem(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.field_data = read_holos_resource_table(r'../../sources/holos/non_regression_crop_view_item/field_data.csv')
+        cls.field_data = read_holos_resource_table(
+            Path(__file__).parents[2] / r'sources/holos/non_regression_crop_view_item/field_data.csv')
         cls.weather_data = read_holos_resource_table(
-            r'../../sources/holos/non_regression_crop_view_item/daily_weather.csv',
+            Path(__file__).parents[2] / r'sources/holos/non_regression_crop_view_item/daily_weather.csv',
             usecols=['Year', 'Mean Daily Air Temperature', 'Mean Daily Precipitation', 'Mean Daily Pet'])
         cls.year = 2025
         cls.crop_type = CropType.Wheat
