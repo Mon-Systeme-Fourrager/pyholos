@@ -82,22 +82,21 @@ class BeefManagementPeriod(BaseModel):
 
 
 
-@dataclass
-class DairyManagementPeriod:
-    name: str
+class DairyManagementPeriod(BaseModel):
+    name: str = Field(min_length=1)
     start_date: date
-    days: int
-    group_pairing_number: int
-    number_of_animals: int
+    days: conint(gt=0)
+    group_pairing_number: conint(ge=0)
+    number_of_animals: conint(ge=0)
     production_stage: ProductionStage
-    number_of_young_animals: int
+    number_of_young_animals: conint(ge=0)
     milk_data: Milk()
     diet: Diet
     housing_type: HousingType
     manure_handling_system: ManureStateType
     weather_summary: WeatherSummary
-    start_weight: float = None
-    end_weight: float = None
+    start_weight: float = confloat(ge=0, allow_inf_nan=False)
+    end_weight: float = confloat(ge=0, allow_inf_nan=False)
     diet_additive_type: DietAdditiveType = DietAdditiveType.NONE
     bedding_material_type: BeddingMaterialType = BeddingMaterialType.straw
 

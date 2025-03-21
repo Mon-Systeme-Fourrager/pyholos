@@ -8,7 +8,7 @@ from uuid import UUID
 from pydantic import ValidationError
 
 from holos_service.components.animals.common import (ProductionStage, Diet, DietAdditiveType, HousingType,
-                                                     ManureStateType, BeddingMaterialType)
+                                                     ManureStateType, BeddingMaterialType, Milk)
 from holos_service.components.land_management.crop import CropType
 from holos_service.farm import farm_inputs
 
@@ -529,6 +529,227 @@ class TestInputBeefManagementPeriod(unittest.TestCase):
                 name='is_milk_fed_only',
                 value=value,
                 expected_message="Input should be a valid boolean, unable to interpret input")
+
+    def test_erroneous_diet(self):
+        for value in ["", 0]:
+            self.run_test(
+                name='diet',
+                value=value,
+                expected_message="Input should be a valid dictionary or instance of Diet")
+
+        try:
+            Diet(**{k: -1 for k in Diet.__signature__.parameters.keys()})
+        except ValidationError as e:
+            for error_output in e.errors():
+                self.assertEqual(
+                    "Input should be greater than or equal to 0",
+                    error_output['msg'])
+
+    def test_erroneous_housing_type(self):
+        for value in ["", 0]:
+            self.run_test(
+                name='housing_type',
+                value=value,
+                expected_message="Input should be 'NotSelected', 'ConfinedNoBarn'",
+                is_startswith=True)
+
+    def test_erroneous_manure_handling_system(self):
+        for value in ["", 0]:
+            self.run_test(
+                name='manure_handling_system',
+                value=value,
+                expected_message="Input should be 'NotSelected', 'AnaerobicDigester'",
+                is_startswith=True)
+
+    def test_erroneous_weather_summary(self):
+        for value in ["", 0]:
+            self.run_test(
+                name='weather_summary',
+                value=value,
+                expected_message="Input should be a valid dictionary or instance of WeatherSummary")
+
+    def test_erroneous_start_weight(self):
+        for value, message in [
+            ('', 'Input should be a valid number, unable to parse string as a number'),
+            (-1, 'Input should be greater than or equal to 0'),
+            (inf, 'Input should be a finite number'),
+        ]:
+            self.run_test(
+                name='start_weight',
+                value=value,
+                expected_message=message)
+
+    def test_erroneous_end_weight(self):
+        for value, message in [
+            ('', 'Input should be a valid number, unable to parse string as a number'),
+            (-1, 'Input should be greater than or equal to 0'),
+            (inf, 'Input should be a finite number'),
+        ]:
+            self.run_test(
+                name='end_weight',
+                value=value,
+                expected_message=message)
+
+    def test_erroneous_diet_additive_type(self):
+        for value in ["", 0]:
+            self.run_test(
+                name='diet_additive_type',
+                value=value,
+                expected_message="Input should be 'TwoPercentFat', 'FourPercentFat'",
+                is_startswith=True)
+
+    def test_erroneous_bedding_material_type(self):
+        for value in ["", 0]:
+            self.run_test(
+                name='bedding_material_type',
+                value=value,
+                expected_message="Input should be 'Straw', 'WoodChip'",
+                is_startswith=True)
+
+
+class TestInputDairyManagementPeriod(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.DairyManagementPeriod = farm_inputs.DairyManagementPeriod
+
+        cls.weather_summary = farm_inputs.WeatherSummary(
+            year=2025,
+            mean_annual_precipitation=uniform(0, 1000),
+            mean_annual_temperature=uniform(-5, 5),
+            mean_annual_evapotranspiration=uniform(0, 1000),
+            growing_season_precipitation=uniform(0, 1000),
+            growing_season_evapotranspiration=uniform(0, 1000),
+            monthly_precipitation=[uniform(0, 100) for _ in range(12)],
+            monthly_potential_evapotranspiration=[uniform(0, 100) for _ in range(12)],
+            monthly_temperature=[uniform(-30, 30) for _ in range(12)]
+        )
+
+    def get_kwargs(self) -> dict:
+        return dict(
+            name='summer grazing',
+            start_date=date(2024, 5, 1),
+            days=183,
+            group_pairing_number=0,
+            number_of_animals=4,
+            production_stage=ProductionStage.gestating,
+            number_of_young_animals=0,
+            milk_data=Milk(),
+            diet=Diet(
+                crude_protein_percentage=16.146,
+                forage_percentage=77.8,
+                total_digestible_nutrient_percentage=69.516,
+                ash_percentage=6.323,
+                starch_percentage=0,
+                fat_percentage=0,
+                neutral_detergent_fiber_percentage=35.289,
+                metabolizable_energy=2.4459),
+            housing_type=HousingType.pasture,
+            manure_handling_system=ManureStateType.pasture,
+            weather_summary=self.weather_summary,
+            start_weight=100,
+            end_weight=200,
+            diet_additive_type=DietAdditiveType.NONE,
+            bedding_material_type=BeddingMaterialType.straw,
+        )
+
+    def run_test(
+            self,
+            name: str,
+            value: Any,
+            expected_message: str,
+            is_startswith: bool = False
+    ):
+        kwargs = self.get_kwargs()
+        kwargs[name] = value
+
+        try:
+            self.DairyManagementPeriod(**kwargs)
+        except ValidationError as e:
+            if is_startswith:
+                self.assertTrue(e.errors()[0]['msg'].startswith(expected_message))
+            else:
+                self.assertEqual(
+                    expected_message,
+                    e.errors()[0]['msg'])
+
+    def test_works_with_correct_types_and_values(self):
+        self.DairyManagementPeriod(**self.get_kwargs())
+
+    def test_erroneous_name(self):
+        self.run_test(
+            name='name',
+            value='',
+            expected_message='String should have at least 1 character')
+
+    def test_erroneous_start_date(self):
+        for value, message in [
+            ('19901231', 'Datetimes provided to dates should have zero time - e.g. be exact dates'),
+            ('1492-01-02',
+             "Assertion failed, Input 'start_date' should be greater than 1970-01-01, actual is 1492-01-02")
+        ]:
+            self.run_test(
+                name='start_date',
+                value=value,
+                expected_message=message)
+
+    def test_erroneous_days(self):
+        for value, message in [
+            ('1', 'Input should be a valid integer, unable to parse string as an integer'),
+            (0, 'Input should be greater than 0'),
+            (-1, 'Input should be greater than 0'),
+            (inf, 'Input should be a finite number'),
+        ]:
+            self.run_test(
+                name='days',
+                value=value,
+                expected_message=message)
+
+    def test_erroneous_group_pairing_number(self):
+        for value, message in [
+            ('', 'Input should be a valid integer, unable to parse string as an integer'),
+            (-1, 'Input should be greater than or equal to 0'),
+            (inf, 'Input should be a finite number'),
+        ]:
+            self.run_test(
+                name='group_pairing_number',
+                value=value,
+                expected_message=message)
+
+    def test_erroneous_number_of_animals(self):
+        for value, message in [
+            ('', 'Input should be a valid integer, unable to parse string as an integer'),
+            (-1, 'Input should be greater than or equal to 0'),
+            (inf, 'Input should be a finite number'),
+        ]:
+            self.run_test(
+                name='number_of_animals',
+                value=value,
+                expected_message=message)
+
+    def test_erroneous_production_stage(self):
+        for value in ["gestating", 0]:
+            self.run_test(
+                name='production_stage',
+                value=value,
+                expected_message="Input should be 'Gestating', 'Lactating', 'Open', 'Weaning', 'GrowingAndFinishing', 'BreedingStock' or 'Weaned'")
+
+    def test_erroneous_number_of_young_animals(self):
+        for value, message in [
+            ('', 'Input should be a valid integer, unable to parse string as an integer'),
+            (-1, 'Input should be greater than or equal to 0'),
+            (inf, 'Input should be a finite number'),
+        ]:
+            self.run_test(
+                name='number_of_young_animals',
+                value=value,
+                expected_message=message)
+
+    def test_erroneous_milk_data(self):
+        for value in ["", 0, 1]:
+            self.run_test(
+                name='milk_data',
+                value=value,
+                expected_message="Input should be a valid dictionary or instance of Milk")
 
     def test_erroneous_diet(self):
         for value in ["", 0]:
