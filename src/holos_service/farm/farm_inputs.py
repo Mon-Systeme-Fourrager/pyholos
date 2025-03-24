@@ -68,8 +68,8 @@ class BeefManagementPeriod(BaseModel):
     housing_type: HousingType
     manure_handling_system: ManureStateType
     weather_summary: WeatherSummary
-    start_weight: float = confloat(ge=0, allow_inf_nan=False)
-    end_weight: float = confloat(ge=0, allow_inf_nan=False)
+    start_weight: confloat(ge=0, allow_inf_nan=False) = None
+    end_weight: confloat(ge=0, allow_inf_nan=False) = None
     diet_additive_type: DietAdditiveType = DietAdditiveType.NONE
     bedding_material_type: BeddingMaterialType = BeddingMaterialType.straw
 
@@ -87,8 +87,8 @@ class DairyManagementPeriod(BaseModel):
     housing_type: HousingType
     manure_handling_system: ManureStateType
     weather_summary: WeatherSummary
-    start_weight: float = confloat(ge=0, allow_inf_nan=False)
-    end_weight: float = confloat(ge=0, allow_inf_nan=False)
+    start_weight: confloat(ge=0, allow_inf_nan=False) = None
+    end_weight: confloat(ge=0, allow_inf_nan=False) = None
     diet_additive_type: DietAdditiveType = DietAdditiveType.NONE
     bedding_material_type: BeddingMaterialType = BeddingMaterialType.straw
 
@@ -105,8 +105,8 @@ class SheepManagementPeriod(BaseModel):
     housing_type: HousingType
     manure_handling_system: ManureStateType
     weather_summary: WeatherSummary
-    start_weight: float = confloat(ge=0, allow_inf_nan=False)
-    end_weight: float = confloat(ge=0, allow_inf_nan=False)
+    start_weight: confloat(ge=0, allow_inf_nan=False) = None
+    end_weight: confloat(ge=0, allow_inf_nan=False) = None
     diet_additive_type: DietAdditiveType = DietAdditiveType.NONE
     bedding_material_type: BeddingMaterialType = BeddingMaterialType.straw
 
