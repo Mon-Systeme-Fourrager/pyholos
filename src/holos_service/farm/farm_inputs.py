@@ -4,7 +4,8 @@ from typing import Union, ClassVar, Generator
 from uuid import UUID, uuid4
 
 from pandas import DataFrame
-from pydantic import BaseModel, conlist, conint, Field, confloat
+from pydantic import (BaseModel, conlist, conint, Field, confloat, PositiveFloat, NonNegativeFloat, field_validator,
+                      PositiveInt, NonNegativeInt)
 
 from holos_service.components.animals import beef, dairy, sheep
 from holos_service.components.animals.common import (ProductionStage, Diet, HousingType, ManureStateType,
@@ -415,23 +416,22 @@ class SheepFlockInput(AnimalInputBase):
         )
 
 
-@dataclass
-class FieldAnnualData:
-    name: str
-    field_area: float
+class FieldAnnualData(BaseModel):
+    name: str = Field(min_length=1)
+    field_area: PositiveFloat
     weather_data: WeatherData
     crop_type: CropType
-    crop_yield: float
-    crop_year: int
+    crop_yield: NonNegativeFloat
+    crop_year: PositiveInt
     under_sown_crops_used: bool
     tillage_type: TillageType
     harvest_method: HarvestMethod
-    nitrogen_fertilizer_rate: float
+    nitrogen_fertilizer_rate: NonNegativeFloat = Field(default=0)
     fertilizer_blend: FertilizerBlends
     irrigation_type: IrrigationType = IrrigationType.RainFed
-    amount_of_irrigation: float = 0
-    number_of_pesticide_passes: int = 0
-    amount_of_manure_applied: float = 0
+    amount_of_irrigation: NonNegativeFloat = 0
+    number_of_pesticide_passes: NonNegativeInt = 0
+    amount_of_manure_applied: NonNegativeFloat = 0
     manure_application_type: ManureApplicationTypes = ManureApplicationTypes.NotSelected
     manure_animal_source_type: ManureAnimalSourceTypes = ManureAnimalSourceTypes.NotSelected
     manure_state_type: ManureStateType = ManureStateType.not_selected
@@ -450,6 +450,12 @@ class FieldAnnualData:
     evapotranspiration: list[float] = None
     precipitation: list[float] = None
     temperature: list[float] = None
+
+    @field_validator('weather_data', mode='after')
+    @classmethod
+    def revalidate_weather_data(cls, value) -> WeatherData:
+        WeatherData(**value.model_dump())
+        return value
 
 
 class FieldsInput:

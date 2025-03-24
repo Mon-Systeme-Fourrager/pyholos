@@ -1,16 +1,22 @@
 import unittest
 from datetime import date
 from math import inf
+from pathlib import Path
 from random import uniform
 from typing import Any
 from uuid import UUID
 
+from pandas import read_csv
 from pydantic import ValidationError
 
 from holos_service.components.animals.common import (ProductionStage, Diet, DietAdditiveType, HousingType,
-                                                     ManureStateType, BeddingMaterialType, Milk)
+                                                     ManureStateType, BeddingMaterialType, Milk,
+                                                     ManureAnimalSourceTypes, ManureLocationSourceType)
+from holos_service.components.land_management.common import (TillageType, HarvestMethod, FertilizerBlends,
+                                                             IrrigationType, ManureApplicationTypes)
 from holos_service.components.land_management.crop import CropType
 from holos_service.farm import farm_inputs
+from holos_service.farm.farm_inputs import WeatherData
 
 
 def get_weather_summary_example() -> farm_inputs.WeatherSummary:
@@ -1028,6 +1034,236 @@ class TestInputSheepManagementPeriod(unittest.TestCase):
                 name='bedding_material_type',
                 value=value,
                 expected_message="Input should be 'Straw', 'WoodChip'",
+                is_startswith=True)
+
+
+class TestInputFieldAnnualData(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.FieldAnnualData = farm_inputs.FieldAnnualData
+        cls.year = 2024
+
+        df = read_csv(Path(__file__).parents[1] / 'sources/holos/daily_weather_data_example.csv',
+                      sep=',', decimal='.', comment='#',
+                      usecols=['Year', 'Mean Daily Air Temperature', 'Mean Daily Precipitation', 'Mean Daily Pet'])
+        df = df[df['Year'] == cls.year]
+        cls.weather_data = WeatherData(
+            year=cls.year,
+            precipitation=df['Mean Daily Precipitation'].to_list(),
+            potential_evapotranspiration=df['Mean Daily Pet'].to_list(),
+            temperature=df['Mean Daily Air Temperature'].to_list())
+
+    def get_kwargs(self) -> dict:
+        return dict(
+            name='field_1',
+            field_area=1,
+            weather_data=self.weather_data,
+            crop_type=CropType.Wheat,
+            crop_yield=2700,
+            crop_year=self.year,
+            under_sown_crops_used=False,
+            tillage_type=TillageType.Reduced,
+            harvest_method=HarvestMethod.CashCrop,
+            nitrogen_fertilizer_rate=100,
+            fertilizer_blend=FertilizerBlends.Custom,
+            irrigation_type=IrrigationType.Irrigated,
+            amount_of_irrigation=0,
+            number_of_pesticide_passes=0,
+            amount_of_manure_applied=0,
+            manure_application_type=ManureApplicationTypes.NotSelected,
+            manure_animal_source_type=ManureAnimalSourceTypes.NotSelected,
+            manure_state_type=ManureStateType.not_selected,
+            manure_location_source_type=ManureLocationSourceType.NotSelected
+        )
+
+    def run_test(
+            self,
+            name: str,
+            value: Any,
+            expected_message: str,
+            is_startswith: bool = False
+    ):
+        kwargs = self.get_kwargs()
+        kwargs[name] = value
+
+        try:
+            self.FieldAnnualData(**kwargs)
+        except ValidationError as e:
+            if is_startswith:
+                self.assertTrue(e.errors()[0]['msg'].startswith(expected_message))
+            else:
+                self.assertEqual(
+                    expected_message,
+                    e.errors()[0]['msg'])
+
+    def test_works_with_correct_types_and_values(self):
+        self.FieldAnnualData(**self.get_kwargs())
+
+    def test_erroneous_name(self):
+        self.run_test(
+            name='name',
+            value='',
+            expected_message='String should have at least 1 character')
+
+    def test_erroneous_field_area(self):
+        for value, message in [
+            ('', 'Input should be a valid number, unable to parse string as a number'),
+            (-1, 'Input should be greater than 0'),
+        ]:
+            self.run_test(
+                name='field_area',
+                value=value,
+                expected_message=message)
+
+    def test_erroneous_weather_data(self):
+        for k in ('precipitation', 'potential_evapotranspiration', 'temperature'):
+            weather_data = WeatherData(**self.weather_data.model_dump())
+            setattr(weather_data, k, 1)
+            self.run_test(
+                name='weather_data',
+                value=weather_data,
+                expected_message="Input should be a valid list")
+
+    def test_erroneous_crop_type(self):
+        for value in ('Canola', 0):
+            self.run_test(
+                name='crop_type',
+                value=value,
+                expected_message="Input should be 'AlfalfaMedicagoSativaL', 'AlfalfaSeed'",
+                is_startswith=True)
+
+    def test_erroneous_crop_yield(self):
+        for value, message in [
+            ('', 'Input should be a valid number, unable to parse string as a number'),
+            (-1, 'Input should be greater than or equal to 0'),
+        ]:
+            self.run_test(
+                name='crop_yield',
+                value=value,
+                expected_message=message)
+
+    def test_erroneous_crop_year(self):
+        for value, message in [
+            ('', 'Input should be a valid integer, unable to parse string as an integer'),
+            (-1, 'Input should be greater than 0'),
+        ]:
+            self.run_test(
+                name='crop_year',
+                value=value,
+                expected_message=message)
+
+    def test_erroneous_under_sown_crops_used(self):
+        for value, message in [
+            ('', 'Input should be a valid boolean, unable to interpret input'),
+            (-1, 'Input should be a valid boolean, unable to interpret input'),
+        ]:
+            self.run_test(
+                name='under_sown_crops_used',
+                value=value,
+                expected_message=message)
+
+    def test_erroneous_tillage_type(self):
+        for value in ('Canola', 0):
+            self.run_test(
+                name='tillage_type',
+                value=value,
+                expected_message="Input should be 'NotSelected', 'Reduced'",
+                is_startswith=True)
+
+    def test_erroneous_harvest_method(self):
+        for value in ('GreenManure', 0):
+            self.run_test(
+                name='harvest_method',
+                value=value,
+                expected_message="Input should be 'Silage', 'Swathing'",
+                is_startswith=True)
+
+    def test_erroneous_nitrogen_fertilizer_rate(self):
+        for value, message in [
+            ('', 'Input should be a valid number, unable to parse string as a number'),
+            (-1, 'Input should be greater than or equal to 0'),
+        ]:
+            self.run_test(
+                name='nitrogen_fertilizer_rate',
+                value=value,
+                expected_message=message)
+
+    def test_erroneous_fertilizer_blend(self):
+        for value in ('Urea', 0):
+            self.run_test(
+                name='fertilizer_blend',
+                value=value,
+                expected_message="Input should be 'Urea', 'Ammonia'",
+                is_startswith=True)
+
+    def test_erroneous_irrigation_type(self):
+        for value in ('Rain Fed', 0):
+            self.run_test(
+                name='irrigation_type',
+                value=value,
+                expected_message="Input should be 'Irrigated' or 'RainFed'",
+                is_startswith=True)
+
+    def test_erroneous_amount_of_irrigation(self):
+        for value, message in [
+            ('', 'Input should be a valid number, unable to parse string as a number'),
+            (-1, 'Input should be greater than or equal to 0'),
+        ]:
+            self.run_test(
+                name='amount_of_irrigation',
+                value=value,
+                expected_message=message)
+
+    def test_erroneous_number_of_pesticide_passes(self):
+        for value, message in [
+            ('', 'Input should be a valid integer, unable to parse string as an integer'),
+            (-1, 'Input should be greater than or equal to 0'),
+        ]:
+            self.run_test(
+                name='number_of_pesticide_passes',
+                value=value,
+                expected_message=message)
+
+    def test_erroneous_amount_of_manure_applied(self):
+        for value, message in [
+            ('', 'Input should be a valid number, unable to parse string as a number'),
+            (-1, 'Input should be greater than or equal to 0'),
+        ]:
+            self.run_test(
+                name='amount_of_irrigation',
+                value=value,
+                expected_message=message)
+
+    def test_erroneous_manure_application_type(self):
+        for value in ('Not Selected', 0):
+            self.run_test(
+                name='manure_application_type',
+                value=value,
+                expected_message="Input should be 'NotSelected', 'OptionA'",
+                is_startswith=True)
+
+    def test_erroneous_manure_animal_source_type(self):
+        for value in ('Not Selected', 0):
+            self.run_test(
+                name='manure_animal_source_type',
+                value=value,
+                expected_message="Input should be 'NotSelected', 'BeefManure'",
+                is_startswith=True)
+
+    def test_erroneous_manure_state_type(self):
+        for value in ('not selected', 0):
+            self.run_test(
+                name='manure_state_type',
+                value=value,
+                expected_message="Input should be 'NotSelected', 'AnaerobicDigester'",
+                is_startswith=True)
+
+    def test_erroneous_manure_location_source_type(self):
+        for value in ('On Farm Anaerobic Digestor', 0):
+            self.run_test(
+                name='manure_location_source_type',
+                value=value,
+                expected_message="Input should be 'NotSelected', 'Livestock'",
                 is_startswith=True)
 
 
