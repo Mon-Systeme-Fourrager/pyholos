@@ -112,9 +112,6 @@ class SheepManagementPeriod(BaseModel):
 
 
 class AnimalInputBase:
-    def __init__(self):
-        pass
-
     def __iter__(self):
         for k, v in self.__dict__.items():
             if v is not None:
