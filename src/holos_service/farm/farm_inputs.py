@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from datetime import date
 from typing import Union, ClassVar, Generator
 from uuid import UUID, uuid4
@@ -111,7 +110,7 @@ class SheepManagementPeriod(BaseModel):
     bedding_material_type: BeddingMaterialType = BeddingMaterialType.straw
 
 
-class AnimalInputBase:
+class AnimalInputBase(BaseModel):
     def __iter__(self):
         for k, v in self.__dict__.items():
             if v is not None:
@@ -162,7 +161,6 @@ class AnimalInputBase:
         return res
 
 
-@dataclass
 class BeefCattleInput(AnimalInputBase):
     Bulls: ManagementPeriods = None
     ReplacementHeifers: ManagementPeriods = None
@@ -266,7 +264,6 @@ class BeefCattleInput(AnimalInputBase):
         )
 
 
-@dataclass
 class DairyCattleInput(AnimalInputBase):
     Heifers: ManagementPeriods = None
     LactatingCow: ManagementPeriods = None
@@ -339,7 +336,6 @@ class DairyCattleInput(AnimalInputBase):
         )
 
 
-@dataclass
 class SheepFlockInput(AnimalInputBase):
     SheepFeedlot: ManagementPeriods = None
     Rams: ManagementPeriods = None
