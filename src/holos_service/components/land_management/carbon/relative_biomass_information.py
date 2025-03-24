@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field
 
+from pydantic import BaseModel, Field, NonNegativeFloat
+
 from holos_service.components.common import convert_province_name
 from holos_service.components.land_management.common import IrrigationType
 from holos_service.components.land_management.crop import CropType, convert_crop_type_name
@@ -78,41 +80,19 @@ class BiogasAndMethaneProductionParametersData:
         return self.__dict__ == other.__dict__ if isinstance(other, self.__class__) else False
 
 
-class RelativeBiomassInformationData:
-    def __init__(
-            self,
-            crop_type: CropType = CropType.NotSelected,
-            irrigation_type: IrrigationType = None,
-            irrigation_lower_range_limit: float = 0,
-            irrigation_upper_range_limit: float = 0,
-            # irrigation_amount: float,
-            moisture_content_of_product: float = 0,
-            relative_biomass_product: float = 0,
-            relative_biomass_straw: float = 0,
-            relative_biomass_root: float = 0,
-            relative_biomass_extraroot: float = 0,
-            nitrogen_content_product: float = 0,
-            nitrogen_content_straw: float = 0,
-            nitrogen_content_root: float = 0,
-            nitrogen_content_extraroot: float = 0,
-            # nitrogen_fertilizer_rate: float,
-            # phosphorus_fertilizer_rate: float,
-            lignin_content: float = 0,
-            province: CanadianProvince = None,
-#            biogas_and_methane_production_parameters_data: BiogasAndMethaneProductionParametersData = BiogasAndMethaneProductionParametersData()
-    ):
-        """Table_7_Relative_Biomass_Information_Data
+class RelativeBiomassInformationData(BaseModel):
+    """Table_7_Relative_Biomass_Information_Data
 
         Args:
             crop_type: CropType class instance
             irrigation_type: IrrigationType class instance
-            irrigation_lower_range_limit:
-            irrigation_upper_range_limit:
+            irrigation_lower_range_limit: (mm)
+            irrigation_upper_range_limit: (mm)
             moisture_content_of_product: (%) product moisture content (between 0 and 100)
-            relative_biomass_product: (-) product relative biomass
-            relative_biomass_straw: (-) product relative straw
-            relative_biomass_root: (-) product relative root
-            relative_biomass_extraroot: (-) product relative extraroot
+            relative_biomass_product: (-) relative biomass allocation coefficient for product
+            relative_biomass_straw: (-) relative biomass allocation coefficient for straw
+            relative_biomass_root: (-) relative biomass allocation coefficient for root
+            relative_biomass_extraroot: (-) relative biomass allocation coefficient for extraroot
             nitrogen_content_product: (g(N)/kg) product Nitrogen content
             nitrogen_content_straw: (g(N)/kg) straw Nitrogen content
             nitrogen_content_root: (g(N)/kg) root Nitrogen content
@@ -120,34 +100,30 @@ class RelativeBiomassInformationData:
             lignin_content: (-) fraction of lignin content in the carbon input (on dry basis, between 0 and 1)
             province: CanadianProvince class instance
 
-        Holos Source Code:
-            https://github.com/holos-aafc/Holos/blob/b183dab99d211158d1fed9da5370ce599ac7c914/H.Core/Providers/Carbon/Table_7_Relative_Biomass_Information_Data.cs#L13
-        """
+    Holos Source Code:
+        https://github.com/holos-aafc/Holos/blob/b183dab99d211158d1fed9da5370ce599ac7c914/H.Core/Providers/Carbon/Table_7_Relative_Biomass_Information_Data.cs#L13
+    """
+    crop_type: CropType = Field(default=CropType.NotSelected)
+    irrigation_type: IrrigationType | None = Field(default=None)
+    irrigation_lower_range_limit: NonNegativeFloat = Field(default=0)
+    irrigation_upper_range_limit: NonNegativeFloat = Field(default=0)
+    # irrigation_amount: NonNegativeFloat = Field(default=0)
+    moisture_content_of_product: float = Field(default=0, ge=0, lt=100)
+    relative_biomass_product: float = Field(default=0, ge=0, lt=100)
+    relative_biomass_straw: float = Field(default=0, ge=0, lt=100)
+    relative_biomass_root: float = Field(default=0, ge=0, lt=100)
+    relative_biomass_extraroot: float = Field(default=0, ge=0, lt=100)
+    nitrogen_content_product: NonNegativeFloat = Field(default=0)
+    nitrogen_content_straw: NonNegativeFloat = Field(default=0)
+    nitrogen_content_root: NonNegativeFloat = Field(default=0)
+    nitrogen_content_extraroot: NonNegativeFloat = Field(default=0)
+    # nitrogen_fertilizer_rate: float = Field(default=0)
+    # phosphorus_fertilizer_rate: float = Field(default=0)
+    lignin_content: float = Field(default=0, ge=0, le=1)
+    province: CanadianProvince | None = Field(default=None)
 
-        # region Properties
-
-        self.crop_type = crop_type
-        self.irrigation_type = irrigation_type
-        self.irrigation_lower_range_limit = irrigation_lower_range_limit
-        self.irrigation_upper_range_limit = irrigation_upper_range_limit
-        # self.irrigation_amount = irrigation_amount
-        self.moisture_content_of_product = moisture_content_of_product
-        self.relative_biomass_product = relative_biomass_product
-        self.relative_biomass_straw = relative_biomass_straw
-        self.relative_biomass_root = relative_biomass_root
-        self.relative_biomass_extraroot = relative_biomass_extraroot
-        self.nitrogen_content_product = nitrogen_content_product
-        self.nitrogen_content_straw = nitrogen_content_straw
-        self.nitrogen_content_root = nitrogen_content_root
-        self.nitrogen_content_extraroot = nitrogen_content_extraroot
-        # self.NitrogenFertilizerRate = nitrogen_fertilizer_rate
-        # self.PhosphorusFertilizerRate = phosphorus_fertilizer_rate
-        self.lignin_content = lignin_content
-        # public Dictionary<Province, Dictionary<SoilFunctionalCategory, double>> NitrogenFertilizerRateTable { get; set; } = new Dictionary<Province, Dictionary<SoilFunctionalCategory, double>>();
-        # public Dictionary<Province, Dictionary<SoilFunctionalCategory, double>> PhosphorusFertilizerRateTable { get; set; } = new Dictionary<Province, Dictionary<SoilFunctionalCategory, double>>();
-        # public Dictionary<Province, TillageType> TillageTypeTable { get; set; } = new Dictionary<Province, TillageType>();
-        self.province = province
-        # self.BiomethaneData = biogas_and_methane_production_parameters_data
+    # biogas_and_methane_production_parameters_data: BiogasAndMethaneProductionParametersData = Field(
+    #     default=BiogasAndMethaneProductionParametersData())
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__ if isinstance(other, self.__class__) else False
