@@ -126,27 +126,27 @@ class RelativeBiomassInformationData:
 
         # region Properties
 
-        self.CropType = crop_type
-        self.IrrigationType = irrigation_type
-        self.IrrigationLowerRangeLimit = irrigation_lower_range_limit
-        self.IrrigationUpperRangeLimit = irrigation_upper_range_limit
-        # self.IrrigationAmount = irrigation_amount
-        self.MoistureContentOfProduct = moisture_content_of_product
-        self.RelativeBiomassProduct = relative_biomass_product
-        self.RelativeBiomassStraw = relative_biomass_straw
-        self.RelativeBiomassRoot = relative_biomass_root
-        self.RelativeBiomassExtraroot = relative_biomass_extraroot
-        self.NitrogenContentProduct = nitrogen_content_product
-        self.NitrogenContentStraw = nitrogen_content_straw
-        self.NitrogenContentRoot = nitrogen_content_root
-        self.NitrogenContentExtraroot = nitrogen_content_extraroot
+        self.crop_type = crop_type
+        self.irrigation_type = irrigation_type
+        self.irrigation_lower_range_limit = irrigation_lower_range_limit
+        self.irrigation_upper_range_limit = irrigation_upper_range_limit
+        # self.irrigation_amount = irrigation_amount
+        self.moisture_content_of_product = moisture_content_of_product
+        self.relative_biomass_product = relative_biomass_product
+        self.relative_biomass_straw = relative_biomass_straw
+        self.relative_biomass_root = relative_biomass_root
+        self.relative_biomass_extraroot = relative_biomass_extraroot
+        self.nitrogen_content_product = nitrogen_content_product
+        self.nitrogen_content_straw = nitrogen_content_straw
+        self.nitrogen_content_root = nitrogen_content_root
+        self.nitrogen_content_extraroot = nitrogen_content_extraroot
         # self.NitrogenFertilizerRate = nitrogen_fertilizer_rate
         # self.PhosphorusFertilizerRate = phosphorus_fertilizer_rate
-        self.LigninContent = lignin_content
+        self.lignin_content = lignin_content
         # public Dictionary<Province, Dictionary<SoilFunctionalCategory, double>> NitrogenFertilizerRateTable { get; set; } = new Dictionary<Province, Dictionary<SoilFunctionalCategory, double>>();
         # public Dictionary<Province, Dictionary<SoilFunctionalCategory, double>> PhosphorusFertilizerRateTable { get; set; } = new Dictionary<Province, Dictionary<SoilFunctionalCategory, double>>();
         # public Dictionary<Province, TillageType> TillageTypeTable { get; set; } = new Dictionary<Province, TillageType>();
-        self.Province = province
+        self.province = province
         # self.BiomethaneData = biogas_and_methane_production_parameters_data
 
     def __eq__(self, other):
@@ -312,7 +312,7 @@ def get_relative_biomass_information_data(
         # Only have values for grassland (native). If type is grassland (broken) or grassland (seeded), return values for grassland (native)
         crop_type = CropType.RangelandNative
 
-    by_crop_type = [v for v in table_7 if v.CropType == crop_type]
+    by_crop_type = [v for v in table_7 if v.crop_type == crop_type]
     if len(by_crop_type) == 0:
         # Trace.TraceError($"{nameof(Table_7_Relative_Biomass_Information_Provider)}.{nameof(this.GetResidueData)}: unknown crop type: '{cropType.GetDescription()}'. Returning default values.");
         return RelativeBiomassInformationData()
@@ -322,24 +322,24 @@ def get_relative_biomass_information_data(
 
     else:
         by_crop_type_and_irrigation_amount = [v for v in by_crop_type if all(
-            [irrigation_amount >= v.IrrigationLowerRangeLimit,
-             irrigation_amount < v.IrrigationUpperRangeLimit])]
+            [irrigation_amount >= v.irrigation_lower_range_limit,
+             irrigation_amount < v.irrigation_upper_range_limit])]
         if len(by_crop_type_and_irrigation_amount) >= 1:
             return by_crop_type_and_irrigation_amount[0]
         else:
-            by_crop_type_and_irrigation_type = [v for v in by_crop_type if v.IrrigationType == irrigation_type]
+            by_crop_type_and_irrigation_type = [v for v in by_crop_type if v.irrigation_type == irrigation_type]
             if len(by_crop_type_and_irrigation_type) >= 1:
                 return by_crop_type_and_irrigation_type[0]
 
     # Potato is a special case
     by_province = [v for v in by_crop_type if all([
-        v.Province is not None,
-        v.Province == province
+        v.province is not None,
+        v.province == province
     ])]
     if len(by_province) >= 1:
         return by_province[0]
 
-    return [v for v in by_crop_type if v.Province is None][0]
+    return [v for v in by_crop_type if v.province is None][0]
 
 
 @dataclass

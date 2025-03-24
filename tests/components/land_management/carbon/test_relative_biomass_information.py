@@ -347,7 +347,7 @@ class TestGetRelativeBiomassInformationData(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.table_7 = parse_table_7()
-        cls.included_crops = [v.CropType for v in cls.table_7]
+        cls.included_crops = [v.crop_type for v in cls.table_7]
         cls.irrigation_type = choice(list(IrrigationType))
         cls.irrigation_amount = random()
         cls.province = choice(list(CanadianProvince))

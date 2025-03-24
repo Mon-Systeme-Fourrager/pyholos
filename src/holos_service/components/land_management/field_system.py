@@ -249,20 +249,20 @@ class LandManagementBase(Component):
             self,
             residue_data: RelativeBiomassInformationData
     ):
-        self.biomass_coefficient_product.value = residue_data.RelativeBiomassProduct
-        self.biomass_coefficient_straw.value = residue_data.RelativeBiomassStraw
-        self.biomass_coefficient_roots.value = residue_data.RelativeBiomassRoot
-        self.biomass_coefficient_extraroot.value = residue_data.RelativeBiomassExtraroot
+        self.biomass_coefficient_product.value = residue_data.relative_biomass_product
+        self.biomass_coefficient_straw.value = residue_data.relative_biomass_straw
+        self.biomass_coefficient_roots.value = residue_data.relative_biomass_root
+        self.biomass_coefficient_extraroot.value = residue_data.relative_biomass_extraroot
 
         if self.harvest_method.value in [
             HarvestMethod.Swathing,
             HarvestMethod.GreenManure,
             HarvestMethod.Silage
         ]:
-            self.biomass_coefficient_product.value = residue_data.RelativeBiomassProduct + residue_data.RelativeBiomassStraw
+            self.biomass_coefficient_product.value = residue_data.relative_biomass_product + residue_data.relative_biomass_straw
             self.biomass_coefficient_straw.value = 0
-            self.biomass_coefficient_roots.value = residue_data.RelativeBiomassRoot
-            self.biomass_coefficient_extraroot.value = residue_data.RelativeBiomassExtraroot
+            self.biomass_coefficient_roots.value = residue_data.relative_biomass_root
+            self.biomass_coefficient_extraroot.value = residue_data.relative_biomass_extraroot
 
     def initialize_nitrogen_content(
             self,
@@ -279,10 +279,10 @@ class LandManagementBase(Component):
         # Assign N content values used for the ICBM methodology
 
         # Table has values in grams but unit of display is kg
-        self.nitrogen_content_in_product.value = residue_data.NitrogenContentProduct / 1000
-        self.nitrogen_content_in_straw.value = residue_data.NitrogenContentStraw / 1000
-        self.nitrogen_content_in_roots.value = residue_data.NitrogenContentRoot / 1000
-        self.nitrogen_content_in_extraroot.value = residue_data.NitrogenContentExtraroot / 1000
+        self.nitrogen_content_in_product.value = residue_data.nitrogen_content_product / 1000
+        self.nitrogen_content_in_straw.value = residue_data.nitrogen_content_straw / 1000
+        self.nitrogen_content_in_roots.value = residue_data.nitrogen_content_root / 1000
+        self.nitrogen_content_in_extraroot.value = residue_data.nitrogen_content_extraroot / 1000
 
         if self.crop_type.value.is_perennial():
             self.nitrogen_content_in_straw.value = 0
@@ -392,7 +392,7 @@ class CropViewItem(LandManagementBase):
         self.amount_of_irrigation.value = amount_of_irrigation
         self.set_irrigation_type()
 
-        self.moisture_content_of_crop.value = relative_biomass_information_data.MoistureContentOfProduct / 100
+        self.moisture_content_of_crop.value = relative_biomass_information_data.moisture_content_of_product / 100
         self.set_moisture_content()
         self.set_percentage_returns()
         self.number_of_pesticide_passes.value = number_of_pesticide_passes
@@ -447,4 +447,4 @@ class CropViewItem(LandManagementBase):
             tillage_factor=self.tillage_factor.value)
 
         self.sand.value = sand_content
-        self.lignin.value = relative_biomass_information_data.LigninContent
+        self.lignin.value = relative_biomass_information_data.lignin_content
