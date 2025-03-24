@@ -97,7 +97,7 @@ def create_farm(
                 soil_texture=soil_texture,
                 path_dir_animal=path_dir_farm / dir_name)
 
-    if fields_data is not None:
+    if (fields_data is not None) and (fields_data.fields is not None):
         path_dir_fields = path_dir_farm / 'Fields'
         path_dir_fields.mkdir(parents=True, exist_ok=True)
 

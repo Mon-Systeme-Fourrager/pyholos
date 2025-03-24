@@ -28,7 +28,5 @@ def set_field_data(weather_data: WeatherData) -> FieldsInput:
         manure_location_source_type=ManureLocationSourceType.NotSelected
     )
     return FieldsInput(
-        fields=dict(
-            field_1=[field_annual_data]
-        )
+        fields=field_annual_data
     )

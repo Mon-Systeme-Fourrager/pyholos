@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import date
-from typing import Union, ClassVar
+from typing import Union, ClassVar, Generator
 from uuid import UUID, uuid4
 
 from pandas import DataFrame
@@ -451,10 +451,20 @@ class FieldAnnualData:
 class FieldsInput:
     def __init__(
             self,
-            fields: dict[str, FieldAnnualData | list[FieldAnnualData]] = None
+            fields: FieldAnnualData | list[FieldAnnualData] = None
     ):
         self.fields = fields
         self.table_7 = parse_table_7()
+
+    @property
+    def fields_data(self) -> Generator[list[FieldAnnualData]] | Generator:
+        if self.fields is None:
+            return iter(())
+        else:
+            if not isinstance(self.fields, list):
+                self.fields = [self.fields]
+            for v in self.fields:
+                yield [v]
 
     @staticmethod
     def calc_year_in_perennial_stand(
@@ -606,7 +616,7 @@ class FieldsInput:
             soil_functional_category: SoilFunctionalCategory,
     ) -> list[DataFrame]:
         res = []
-        for _, field_data in self.fields.items():
+        for field_data in self.fields_data:
             field_component = self._create_field_component(
                 field_data=field_data,
                 province=province,
