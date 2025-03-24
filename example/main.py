@@ -3,7 +3,10 @@ from pathlib import Path
 
 from pandas import read_csv, DataFrame
 
+from example.beef_inputs import set_beef_data
+from example.dairy_inputs import set_dairy_data
 from example.field_inputs import set_field_data
+from example.sheep_inputs import set_sheep_data
 from holos_service.farm.farm import create_farm
 from holos_service.farm.farm_inputs import WeatherSummary, WeatherData
 
@@ -14,6 +17,7 @@ def get_weather_data(df: DataFrame) -> WeatherData:
         precipitation=df['precipitation'],
         potential_evapotranspiration=df['potential_evapotranspiration'],
         temperature=df['air_temperature'])
+
 
 def get_weather_summary(df: DataFrame) -> WeatherSummary:
     year = df.loc[0, 'year']
@@ -43,8 +47,8 @@ if __name__ == '__main__':
         longitude=-98.04,
         weather_summary=get_weather_summary(df=weather_df),
         path_dir_farm=path_root / 'example_farm',
-        # beef_cattle_data=set_beef_data(weather_summary=weather_summary),
-        # dairy_cattle_data=set_dairy_data(weather_summary=weather_summary),
-        # sheep_flock_data=set_sheep_data(weather_summary=weather_summary),
+        beef_cattle_data=set_beef_data(weather_summary=weather_summary),
+        dairy_cattle_data=set_dairy_data(weather_summary=weather_summary),
+        sheep_flock_data=set_sheep_data(weather_summary=weather_summary),
         fields_data=set_field_data(weather_data=get_weather_data(df=weather_df))
     )
