@@ -451,13 +451,9 @@ class FieldAnnualData(BaseModel):
         return value
 
 
-class FieldsInput:
-    def __init__(
-            self,
-            fields: FieldAnnualData | list[FieldAnnualData] = None
-    ):
-        self.fields = fields
-        self.table_7 = parse_table_7()
+class FieldsInput(BaseModel):
+    fields: FieldAnnualData | list[FieldAnnualData] = None
+    table_7: ClassVar = parse_table_7()
 
     @property
     def fields_data(self) -> Generator[list[FieldAnnualData]] | Generator:
