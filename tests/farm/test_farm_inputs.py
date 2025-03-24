@@ -21,16 +21,17 @@ from holos_service.farm.farm_inputs import WeatherData
 
 def get_weather_summary_example() -> farm_inputs.WeatherSummary:
     return farm_inputs.WeatherSummary(
-            year=2025,
-            mean_annual_precipitation=uniform(0, 1000),
-            mean_annual_temperature=uniform(-5, 5),
-            mean_annual_evapotranspiration=uniform(0, 1000),
-            growing_season_precipitation=uniform(0, 1000),
-            growing_season_evapotranspiration=uniform(0, 1000),
-            monthly_precipitation=[uniform(0, 100) for _ in range(12)],
-            monthly_potential_evapotranspiration=[uniform(0, 100) for _ in range(12)],
-            monthly_temperature=[uniform(-30, 30) for _ in range(12)]
-        )
+        year=2025,
+        mean_annual_precipitation=uniform(0, 1000),
+        mean_annual_temperature=uniform(-5, 5),
+        mean_annual_evapotranspiration=uniform(0, 1000),
+        growing_season_precipitation=uniform(0, 1000),
+        growing_season_evapotranspiration=uniform(0, 1000),
+        monthly_precipitation=[uniform(0, 100) for _ in range(12)],
+        monthly_potential_evapotranspiration=[uniform(0, 100) for _ in range(12)],
+        monthly_temperature=[uniform(-30, 30) for _ in range(12)]
+    )
+
 
 class TestCalcYearInPerennialStand(unittest.TestCase):
     @staticmethod
