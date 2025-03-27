@@ -1,3 +1,4 @@
+from pathlib import Path
 import unittest
 from itertools import product
 from uuid import UUID
@@ -245,20 +246,23 @@ class TestLandManagementBase(unittest.TestCase):
 class TestCropViewItem(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.field_data = read_holos_resource_table(r'../../sources/holos/non_regression_crop_view_item/field_data.csv')
+        cls.field_data = read_holos_resource_table(
+            Path(__file__).parents[2] / r'sources/holos/non_regression_crop_view_item/field_data.csv')
         cls.weather_data = read_holos_resource_table(
-            r'../../sources/holos/non_regression_crop_view_item/daily_weather.csv',
+            Path(__file__).parents[2] / r'sources/holos/non_regression_crop_view_item/daily_weather.csv',
             usecols=['Year', 'Mean Daily Air Temperature', 'Mean Daily Precipitation', 'Mean Daily Pet'])
         cls.year = 2025
         cls.crop_type = CropType.Wheat
         cls.irrigation_type = IrrigationType.RainFed
         cls.irrigation_amount = 0
         cls.province = CanadianProvince.Quebec
+        nearest_year = (cls.weather_data['Year'][cls.weather_data['Year'] <= cls.year]).max()
+        precipitation = (cls.weather_data[cls.weather_data['Year'] == nearest_year]['Mean Daily Precipitation']).sum()
         cls.relative_biomass_data = get_relative_biomass_information_data(
             table_7=parse_table_7(),
             crop_type=cls.crop_type,
             irrigation_type=cls.irrigation_type,
-            irrigation_amount=cls.irrigation_amount + cls.weather_data.loc[cls.year, 'Mean Daily Precipitation'] * 365,
+            irrigation_amount=cls.irrigation_amount + precipitation,
             province=cls.province
         )
         cls.excepted_columns = [

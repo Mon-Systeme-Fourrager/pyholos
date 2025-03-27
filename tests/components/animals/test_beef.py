@@ -34,7 +34,7 @@ class TestBeefCowCalfNonRegression(unittest.TestCase):
     def setUpClass(cls):
         cls.non_regression_data = read_holos_resource_table(
             path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_beef_cow_calf.csv',
-        dtype={"Animals Are Milk Fed Only": str})
+            keep_default_na=False)
         cls.non_regression_data.set_index("Group Name", inplace=True)
 
         cls.animal_type = common.AnimalType.beef_bulls
@@ -53,10 +53,17 @@ class TestBeefCowCalfNonRegression(unittest.TestCase):
             res: dict
     ):
         for k, v in self.non_regression_data.loc[group_name].to_dict().items():
-            self.assertAlmostEqual(
-                v,
-                res[k],
-                places=3)
+            actual = res[k]
+
+            if all([isinstance(v, (int, float)), isinstance(actual, (int, float))]):
+                self.assertAlmostEqual(
+                    v,
+                    res[k],
+                    places=3)
+            else:
+                self.assertEqual(
+                    str(v),
+                    str(res[k]))
 
     def test_bulls(self):
         manure_state_type = common.ManureStateType.deep_bedding
@@ -207,9 +214,8 @@ class TestBeefFinisherNonRegression(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.non_regression_data = read_holos_resource_table(
-            path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_beef_finisher.csv')
-        cls.non_regression_data.loc[:, 'Animals Are Milk Fed Only'] = (
-            cls.non_regression_data['Animals Are Milk Fed Only'].apply(lambda x: str(x).upper()))
+            path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_beef_finisher.csv',
+            keep_default_na=False)
         cls.non_regression_data.set_index("Group Name", inplace=True)
 
         cls.manure_emission_kwargs = dict(
@@ -227,10 +233,18 @@ class TestBeefFinisherNonRegression(unittest.TestCase):
             res: dict
     ):
         for k, v in self.non_regression_data.loc[group_name].to_dict().items():
-            self.assertAlmostEqual(
-                v,
-                res[k],
-                places=3)
+            actual = res[k]
+
+            if all([isinstance(v, (int, float)), isinstance(actual, (int, float))]):
+                self.assertAlmostEqual(
+                    v,
+                    res[k],
+                    places=3)
+            else:
+                self.assertEqual(
+                    str(v),
+                    str(res[k]))
+
 
     def test_heifers(self):
         manure_state_type = common.ManureStateType.deep_bedding
@@ -309,9 +323,9 @@ class TestBeefBackgrounderNonRegression(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.non_regression_data = read_holos_resource_table(
-            path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_beef_stockers_and_backgrounders.csv')
-        cls.non_regression_data.loc[:, 'Animals Are Milk Fed Only'] = (
-            cls.non_regression_data['Animals Are Milk Fed Only'].apply(lambda x: str(x).upper()))
+            path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_beef_stockers_and_backgrounders.csv',
+            keep_default_na=False)
+
         cls.non_regression_data.set_index("Group Name", inplace=True)
 
         cls.manure_emission_kwargs = dict(
@@ -329,10 +343,17 @@ class TestBeefBackgrounderNonRegression(unittest.TestCase):
             res: dict
     ):
         for k, v in self.non_regression_data.loc[group_name].to_dict().items():
-            self.assertAlmostEqual(
-                v,
-                res[k],
-                places=3)
+            actual = res[k]
+
+            if all([isinstance(v, (int, float)), isinstance(actual, (int, float))]):
+                self.assertAlmostEqual(
+                    v,
+                    res[k],
+                    places=3)
+            else:
+                self.assertEqual(
+                    str(v),
+                    str(res[k]))
 
     def test_heifers(self):
         manure_state_type = common.ManureStateType.deep_bedding

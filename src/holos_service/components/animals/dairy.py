@@ -230,6 +230,8 @@ class Dairy(DairyBase):
 
 
 class DairyHeifers(Dairy):
+    animal_group = GroupNameType.dairy_heifers.value
+
     def __init__(
             self,
             management_period_name: str,
@@ -249,16 +251,16 @@ class DairyHeifers(Dairy):
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
     ):
-        _animal_group = GroupNameType.dairy_heifers.value
-
         super().__init__(
-            group_name=_animal_group.name,
-            animal_type=_animal_group.type,
+            group_name=self.animal_group.name,
+            animal_type=self.animal_group.type,
             **get_local_args(locals())
         )
 
 
 class DairyLactatingCow(Dairy):
+    animal_group = GroupNameType.dairy_lactating_cow.value
+
     def __init__(
             self,
             management_period_name: str,
@@ -278,16 +280,16 @@ class DairyLactatingCow(Dairy):
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
     ):
-        _animal_group = GroupNameType.dairy_lactating_cow.value
-
         super().__init__(
-            group_name=_animal_group.name,
-            animal_type=_animal_group.type,
+            group_name=self.animal_group.name,
+            animal_type=self.animal_group.type,
             **get_local_args(locals())
         )
 
 
 class DairyCalves(Dairy):
+    animal_group = GroupNameType.dairy_calves.value
+
     def __init__(
             self,
             management_period_name: str,
@@ -307,16 +309,16 @@ class DairyCalves(Dairy):
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
     ):
-        _animal_group = GroupNameType.dairy_calves.value
-
         super().__init__(
-            group_name=_animal_group.name,
-            animal_type=_animal_group.type,
+            group_name=self.animal_group.name,
+            animal_type=self.animal_group.type,
             **get_local_args(locals())
         )
 
 
 class DairyDryCow(Dairy):
+    animal_group = GroupNameType.dairy_dry_cow.value
+
     def __init__(
             self,
             management_period_name: str,
@@ -336,10 +338,8 @@ class DairyDryCow(Dairy):
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
     ):
-        _animal_group = GroupNameType.dairy_dry_cow.value
-
         super().__init__(
-            group_name=_animal_group.name,
-            animal_type=_animal_group.type,
+            group_name=self.animal_group.name,
+            animal_type=self.animal_group.type,
             **get_local_args(locals())
         )

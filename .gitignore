@@ -163,3 +163,10 @@ cython_debug/
 
 misc/
 doc/_build
+
+example/extended_usage/example_farm/*
+example/minimal_usage/*
+!example/minimal_usage/farm_data
+example/minimal_usage/farm_data/*
+!example/minimal_usage/farm_data/farm.json
+!example/minimal_usage/main.py

@@ -1,6 +1,7 @@
 import unittest
 from itertools import product
 from json import load
+from pathlib import Path
 from random import random, randint
 
 from holos_service.components.land_management.carbon import climate
@@ -595,7 +596,7 @@ class TestCalculateClimateFactor(unittest.TestCase):
 class TestNonRegressionCalculateDailyClimateParameter(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        with open(r'../../../sources/holos/non_regression_climate_calculator.json', mode='r') as f:
+        with (Path(__file__).parents[3] / r'sources/holos/non_regression_climate_calculator.json').open(mode='r') as f:
             cls.non_regression_data = load(f)['calculate_daily_climate_parameter']
 
     def test_values(self):
@@ -610,7 +611,7 @@ class TestNonRegressionCalculateDailyClimateParameter(unittest.TestCase):
 class TestNonRegressionCalculateDailyClimateParameters(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        with open(r'../../../sources/holos/non_regression_climate_calculator.json', mode='r') as f:
+        with (Path(__file__).parents[3] / r'sources/holos/non_regression_climate_calculator.json').open(mode='r') as f:
             cls.non_regression_data = load(f)['calculate_daily_climate_parameters']
 
     def test_values(self):
@@ -646,7 +647,7 @@ class TestNonRegressionCalculateClimateParameter(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.weather_data = read_holos_resource_table(
-            r'../../../sources/holos/daily_weather_data_example.csv',
+            Path(__file__).parents[3] / r'sources/holos/daily_weather_data_example.csv',
             usecols=['Year', 'Mean Daily Air Temperature', 'Mean Daily Precipitation', 'Mean Daily Pet'])
 
     def test_values_of_monoculture_field_of_annual_crop(self):

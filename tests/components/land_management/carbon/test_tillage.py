@@ -33,7 +33,7 @@ class TestCalculateCropTillageFactor(unittest.TestCase):
         ]:
             self.assertEqual(
                 expected_result,
-                tillage_factor.calculate_crop_tillage_factor(
+                tillage.calculate_crop_tillage_factor(
                     soil_functional_category=soil_functional_category,
                     tillage_type=tillage_type))
             self.considered_soil_functional_categories.append(soil_functional_category)
@@ -47,7 +47,7 @@ class TestCalculateCropTillageFactor(unittest.TestCase):
             ]:
                 self.assertEqual(
                     1,
-                    tillage_factor.calculate_crop_tillage_factor(
+                    tillage.calculate_crop_tillage_factor(
                         soil_functional_category=soil_functional_category,
                         tillage_type=choice(list(TillageType))
                     )
@@ -64,7 +64,7 @@ class TestCalculateTillageFactorForPerennials(unittest.TestCase):
             ]:
                 self.assertEqual(
                     expected_value,
-                    tillage_factor.calculate_tillage_factor_for_perennials(
+                    tillage.calculate_tillage_factor_for_perennials(
                         soil_functional_category=soil_functional_category,
                         province=province))
 
@@ -73,7 +73,7 @@ class TestCalculateTillageFactorForPerennials(unittest.TestCase):
             if province not in _PRAIRIE_PROVINCES:
                 self.assertEqual(
                     0.9,
-                    tillage_factor.calculate_tillage_factor_for_perennials(
+                    tillage.calculate_tillage_factor_for_perennials(
                         soil_functional_category=choice(list(SoilFunctionalCategory)),
                         province=province))
 
@@ -84,7 +84,7 @@ class TestCalculateTillageFactor(unittest.TestCase):
             if crop.is_root_crop():
                 self.assertEqual(
                     1.13,
-                    tillage_factor.calculate_tillage_factor(
+                    tillage.calculate_tillage_factor(
                         province=choice(list(CanadianProvince)),
                         soil_functional_category=choice(list(SoilFunctionalCategory)),
                         tillage_type=choice(list(TillageType)),
@@ -99,7 +99,7 @@ class TestCalculateTillageFactor(unittest.TestCase):
             ]):
                 self.assertEqual(
                     1,
-                    tillage_factor.calculate_tillage_factor(
+                    tillage.calculate_tillage_factor(
                         province=province,
                         soil_functional_category=choice(list(SoilFunctionalCategory)),
                         tillage_type=choice(list(TillageType)),
@@ -113,10 +113,10 @@ class TestCalculateTillageFactor(unittest.TestCase):
                 not crop.is_root_crop(),
             ]):
                 self.assertEqual(
-                    tillage_factor.calculate_crop_tillage_factor(
+                    tillage.calculate_crop_tillage_factor(
                         soil_functional_category=soil_functional_category.get_simplified_soil_category(),
                         tillage_type=tillage_type),
-                    tillage_factor.calculate_tillage_factor(
+                    tillage.calculate_tillage_factor(
                         province=province,
                         soil_functional_category=soil_functional_category,
                         tillage_type=tillage_type,
@@ -126,10 +126,10 @@ class TestCalculateTillageFactor(unittest.TestCase):
         for crop, province, soil_functional_category in product(CropType, CanadianProvince, SoilFunctionalCategory):
             if crop.is_perennial():
                 self.assertEqual(
-                    tillage_factor.calculate_tillage_factor_for_perennials(
+                    tillage.calculate_tillage_factor_for_perennials(
                         soil_functional_category=soil_functional_category.get_simplified_soil_category(),
                         province=province),
-                    tillage_factor.calculate_tillage_factor(
+                    tillage.calculate_tillage_factor(
                         province=province,
                         soil_functional_category=soil_functional_category,
                         tillage_type=choice(list(TillageType)),

@@ -158,14 +158,14 @@ class TestParseRelativeBiomassInformationData(unittest.TestCase):
             nitrogen_content_extraroot=0,
             lignin_content=0,
             province=None,
-            biogas_and_methane_production_parameters_data=BiogasAndMethaneProductionParametersData(
-                crop_type=crop_type,
-                bio_methane_potential=0,
-                methane_fraction=0,
-                volatile_solids=0,
-                total_solids=0,
-                total_nitrogen=0
-            ))
+            # biogas_and_methane_production_parameters_data=BiogasAndMethaneProductionParametersData(
+            #     crop_type=crop_type,
+            #     bio_methane_potential=0,
+            #     methane_fraction=0,
+            #     volatile_solids=0,
+            #     total_solids=0,
+            #     total_nitrogen=0)
+        )
         self.assertDictEqual(actual.__dict__, expected.__dict__)
 
     def test_barley_high_irrigation_rate(self):
@@ -187,14 +187,14 @@ class TestParseRelativeBiomassInformationData(unittest.TestCase):
             nitrogen_content_extraroot=9.5,
             lignin_content=0.046,
             province=None,
-            biogas_and_methane_production_parameters_data=BiogasAndMethaneProductionParametersData(
-                crop_type=crop_type,
-                bio_methane_potential=267,
-                methane_fraction=0.44,
-                volatile_solids=90,
-                total_solids=880,
-                total_nitrogen=6.1
-            ))
+            # biogas_and_methane_production_parameters_data=BiogasAndMethaneProductionParametersData(
+            #     crop_type=crop_type,
+            #     bio_methane_potential=267,
+            #     methane_fraction=0.44,
+            #     volatile_solids=90,
+            #     total_solids=880,
+            #     total_nitrogen=6.1)
+        )
         self.assertDictEqual(actual.__dict__, expected.__dict__)
 
     def test_canola_medium_irrigation_rate(self):
@@ -216,14 +216,14 @@ class TestParseRelativeBiomassInformationData(unittest.TestCase):
             nitrogen_content_extraroot=13.4,
             lignin_content=0.073,
             province=None,
-            biogas_and_methane_production_parameters_data=BiogasAndMethaneProductionParametersData(
-                crop_type=crop_type,
-                bio_methane_potential=0,
-                methane_fraction=0,
-                volatile_solids=0,
-                total_solids=0,
-                total_nitrogen=0
-            ))
+            # biogas_and_methane_production_parameters_data=BiogasAndMethaneProductionParametersData(
+            #     crop_type=crop_type,
+            #     bio_methane_potential=0,
+            #     methane_fraction=0,
+            #     volatile_solids=0,
+            #     total_solids=0,
+            #     total_nitrogen=0)
+        )
         self.assertDictEqual(actual.__dict__, expected.__dict__)
 
     def test_berries_and_grapes_canada(self):
@@ -245,14 +245,14 @@ class TestParseRelativeBiomassInformationData(unittest.TestCase):
             nitrogen_content_extraroot=10,
             lignin_content=0,
             province=None,
-            biogas_and_methane_production_parameters_data=BiogasAndMethaneProductionParametersData(
-                crop_type=crop_type,
-                bio_methane_potential=0,
-                methane_fraction=0,
-                volatile_solids=0,
-                total_solids=0,
-                total_nitrogen=0
-            ))
+            # biogas_and_methane_production_parameters_data=BiogasAndMethaneProductionParametersData(
+            #     crop_type=crop_type,
+            #     bio_methane_potential=0,
+            #     methane_fraction=0,
+            #     volatile_solids=0,
+            #     total_solids=0,
+            #     total_nitrogen=0)
+        )
         self.assertDictEqual(actual.__dict__, expected.__dict__)
 
     def test_oat_avena_sativa(self):
@@ -274,14 +274,14 @@ class TestParseRelativeBiomassInformationData(unittest.TestCase):
             nitrogen_content_extraroot=15.7,
             lignin_content=0.047,
             province=None,
-            biogas_and_methane_production_parameters_data=BiogasAndMethaneProductionParametersData(
-                crop_type=crop_type,
-                bio_methane_potential=0,
-                methane_fraction=0,
-                volatile_solids=0,
-                total_solids=0,
-                total_nitrogen=0
-            ))
+            # biogas_and_methane_production_parameters_data=BiogasAndMethaneProductionParametersData(
+            #     crop_type=crop_type,
+            #     bio_methane_potential=0,
+            #     methane_fraction=0,
+            #     volatile_solids=0,
+            #     total_solids=0,
+            #     total_nitrogen=0)
+        )
         self.assertDictEqual(actual.__dict__, expected.__dict__)
 
     def test_sesame_sesamum_indicum(self):
@@ -303,14 +303,14 @@ class TestParseRelativeBiomassInformationData(unittest.TestCase):
             nitrogen_content_extraroot=0,
             lignin_content=0.053,
             province=None,
-            biogas_and_methane_production_parameters_data=BiogasAndMethaneProductionParametersData(
-                crop_type=crop_type,
-                bio_methane_potential=0,
-                methane_fraction=0,
-                volatile_solids=0,
-                total_solids=0,
-                total_nitrogen=0
-            ))
+            # biogas_and_methane_production_parameters_data=BiogasAndMethaneProductionParametersData(
+            #     crop_type=crop_type,
+            #     bio_methane_potential=0,
+            #     methane_fraction=0,
+            #     volatile_solids=0,
+            #     total_solids=0,
+            #     total_nitrogen=0)
+        )
         self.assertDictEqual(actual.__dict__, expected.__dict__)
 
     def test_shepherds_purse(self):
@@ -332,14 +332,14 @@ class TestParseRelativeBiomassInformationData(unittest.TestCase):
             nitrogen_content_extraroot=9.4,
             lignin_content=0.075,
             province=None,
-            biogas_and_methane_production_parameters_data=BiogasAndMethaneProductionParametersData(
-                crop_type=crop_type,
-                bio_methane_potential=0,
-                methane_fraction=0,
-                volatile_solids=0,
-                total_solids=0,
-                total_nitrogen=0
-            ))
+            # biogas_and_methane_production_parameters_data=BiogasAndMethaneProductionParametersData(
+            #     crop_type=crop_type,
+            #     bio_methane_potential=0,
+            #     methane_fraction=0,
+            #     volatile_solids=0,
+            #     total_solids=0,
+            #     total_nitrogen=0)
+        )
         self.assertDictEqual(actual.__dict__, expected.__dict__)
 
 
@@ -347,7 +347,7 @@ class TestGetRelativeBiomassInformationData(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.table_7 = parse_table_7()
-        cls.included_crops = [v.CropType for v in cls.table_7]
+        cls.included_crops = [v.crop_type for v in cls.table_7]
         cls.irrigation_type = choice(list(IrrigationType))
         cls.irrigation_amount = random()
         cls.province = choice(list(CanadianProvince))
@@ -535,13 +535,13 @@ class TestParseNitrogenLigninContentInCropsData(unittest.TestCase):
                 raw_input=self.lines[12]))
 
     def test_values_for_fall_rye(self):
-        for i in [
-            11,  # Rye,
-            40,  # Fall Rye
+        for i, crop_type in [
+            (11, CropType.Rye),
+            (40, CropType.FallRye)
         ]:
             self.assertEqual(
                 NitrogenLigninContentInCropsData(
-                    CropType=CropType.Rye,
+                    CropType=crop_type,
                     InterceptValue=0.344,
                     SlopeValue=0.015,
                     RSTRatio=0.229,
@@ -549,7 +549,7 @@ class TestParseNitrogenLigninContentInCropsData(unittest.TestCase):
                     LigninContentResidues=0.053,
                     MoistureContent=12,
                     BiomethaneData=BiogasAndMethaneProductionParametersData(
-                        crop_type=CropType.Rye,
+                        crop_type=crop_type,
                         bio_methane_potential=241,
                         methane_fraction=0.44,
                         volatile_solids=94,

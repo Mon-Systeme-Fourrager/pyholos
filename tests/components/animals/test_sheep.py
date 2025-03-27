@@ -94,7 +94,8 @@ class TestSheepFeedlotNonRegression(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.non_regression_data = read_holos_resource_table(
-            path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_sheep_feedlot.csv').loc[0].to_dict()
+            path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_sheep_feedlot.csv',
+            keep_default_na=False).loc[0].to_dict()
 
         cls.manure_state_type = common.ManureStateType.pasture
         cls.manure_emission_factors = common.get_manure_emission_factors(
@@ -146,7 +147,8 @@ class TestRamsNonRegression(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.non_regression_data = read_holos_resource_table(
-            path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_sheep_rams.csv').loc[0].to_dict()
+            path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_sheep_rams.csv',
+            keep_default_na=False).loc[0].to_dict()
 
         cls.manure_state_type = common.ManureStateType.pasture
         cls.manure_emission_factors = common.get_manure_emission_factors(
@@ -198,7 +200,8 @@ class TestEwesNonRegression(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.non_regression_data = read_holos_resource_table(
-            path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_sheep_lambs_and_ewes.csv')
+            path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_sheep_lambs_and_ewes.csv',
+            keep_default_na=False)
 
         cls.manure_state_type = common.ManureStateType.pasture
         cls.manure_emission_kwargs = dict(

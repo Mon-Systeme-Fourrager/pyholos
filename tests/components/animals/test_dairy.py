@@ -12,7 +12,8 @@ class MyTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.non_regression_data = read_holos_resource_table(
-            path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_dairy.csv')
+            path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_dairy.csv',
+            keep_default_na=False)
         cls.non_regression_data.set_index("Group Name", inplace=True)
 
         cls.province = CanadianProvince.Manitoba
