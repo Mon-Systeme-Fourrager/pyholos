@@ -3,10 +3,10 @@ from pathlib import Path
 
 from pandas import read_csv, DataFrame
 
-from example.beef_inputs import set_beef_data
-from example.dairy_inputs import set_dairy_data
-from example.field_inputs import set_field_data
-from example.sheep_inputs import set_sheep_data
+from example.input_creation.beef_inputs import set_beef_data
+from example.input_creation.dairy_inputs import set_dairy_data
+from example.input_creation.field_inputs import set_field_data
+from example.input_creation.sheep_inputs import set_sheep_data
 from holos_service.farm.farm import create_farm
 from holos_service.farm.farm_inputs import WeatherSummary, WeatherData
 
