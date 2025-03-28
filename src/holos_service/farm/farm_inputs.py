@@ -2,7 +2,6 @@ from datetime import date
 from typing import Union, ClassVar, Generator
 from uuid import UUID, uuid4
 
-from pandas import DataFrame
 from pydantic import (BaseModel, conlist, conint, Field, confloat, PositiveFloat, NonNegativeFloat, field_validator,
                       PositiveInt, NonNegativeInt)
 
@@ -22,6 +21,13 @@ from holos_service.django_stuff import CanadianProvince
 from holos_service.soil import SoilTexture, SoilFunctionalCategory
 from holos_service.utils import concat_lists
 
+AnimalComponent = Union[
+    beef.Bulls, beef.ReplacementHeifers, beef.Cows, beef.Calves,
+    beef.FinishingHeifers, beef.FinishingSteers,
+    beef.BackgrounderHeifer, beef.BackgrounderSteer,
+    dairy.DairyHeifers, dairy.DairyLactatingCow, dairy.DairyCalves, dairy.DairyDryCow,
+    sheep.SheepFeedlot, sheep.Rams, sheep.Ewes, sheep.Lambs
+]
 type ManagementPeriods = list[BeefManagementPeriod | DairyManagementPeriod | SheepManagementPeriod]
 
 TypeWaterData = confloat(strict=True, ge=0, allow_inf_nan=False)
@@ -142,7 +148,7 @@ class AnimalInputBase(BaseModel):
             self,
             province: CanadianProvince,
             soil_texture: SoilTexture,
-    ) -> list[DataFrame]:
+    ) -> list[list[AnimalComponent]]:
         res = []
         for non_empty_entry in self.filter_inputs():
             animal_components = []
@@ -154,10 +160,10 @@ class AnimalInputBase(BaseModel):
                         province=province,
                         soil_texture=soil_texture,
                         component_class=component_type,
-                        management_period=management_period).to_dict()
-                     for management_period in management_periods])
+                        management_period=management_period)
+                        for management_period in management_periods])
 
-            res.append(DataFrame.from_records(concat_lists(*animal_components)))
+            res.append(concat_lists(*animal_components))
         return res
 
 
@@ -180,17 +186,6 @@ class BeefCattleInput(AnimalInputBase):
         beef.FinishingSteers,
         beef.BackgrounderHeifer,
         beef.BackgrounderSteer]
-
-    # def __post_init__(self):
-    #     self.verify_is_one_animal_component_type()
-    #
-    # def get_animal_components(self) -> list[str]:
-    #     return list(set([self.map_component(component_name=v).component_type.value for v, _ in self]))
-    #
-    # def verify_is_one_animal_component_type(self):
-    #     animal_components = self.get_animal_components()
-    #     assert len(animal_components) == 1, (
-    #         f"All animal types must belong to the same component type (current components are {animal_components}).")
 
     def filter_inputs(self) -> list[list[str]]:
         return self._filter_inputs(animal_groups=[
@@ -572,7 +567,7 @@ class FieldsInput(BaseModel):
             organic_carbon_percentage: float,
             soil_top_layer_thickness: float,
             soil_functional_category: SoilFunctionalCategory,
-    ) -> list[dict]:
+    ) -> list[CropViewItem]:
 
         field_system_component_guid = uuid4()
         crops = [v.crop_type for v in field_data]
@@ -601,7 +596,7 @@ class FieldsInput(BaseModel):
                 year_in_perennial_stand=year_in_perennial_stand,
             )
 
-            res.append(one_year_component.to_dict())
+            res.append(one_year_component)
 
         return res
 
@@ -613,7 +608,7 @@ class FieldsInput(BaseModel):
             organic_carbon_percentage: float,
             soil_top_layer_thickness: float,
             soil_functional_category: SoilFunctionalCategory,
-    ) -> list[DataFrame]:
+    ) -> list[list[CropViewItem]]:
         res = []
         for field_data in self.fields_data:
             field_component = self._create_field_component(
@@ -625,6 +620,6 @@ class FieldsInput(BaseModel):
                 soil_top_layer_thickness=soil_top_layer_thickness,
                 soil_functional_category=soil_functional_category
             )
-            res.append(DataFrame.from_records(field_component))
+            res.append(field_component)
 
         return res

@@ -42,13 +42,14 @@ if __name__ == '__main__':
     path_root = Path(__file__).parent
     weather_df = read_csv('weather_data.csv', sep=',', decimal='.', comment='#')
     weather_summary = get_weather_summary(weather_df)
-    create_farm(
+    farm = create_farm(
         latitude=49.98,
         longitude=-98.04,
         weather_summary=get_weather_summary(df=weather_df),
-        path_dir_farm=path_root / 'farm_data/example_farm',
         beef_cattle_data=set_beef_data(weather_summary=weather_summary),
         dairy_cattle_data=set_dairy_data(weather_summary=weather_summary),
         sheep_flock_data=set_sheep_data(weather_summary=weather_summary),
         fields_data=set_field_data(weather_data=get_weather_data(df=weather_df))
     )
+
+    farm.write_files(path_dir_farm=path_root / 'farm_data/example_farm')
