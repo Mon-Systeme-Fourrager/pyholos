@@ -164,7 +164,7 @@ cython_debug/
 misc/
 doc/_build
 
-example/extended_usage/example_farm/*
+example/extended_usage/farm_data/*
 example/minimal_usage/*
 !example/minimal_usage/farm_data
 example/minimal_usage/farm_data/*
