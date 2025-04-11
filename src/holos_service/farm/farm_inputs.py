@@ -87,7 +87,7 @@ class DairyManagementPeriod(BaseModel):
     number_of_animals: conint(ge=0)
     production_stage: ProductionStage
     number_of_young_animals: conint(ge=0)
-    milk_data: Milk()
+    milk_data: Milk
     diet: Diet
     housing_type: HousingType
     manure_handling_system: ManureStateType
