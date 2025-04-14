@@ -1,8 +1,8 @@
 from enum import Enum, unique, StrEnum, auto
 from typing import Any
 
-from holos_service.django_stuff import CanadianProvince
-from holos_service.utils import AutoNameEnum
+from pyholos.django_stuff import CanadianProvince
+from pyholos.utils import AutoNameEnum
 
 
 class EnumGeneric(Enum):

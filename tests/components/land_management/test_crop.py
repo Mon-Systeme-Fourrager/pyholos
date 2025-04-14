@@ -1,15 +1,15 @@
 import random
 import unittest
 
-from holos_service.components.land_management.crop import (CropType, get_valid_crop_types,
-                                                           get_valid_perennial_types,
-                                                           get_alberta_economic_crop_types,
-                                                           get_saskatchewan_economic_crop_types,
-                                                           get_manitoba_economic_crop_types,
-                                                           get_ontario_economic_crop_types, get_grassland_types,
-                                                           get_economic_crop_types,
-                                                           convert_crop_type_name, get_nitrogen_fixation)
-from holos_service.utils import concat_lists
+from pyholos.components.land_management.crop import (CropType, get_valid_crop_types,
+                                                     get_valid_perennial_types,
+                                                     get_alberta_economic_crop_types,
+                                                     get_saskatchewan_economic_crop_types,
+                                                     get_manitoba_economic_crop_types,
+                                                     get_ontario_economic_crop_types, get_grassland_types,
+                                                     get_economic_crop_types,
+                                                     convert_crop_type_name, get_nitrogen_fixation)
+from pyholos.utils import concat_lists
 from tests.helpers.utils import CropTypePerCategory
 
 

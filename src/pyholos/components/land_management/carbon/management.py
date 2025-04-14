@@ -1,4 +1,4 @@
-from holos_service.core_constants import CoreConstants
+from pyholos.core_constants import CoreConstants
 
 
 def calculate_management_factor(

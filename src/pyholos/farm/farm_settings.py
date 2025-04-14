@@ -1,11 +1,11 @@
 from pathlib import Path
 from typing import Any
 
-from holos_service.common import HolosVar
-from holos_service.core_constants import CoreConstants
-from holos_service.defaults import Defaults
-from holos_service.farm.enums import YieldAssignmentMethod, CarbonModellingStrategies, ChosenClimateAcquisition
-from holos_service.soil import set_soil_properties
+from pyholos.common import HolosVar
+from pyholos.core_constants import CoreConstants
+from pyholos.defaults import Defaults
+from pyholos.farm.enums import YieldAssignmentMethod, CarbonModellingStrategies, ChosenClimateAcquisition
+from pyholos.soil import set_soil_properties
 
 
 class FarmSettingsVar(HolosVar):

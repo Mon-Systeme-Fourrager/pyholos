@@ -2,11 +2,11 @@ import unittest
 from itertools import product
 from random import choice
 
-from holos_service.components.land_management.carbon import tillage
-from holos_service.components.land_management.common import TillageType
-from holos_service.components.land_management.crop import CropType
-from holos_service.django_stuff import CanadianProvince
-from holos_service.soil import SoilFunctionalCategory
+from pyholos.components.land_management.carbon import tillage
+from pyholos.components.land_management.common import TillageType
+from pyholos.components.land_management.crop import CropType
+from pyholos.django_stuff import CanadianProvince
+from pyholos.soil import SoilFunctionalCategory
 
 _PRAIRIE_PROVINCES = [
     CanadianProvince.Alberta,

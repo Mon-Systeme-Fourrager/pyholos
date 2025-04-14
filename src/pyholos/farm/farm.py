@@ -3,11 +3,11 @@ from pathlib import Path
 
 from pandas import DataFrame
 
-from holos_service.components.common import convert_province_name
-from holos_service.farm.farm_inputs import (BeefCattleInput, DairyCattleInput, SheepFlockInput, WeatherSummary,
-                                            FieldsInput)
-from holos_service.farm.farm_settings import ParamsFarmSettings
-from holos_service.soil import (convert_soil_texture_name, convert_soil_functional_category_name)
+from pyholos.components.common import convert_province_name
+from pyholos.farm.farm_inputs import (BeefCattleInput, DairyCattleInput, SheepFlockInput, WeatherSummary,
+                                      FieldsInput)
+from pyholos.farm.farm_settings import ParamsFarmSettings
+from pyholos.soil import (convert_soil_texture_name, convert_soil_functional_category_name)
 
 
 class Farm:

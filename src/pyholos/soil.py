@@ -1,10 +1,10 @@
 from enum import StrEnum, unique, auto
 
-from holos_service import django_stuff
-from holos_service.common import Region, get_region
-from holos_service.config import PathsSlcData
-from holos_service.django_stuff import CanadianProvince
-from holos_service.utils import AutoNameEnum, keep_alphabetical_characters
+from pyholos import django_stuff
+from pyholos.common import Region, get_region
+from pyholos.config import PathsSlcData
+from pyholos.django_stuff import CanadianProvince
+from pyholos.utils import AutoNameEnum, keep_alphabetical_characters
 
 
 @unique

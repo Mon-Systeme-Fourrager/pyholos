@@ -1,8 +1,8 @@
-from holos_service.components.animals.common import ManureAnimalSourceTypes, ManureStateType, ManureLocationSourceType
-from holos_service.components.land_management.common import (
+from pyholos.components.animals.common import ManureAnimalSourceTypes, ManureStateType, ManureLocationSourceType
+from pyholos.components.land_management.common import (
     TillageType, IrrigationType, HarvestMethod, FertilizerBlends, ManureApplicationTypes)
-from holos_service.components.land_management.crop import CropType
-from holos_service.farm.farm_inputs import FieldsInput, FieldAnnualData, WeatherData
+from pyholos.components.land_management.crop import CropType
+from pyholos.farm.farm_inputs import FieldsInput, FieldAnnualData, WeatherData
 
 
 def set_field_data(weather_data: WeatherData) -> FieldsInput:

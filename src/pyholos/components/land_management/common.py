@@ -3,13 +3,13 @@ from pathlib import Path
 
 from pandas import DataFrame, MultiIndex
 
-from holos_service.common import get_region, Region
-from holos_service.components.common import convert_province_name
-from holos_service.components.land_management.crop import convert_crop_type_name, CropType
-from holos_service.config import PathsHolosResources
-from holos_service.django_stuff import CanadianProvince
-from holos_service.soil import convert_soil_functional_category_name, SoilFunctionalCategory
-from holos_service.utils import AutoNameEnum, keep_alphabetical_characters, read_holos_resource_table
+from pyholos.common import get_region, Region
+from pyholos.components.common import convert_province_name
+from pyholos.components.land_management.crop import convert_crop_type_name, CropType
+from pyholos.config import PathsHolosResources
+from pyholos.django_stuff import CanadianProvince
+from pyholos.soil import convert_soil_functional_category_name, SoilFunctionalCategory
+from pyholos.utils import AutoNameEnum, keep_alphabetical_characters, read_holos_resource_table
 
 
 class IrrigationType(AutoNameEnum):

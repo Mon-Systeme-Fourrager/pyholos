@@ -4,9 +4,9 @@ from json import load
 from pathlib import Path
 from random import random, randint
 
-from holos_service.components.land_management.carbon import climate
-from holos_service.defaults import Defaults
-from holos_service.utils import read_holos_resource_table
+from pyholos.components.land_management.carbon import climate
+from pyholos.defaults import Defaults
+from pyholos.utils import read_holos_resource_table
 from tests.helpers.utils import assert_is_ascending, assert_is_descending
 
 

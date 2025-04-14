@@ -1,7 +1,7 @@
 import unittest
 from pathlib import Path
 
-from holos_service.farm import farm_settings
+from pyholos.farm import farm_settings
 
 
 class TestFarmSettingsVar(unittest.TestCase):

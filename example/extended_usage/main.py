@@ -7,8 +7,8 @@ from example.extended_usage.beef_inputs import set_beef_data
 from example.extended_usage.dairy_inputs import set_dairy_data
 from example.extended_usage.field_inputs import set_field_data
 from example.extended_usage.sheep_inputs import set_sheep_data
-from holos_service.farm.farm import create_farm
-from holos_service.farm.farm_inputs import WeatherSummary, WeatherData
+from pyholos.farm.farm import create_farm
+from pyholos.farm.farm_inputs import WeatherSummary, WeatherData
 
 
 def get_weather_data(df: DataFrame) -> WeatherData:

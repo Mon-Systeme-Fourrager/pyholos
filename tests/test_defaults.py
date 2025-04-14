@@ -1,6 +1,6 @@
 import unittest
 
-from holos_service.defaults import Defaults
+from pyholos.defaults import Defaults
 
 
 class MyDefaults(unittest.TestCase):

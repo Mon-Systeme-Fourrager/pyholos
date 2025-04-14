@@ -1,10 +1,10 @@
 import unittest
 
-from holos_service.components.land_management import common
-from holos_service.components.land_management.common import TillageType
-from holos_service.components.land_management.crop import CropType
-from holos_service.django_stuff import CanadianProvince
-from holos_service.soil import SoilFunctionalCategory
+from pyholos.components.land_management import common
+from pyholos.components.land_management.common import TillageType
+from pyholos.components.land_management.crop import CropType
+from pyholos.django_stuff import CanadianProvince
+from pyholos.soil import SoilFunctionalCategory
 
 
 class TestConvertTillageTypeName(unittest.TestCase):

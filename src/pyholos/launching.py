@@ -1,7 +1,7 @@
 import subprocess
 from pathlib import Path, PureWindowsPath
 
-from holos_service.config import PATH_HOLOS_CLI
+from pyholos.config import PATH_HOLOS_CLI
 
 def set_cmd(
         path_dir_farms: Path,

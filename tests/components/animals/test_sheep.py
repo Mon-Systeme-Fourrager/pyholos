@@ -2,11 +2,11 @@ import unittest
 from datetime import date
 from pathlib import Path
 
-from holos_service.components.animals import sheep, common
-from holos_service.config import PathsHolosResources
-from holos_service.django_stuff import CanadianProvince
-from holos_service.soil import SoilTexture
-from holos_service.utils import read_holos_resource_table
+from pyholos.components.animals import sheep, common
+from pyholos.config import PathsHolosResources
+from pyholos.django_stuff import CanadianProvince
+from pyholos.soil import SoilTexture
+from pyholos.utils import read_holos_resource_table
 
 
 class TestGetAnimalCoefficientData(unittest.TestCase):

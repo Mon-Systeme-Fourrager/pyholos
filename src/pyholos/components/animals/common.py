@@ -4,15 +4,15 @@ from typing import ClassVar
 from pandas import DataFrame
 from pydantic import BaseModel, NonNegativeFloat, Field
 
-from holos_service import utils
-from holos_service.common import EnumGeneric, HolosVar, Region, get_region, get_climate_zone, ClimateZones
-from holos_service.components.common import (ComponentCategory,
-                                             calculate_fraction_of_nitrogen_lost_by_leaching_and_runoff)
-from holos_service.config import PathsHolosResources
-from holos_service.defaults import Defaults
-from holos_service.django_stuff import CanadianProvince
-from holos_service.soil import SoilTexture
-from holos_service.utils import read_holos_resource_table, AutoNameEnum
+from pyholos import utils
+from pyholos.common import EnumGeneric, HolosVar, Region, get_region, get_climate_zone, ClimateZones
+from pyholos.components.common import (ComponentCategory,
+                                       calculate_fraction_of_nitrogen_lost_by_leaching_and_runoff)
+from pyholos.config import PathsHolosResources
+from pyholos.defaults import Defaults
+from pyholos.django_stuff import CanadianProvince
+from pyholos.soil import SoilTexture
+from pyholos.utils import read_holos_resource_table, AutoNameEnum
 
 
 class DietAdditiveType(EnumGeneric):

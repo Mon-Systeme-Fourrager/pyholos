@@ -2,11 +2,11 @@ from pathlib import Path
 
 from pandas import DataFrame
 
-from holos_service.components.animals.common import AnimalType, BeddingMaterialType
-from holos_service.components.land_management.common import TillageType
-from holos_service.config import PathsHolosResources
-from holos_service.core_constants import CoreConstants
-from holos_service.soil import SoilFunctionalCategory
+from pyholos.components.animals.common import AnimalType, BeddingMaterialType
+from pyholos.components.land_management.common import TillageType
+from pyholos.config import PathsHolosResources
+from pyholos.core_constants import CoreConstants
+from pyholos.soil import SoilFunctionalCategory
 
 
 class _HolosTable:

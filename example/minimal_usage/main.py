@@ -2,7 +2,7 @@ import unittest
 from pathlib import Path
 from shutil import rmtree
 
-from holos_service import launching
+from pyholos import launching
 
 class ExampleData:
     _path = Path(__file__).parent

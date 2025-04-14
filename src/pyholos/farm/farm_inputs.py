@@ -5,21 +5,21 @@ from uuid import UUID, uuid4
 from pydantic import (BaseModel, conlist, conint, Field, confloat, PositiveFloat, NonNegativeFloat, field_validator,
                       PositiveInt, NonNegativeInt)
 
-from holos_service.components.animals import beef, dairy, sheep
-from holos_service.components.animals.common import (ProductionStage, Diet, HousingType, ManureStateType,
-                                                     DietAdditiveType, BeddingMaterialType, Milk,
-                                                     get_manure_emission_factors, ManureAnimalSourceTypes,
-                                                     ManureLocationSourceType)
-from holos_service.components.land_management.carbon.relative_biomass_information import (
+from pyholos.components.animals import beef, dairy, sheep
+from pyholos.components.animals.common import (ProductionStage, Diet, HousingType, ManureStateType,
+                                               DietAdditiveType, BeddingMaterialType, Milk,
+                                               get_manure_emission_factors, ManureAnimalSourceTypes,
+                                               ManureLocationSourceType)
+from pyholos.components.land_management.carbon.relative_biomass_information import (
     RelativeBiomassInformationData, parse_table_7, get_relative_biomass_information_data)
-from holos_service.components.land_management.common import (
+from pyholos.components.land_management.common import (
     TillageType, HarvestMethod, FertilizerBlends, ManureApplicationTypes, IrrigationType)
-from holos_service.components.land_management.crop import CropType
-from holos_service.components.land_management.field_system import CropViewItem
-from holos_service.core_constants import CoreConstants
-from holos_service.django_stuff import CanadianProvince
-from holos_service.soil import SoilTexture, SoilFunctionalCategory
-from holos_service.utils import concat_lists
+from pyholos.components.land_management.crop import CropType
+from pyholos.components.land_management.field_system import CropViewItem
+from pyholos.core_constants import CoreConstants
+from pyholos.django_stuff import CanadianProvince
+from pyholos.soil import SoilTexture, SoilFunctionalCategory
+from pyholos.utils import concat_lists
 
 AnimalComponent = Union[
     beef.Bulls, beef.ReplacementHeifers, beef.Cows, beef.Calves,

@@ -3,7 +3,7 @@ from pathlib import Path
 
 from geojson import load
 
-from holos_service import django_stuff
+from pyholos import django_stuff
 
 
 class TestGetSlcPolygonProperties(unittest.TestCase):

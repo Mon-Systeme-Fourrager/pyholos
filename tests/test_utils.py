@@ -1,6 +1,6 @@
 import unittest
 
-from holos_service import utils
+from pyholos import utils
 
 
 class TestConvertCamelCaseToSpaceDelimited(unittest.TestCase):

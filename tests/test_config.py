@@ -1,6 +1,6 @@
 import unittest
 
-from holos_service import config
+from pyholos import config
 
 
 class TestPaths(unittest.TestCase):

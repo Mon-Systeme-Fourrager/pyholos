@@ -5,7 +5,7 @@ from typing import Iterable
 
 from pandas import read_csv, DataFrame
 
-from holos_service.core_constants import CoreConstants
+from pyholos.core_constants import CoreConstants
 
 
 class AutoNameEnum(StrEnum):

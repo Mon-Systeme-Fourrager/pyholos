@@ -2,8 +2,8 @@ import math
 import sys
 from dataclasses import dataclass
 
-from holos_service.core_constants import CoreConstants
-from holos_service.utils import calc_average
+from pyholos.core_constants import CoreConstants
+from pyholos.utils import calc_average
 
 
 @dataclass

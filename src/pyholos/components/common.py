@@ -1,7 +1,7 @@
 from enum import StrEnum, unique, auto
 
-from holos_service.common import EnumGeneric
-from holos_service.django_stuff import CanadianProvince
+from pyholos.common import EnumGeneric
+from pyholos.django_stuff import CanadianProvince
 
 
 @unique

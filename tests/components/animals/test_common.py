@@ -3,15 +3,15 @@ import unittest
 from itertools import product
 from unittest.mock import patch
 
-from holos_service.common import ClimateZones
-from holos_service.components.animals import common
-from holos_service.components.common import ComponentCategory
-from holos_service.config import PathsHolosResources
-from holos_service.core_constants import CoreConstants
-from holos_service.defaults import Defaults
-from holos_service.django_stuff import CanadianProvince
-from holos_service.soil import SoilTexture
-from holos_service.utils import read_holos_resource_table
+from pyholos.common import ClimateZones
+from pyholos.components.animals import common
+from pyholos.components.common import ComponentCategory
+from pyholos.config import PathsHolosResources
+from pyholos.core_constants import CoreConstants
+from pyholos.defaults import Defaults
+from pyholos.django_stuff import CanadianProvince
+from pyholos.soil import SoilTexture
+from pyholos.utils import read_holos_resource_table
 from tests.helpers import utils
 
 
@@ -2327,7 +2327,7 @@ class TestGetManureEmissionFactors(unittest.TestCase):
             v for v in common.AnimalType
             if v.get_component_category_from_animal_type() == ComponentCategory.OtherLivestock]
 
-    @patch("holos_service.components.animals.common.get_land_application_factors")
+    @patch("pyholos.components.animals.common.get_land_application_factors")
     def test_get_manure_emission_factors_call_same_function_for_pasture_manure_holding_system(self, mocker):
         mocker.return_value = {'foo': 'dummy'}
         res = []

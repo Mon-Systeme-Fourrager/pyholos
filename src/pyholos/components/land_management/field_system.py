@@ -1,20 +1,20 @@
 from uuid import UUID
 
-from holos_service.common import HolosVar, Component
-from holos_service.components.animals.common import ManureAnimalSourceTypes, ManureStateType, ManureLocationSourceType
-from holos_service.components.land_management.carbon.climate import calculate_climate_parameter
-from holos_service.components.land_management.carbon.management import calculate_management_factor
-from holos_service.components.land_management.carbon.relative_biomass_information import (
+from pyholos.common import HolosVar, Component
+from pyholos.components.animals.common import ManureAnimalSourceTypes, ManureStateType, ManureLocationSourceType
+from pyholos.components.land_management.carbon.climate import calculate_climate_parameter
+from pyholos.components.land_management.carbon.management import calculate_management_factor
+from pyholos.components.land_management.carbon.relative_biomass_information import (
     RelativeBiomassInformationData, get_nitrogen_lignin_content_in_crops_data, parse_table_9)
-from holos_service.components.land_management.carbon.tillage import calculate_tillage_factor
-from holos_service.components.land_management.common import (
+from pyholos.components.land_management.carbon.tillage import calculate_tillage_factor
+from pyholos.components.land_management.common import (
     TillageType, HarvestMethod, IrrigationType, ManureApplicationTypes, TimePeriodCategory, get_fuel_energy_estimate,
     get_herbicide_energy_estimate, FertilizerBlends)
-from holos_service.components.land_management.crop import get_nitrogen_fixation, CropType
-from holos_service.core_constants import CoreConstants
-from holos_service.defaults import Defaults
-from holos_service.django_stuff import CanadianProvince
-from holos_service.soil import SoilFunctionalCategory
+from pyholos.components.land_management.crop import get_nitrogen_fixation, CropType
+from pyholos.core_constants import CoreConstants
+from pyholos.defaults import Defaults
+from pyholos.django_stuff import CanadianProvince
+from pyholos.soil import SoilFunctionalCategory
 
 TABLE_9 = parse_table_9()
 

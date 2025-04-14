@@ -2,7 +2,7 @@ import unittest
 from json import load
 from pathlib import Path
 
-from holos_service import soil
+from pyholos import soil
 
 
 class TestSetSoilTextureAccordingToHolos(unittest.TestCase):

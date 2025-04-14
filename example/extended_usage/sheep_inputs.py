@@ -1,9 +1,9 @@
 from datetime import date
 
-from holos_service.components.animals.common import (ProductionStage, Diet, HousingType, ManureStateType,
-                                                     BeddingMaterialType)
-from holos_service.farm import farm_inputs
-from holos_service.farm.farm_inputs import WeatherSummary
+from pyholos.components.animals.common import (ProductionStage, Diet, HousingType, ManureStateType,
+                                               BeddingMaterialType)
+from pyholos.farm import farm_inputs
+from pyholos.farm.farm_inputs import WeatherSummary
 
 global kwargs
 _NUMBER_ANIMALS = 100

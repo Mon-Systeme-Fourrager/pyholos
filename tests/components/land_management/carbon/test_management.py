@@ -1,7 +1,7 @@
 import unittest
 from random import random, uniform
 
-from holos_service.components.land_management.carbon import management
+from pyholos.components.land_management.carbon import management
 
 
 class TestCalculateManagementFactor(unittest.TestCase):

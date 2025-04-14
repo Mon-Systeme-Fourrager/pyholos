@@ -1,7 +1,7 @@
 import unittest
 
-from holos_service import common
-from holos_service.django_stuff import CanadianProvince
+from pyholos import common
+from pyholos.django_stuff import CanadianProvince
 
 
 class TestGetRegion(unittest.TestCase):

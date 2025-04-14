@@ -1,4 +1,4 @@
-from holos_service.components.land_management.crop import CropType
+from pyholos.components.land_management.crop import CropType
 
 
 def assert_is_ascending(values: list | tuple) -> bool:

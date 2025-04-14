@@ -9,14 +9,14 @@ from uuid import UUID
 from pandas import read_csv
 from pydantic import ValidationError
 
-from holos_service.components.animals.common import (ProductionStage, Diet, DietAdditiveType, HousingType,
-                                                     ManureStateType, BeddingMaterialType, Milk,
-                                                     ManureAnimalSourceTypes, ManureLocationSourceType)
-from holos_service.components.land_management.common import (TillageType, HarvestMethod, FertilizerBlends,
-                                                             IrrigationType, ManureApplicationTypes)
-from holos_service.components.land_management.crop import CropType
-from holos_service.farm import farm_inputs
-from holos_service.farm.farm_inputs import WeatherData
+from pyholos.components.animals.common import (ProductionStage, Diet, DietAdditiveType, HousingType,
+                                               ManureStateType, BeddingMaterialType, Milk,
+                                               ManureAnimalSourceTypes, ManureLocationSourceType)
+from pyholos.components.land_management.common import (TillageType, HarvestMethod, FertilizerBlends,
+                                                       IrrigationType, ManureApplicationTypes)
+from pyholos.components.land_management.crop import CropType
+from pyholos.farm import farm_inputs
+from pyholos.farm.farm_inputs import WeatherData
 
 
 def get_weather_summary_example() -> farm_inputs.WeatherSummary:
