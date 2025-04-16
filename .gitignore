@@ -162,7 +162,7 @@ cython_debug/
 .idea/
 
 misc/
-doc/_build
+docs/_build
 
 example/extended_usage/farm_data/*
 example/minimal_usage/*
