@@ -9,6 +9,7 @@ if "%SPHINXBUILD%" == "" (
 )
 set SOURCEDIR=.
 set BUILDDIR=_build
+set SPHINXPROJ=PyHolos
 
 %SPHINXBUILD% >NUL 2>NUL
 if errorlevel 9009 (
