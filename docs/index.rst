@@ -8,7 +8,7 @@ PyHolos documentation
 
 Welcome to PyHolos ! This package allows launching the `Holos model CLI <https://github.com/holos-aafc/Holos>`__ using python.
 
-.. image:: figs/logo_pyholos.png
+.. image:: figs/logo_pyholos.svg
     :align: center
     :height: 250
 
