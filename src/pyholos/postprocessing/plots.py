@@ -61,7 +61,32 @@ def plot_farm_total_co2eq_emissions(
     )
 
     fig.tight_layout()
-    fig.savefig(path_dir_fig / f"total_co2eq_{df['Farm Name'].iloc[0]}.png")
+    fig.savefig(path_dir_fig / f"co2eq_{df['Farm Name'].iloc[0]}_total.png")
+    pass
+
+
+def plot_farm_detailed_co2eq_emissions(
+        df: DataFrame,
+        path_dir_fig: Path
+) -> None:
+    data = df.drop(columns=['Farm Name', 'Component Name', 'Sub-total (Mg C02e)']).groupby(
+        by=['Component Category', 'Component Group Name']).sum()
+
+    fig, ax = pyplot.subplots()
+    data.plot(kind='bar', stacked=True, ax=ax)
+    ax.set(
+        xlabel="Animal category",
+        ylabel=UnitStrings.co2_eq
+    )
+
+    handles, labels = ax.get_legend_handles_labels()
+    ax.legend(
+        labels=[Config.map_names[s].name for s in labels],
+        handles=handles
+    )
+
+    fig.tight_layout()
+    fig.savefig(path_dir_fig / f"co2eq_{df['Farm Name'].iloc[0]}_detailed.png")
     pass
 
 
@@ -77,6 +102,10 @@ def plot_total_co2eq_emissions(
 
     for farm in farms:
         plot_farm_total_co2eq_emissions(
+            df=ghg_data[ghg_data['Farm Name'] == farm],
+            path_dir_fig=path_dir_fig
+        )
+        plot_farm_detailed_co2eq_emissions(
             df=ghg_data[ghg_data['Farm Name'] == farm],
             path_dir_fig=path_dir_fig
         )
