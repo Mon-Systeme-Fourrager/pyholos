@@ -44,8 +44,11 @@ def launch_holos(
         name_farm_json: str = None,
         name_dir_farms_json: str = None,
         name_settings: str = None,
-        id_slc_polygon: int = None
+        id_slc_polygon: int = None,
+        is_print_holos_messages: bool = False
 ) -> None:
+    print_holos_msg = lambda is_print_message, holos_message: print(holos_message) if is_print_message else None
+
     cmd = set_cmd(
         path_dir_farms=path_dir_farms,
         path_dir_outputs=path_dir_outputs,
@@ -63,7 +66,8 @@ def launch_holos(
         text=True)
 
     for msg in _get_cli_messages(p=process):
-        # print(msg)
+        print_holos_msg(is_print_message=is_print_holos_messages, holos_message=msg)
+
         if msg.startswith("Do you have farms that you would like to import from the Holos GUI? (yes/no)"):
             process.stdin.write('no\n')
             process.stdin.flush()
