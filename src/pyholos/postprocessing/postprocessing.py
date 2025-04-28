@@ -3,7 +3,7 @@ from pathlib import Path
 from pandas import read_csv, DataFrame
 
 
-def get_ghg_emissions(
+def read_equivalent_co2_emissions(
         path_outputs: Path
 ) -> DataFrame:
     df = read_csv(path_outputs, decimal='.', sep=',').rename(columns=lambda x: x.strip()).ffill()
