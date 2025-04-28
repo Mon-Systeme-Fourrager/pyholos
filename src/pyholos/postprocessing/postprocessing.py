@@ -11,7 +11,7 @@ def get_ghg_emissions(
     df = df[cols_to_keep].dropna(axis=0)
     df.loc[:, 'Farm Name'] = df['Farm Name'].apply(lambda x: x.replace('_Farm_', '')).to_list()
 
-    df = df[~df['Component Group Name'].str.contains('Totals')]
+    df = df[~df['Component Group Name'].str.contains('Totals|Total')]
     df = df[~df['Farm Name'].str.contains('All Farms')]
 
     return df
