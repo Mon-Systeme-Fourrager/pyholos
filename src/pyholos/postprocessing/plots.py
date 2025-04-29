@@ -1,6 +1,6 @@
-"""This module includes figures produced for performing a demo on MSF
-"""
+import calendar
 from dataclasses import dataclass
+from math import ceil
 from pathlib import Path
 
 import matplotlib
@@ -11,7 +11,7 @@ matplotlib.use("Qt5Agg")
 
 
 class UnitStrings:
-    co2_eq = r"$\mathregular{CO_2\/(eq)}$"
+    co2_eq = r"$\mathregular{CO_2\/_{(eq)}}$"
     mg_co2_eq = f'MG {co2_eq}'
     ch4 = r"$\mathregular{CH_4}$"
     n2o = r"$\mathregular{N_2O}$"
@@ -24,7 +24,7 @@ class NameUnit:
     unit: str
 
     def get_string(self, sep: str = ' ') -> str:
-        return sep.join([self.name, self.unit])
+        return f"{self.name}{sep}({self.unit})"
 
 
 class Config:
@@ -110,4 +110,46 @@ def plot_total_co2eq_emissions(
             path_dir_fig=path_dir_fig
         )
 
+    pass
+
+
+def plot_farm_monthly_co2eq_emissions(
+        df: DataFrame,
+        path_dir_fig: Path
+) -> None:
+    cols_to_plot = [
+        "Enteric CH4 (Mg C02e)",
+        "Manure CH4 (Mg C02e)",
+        "Direct N2O (Mg C02e)",
+        "Indirect N2O (Mg C02e)"
+    ]
+
+    df.loc[:, 'Month'] = df['Month'].map({calendar.month_name[i]: i for i in range(1, 13)})
+    df.loc[:, 'animal_type_id'] = df.loc[:, ['Component Category', 'Component Name', 'Group Name']].apply(
+        lambda x: '_'.join(x), axis=1)
+    gdf = df.groupby(by='animal_type_id').agg(list).sort_values(by='Component Category')
+
+    fig, axs = pyplot.subplots(ncols=2, nrows=ceil(len(cols_to_plot) / 2), sharex='all', sharey='all')
+
+    for ax, col in zip(axs.flatten(), cols_to_plot):
+        ax.clear()
+        ax.set_ylabel(Config.map_names[col].get_string())
+        bottom = [0] * 12
+        for group_name, values in gdf.iterrows():
+            simulated_months = values['Month']
+            simulated_ghg = values[col]
+            ax.bar(simulated_months, simulated_ghg,
+                   width=0.5,
+                   label=' '.join(group_name.split('_')[1:]),
+                   bottom=[bottom[i - 1] for i in simulated_months])
+            for month, ghg in zip(simulated_months, simulated_ghg):
+                bottom[month - 1] += ghg
+
+    axs[-1, -1].legend(fontsize=7)
+
+    axs[-1, 0].xaxis.set_ticks(range(1, 13))
+    axs[-1, 0].set_xlabel('month')
+    axs[-1, 0].xaxis.set_label_coords(1.05, -0.15)
+    fig.tight_layout()
+    fig.savefig(path_dir_fig / f"co2eq_{df['Farm Name'].iloc[0]}_monthly.png")
     pass
