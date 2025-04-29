@@ -7,6 +7,8 @@ import matplotlib
 from matplotlib import pyplot
 from pandas import DataFrame
 
+from pyholos.utils import calc_vector_percentage
+
 matplotlib.use("Qt5Agg")
 
 
@@ -115,7 +117,8 @@ def plot_total_co2eq_emissions(
 
 def plot_farm_monthly_co2eq_emissions(
         df: DataFrame,
-        path_dir_fig: Path
+        path_dir_fig: Path,
+        is_percentage: bool = False
 ) -> None:
     cols_to_plot = [
         "Enteric CH4 (Mg C02e)",
@@ -123,6 +126,12 @@ def plot_farm_monthly_co2eq_emissions(
         "Direct N2O (Mg C02e)",
         "Indirect N2O (Mg C02e)"
     ]
+
+    if is_percentage:
+        for col in cols_to_plot:
+            for month in df['Month'].unique():
+                df.loc[df['Month'] == month, col] = calc_vector_percentage(
+                    vector=df[df['Month'] == month].loc[:, col])
 
     df.loc[:, 'Month'] = df['Month'].map({calendar.month_name[i]: i for i in range(1, 13)})
     df.loc[:, 'animal_type_id'] = df.loc[:, ['Component Category', 'Component Name', 'Group Name']].apply(
@@ -151,5 +160,5 @@ def plot_farm_monthly_co2eq_emissions(
     axs[-1, 0].set_xlabel('month')
     axs[-1, 0].xaxis.set_label_coords(1.05, -0.15)
     fig.tight_layout()
-    fig.savefig(path_dir_fig / f"co2eq_{df['Farm Name'].iloc[0]}_monthly.png")
+    fig.savefig(path_dir_fig / f"co2eq_{df['Farm Name'].iloc[0]}_monthly{'_percentage' if is_percentage else ''}.png")
     pass
