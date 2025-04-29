@@ -65,3 +65,12 @@ def clean_string(
         input_string = re.sub("[[].*?[]]", "", input_string)
 
     return input_string
+
+
+def calc_vector_percentage(vector: int | float | Iterable) -> list:
+    if not isinstance(vector, Iterable):
+        vector = [vector]
+    assert all([v >= 0 for v in vector]), "Negative values are not allowed when calculating a vector's percentage"
+    assert sum(vector) > 0, "At least on item must be greater than 0 when calculating a vector's percentage"
+
+    return [v / sum(vector) * 100 for v in vector]
