@@ -16,7 +16,7 @@ class TestLaunching(unittest.TestCase):
         cls.name_settings = None
         cls.id_slc_polygon = 851003
         cls.timeout_secs = 60
-        cls.expected_output_folders = ['farm_from_json', 'HolosExampleFarm']
+        cls.expected_output_folders = ['farm_from_json']
 
         cls.clean_up()
 
