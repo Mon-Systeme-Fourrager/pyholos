@@ -1,2 +1,3 @@
-# holos_service
-Prototype for running Holos 4.0 in MSF
+# Welcome to PyHolos, the Python wrapper for Holos CLI! (and beyond)
+Description in progress
+
