@@ -5,7 +5,6 @@ PATH_HOLOS_CLI = Path(environ['PATH_HOLOS_CLI'])
 DATE_FMT = "%Y-%m-%d"
 
 _PATH_HOLOS_SERVICE_RESOURCES = Path(__file__).parent / 'resources'
-_PATH_MSF_RESOURCES = Path(environ['PATH_HOLOS_SERVICE_RESOURCES'])
 
 
 class PathsHolosResources:
@@ -42,7 +41,7 @@ class PathsHolosResources:
 
 
 class PathsSlcData:
-    _path_root = _PATH_MSF_RESOURCES / 'soil_landscapes_of_canada_v3r2'
+    _path_root = _PATH_HOLOS_SERVICE_RESOURCES / 'soil_landscapes_of_canada_v3r2'
     geojson_file = _path_root / 'soil_landscapes_of_canada_v3r2.geojson'
     csv_dir = _path_root / 'soil_landscapes_of_canada_v3r2_csv'
     cmp_file = csv_dir / 'ca_all_slc_v3r2_cmp.csv'
