@@ -213,15 +213,11 @@ The GeoJSON file includes complimentary spatially-identified soil information, d
 "Pre-packaged GeoJSON files" in |slc|
 (downloads a zip file called "soil_landscapes_of_canada_v3r2_geojson.zip").
 
-Once downloaded, the zip files must be extracted into a distinct directory and the path to this directory must be added
-to the environment variables with the name **PATH_HOLOS_SERVICE_RESOURCES** (see :numref:`fig_environment_variables`).
+.. note::
+    For convenience the soil data are already added to this project under ``src/pyholos/resources``. Prior to using
+    PyHolos, extract the zipped SLC files ``soil_landscapes_of_canada_v3r2_geojson.zip`` and remove the zip file.
+    **The soil data files are only required when PyHolos is used to create input files for Holos CLI.**
 
-
-.. figure:: figs/location_slc_data.png
-    :align: center
-    :height: 400
-
-    Organisation of the soil data files required to run PyHolos when the latter is used to create input files for
-    Holos CLI.
-
-
+    .. image:: figs/location_slc_data.png
+        :align: center
+        :height: 400
