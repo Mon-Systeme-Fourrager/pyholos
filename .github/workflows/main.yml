@@ -39,3 +39,11 @@ jobs:
       - name: Tests
         run: |
           python -m unittest discover -s tests -p "*.py"
+
+
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v3
+    - uses: pre-commit/action@v3.0.1
