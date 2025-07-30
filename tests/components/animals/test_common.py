@@ -3586,7 +3586,7 @@ class TestGetAverageMilkProductionForDairyCowsValue(unittest.TestCase):
             path_file=PathsHolosResources.Table_21_Average_Milk_Production_For_Dairy_Cows_By_Province,
             index_col='Year')
 
-        cls.provinces = [v for v in CanadianProvince if not v in (
+        cls.provinces = [v for v in CanadianProvince if v not in (
             CanadianProvince.NorthwestTerritories,
             CanadianProvince.Nunavut,
             CanadianProvince.Yukon)]
