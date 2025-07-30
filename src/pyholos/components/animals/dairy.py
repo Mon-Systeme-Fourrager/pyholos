@@ -7,8 +7,7 @@ from pyholos.components.animals.common import (
     ManureStateType, Milk, ProductionStage,
     get_beef_and_dairy_cattle_coefficient_data,
     get_beef_and_dairy_cattle_feeding_activity_coefficient,
-    get_default_methane_producing_capacity_of_manure,
-    get_fraction_of_organic_nitrogen_mineralized_data)
+    get_default_methane_producing_capacity_of_manure)
 from pyholos.config import DATE_FMT
 from pyholos.utils import convert_camel_case_to_space_delimited, get_local_args
 

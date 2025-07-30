@@ -145,7 +145,7 @@ def convert_province_name(name: str) -> CanadianProvince:
         case "yukon" | "yt" | "yk" | "yuk" | "yn":
             return CanadianProvince.Yukon
         case "northwestterritories" | "territoiresdunordouest" | "nt" | "tno":
-            return CanadianProvince.NorthwestTerritories;
+            return CanadianProvince.NorthwestTerritories
         case "nunavut" | "nu" | "nvt":
             return CanadianProvince.Nunavut
         case _:
