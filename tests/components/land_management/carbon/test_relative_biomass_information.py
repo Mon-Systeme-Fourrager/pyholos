@@ -13,7 +13,7 @@ from pyholos.components.land_management.carbon.relative_biomass_information impo
 from pyholos.components.land_management.common import IrrigationType
 from pyholos.components.land_management.crop import (CropType,
                                                      convert_crop_type_name)
-from pyholos.django_stuff import CanadianProvince
+from pyholos.common2 import CanadianProvince
 
 
 class TestParseIrrigationData(unittest.TestCase):

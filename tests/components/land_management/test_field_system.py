@@ -12,7 +12,7 @@ from pyholos.components.land_management.common import (FertilizerBlends,
                                                        TillageType)
 from pyholos.components.land_management.crop import CropType
 from pyholos.defaults import Defaults
-from pyholos.django_stuff import CanadianProvince
+from pyholos.common2 import CanadianProvince
 from pyholos.soil import SoilFunctionalCategory
 from pyholos.utils import read_holos_resource_table
 from tests.helpers.utils import CropTypePerCategory

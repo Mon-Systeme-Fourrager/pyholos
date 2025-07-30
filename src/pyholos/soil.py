@@ -1,9 +1,9 @@
 from enum import StrEnum, auto, unique
 
-from pyholos import django_stuff
+from pyholos import common2
 from pyholos.common import Region, get_region
 from pyholos.config import PathsSlcData
-from pyholos.django_stuff import CanadianProvince
+from pyholos.common2 import CanadianProvince
 from pyholos.utils import AutoNameEnum, keep_alphabetical_characters
 
 
@@ -132,207 +132,207 @@ class SoilGreatGroup:
 def get_soil_great_group_table() -> list[SoilGreatGroup]:
     return [
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.BrownChernozem.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.BrownChernozem.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.Brown),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.BrownChernozem.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.BrownChernozem.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.NotApplicable),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.DarkBrownChernozem.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.DarkBrownChernozem.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.DarkBrown),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.DarkBrownChernozem.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.DarkBrownChernozem.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.NotApplicable),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.BlackChernozem.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.BlackChernozem.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.Black),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.BlackChernozem.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.BlackChernozem.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.NotApplicable),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.DarkGrayChernozem.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.DarkGrayChernozem.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.Black),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.DarkGrayChernozem.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.DarkGrayChernozem.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.NotApplicable),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.Solonetz.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.Solonetz.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.Brown),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.Solonetz.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.Solonetz.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.EasternCanada),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.SolodizedSolonetz.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.SolodizedSolonetz.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.Brown),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.SolodizedSolonetz.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.SolodizedSolonetz.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.EasternCanada),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.Solod.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.Solod.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.Brown),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.Solod.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.Solod.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.EasternCanada),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.VerticSolonetz.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.VerticSolonetz.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.Brown),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.VerticSolonetz.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.VerticSolonetz.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.EasternCanada),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.GrayBrownLuvisol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.GrayBrownLuvisol.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.NotApplicable),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.GrayBrownLuvisol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.GrayBrownLuvisol.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.EasternCanada),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.GrayLuvisol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.GrayLuvisol.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.Black),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.GrayLuvisol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.GrayLuvisol.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.EasternCanada),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.FerroHumicPodzol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.FerroHumicPodzol.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.Brown),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.FerroHumicPodzol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.FerroHumicPodzol.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.EasternCanada),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.HumicPodzol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.HumicPodzol.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.Brown),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.HumicPodzol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.HumicPodzol.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.EasternCanada),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.HumoFerricPodzol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.HumoFerricPodzol.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.Brown),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.HumoFerricPodzol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.HumoFerricPodzol.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.EasternCanada),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.MelanicBrunisol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.MelanicBrunisol.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.Brown),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.MelanicBrunisol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.MelanicBrunisol.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.EasternCanada),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.EutricBrunisol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.EutricBrunisol.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.Brown),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.EutricBrunisol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.EutricBrunisol.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.EasternCanada),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.SombricBrunisol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.SombricBrunisol.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.Brown),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.SombricBrunisol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.SombricBrunisol.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.EasternCanada),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.DystricBrunisol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.DystricBrunisol.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.Brown),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.DystricBrunisol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.DystricBrunisol.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.EasternCanada),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.HumicGleysol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.HumicGleysol.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.Brown),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.HumicGleysol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.HumicGleysol.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.EasternCanada),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.Gleysol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.Gleysol.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.Brown),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.Gleysol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.Gleysol.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.EasternCanada),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.LuvicGleysol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.LuvicGleysol.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.Black),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.LuvicGleysol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.LuvicGleysol.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.EasternCanada),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.Fibrisol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.Fibrisol.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.Organic),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.Fibrisol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.Fibrisol.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.Organic),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.Mesisol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.Mesisol.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.Organic),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.Mesisol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.Mesisol.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.Organic),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.OrganicCryosol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.OrganicCryosol.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.Organic),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.OrganicCryosol.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.OrganicCryosol.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.Organic),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.NotApplicable.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.NotApplicable.name,
             region=Region.WesternCanada,
             soil_functional_category=SoilFunctionalCategory.NotApplicable),
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.NotApplicable.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.NotApplicable.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.NotApplicable),
 
         SoilGreatGroup(
-            soil_great_group_type=django_stuff.SoilGreatGroupNamesSlc.Unknown.name,
+            soil_great_group_type=common2.SoilGreatGroupNamesSlc.Unknown.name,
             region=Region.EasternCanada,
             soil_functional_category=SoilFunctionalCategory.EasternCanada),
     ]
 
 
 def seek_soil_functional_category(
-        province: django_stuff.CanadianProvince,
+        province: common2.CanadianProvince,
         soil_great_group: str
 ) -> str:
     region = get_region(province=province)
@@ -343,7 +343,7 @@ def seek_soil_functional_category(
 
 
 def get_soil_functional_category(
-        province: django_stuff.CanadianProvince,
+        province: common2.CanadianProvince,
         soil_great_group: str
 ) -> str:
     soil_functional_category = seek_soil_functional_category(
@@ -355,7 +355,7 @@ def get_soil_functional_category(
 def set_soil_texture_according_to_holos(
         soil_texture_abbreviation_from_slc: str
 ) -> str:
-    soil_name = django_stuff.ParentMaterialTextureNamesSlc.get_name(abbreviation=soil_texture_abbreviation_from_slc)
+    soil_name = common2.ParentMaterialTextureNamesSlc.get_name(abbreviation=soil_texture_abbreviation_from_slc)
     if soil_name in ('Very Coarse', 'Coarse', 'Moderately Coarse'):
         res = SoilTexture.Coarse.name
     elif soil_name in ('Medium', 'Medium Skeletal'):
@@ -393,30 +393,30 @@ def set_soil_properties(
             organic_carbon_proportion (float): (between 0 and 100) percentage of soil organic carbon in soil
 
     """
-    polygon_properties = django_stuff.get_slc_polygon_properties(
+    polygon_properties = common2.get_slc_polygon_properties(
         latitude=latitude,
         longitude=longitude,
-        geojson_data=django_stuff.load_slc_data(
+        geojson_data=common2.load_slc_data(
             path_slc_geojson_file=PathsSlcData.geojson_file))
     id_polygon = polygon_properties['POLY_ID']
-    dominant_component_properties = django_stuff.get_dominant_component_properties(
+    dominant_component_properties = common2.get_dominant_component_properties(
         id_polygon=id_polygon,
-        slc_components_table=django_stuff.read_slc_csv(
+        slc_components_table=common2.read_slc_csv(
             path_file=PathsSlcData.cmp_file,
             usecols=['POLY_ID', 'PROVINCE', 'PERCENT_', 'SOIL_ID']))
     id_soil = dominant_component_properties['SOIL_ID']
-    soil_layer_table = django_stuff.get_soil_layer_table(
+    soil_layer_table = common2.get_soil_layer_table(
         id_soil=id_soil,
-        slc_soil_layer_table=django_stuff.read_slc_csv(path_file=PathsSlcData.slt_file))
-    first_non_litter_layer = django_stuff.get_first_non_litter_layer(
+        slc_soil_layer_table=common2.read_slc_csv(path_file=PathsSlcData.slt_file))
+    first_non_litter_layer = common2.get_first_non_litter_layer(
         soil_layer_table=soil_layer_table)
-    soil_name_table = django_stuff.get_soil_name_table(
-        soil_name_table=django_stuff.read_slc_csv(
+    soil_name_table = common2.get_soil_name_table(
+        soil_name_table=common2.read_slc_csv(
             path_file=PathsSlcData.snt_file, usecols=['SOIL_ID', 'PMTEX1', 'G_GROUP3']),
         id_soil=id_soil)
 
-    province = django_stuff.CanadianProvince.get_name(abbreviation=dominant_component_properties['PROVINCE'])
-    soil_great_group = django_stuff.SoilGreatGroupNamesSlc.get_name(
+    province = common2.CanadianProvince.get_name(abbreviation=dominant_component_properties['PROVINCE'])
+    soil_great_group = common2.SoilGreatGroupNamesSlc.get_name(
         abbreviation=soil_name_table['G_GROUP3']).replace(' ', '')
 
     return dict(

@@ -2,7 +2,7 @@ from pyholos.common import verify_is_prairie_province
 from pyholos.components.land_management.common import TillageType
 from pyholos.components.land_management.crop import CropType
 from pyholos.config import PathsHolosResources
-from pyholos.django_stuff import CanadianProvince
+from pyholos.common2 import CanadianProvince
 from pyholos.soil import SoilFunctionalCategory
 from pyholos.utils import read_holos_resource_table
 

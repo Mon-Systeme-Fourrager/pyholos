@@ -12,7 +12,7 @@ from pyholos.components.common import (
     calculate_fraction_of_nitrogen_lost_by_leaching_and_runoff)
 from pyholos.config import PathsHolosResources
 from pyholos.defaults import Defaults
-from pyholos.django_stuff import CanadianProvince
+from pyholos.common2 import CanadianProvince
 from pyholos.soil import SoilTexture
 from pyholos.utils import AutoNameEnum, read_holos_resource_table
 

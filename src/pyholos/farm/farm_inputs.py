@@ -25,7 +25,7 @@ from pyholos.components.land_management.common import (FertilizerBlends,
 from pyholos.components.land_management.crop import CropType
 from pyholos.components.land_management.field_system import CropViewItem
 from pyholos.core_constants import CoreConstants
-from pyholos.django_stuff import CanadianProvince
+from pyholos.common2 import CanadianProvince
 from pyholos.soil import SoilFunctionalCategory, SoilTexture
 from pyholos.utils import concat_lists
 

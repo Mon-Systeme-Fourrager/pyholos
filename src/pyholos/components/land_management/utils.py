@@ -2,7 +2,7 @@ from pyholos.components.common import convert_province_name
 from pyholos.components.land_management.crop import (CropType,
                                                      convert_crop_type_name)
 from pyholos.config import PathsHolosResources
-from pyholos.django_stuff import CanadianProvince
+from pyholos.common2 import CanadianProvince
 from pyholos.utils import read_holos_resource_table
 
 

@@ -1,7 +1,7 @@
 from enum import StrEnum, auto, unique
 
 from pyholos.common import EnumGeneric
-from pyholos.django_stuff import CanadianProvince
+from pyholos.common2 import CanadianProvince
 
 
 @unique

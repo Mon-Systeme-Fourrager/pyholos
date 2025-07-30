@@ -8,7 +8,7 @@ from pyholos.components.common import convert_province_name
 from pyholos.components.land_management.crop import (CropType,
                                                      convert_crop_type_name)
 from pyholos.config import PathsHolosResources
-from pyholos.django_stuff import CanadianProvince
+from pyholos.common2 import CanadianProvince
 from pyholos.soil import (SoilFunctionalCategory,
                           convert_soil_functional_category_name)
 from pyholos.utils import (AutoNameEnum, keep_alphabetical_characters,

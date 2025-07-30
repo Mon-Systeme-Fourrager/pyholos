@@ -21,7 +21,7 @@ from pyholos.components.land_management.crop import (CropType,
                                                      get_nitrogen_fixation)
 from pyholos.core_constants import CoreConstants
 from pyholos.defaults import Defaults
-from pyholos.django_stuff import CanadianProvince
+from pyholos.common2 import CanadianProvince
 from pyholos.soil import SoilFunctionalCategory
 
 TABLE_9 = parse_table_9()

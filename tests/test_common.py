@@ -1,7 +1,7 @@
 import unittest
 
 from pyholos import common
-from pyholos.django_stuff import CanadianProvince
+from pyholos.common2 import CanadianProvince
 
 
 class TestGetRegion(unittest.TestCase):

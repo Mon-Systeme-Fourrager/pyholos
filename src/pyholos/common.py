@@ -1,7 +1,7 @@
 from enum import Enum, StrEnum, auto, unique
 from typing import Any
 
-from pyholos.django_stuff import CanadianProvince
+from pyholos.common2 import CanadianProvince
 from pyholos.utils import AutoNameEnum
 
 

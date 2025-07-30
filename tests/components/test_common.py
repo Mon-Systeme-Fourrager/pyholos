@@ -1,7 +1,7 @@
 import unittest
 
 from pyholos.components import common
-from pyholos.django_stuff import CanadianProvince
+from pyholos.common2 import CanadianProvince
 
 
 class TestComponentType(unittest.TestCase):
