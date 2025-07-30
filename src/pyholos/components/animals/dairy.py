@@ -212,10 +212,6 @@ class Dairy(DairyBase):
             is_pasture=housing_type.is_pasture(),
             animal_type=animal_type)
 
-        fraction_of_organic_nitrogen_mineralized_data = get_fraction_of_organic_nitrogen_mineralized_data(
-            state_type=manure_handling_system,
-            animal_type=animal_type)
-
         self.methane_conversion_factor_of_manure.value = manure_emission_factors.MethaneConversionFactor
         self.n2o_direct_emission_factor.value = manure_emission_factors.N2ODirectEmissionFactor
         self.volatilization_fraction.value = manure_emission_factors.VolatilizationFraction
