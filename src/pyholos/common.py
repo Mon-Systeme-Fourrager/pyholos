@@ -1,4 +1,4 @@
-from enum import Enum, unique, StrEnum, auto
+from enum import Enum, StrEnum, auto, unique
 from typing import Any
 
 from pyholos.django_stuff import CanadianProvince

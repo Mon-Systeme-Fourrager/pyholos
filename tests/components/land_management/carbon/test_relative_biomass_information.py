@@ -1,14 +1,18 @@
 import unittest
-from random import random, randint, choice
+from random import choice, randint, random
 
 from pyholos.components.land_management.carbon.relative_biomass_information import (
-    parse_irrigation_data, parse_province_data, parse_carbon_residue_data, parse_nitrogen_residue_data,
-    parse_lignin_content_data, parse_biomethane_data, RelativeBiomassInformationData,
-    BiogasAndMethaneProductionParametersData, parse_relative_biomass_information_data, read_table_7, parse_table_7,
-    get_relative_biomass_information_data, read_table_9, parse_table_9, NitrogenLigninContentInCropsData,
-    parse_nitrogen_lignin_content_in_crops_data, get_nitrogen_lignin_content_in_crops_data)
+    BiogasAndMethaneProductionParametersData, NitrogenLigninContentInCropsData,
+    RelativeBiomassInformationData, get_nitrogen_lignin_content_in_crops_data,
+    get_relative_biomass_information_data, parse_biomethane_data,
+    parse_carbon_residue_data, parse_irrigation_data,
+    parse_lignin_content_data, parse_nitrogen_lignin_content_in_crops_data,
+    parse_nitrogen_residue_data, parse_province_data,
+    parse_relative_biomass_information_data, parse_table_7, parse_table_9,
+    read_table_7, read_table_9)
 from pyholos.components.land_management.common import IrrigationType
-from pyholos.components.land_management.crop import CropType, convert_crop_type_name
+from pyholos.components.land_management.crop import (CropType,
+                                                     convert_crop_type_name)
 from pyholos.django_stuff import CanadianProvince
 
 

@@ -1,9 +1,10 @@
 from datetime import date
 
-from pyholos.common import Component, HolosVar, EnumGeneric
+from pyholos.common import Component, EnumGeneric, HolosVar
 from pyholos.components.animals.common import (
-    AnimalType, AnimalCoefficientData, Milk, Bedding, Diet, HousingType, ProductionStage, ManureStateType,
-    LivestockEmissionConversionFactorsData, DietAdditiveType, BeddingMaterialType,
+    AnimalCoefficientData, AnimalType, Bedding, BeddingMaterialType, Diet,
+    DietAdditiveType, HousingType, LivestockEmissionConversionFactorsData,
+    ManureStateType, Milk, ProductionStage,
     get_beef_and_dairy_cattle_coefficient_data,
     get_beef_and_dairy_cattle_feeding_activity_coefficient,
     get_default_methane_producing_capacity_of_manure,

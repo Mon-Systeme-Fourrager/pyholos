@@ -2,7 +2,7 @@ import unittest
 from itertools import product
 from json import load
 from pathlib import Path
-from random import random, randint
+from random import randint, random
 
 from pyholos.components.land_management.carbon import climate
 from pyholos.defaults import Defaults

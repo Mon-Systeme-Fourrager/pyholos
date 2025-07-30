@@ -1,24 +1,32 @@
 from datetime import date
-from typing import Union, ClassVar, Generator
+from typing import ClassVar, Generator, Union
 from uuid import UUID, uuid4
 
-from pydantic import (BaseModel, conlist, conint, Field, confloat, PositiveFloat, NonNegativeFloat, field_validator,
-                      PositiveInt, NonNegativeInt)
+from pydantic import (BaseModel, Field, NonNegativeFloat, NonNegativeInt,
+                      PositiveFloat, PositiveInt, confloat, conint, conlist,
+                      field_validator)
 
 from pyholos.components.animals import beef, dairy, sheep
-from pyholos.components.animals.common import (ProductionStage, Diet, HousingType, ManureStateType,
-                                               DietAdditiveType, BeddingMaterialType, Milk,
-                                               get_manure_emission_factors, ManureAnimalSourceTypes,
-                                               ManureLocationSourceType)
+from pyholos.components.animals.common import (BeddingMaterialType, Diet,
+                                               DietAdditiveType, HousingType,
+                                               ManureAnimalSourceTypes,
+                                               ManureLocationSourceType,
+                                               ManureStateType, Milk,
+                                               ProductionStage,
+                                               get_manure_emission_factors)
 from pyholos.components.land_management.carbon.relative_biomass_information import (
-    RelativeBiomassInformationData, parse_table_7, get_relative_biomass_information_data)
-from pyholos.components.land_management.common import (
-    TillageType, HarvestMethod, FertilizerBlends, ManureApplicationTypes, IrrigationType)
+    RelativeBiomassInformationData, get_relative_biomass_information_data,
+    parse_table_7)
+from pyholos.components.land_management.common import (FertilizerBlends,
+                                                       HarvestMethod,
+                                                       IrrigationType,
+                                                       ManureApplicationTypes,
+                                                       TillageType)
 from pyholos.components.land_management.crop import CropType
 from pyholos.components.land_management.field_system import CropViewItem
 from pyholos.core_constants import CoreConstants
 from pyholos.django_stuff import CanadianProvince
-from pyholos.soil import SoilTexture, SoilFunctionalCategory
+from pyholos.soil import SoilFunctionalCategory, SoilTexture
 from pyholos.utils import concat_lists
 
 AnimalComponent = Union[

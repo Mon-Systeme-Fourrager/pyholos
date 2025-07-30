@@ -1,12 +1,15 @@
-from pathlib import Path
 import unittest
 from itertools import product
+from pathlib import Path
 from uuid import UUID
 
 from pyholos.components.land_management import field_system
-from pyholos.components.land_management.carbon.relative_biomass_information import parse_table_7, \
-    get_relative_biomass_information_data
-from pyholos.components.land_management.common import HarvestMethod, IrrigationType, TillageType, FertilizerBlends
+from pyholos.components.land_management.carbon.relative_biomass_information import (
+    get_relative_biomass_information_data, parse_table_7)
+from pyholos.components.land_management.common import (FertilizerBlends,
+                                                       HarvestMethod,
+                                                       IrrigationType,
+                                                       TillageType)
 from pyholos.components.land_management.crop import CropType
 from pyholos.defaults import Defaults
 from pyholos.django_stuff import CanadianProvince

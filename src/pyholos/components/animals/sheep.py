@@ -3,12 +3,13 @@ from enum import Enum
 
 from pyholos import utils
 from pyholos.common import Component, HolosVar
-from pyholos.components.animals.common import (ProductionStage, AnimalType, convert_animal_type_name,
-                                               DietAdditiveType, Diet, HousingType, Bedding, BeddingMaterialType,
-                                               LivestockEmissionConversionFactorsData,
-                                               get_default_methane_producing_capacity_of_manure,
-                                               get_manure_excretion_rate, get_default_manure_composition_data,
-                                               ManureStateType)
+from pyholos.components.animals.common import (
+    AnimalType, Bedding, BeddingMaterialType, Diet, DietAdditiveType,
+    HousingType, LivestockEmissionConversionFactorsData, ManureStateType,
+    ProductionStage, convert_animal_type_name,
+    get_default_manure_composition_data,
+    get_default_methane_producing_capacity_of_manure,
+    get_manure_excretion_rate)
 from pyholos.components.common import ComponentType
 from pyholos.config import DATE_FMT, PathsHolosResources
 

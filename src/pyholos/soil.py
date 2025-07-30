@@ -1,4 +1,4 @@
-from enum import StrEnum, unique, auto
+from enum import StrEnum, auto, unique
 
 from pyholos import django_stuff
 from pyholos.common import Region, get_region

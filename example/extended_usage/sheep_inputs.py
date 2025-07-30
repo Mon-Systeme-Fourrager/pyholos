@@ -1,7 +1,8 @@
 from datetime import date
 
-from pyholos.components.animals.common import (ProductionStage, Diet, HousingType, ManureStateType,
-                                               BeddingMaterialType)
+from pyholos.components.animals.common import (BeddingMaterialType, Diet,
+                                               HousingType, ManureStateType,
+                                               ProductionStage)
 from pyholos.farm import farm_inputs
 from pyholos.farm.farm_inputs import WeatherSummary
 

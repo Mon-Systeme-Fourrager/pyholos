@@ -4,6 +4,7 @@ from shutil import rmtree
 
 from pyholos import launching
 
+
 class ExampleData:
     _path = Path(__file__).parent
     path_dir_farms = _path / 'farm_data'

@@ -1,9 +1,9 @@
 import re
 from enum import StrEnum
 from pathlib import Path
-from typing import Iterable, Callable
+from typing import Callable, Iterable
 
-from pandas import read_csv, DataFrame
+from pandas import DataFrame, read_csv
 
 from pyholos.core_constants import CoreConstants
 
