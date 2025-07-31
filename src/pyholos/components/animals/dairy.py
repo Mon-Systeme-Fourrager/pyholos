@@ -1,13 +1,13 @@
 from datetime import date
 
-from pyholos.common import Component, HolosVar, EnumGeneric
+from pyholos.common import Component, EnumGeneric, HolosVar
 from pyholos.components.animals.common import (
-    AnimalType, AnimalCoefficientData, Milk, Bedding, Diet, HousingType, ProductionStage, ManureStateType,
-    LivestockEmissionConversionFactorsData, DietAdditiveType, BeddingMaterialType,
+    AnimalCoefficientData, AnimalType, Bedding, BeddingMaterialType, Diet,
+    DietAdditiveType, HousingType, LivestockEmissionConversionFactorsData,
+    ManureStateType, Milk, ProductionStage,
     get_beef_and_dairy_cattle_coefficient_data,
     get_beef_and_dairy_cattle_feeding_activity_coefficient,
-    get_default_methane_producing_capacity_of_manure,
-    get_fraction_of_organic_nitrogen_mineralized_data)
+    get_default_methane_producing_capacity_of_manure)
 from pyholos.config import DATE_FMT
 from pyholos.utils import convert_camel_case_to_space_delimited, get_local_args
 
@@ -210,10 +210,6 @@ class Dairy(DairyBase):
 
         self.methane_producing_capacity_of_manure.value = get_default_methane_producing_capacity_of_manure(
             is_pasture=housing_type.is_pasture(),
-            animal_type=animal_type)
-
-        fraction_of_organic_nitrogen_mineralized_data = get_fraction_of_organic_nitrogen_mineralized_data(
-            state_type=manure_handling_system,
             animal_type=animal_type)
 
         self.methane_conversion_factor_of_manure.value = manure_emission_factors.MethaneConversionFactor

@@ -1,14 +1,14 @@
 from datetime import datetime, timedelta
 from pathlib import Path
 
-from pandas import read_csv, DataFrame
+from pandas import DataFrame, read_csv
 
 from example.extended_usage.beef_inputs import set_beef_data
 from example.extended_usage.dairy_inputs import set_dairy_data
 from example.extended_usage.field_inputs import set_field_data
 from example.extended_usage.sheep_inputs import set_sheep_data
 from pyholos.farm.farm import create_farm
-from pyholos.farm.farm_inputs import WeatherSummary, WeatherData
+from pyholos.farm.farm_inputs import WeatherData, WeatherSummary
 
 
 def get_weather_data(df: DataFrame) -> WeatherData:

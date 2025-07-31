@@ -1,9 +1,9 @@
 import re
 from enum import StrEnum
 from pathlib import Path
-from typing import Iterable
+from typing import Callable, Iterable
 
-from pandas import read_csv, DataFrame
+from pandas import DataFrame, read_csv
 
 from pyholos.core_constants import CoreConstants
 
@@ -34,7 +34,7 @@ def convert_camel_case_to_space_delimited(s: str) -> str:
 
 
 def concat_lists(*args) -> list:
-    return [v for l in args for v in l]
+    return [v for ls in args for v in ls]
 
 
 def keep_alphabetical_characters(name: str) -> str:
@@ -74,3 +74,10 @@ def calc_vector_percentage(vector: int | float | Iterable) -> list:
     assert sum(vector) > 0, "At least on item must be greater than 0 when calculating a vector's percentage"
 
     return [v / sum(vector) * 100 for v in vector]
+
+
+def print_holos_msg(
+        is_print_message: bool,
+        holos_message: str
+) -> Callable | None:
+    return print(holos_message) if is_print_message else None

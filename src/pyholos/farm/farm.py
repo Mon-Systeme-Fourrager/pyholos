@@ -1,13 +1,14 @@
-from dataclasses import dataclass
 from pathlib import Path
 
 from pandas import DataFrame
 
 from pyholos.components.common import convert_province_name
-from pyholos.farm.farm_inputs import (BeefCattleInput, DairyCattleInput, SheepFlockInput, WeatherSummary,
-                                      FieldsInput)
+from pyholos.farm.farm_inputs import (BeefCattleInput, DairyCattleInput,
+                                      FieldsInput, SheepFlockInput,
+                                      WeatherSummary)
 from pyholos.farm.farm_settings import ParamsFarmSettings
-from pyholos.soil import (convert_soil_texture_name, convert_soil_functional_category_name)
+from pyholos.soil import (convert_soil_functional_category_name,
+                          convert_soil_texture_name)
 
 
 class Farm:

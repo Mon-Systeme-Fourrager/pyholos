@@ -2,11 +2,12 @@ from dataclasses import dataclass, field
 
 from pydantic import BaseModel, Field, NonNegativeFloat
 
+from pyholos.common2 import CanadianProvince
 from pyholos.components.common import convert_province_name
 from pyholos.components.land_management.common import IrrigationType
-from pyholos.components.land_management.crop import CropType, convert_crop_type_name
+from pyholos.components.land_management.crop import (CropType,
+                                                     convert_crop_type_name)
 from pyholos.config import PathsHolosResources
-from pyholos.django_stuff import CanadianProvince
 from pyholos.utils import clean_string
 
 
@@ -261,14 +262,14 @@ def parse_relative_biomass_information_data(
 
 def read_table_7():
     with PathsHolosResources.Table_7_Relative_Biomass_Information.open(mode='r') as f:
-        return [l for l in f.readlines()[5:] if all([
-            not len(l.replace(' ', '').replace(',', '').replace('\n', '')) == 0,
-            not l.startswith('#')
+        return [v for v in f.readlines()[5:] if all([
+            not len(v.replace(' ', '').replace(',', '').replace('\n', '')) == 0,
+            not v.startswith('#')
         ])][2:]
 
 
 def parse_table_7() -> list[RelativeBiomassInformationData]:
-    return [parse_relative_biomass_information_data(raw_input=l) for l in read_table_7()]
+    return [parse_relative_biomass_information_data(raw_input=v) for v in read_table_7()]
 
 
 def get_relative_biomass_information_data(
@@ -373,9 +374,9 @@ def parse_nitrogen_lignin_content_in_crops_data(
 
 def read_table_9() -> list[str]:
     with PathsHolosResources.Table_9_Default_Values_For_Nitrogen_Lignin_In_Crops.open(mode='r') as f:
-        return [l for l in f.readlines() if all([
-            not len(l.replace(' ', '').replace(',', '').replace('\n', '')) == 0,
-            not l.startswith('#')
+        return [v for v in f.readlines() if all([
+            not len(v.replace(' ', '').replace(',', '').replace('\n', '')) == 0,
+            not v.startswith('#')
         ])][1:]
 
 

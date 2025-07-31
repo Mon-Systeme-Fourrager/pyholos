@@ -1,3 +1,4 @@
+import sys
 import unittest
 from pathlib import Path
 from shutil import rmtree
@@ -5,6 +6,7 @@ from shutil import rmtree
 from pyholos import launching
 
 
+@unittest.skipUnless(sys.platform.startswith("win"), "requires Windows")
 class TestLaunching(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

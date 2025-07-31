@@ -1,14 +1,16 @@
 from datetime import date
 
 from pyholos import utils
-from pyholos.common import HolosVar, Component, EnumGeneric
+from pyholos.common import Component, EnumGeneric, HolosVar
 from pyholos.components.animals.common import (
-    ProductionStage, DietAdditiveType, Milk, Diet, HousingType,
-    Bedding, AnimalType, BeddingMaterialType, AnimalCoefficientData,
-    get_default_methane_producing_capacity_of_manure, ManureStateType,
-    get_fraction_of_organic_nitrogen_mineralized_data,
-    get_ammonia_emission_factor_for_storage_of_beef_and_dairy_cattle_manure, LivestockEmissionConversionFactorsData,
-    get_beef_and_dairy_cattle_coefficient_data, get_beef_and_dairy_cattle_feeding_activity_coefficient)
+    AnimalCoefficientData, AnimalType, Bedding, BeddingMaterialType, Diet,
+    DietAdditiveType, HousingType, LivestockEmissionConversionFactorsData,
+    ManureStateType, Milk, ProductionStage,
+    get_ammonia_emission_factor_for_storage_of_beef_and_dairy_cattle_manure,
+    get_beef_and_dairy_cattle_coefficient_data,
+    get_beef_and_dairy_cattle_feeding_activity_coefficient,
+    get_default_methane_producing_capacity_of_manure,
+    get_fraction_of_organic_nitrogen_mineralized_data)
 from pyholos.components.common import ComponentType
 from pyholos.config import DATE_FMT
 

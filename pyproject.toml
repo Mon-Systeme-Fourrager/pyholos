@@ -19,3 +19,8 @@ classifiers = [
 [project.urls]
 Homepage = "https://github.com/Mon-Systeme-Fourrager/pyholos"
 Issues = "https://github.com/Mon-Systeme-Fourrager/pyholos/issues"
+
+[tool.ruff]
+
+[tool.ruff.format]
+quote-style = "preserve"

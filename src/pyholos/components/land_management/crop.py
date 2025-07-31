@@ -1,6 +1,7 @@
 from enum import auto
 
-from pyholos.utils import AutoNameEnum, concat_lists, keep_alphabetical_characters
+from pyholos.utils import (AutoNameEnum, concat_lists,
+                           keep_alphabetical_characters)
 
 
 class CropType(AutoNameEnum):

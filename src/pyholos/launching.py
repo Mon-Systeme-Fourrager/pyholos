@@ -2,6 +2,8 @@ import subprocess
 from pathlib import Path, PureWindowsPath
 
 from pyholos.config import PATH_HOLOS_CLI
+from pyholos.utils import print_holos_msg
+
 
 def set_cmd(
         path_dir_farms: Path,
@@ -47,8 +49,6 @@ def launch_holos(
         id_slc_polygon: int = None,
         is_print_holos_messages: bool = False
 ) -> None:
-    print_holos_msg = lambda is_print_message, holos_message: print(holos_message) if is_print_message else None
-
     cmd = set_cmd(
         path_dir_farms=path_dir_farms,
         path_dir_outputs=path_dir_outputs,

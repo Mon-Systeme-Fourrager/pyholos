@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from pandas import read_csv, DataFrame
+from pandas import DataFrame, read_csv
 
 
 def read_equivalent_co2_emissions(

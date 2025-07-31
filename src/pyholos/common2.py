@@ -1,9 +1,9 @@
 from enum import Enum
 from pathlib import Path
 
-from geojson import load, FeatureCollection
-from pandas import read_csv, DataFrame
-from shapely.geometry import shape, Point
+from geojson import FeatureCollection, load
+from pandas import DataFrame, read_csv
+from shapely.geometry import Point, shape
 
 
 class MapNamesGeneric(Enum):

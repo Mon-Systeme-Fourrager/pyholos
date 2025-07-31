@@ -1,7 +1,7 @@
-from enum import StrEnum, unique, auto
+from enum import StrEnum, auto, unique
 
 from pyholos.common import EnumGeneric
-from pyholos.django_stuff import CanadianProvince
+from pyholos.common2 import CanadianProvince
 
 
 @unique
@@ -145,7 +145,7 @@ def convert_province_name(name: str) -> CanadianProvince:
         case "yukon" | "yt" | "yk" | "yuk" | "yn":
             return CanadianProvince.Yukon
         case "northwestterritories" | "territoiresdunordouest" | "nt" | "tno":
-            return CanadianProvince.NorthwestTerritories;
+            return CanadianProvince.NorthwestTerritories
         case "nunavut" | "nu" | "nvt":
             return CanadianProvince.Nunavut
         case _:

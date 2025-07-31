@@ -4,12 +4,12 @@ from itertools import product
 from unittest.mock import patch
 
 from pyholos.common import ClimateZones
+from pyholos.common2 import CanadianProvince
 from pyholos.components.animals import common
 from pyholos.components.common import ComponentCategory
 from pyholos.config import PathsHolosResources
 from pyholos.core_constants import CoreConstants
 from pyholos.defaults import Defaults
-from pyholos.django_stuff import CanadianProvince
 from pyholos.soil import SoilTexture
 from pyholos.utils import read_holos_resource_table
 from tests.helpers import utils
@@ -3586,7 +3586,7 @@ class TestGetAverageMilkProductionForDairyCowsValue(unittest.TestCase):
             path_file=PathsHolosResources.Table_21_Average_Milk_Production_For_Dairy_Cows_By_Province,
             index_col='Year')
 
-        cls.provinces = [v for v in CanadianProvince if not v in (
+        cls.provinces = [v for v in CanadianProvince if v not in (
             CanadianProvince.NorthwestTerritories,
             CanadianProvince.Nunavut,
             CanadianProvince.Yukon)]

@@ -4,7 +4,9 @@ from typing import Any
 from pyholos.common import HolosVar
 from pyholos.core_constants import CoreConstants
 from pyholos.defaults import Defaults
-from pyholos.farm.enums import YieldAssignmentMethod, CarbonModellingStrategies, ChosenClimateAcquisition
+from pyholos.farm.enums import (CarbonModellingStrategies,
+                                ChosenClimateAcquisition,
+                                YieldAssignmentMethod)
 from pyholos.soil import set_soil_properties
 
 

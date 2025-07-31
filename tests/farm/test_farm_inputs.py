@@ -9,11 +9,17 @@ from uuid import UUID
 from pandas import read_csv
 from pydantic import ValidationError
 
-from pyholos.components.animals.common import (ProductionStage, Diet, DietAdditiveType, HousingType,
-                                               ManureStateType, BeddingMaterialType, Milk,
-                                               ManureAnimalSourceTypes, ManureLocationSourceType)
-from pyholos.components.land_management.common import (TillageType, HarvestMethod, FertilizerBlends,
-                                                       IrrigationType, ManureApplicationTypes)
+from pyholos.components.animals.common import (BeddingMaterialType, Diet,
+                                               DietAdditiveType, HousingType,
+                                               ManureAnimalSourceTypes,
+                                               ManureLocationSourceType,
+                                               ManureStateType, Milk,
+                                               ProductionStage)
+from pyholos.components.land_management.common import (FertilizerBlends,
+                                                       HarvestMethod,
+                                                       IrrigationType,
+                                                       ManureApplicationTypes,
+                                                       TillageType)
 from pyholos.components.land_management.crop import CropType
 from pyholos.farm import farm_inputs
 from pyholos.farm.farm_inputs import WeatherData

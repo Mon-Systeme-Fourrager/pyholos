@@ -2,9 +2,9 @@ import unittest
 from datetime import date
 from pathlib import Path
 
-from pyholos.components.animals import sheep, common
+from pyholos.common2 import CanadianProvince
+from pyholos.components.animals import common, sheep
 from pyholos.config import PathsHolosResources
-from pyholos.django_stuff import CanadianProvince
 from pyholos.soil import SoilTexture
 from pyholos.utils import read_holos_resource_table
 

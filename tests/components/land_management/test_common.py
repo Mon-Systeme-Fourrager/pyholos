@@ -1,9 +1,9 @@
 import unittest
 
+from pyholos.common2 import CanadianProvince
 from pyholos.components.land_management import common
 from pyholos.components.land_management.common import TillageType
 from pyholos.components.land_management.crop import CropType
-from pyholos.django_stuff import CanadianProvince
 from pyholos.soil import SoilFunctionalCategory
 
 
