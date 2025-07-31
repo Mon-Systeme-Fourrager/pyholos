@@ -6,6 +6,7 @@ from pydantic import (BaseModel, Field, NonNegativeFloat, NonNegativeInt,
                       PositiveFloat, PositiveInt, confloat, conint, conlist,
                       field_validator)
 
+from pyholos.common2 import CanadianProvince
 from pyholos.components.animals import beef, dairy, sheep
 from pyholos.components.animals.common import (BeddingMaterialType, Diet,
                                                DietAdditiveType, HousingType,
@@ -25,7 +26,6 @@ from pyholos.components.land_management.common import (FertilizerBlends,
 from pyholos.components.land_management.crop import CropType
 from pyholos.components.land_management.field_system import CropViewItem
 from pyholos.core_constants import CoreConstants
-from pyholos.common2 import CanadianProvince
 from pyholos.soil import SoilFunctionalCategory, SoilTexture
 from pyholos.utils import concat_lists
 

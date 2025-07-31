@@ -2,8 +2,8 @@ from enum import StrEnum, auto, unique
 
 from pyholos import common2
 from pyholos.common import Region, get_region
-from pyholos.config import PathsSlcData
 from pyholos.common2 import CanadianProvince
+from pyholos.config import PathsSlcData
 from pyholos.utils import AutoNameEnum, keep_alphabetical_characters
 
 

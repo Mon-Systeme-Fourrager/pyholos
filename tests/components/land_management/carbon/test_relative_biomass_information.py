@@ -1,6 +1,7 @@
 import unittest
 from random import choice, randint, random
 
+from pyholos.common2 import CanadianProvince
 from pyholos.components.land_management.carbon.relative_biomass_information import (
     BiogasAndMethaneProductionParametersData, NitrogenLigninContentInCropsData,
     RelativeBiomassInformationData, get_nitrogen_lignin_content_in_crops_data,
@@ -13,7 +14,6 @@ from pyholos.components.land_management.carbon.relative_biomass_information impo
 from pyholos.components.land_management.common import IrrigationType
 from pyholos.components.land_management.crop import (CropType,
                                                      convert_crop_type_name)
-from pyholos.common2 import CanadianProvince
 
 
 class TestParseIrrigationData(unittest.TestCase):

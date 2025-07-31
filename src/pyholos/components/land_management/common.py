@@ -4,11 +4,11 @@ from pathlib import Path
 from pandas import DataFrame, MultiIndex
 
 from pyholos.common import Region, get_region
+from pyholos.common2 import CanadianProvince
 from pyholos.components.common import convert_province_name
 from pyholos.components.land_management.crop import (CropType,
                                                      convert_crop_type_name)
 from pyholos.config import PathsHolosResources
-from pyholos.common2 import CanadianProvince
 from pyholos.soil import (SoilFunctionalCategory,
                           convert_soil_functional_category_name)
 from pyholos.utils import (AutoNameEnum, keep_alphabetical_characters,

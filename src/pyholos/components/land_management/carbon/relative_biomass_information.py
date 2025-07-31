@@ -2,12 +2,12 @@ from dataclasses import dataclass, field
 
 from pydantic import BaseModel, Field, NonNegativeFloat
 
+from pyholos.common2 import CanadianProvince
 from pyholos.components.common import convert_province_name
 from pyholos.components.land_management.common import IrrigationType
 from pyholos.components.land_management.crop import (CropType,
                                                      convert_crop_type_name)
 from pyholos.config import PathsHolosResources
-from pyholos.common2 import CanadianProvince
 from pyholos.utils import clean_string
 
 

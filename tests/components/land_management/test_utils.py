@@ -1,8 +1,8 @@
 import unittest
 
+from pyholos.common2 import CanadianProvince
 from pyholos.components.land_management import utils
 from pyholos.components.land_management.crop import CropType
-from pyholos.common2 import CanadianProvince
 
 
 class TestLoadData(unittest.TestCase):

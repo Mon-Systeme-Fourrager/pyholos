@@ -3,6 +3,7 @@ from itertools import product
 from pathlib import Path
 from uuid import UUID
 
+from pyholos.common2 import CanadianProvince
 from pyholos.components.land_management import field_system
 from pyholos.components.land_management.carbon.relative_biomass_information import (
     get_relative_biomass_information_data, parse_table_7)
@@ -12,7 +13,6 @@ from pyholos.components.land_management.common import (FertilizerBlends,
                                                        TillageType)
 from pyholos.components.land_management.crop import CropType
 from pyholos.defaults import Defaults
-from pyholos.common2 import CanadianProvince
 from pyholos.soil import SoilFunctionalCategory
 from pyholos.utils import read_holos_resource_table
 from tests.helpers.utils import CropTypePerCategory
