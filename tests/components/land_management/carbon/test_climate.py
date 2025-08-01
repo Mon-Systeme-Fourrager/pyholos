@@ -403,7 +403,7 @@ class TestCalculateSoilCoefficient(unittest.TestCase):
             climate.calculate_soil_coefficient(
                 field_capacity=field_capacity,
                 volumetric_soil_water_content=field_capacity,
-                wilting_point=field_capacity ** 2,
+                wilting_point=field_capacity / 2.,
                 alfa=1))
 
     def test_values_increase_with_field_capacity(self):
