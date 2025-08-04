@@ -25,7 +25,7 @@ dependencies = { file = ["requirements.txt"] }
 include-package-data = true
 
 [tool.setuptools.package-data]
-"pyholos" = ["src/**/*.csv"]  # or ["data/*.csv"] if you store them in a subfolder
+"pyholos" = ["resources/**/*"]
 
 [project.urls]
 Homepage = "https://github.com/Mon-Systeme-Fourrager/pyholos"
