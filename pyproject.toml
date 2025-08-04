@@ -21,6 +21,12 @@ dynamic = ['version', 'dependencies']
 version = { attr = "pyholos.version.__version__" }
 dependencies = { file = ["requirements.txt"] }
 
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+"pyholos" = ["resources/**/*"]
+
 [project.urls]
 Homepage = "https://github.com/Mon-Systeme-Fourrager/pyholos"
 Issues = "https://github.com/Mon-Systeme-Fourrager/pyholos/issues"
