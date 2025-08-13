@@ -545,3 +545,6 @@ class ParamsFarmSettings:
         with (path_dir_farm / self._file_name).open(mode='w', encoding='utf-8') as f:
             f.writelines('\n'.join(res))
         pass
+
+    def export_to_dict(self) -> dict[str, list[str]]:
+        return {self._file_name: self._get_data()}

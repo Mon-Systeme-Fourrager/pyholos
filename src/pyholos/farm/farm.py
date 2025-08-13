@@ -54,6 +54,14 @@ class Farm:
                 name_output_file = df['Name'].unique()[0]
                 df.to_csv(path_dir / f'{name_output_file}.csv', index=False)
 
+    def export_to_dict(self) -> dict:
+        res = {**self.farm_settings.export_to_dict()}
+        for k, v in self._iter_over_animal_components():
+            dir_name = self._set_dir_name(entry=k)
+            res[dir_name] = [[v.to_dict() for v in component] for component in v]
+
+        return res
+
 
 def create_farm(
         latitude: float,
