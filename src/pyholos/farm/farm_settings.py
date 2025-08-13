@@ -531,12 +531,20 @@ class ParamsFarmSettings:
             year=year,
             **soil_properties)
 
+        self._file_name = "Farm.settings"
+
     def get_params(self) -> list[ParamGeneric]:
         return [getattr(self, v) for v in self.__dict__ if all([not v.startswith(('_', '__')), not callable(v)])]
 
-    def write(self, path_dir_farm: Path):
+    def _get_data(self) -> list[str]:
         sections = self.get_params()
-        res = [x for y in [v.to_list() + [''] for v in sections[:-1]] for x in y] + sections[-1].to_list()
-        with (path_dir_farm / 'Farm.settings').open(mode='w', encoding='utf-8') as f:
+        return [x for y in [v.to_list() + [''] for v in sections[:-1]] for x in y] + sections[-1].to_list()
+
+    def write(self, path_dir_farm: Path):
+        res = self._get_data()
+        with (path_dir_farm / self._file_name).open(mode='w', encoding='utf-8') as f:
             f.writelines('\n'.join(res))
         pass
+
+    def export_to_dict(self) -> dict[str, list[str]]:
+        return {self._file_name: self._get_data()}

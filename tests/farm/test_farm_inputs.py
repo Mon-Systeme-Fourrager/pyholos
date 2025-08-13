@@ -22,7 +22,8 @@ from pyholos.components.land_management.common import (FertilizerBlends,
                                                        TillageType)
 from pyholos.components.land_management.crop import CropType
 from pyholos.farm import farm_inputs
-from pyholos.farm.farm_inputs import WeatherData
+from pyholos.farm.farm import create_farm
+from pyholos.farm.farm_inputs import WeatherData, WeatherSummary
 
 
 def get_weather_summary_example() -> farm_inputs.WeatherSummary:
@@ -1272,6 +1273,35 @@ class TestInputFieldAnnualData(unittest.TestCase):
                 value=value,
                 expected_message="Input should be 'NotSelected', 'Livestock'",
                 is_startswith=True)
+
+
+class TestFarmMinimalInputs(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.latitude = 49.98
+        cls.longitude = -98.04
+        cls.weather_summary = WeatherSummary(
+            year=2024,
+            mean_annual_precipitation=542,
+            mean_annual_temperature=3.6,
+            mean_annual_evapotranspiration=626,
+            growing_season_precipitation=497,
+            growing_season_evapotranspiration=582.7,
+            monthly_precipitation=[15.7, 18.4, 30.4, 41.2, 121.1, 143.3, 76.2, 47.2, 37.8, 15.8, 55.7, 32.1],
+            monthly_potential_evapotranspiration=[0.1, 0.4, 1.5, 53.6, 88.6, 122, 134, 111.8, 83.2, 36.5, 6.5, 0],
+            monthly_temperature=[-13.1, -6.8, -6.4, 6.6, 12.4, 16.9, 21.9, 20.7, 18.7, 8.3, -2.6, -11.5]
+        )
+
+    def test_create_farm(self):
+        farm_dict = create_farm(
+            latitude=self.latitude,
+            longitude=self.longitude,
+            weather_summary=self.weather_summary,
+        ).export_to_dict()
+
+        self.assertIsInstance(farm_dict, dict)
+        self.assertIn('Farm.settings', farm_dict)
+        self.assertTrue(len(farm_dict) == 1)
 
 
 if __name__ == '__main__':
