@@ -34,17 +34,7 @@ class TestParamsFarmSettings(unittest.TestCase):
             monthly_temperature=list(range(-5, 7)),
             run_in_period_years=15)
         cls.path_farm_settings = Path(__file__).parents[1] / 'sources/Farm.settings'
-
-    @classmethod
-    def tearDownClass(cls):
-        if cls.path_farm_settings.exists():
-            cls.path_farm_settings.unlink()
-
-    def test_params_farm_settings_output_is_written_to_file(self):
-        self.params_farm_settings.write(self.path_farm_settings.parent)
-        self.assertTrue(self.path_farm_settings.exists())
-
-        expected_output = [
+        cls.expected_output = [
             '# General',
             'Yield Assignment Method = SmallAreaData',
             'Polygon Number = 851003',
@@ -168,9 +158,24 @@ class TestParamsFarmSettings(unittest.TestCase):
             'Proportion Of Clay In Soil = 0.3',
             'Proportion Of Soil Organic Carbon = 3.1'
         ]
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls.path_farm_settings.exists():
+            cls.path_farm_settings.unlink()
+
+    def test_params_farm_settings_output_is_written_to_file(self):
+        self.params_farm_settings.write(self.path_farm_settings.parent)
+        self.assertTrue(self.path_farm_settings.exists())
+
         with self.path_farm_settings.open(mode='r', encoding='utf-8') as f:
             output = f.readlines()
-        self.assertEqual(expected_output, [s.replace('\n', '') for s in output])
+        self.assertEqual(self.expected_output, [s.replace('\n', '') for s in output])
+        pass
+
+    def test_params_farm_settings_output_is_passed_to_dict(self):
+        output = self.params_farm_settings.export_to_dict()
+        self.assertEqual(self.expected_output, output['Farm.settings'])
         pass
 
 
