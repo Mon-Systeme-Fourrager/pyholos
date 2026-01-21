@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Generator
 
 from pandas import DataFrame
 
@@ -34,20 +35,32 @@ class Farm:
     def _set_dir_name(entry: str) -> str:
         return ' '.join([s.capitalize() for s in entry.split('_')])
 
+    def _iter_over_animal_components(self) -> Generator:
+        for k, v in self.__dict__.items():
+            if (v is not None) and (not isinstance(v, ParamsFarmSettings)):
+                yield k, v
+
     def write_files(
             self,
             path_dir_farm: Path
     ):
         path_dir_farm.mkdir(parents=True, exist_ok=True)
         self.farm_settings.write(path_dir_farm=path_dir_farm)
-        for k, v in self.__dict__.items():
-            if (v is not None) and (not isinstance(v, ParamsFarmSettings)):
-                path_dir = path_dir_farm / self._set_dir_name(entry=k)
-                path_dir.mkdir(parents=True, exist_ok=True)
-                dfs = [DataFrame.from_records([v.to_dict() for v in component]) for component in v]
-                for df in dfs:
-                    name_output_file = df['Name'].unique()[0]
-                    df.to_csv(path_dir / f'{name_output_file}.csv', index=False)
+        for k, v in self._iter_over_animal_components():
+            path_dir = path_dir_farm / self._set_dir_name(entry=k)
+            path_dir.mkdir(parents=True, exist_ok=True)
+            dfs = [DataFrame.from_records([v.to_dict() for v in component]) for component in v]
+            for df in dfs:
+                name_output_file = df['Name'].unique()[0]
+                df.to_csv(path_dir / f'{name_output_file}.csv', index=False)
+
+    def export_to_dict(self) -> dict:
+        res = {**self.farm_settings.export_to_dict()}
+        for k, v in self._iter_over_animal_components():
+            dir_name = self._set_dir_name(entry=k)
+            res[dir_name] = [[v.to_dict() for v in component] for component in v]
+
+        return res
 
 
 def create_farm(
