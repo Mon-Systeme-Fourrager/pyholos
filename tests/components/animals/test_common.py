@@ -1928,7 +1928,7 @@ class TestGetLandApplicationFactors(unittest.TestCase):
         cls.volatilization_fraction_for_other_animal_types = 0.21
 
         cls.methane_conversion_factor = 0.0047
-        cls.emission_factor_leaching = Defaults.EmissionFactorForLeachingAndRunoff.value
+        cls.emission_factor_leaching = Defaults.EmissionFactorForLeachingAndRunoff
         cls.leaching_fraction = common.calculate_fraction_of_nitrogen_lost_by_leaching_and_runoff(
             growing_season_precipitation=cls.growing_season_precipitation,
             growing_season_evapotranspiration=cls.growing_season_evapotranspiration)
