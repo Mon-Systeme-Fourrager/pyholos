@@ -1,10 +1,9 @@
-from os import environ
 from pathlib import Path
 
-PATH_HOLOS_CLI = Path(environ['PATH_HOLOS_CLI'])
 DATE_FMT = "%Y-%m-%d"
 
 _PATH_HOLOS_SERVICE_RESOURCES = Path(__file__).parent / 'resources'
+PATH_HOLOS_CLI = _PATH_HOLOS_SERVICE_RESOURCES / 'holos4_cli/H.CLI.exe'
 
 
 class PathsHolosResources:
