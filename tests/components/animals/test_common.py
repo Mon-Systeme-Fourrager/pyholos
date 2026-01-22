@@ -3546,7 +3546,7 @@ class TestGetBeefAndDairyCattleCoefficientData(unittest.TestCase):
                           gain_coefficient,
                           default_initial_weight,
                           default_final_weight) in [
-            (common.AnimalType.beef_calf, (CoreConstants.NotApplicable, CoreConstants.NotApplicable, 39, 90)),
+            (common.AnimalType.beef_calf, (CoreConstants.NotApplicable, CoreConstants.NotApplicable, 39, 260)),
             (common.AnimalType.beef_cow_lactating, (0.386, 0.8, 610, 610)),
             (common.AnimalType.beef_cow_dry, (0.322, 0.8, 610, 610)),
             (common.AnimalType.beef_bulls, (0.37, 1.2, 900, 900)),
