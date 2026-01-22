@@ -459,7 +459,7 @@ class FieldsInput(BaseModel):
     table_7: ClassVar = parse_table_7()
 
     @property
-    def fields_data(self) -> Generator[list[FieldAnnualData]] | Generator:
+    def fields_data(self) -> Generator:
         if self.fields is None:
             return iter(())
         else:
