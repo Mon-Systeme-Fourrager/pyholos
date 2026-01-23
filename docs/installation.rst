@@ -106,11 +106,6 @@ Move inside the project folder:
 
     cd pyholos
 
-Unzip the pre-installed Holos4 CLI located under `src/pyholos/resources/holos4_cli.zip`
-into `src/pyholos/resources/holos4_cli`. This ensures that pyholos works with a specific version of Holos4 CLI.
-Working with other CLI versions should be performed by manually replacing this unzipped folder with new version files.
-However, breaking-change problems may occur.
-
 
 Now you can create a **conda** (or **mamba**) environment inside which you will install ``pyholos`` and all its
 dependencies. Let's create and activate an environment called 'MyEnv':
