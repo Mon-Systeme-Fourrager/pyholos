@@ -10,10 +10,14 @@ _PATH_RESOURCES_UNZIP: Path = _PATH_RESOURCES if (pth := environ.get('PATH_RESOU
 
 
 def _ensure_resources_extracted():
-    """Extract resource zip files if not already extracted."""
+    """Extract resource zip files if not already extracted.
+
+    ZIPs are always stored in the package resources directory (_PATH_RESOURCES).
+    Extraction happens to _PATH_RESOURCES_UNZIP (can be /tmp for Lambda).
+    """
     # Extract HOLOS CLI if needed
-    holos_cli_zip = _PATH_RESOURCES_UNZIP / 'holos4_cli.zip'
-    holos_cli_dir = _PATH_RESOURCES_UNZIP / 'holos4_cli'
+    holos_cli_zip = _PATH_RESOURCES / 'holos4_cli.zip'  # Source: package resources
+    holos_cli_dir = _PATH_RESOURCES_UNZIP / 'holos4_cli'  # Destination: writable location
     holos_cli_exe = holos_cli_dir / 'H.CLI.exe'
 
     if holos_cli_zip.exists() and not holos_cli_exe.exists():
@@ -21,8 +25,8 @@ def _ensure_resources_extracted():
             zip_ref.extractall(_PATH_RESOURCES_UNZIP)
 
     # Extract SLC data if needed
-    slc_zip = _PATH_RESOURCES_UNZIP / 'soil_landscapes_of_canada_v3r2.zip'
-    slc_dir = _PATH_RESOURCES_UNZIP / 'soil_landscapes_of_canada_v3r2'
+    slc_zip = _PATH_RESOURCES / 'soil_landscapes_of_canada_v3r2.zip'  # Source: package resources
+    slc_dir = _PATH_RESOURCES_UNZIP / 'soil_landscapes_of_canada_v3r2'  # Destination: writable location
     slc_geojson = slc_dir / 'soil_landscapes_of_canada_v3r2.geojson'
 
     if slc_zip.exists() and not slc_geojson.exists():
@@ -76,6 +80,3 @@ class PathsSlcData:
     cmp_file = csv_dir / 'ca_all_slc_v3r2_cmp.csv'
     slt_file = csv_dir / 'ca_all_slc_v3r2_slt.csv'
     snt_file = csv_dir / 'ca_all_slc_v3r2_snt.csv'
-
-
-pass
