@@ -62,10 +62,6 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
-      - name: Unzip HOLOS CLI
-        run: unzip ./src/pyholos/resources/holos4_cli.zip -d ./src/pyholos/resources/
-      - name: Unzip SLC data
-        run: unzip ./src/pyholos/resources/soil_landscapes_of_canada_v3r2.zip -d ./src/pyholos/resources/
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip

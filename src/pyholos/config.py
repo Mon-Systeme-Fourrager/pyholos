@@ -1,8 +1,35 @@
 from pathlib import Path
+import zipfile
 
 DATE_FMT = "%Y-%m-%d"
 
 _PATH_HOLOS_SERVICE_RESOURCES = Path(__file__).parent / 'resources'
+
+
+def _ensure_resources_extracted():
+    """Extract resource zip files if not already extracted."""
+    # Extract HOLOS CLI if needed
+    holos_cli_zip = _PATH_HOLOS_SERVICE_RESOURCES / 'holos4_cli.zip'
+    holos_cli_dir = _PATH_HOLOS_SERVICE_RESOURCES / 'holos4_cli'
+    holos_cli_exe = holos_cli_dir / 'H.CLI.exe'
+
+    if holos_cli_zip.exists() and not holos_cli_exe.exists():
+        with zipfile.ZipFile(holos_cli_zip, 'r') as zip_ref:
+            zip_ref.extractall(_PATH_HOLOS_SERVICE_RESOURCES)
+
+    # Extract SLC data if needed
+    slc_zip = _PATH_HOLOS_SERVICE_RESOURCES / 'soil_landscapes_of_canada_v3r2.zip'
+    slc_dir = _PATH_HOLOS_SERVICE_RESOURCES / 'soil_landscapes_of_canada_v3r2'
+    slc_geojson = slc_dir / 'soil_landscapes_of_canada_v3r2.geojson'
+
+    if slc_zip.exists() and not slc_geojson.exists():
+        with zipfile.ZipFile(slc_zip, 'r') as zip_ref:
+            zip_ref.extractall(_PATH_HOLOS_SERVICE_RESOURCES)
+
+
+# Auto-extract resources on import
+_ensure_resources_extracted()
+
 PATH_HOLOS_CLI = _PATH_HOLOS_SERVICE_RESOURCES / 'holos4_cli/H.CLI.exe'
 
 
