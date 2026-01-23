@@ -68,5 +68,5 @@ jobs:
       - name: build wheel
         run: python -m build --wheel
       - name: Publish package
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        if: (github.event_name == 'push' && startsWith(github.ref, 'refs/tags')) || (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'release'
         uses: pypa/gh-action-pypi-publish@release/v1
