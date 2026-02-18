@@ -86,6 +86,7 @@ class BeefManagementPeriod(BaseModel):
     end_weight: confloat(ge=0, allow_inf_nan=False) = None
     diet_additive_type: DietAdditiveType = DietAdditiveType.NONE
     bedding_material_type: BeddingMaterialType = BeddingMaterialType.straw
+    pasture_location: UUID | None = None
 
 
 class DairyManagementPeriod(BaseModel):
@@ -265,7 +266,8 @@ class BeefCattleInput(AnimalInputBase):
             start_weight=management_period.start_weight,
             end_weight=management_period.end_weight,
             diet_additive_type=management_period.diet_additive_type,
-            bedding_material_type=management_period.bedding_material_type
+            bedding_material_type=management_period.bedding_material_type,
+            pasture_location=management_period.pasture_location,
         )
 
 

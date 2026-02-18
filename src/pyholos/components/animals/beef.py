@@ -1,4 +1,5 @@
 from datetime import date
+from uuid import UUID
 
 from pyholos import utils
 from pyholos.common import Component, EnumGeneric, HolosVar
@@ -154,6 +155,10 @@ class BeefBase(Component):
             value=None)
         """(MJ day⁻¹ kg⁻¹) C_f_adjusted"""
 
+        self.pasture_location = HolosVar(
+            name="Pasture Location",
+            value=None)
+
         self.methane_conversion_factor_of_manure = HolosVar(
             name="Methane Conversion Factor Of Manure",
             value=None)
@@ -245,6 +250,7 @@ class Beef(BeefBase):
             end_weight: float = None,
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+            pasture_location: UUID | None = None,
     ):
         """
 
@@ -271,8 +277,14 @@ class Beef(BeefBase):
             start_weight: (kg) animal weight at the beginning of the management period
             end_weight: (kg) animal weight at the end of the management period
             bedding_material_type: bedding material type
+            pasture_location: (optional) UUID class instance
 
         """
+        if pasture_location is None:
+            assert housing_type != HousingType.pasture, (
+                "Pasture location must be specified (UUID). "
+                "Ensure that the same UUID is set to an existing field data under 'Field System Component Guid'")
+
         super().__init__()
         self.update_name(name=name)
         self.update_component_type(component_type.to_str())
@@ -348,6 +360,8 @@ class Beef(BeefBase):
             get_ammonia_emission_factor_for_storage_of_beef_and_dairy_cattle_manure(
                 storage_type=manure_handling_system))
 
+        self.pasture_location.value = str(pasture_location) if pasture_location is not None else "N/A"
+
         self.methane_conversion_factor_of_manure.value = manure_emission_factors.MethaneConversionFactor
         self.n2o_direct_emission_factor.value = manure_emission_factors.N2ODirectEmissionFactor
         self.volatilization_fraction.value = manure_emission_factors.VolatilizationFraction
@@ -380,6 +394,7 @@ class Bulls(Beef):
             end_weight: float = None,
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+            pasture_location: UUID | None = None,
     ):
         """
 
@@ -399,6 +414,7 @@ class Bulls(Beef):
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type
+            pasture_location: (optional) UUID class instance
         """
         super().__init__(
             name='Cow-Calf',
@@ -434,6 +450,7 @@ class ReplacementHeifers(Beef):
             end_weight: float = None,
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+            pasture_location: UUID | None = None,
     ):
         """
 
@@ -453,6 +470,7 @@ class ReplacementHeifers(Beef):
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type
+            pasture_location: (optional) UUID class instance
         """
         super().__init__(
             name='Cow-Calf',
@@ -488,6 +506,7 @@ class Cows(Beef):
             end_weight: float = None,
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+            pasture_location: UUID | None = None,
     ):
         """
 
@@ -507,6 +526,7 @@ class Cows(Beef):
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type
+            pasture_location: (optional) UUID class instance
         """
         super().__init__(
             name='Cow-Calf',
@@ -542,6 +562,7 @@ class Calves(Beef):
             end_weight: float = None,
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+            pasture_location: UUID | None = None,
     ):
         """
 
@@ -561,6 +582,7 @@ class Calves(Beef):
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type
+            pasture_location: (optional) UUID class instance
         """
         super().__init__(
             name='Cow-Calf',
@@ -596,6 +618,7 @@ class FinishingHeifers(Beef):
             end_weight: float = None,
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+            pasture_location: UUID | None = None,
     ):
         """
 
@@ -615,6 +638,7 @@ class FinishingHeifers(Beef):
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type
+            pasture_location: (optional) UUID class instance
         """
         super().__init__(
             name='Finisher',
@@ -650,6 +674,7 @@ class FinishingSteers(Beef):
             end_weight: float = None,
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+            pasture_location: UUID | None = None,
     ):
         """
 
@@ -669,6 +694,7 @@ class FinishingSteers(Beef):
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type
+            pasture_location: (optional) UUID class instance
         """
         super().__init__(
             name='Finisher',
@@ -704,6 +730,7 @@ class BackgrounderHeifer(Beef):
             end_weight: float = None,
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+            pasture_location: UUID | None = None,
     ):
         """
 
@@ -723,6 +750,7 @@ class BackgrounderHeifer(Beef):
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type
+            pasture_location: (optional) UUID class instance
         """
         super().__init__(
             name='Stockers & Backgrounders',
@@ -758,6 +786,7 @@ class BackgrounderSteer(Beef):
             end_weight: float = None,
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+            pasture_location: UUID | None = None,
     ):
         """
 
@@ -777,6 +806,7 @@ class BackgrounderSteer(Beef):
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type
+            pasture_location: (optional) UUID class instance
         """
         super().__init__(
             name='Stockers & Backgrounders',
