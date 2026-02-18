@@ -82,6 +82,9 @@ class BeefBase(Component):
         self.milk_protein_content_as_percentage = HolosVar(
             name="Milk Protein Content As Percentage",
             value=None)
+        self.diet_name = HolosVar(
+            name="Diet Name",
+            value=None)
         self.diet_additive_type = HolosVar(
             name="Diet Additive Type",
             value=None)
@@ -233,6 +236,7 @@ class Beef(BeefBase):
             number_of_young_animals: int,
             is_milk_fed_only: bool,
             milk_data: Milk,
+            diet_name: str,
             diet: Diet,
             housing_type: HousingType,
             manure_handling_system: ManureStateType,
@@ -258,6 +262,7 @@ class Beef(BeefBase):
             number_of_young_animals: number of young animals
             is_milk_fed_only: used to indicate when animals are not consuming forage but only milk (distinction needed for calculate enteric methane for beef calves)
             milk_data: class object that contains all required milk production data
+            diet_name: name of the diet simulated
             diet: class object that contains all required diet data
             housing_type: HousingType class instance
             manure_handling_system: ManureStateType class instance
@@ -299,6 +304,7 @@ class Beef(BeefBase):
         self.methane_conversion_factor_adjusted.value = 0
         self.feed_intake.value = 0
 
+        self.diet_name.value = diet_name
         self.crude_protein.value = diet.crude_protein_percentage
         self.forage.value = diet.forage_percentage
         self.tdn.value = diet.total_digestible_nutrient_percentage
@@ -365,6 +371,7 @@ class Bulls(Beef):
             number_of_young_animals: int,
             is_milk_fed_only: bool,
             milk_data: Milk,
+            diet_name: str,
             diet: Diet,
             housing_type: HousingType,
             manure_handling_system: ManureStateType,
@@ -388,6 +395,7 @@ class Bulls(Beef):
             start_weight: (kg) animal weight at the beginning of the management period
             end_weight: (kg) animal weight at the end of the management period
             milk_data: class object that contains all required milk production data
+            diet_name: name of the diet simulated
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type
@@ -417,6 +425,7 @@ class ReplacementHeifers(Beef):
             number_of_young_animals: int,
             is_milk_fed_only: bool,
             milk_data: Milk,
+            diet_name: str,
             diet: Diet,
             housing_type: HousingType,
             manure_handling_system: ManureStateType,
@@ -440,6 +449,7 @@ class ReplacementHeifers(Beef):
             start_weight: (kg) animal weight at the beginning of the management period
             end_weight: (kg) animal weight at the end of the management period
             milk_data: class object that contains all required milk production data
+            diet_name: name of the diet simulated
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type
@@ -469,6 +479,7 @@ class Cows(Beef):
             number_of_young_animals: int,
             is_milk_fed_only: bool,
             milk_data: Milk,
+            diet_name: str,
             diet: Diet,
             housing_type: HousingType,
             manure_handling_system: ManureStateType,
@@ -492,6 +503,7 @@ class Cows(Beef):
             start_weight: (kg) animal weight at the beginning of the management period
             end_weight: (kg) animal weight at the end of the management period
             milk_data: class object that contains all required milk production data
+            diet_name: name of the diet simulated
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type
@@ -521,6 +533,7 @@ class Calves(Beef):
             number_of_young_animals: int,
             is_milk_fed_only: bool,
             milk_data: Milk,
+            diet_name: str,
             diet: Diet,
             housing_type: HousingType,
             manure_handling_system: ManureStateType,
@@ -544,6 +557,7 @@ class Calves(Beef):
             start_weight: (kg) animal weight at the beginning of the management period
             end_weight: (kg) animal weight at the end of the management period
             milk_data: class object that contains all required milk production data
+            diet_name: name of the diet simulated
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type
@@ -573,6 +587,7 @@ class FinishingHeifers(Beef):
             number_of_young_animals: int,
             is_milk_fed_only: bool,
             milk_data: Milk,
+            diet_name: str,
             diet: Diet,
             housing_type: HousingType,
             manure_handling_system: ManureStateType,
@@ -596,6 +611,7 @@ class FinishingHeifers(Beef):
             start_weight: (kg) animal weight at the beginning of the management period
             end_weight: (kg) animal weight at the end of the management period
             milk_data: class object that contains all required milk production data
+            diet_name: name of the diet simulated
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type
@@ -625,6 +641,7 @@ class FinishingSteers(Beef):
             number_of_young_animals: int,
             is_milk_fed_only: bool,
             milk_data: Milk,
+            diet_name: str,
             diet: Diet,
             housing_type: HousingType,
             manure_handling_system: ManureStateType,
@@ -648,6 +665,7 @@ class FinishingSteers(Beef):
             start_weight: (kg) animal weight at the beginning of the management period
             end_weight: (kg) animal weight at the end of the management period
             milk_data: class object that contains all required milk production data
+            diet_name: name of the diet simulated
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type
@@ -677,6 +695,7 @@ class BackgrounderHeifer(Beef):
             number_of_young_animals: int,
             is_milk_fed_only: bool,
             milk_data: Milk,
+            diet_name: str,
             diet: Diet,
             housing_type: HousingType,
             manure_handling_system: ManureStateType,
@@ -700,6 +719,7 @@ class BackgrounderHeifer(Beef):
             start_weight: (kg) animal weight at the beginning of the management period
             end_weight: (kg) animal weight at the end of the management period
             milk_data: class object that contains all required milk production data
+            diet_name: name of the diet simulated
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type
@@ -729,6 +749,7 @@ class BackgrounderSteer(Beef):
             number_of_young_animals: int,
             is_milk_fed_only: bool,
             milk_data: Milk,
+            diet_name: str,
             diet: Diet,
             housing_type: HousingType,
             manure_handling_system: ManureStateType,
@@ -752,6 +773,7 @@ class BackgrounderSteer(Beef):
             start_weight: (kg) animal weight at the beginning of the management period
             end_weight: (kg) animal weight at the end of the management period
             milk_data: class object that contains all required milk production data
+            diet_name: name of the diet simulated
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type

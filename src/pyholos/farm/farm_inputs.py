@@ -77,6 +77,7 @@ class BeefManagementPeriod(BaseModel):
     production_stage: ProductionStage
     number_of_young_animals: conint(ge=0)
     is_milk_fed_only: bool
+    diet_name: str
     diet: Diet
     housing_type: HousingType
     manure_handling_system: ManureStateType
@@ -246,6 +247,7 @@ class BeefCattleInput(AnimalInputBase):
             number_of_young_animals=management_period.number_of_young_animals,
             is_milk_fed_only=management_period.is_milk_fed_only,
             milk_data=Milk(),
+            diet_name=management_period.diet_name,
             diet=management_period.diet,
             housing_type=management_period.housing_type,
             manure_handling_system=management_period.manure_handling_system,

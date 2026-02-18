@@ -36,6 +36,7 @@ class TestBeefCowCalfNonRegression(unittest.TestCase):
             path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_beef_cow_calf.csv',
             keep_default_na=False)
         cls.non_regression_data.set_index("Group Name", inplace=True)
+        cls.diet_name: str = 'custom'
 
         cls.animal_type = common.AnimalType.beef_bulls
         cls.manure_emission_kwargs = dict(
@@ -78,6 +79,7 @@ class TestBeefCowCalfNonRegression(unittest.TestCase):
             number_of_young_animals=0,
             is_milk_fed_only=False,
             milk_data=common.Milk(),
+            diet_name=self.diet_name,
             diet=common.Diet(
                 crude_protein_percentage=12.44,
                 forage_percentage=97,
@@ -114,6 +116,7 @@ class TestBeefCowCalfNonRegression(unittest.TestCase):
             number_of_young_animals=0,
             is_milk_fed_only=False,
             milk_data=common.Milk(),
+            diet_name=self.diet_name,
             diet=common.Diet(
                 crude_protein_percentage=6.8,
                 forage_percentage=100,
@@ -150,6 +153,7 @@ class TestBeefCowCalfNonRegression(unittest.TestCase):
             number_of_young_animals=0,
             is_milk_fed_only=False,
             milk_data=common.Milk(),
+            diet_name=self.diet_name,
             diet=common.Diet(
                 crude_protein_percentage=12.44,
                 forage_percentage=97,
@@ -186,6 +190,7 @@ class TestBeefCowCalfNonRegression(unittest.TestCase):
             number_of_young_animals=0,
             is_milk_fed_only=True,
             milk_data=common.Milk(),
+            diet_name=self.diet_name,
             diet=common.Diet(
                 crude_protein_percentage=12.44,
                 forage_percentage=97,
@@ -217,6 +222,7 @@ class TestBeefFinisherNonRegression(unittest.TestCase):
             path_file=Path(__file__).parents[2] / 'sources/holos/non_regression_beef_finisher.csv',
             keep_default_na=False)
         cls.non_regression_data.set_index("Group Name", inplace=True)
+        cls.diet_name: str = 'custom'
 
         cls.manure_emission_kwargs = dict(
             mean_annual_precipitation=541.5,
@@ -259,6 +265,7 @@ class TestBeefFinisherNonRegression(unittest.TestCase):
             number_of_young_animals=0,
             is_milk_fed_only=False,
             milk_data=common.Milk(),
+            diet_name=self.diet_name,
             diet=common.Diet(
                 crude_protein_percentage=12.72,
                 forage_percentage=10,
@@ -295,6 +302,7 @@ class TestBeefFinisherNonRegression(unittest.TestCase):
             number_of_young_animals=0,
             is_milk_fed_only=False,
             milk_data=common.Milk(),
+            diet_name=self.diet_name,
             diet=common.Diet(
                 crude_protein_percentage=12.72,
                 forage_percentage=10,
@@ -327,6 +335,7 @@ class TestBeefBackgrounderNonRegression(unittest.TestCase):
             keep_default_na=False)
 
         cls.non_regression_data.set_index("Group Name", inplace=True)
+        cls.diet_name: str = 'custom'
 
         cls.manure_emission_kwargs = dict(
             mean_annual_precipitation=541.5,
@@ -368,6 +377,7 @@ class TestBeefBackgrounderNonRegression(unittest.TestCase):
             number_of_young_animals=0,
             is_milk_fed_only=False,
             milk_data=common.Milk(),
+            diet_name=self.diet_name,
             diet=common.Diet(
                 crude_protein_percentage=12.28,
                 forage_percentage=65,
@@ -404,6 +414,7 @@ class TestBeefBackgrounderNonRegression(unittest.TestCase):
             number_of_young_animals=0,
             is_milk_fed_only=False,
             milk_data=common.Milk(),
+            diet_name=self.diet_name,
             diet=common.Diet(
                 crude_protein_percentage=12.28,
                 forage_percentage=65,
