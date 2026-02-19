@@ -123,6 +123,10 @@ class DairyBase(Component):
             name="Ammonia Emission Factor For Manure Storage",
             value=None)
 
+        self.use_custom_indoor_housing_temperature = HolosVar(
+            name="Use Custom Indoor Housing Temperature",
+            value=False)
+
         self._animal_coefficient_data: AnimalCoefficientData | None = None
 
     def get_animal_coefficient_data(self):
