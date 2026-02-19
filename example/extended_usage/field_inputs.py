@@ -5,7 +5,7 @@ from pyholos.components.land_management.common import (FertilizerBlends,
                                                        HarvestMethod,
                                                        IrrigationType,
                                                        ManureApplicationTypes,
-                                                       TillageType)
+                                                       TillageType, FertilizerApplicationMethodologies)
 from pyholos.components.land_management.crop import CropType
 from pyholos.farm.farm_inputs import FieldAnnualData, FieldsInput, WeatherData
 
@@ -22,6 +22,7 @@ def set_field_data(weather_data: WeatherData) -> FieldsInput:
         tillage_type=TillageType.Reduced,
         harvest_method=HarvestMethod.CashCrop,
         nitrogen_fertilizer_rate=100,
+        fertilizer_application_method=FertilizerApplicationMethodologies.IncorporatedOrPartiallyInjected,
         fertilizer_blend=FertilizerBlends.Custom,
         irrigation_type=IrrigationType.Irrigated,
         amount_of_irrigation=0,
