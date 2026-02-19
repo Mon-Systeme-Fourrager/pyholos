@@ -143,6 +143,7 @@ class SheepBase(Component):
         self.ndf = HolosVar(name="NDF", value=None)
         self.gain_coefficient_a = HolosVar(name="Gain Coefficient A", value=None)
         self.gain_coefficient_b = HolosVar(name="Gain Coefficient B", value=None)
+        self.housing_type = HolosVar(name="Housing Type", value=None)
         self.activity_coefficient_of_feeding_situation = HolosVar(name="Activity Coefficient Of Feeding Situation",
                                                                   value=None)
         self.maintenance_coefficient = HolosVar(name="Maintenance Coefficient", value=None)
@@ -241,6 +242,7 @@ class Sheep(SheepBase):
         self.end_weight.value = _animal_coefficient_data.final_weight if end_weight is None else end_weight
         self.gain_coefficient_a.value = _animal_coefficient_data.coefficient_a
         self.gain_coefficient_b.value = _animal_coefficient_data.coefficient_b
+        self.housing_type.value = housing_type.value
         self.wool_production.value = _animal_coefficient_data.wool_production
 
         self.average_daily_gain.value = (self.end_weight.value - self.start_weight.value) / management_period_days
