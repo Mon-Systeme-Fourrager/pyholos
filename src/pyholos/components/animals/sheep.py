@@ -156,6 +156,7 @@ class SheepBase(Component):
         self.moisture_content_of_bedding_material = HolosVar(name="Moisture Content Of Bedding Material", value=None)
 
         self.pasture_location = HolosVar(name="Pasture Location", value=None)
+        self.manure_state_type = HolosVar(name="Manure State Type",value=None)
 
         self.methane_conversion_factor_of_manure = HolosVar(name="Methane Conversion Factor Of Manure", value=None)
         self.n2o_direct_emission_factor = HolosVar(name="N2O Direct Emission Factor", value=None)
@@ -282,6 +283,7 @@ class Sheep(SheepBase):
         self.moisture_content_of_bedding_material.value = bedding.moisture_content_of_bedding_material.value
 
         self.pasture_location.value = str(pasture_location) if pasture_location is not None else "N/A"
+        self.manure_state_type.value = manure_handling_system.value
 
         self.methane_conversion_factor_of_manure.value = manure_emission_factors.MethaneConversionFactor
         self.n2o_direct_emission_factor.value = manure_emission_factors.N2ODirectEmissionFactor
