@@ -7,7 +7,9 @@ from pyholos.components.animals.common import (
     ManureStateType, Milk, ProductionStage,
     get_beef_and_dairy_cattle_coefficient_data,
     get_beef_and_dairy_cattle_feeding_activity_coefficient,
-    get_default_methane_producing_capacity_of_manure)
+    get_default_methane_producing_capacity_of_manure,
+    get_fraction_of_organic_nitrogen_mineralized_data,
+)
 from pyholos.config import DATE_FMT
 from pyholos.utils import convert_camel_case_to_space_delimited, get_local_args
 
@@ -103,6 +105,19 @@ class DairyBase(Component):
         """deprecated"""
 
         self.methane_producing_capacity_of_manure = HolosVar(name="Methane Producing Capacity Of Manure", value=None)
+
+        self.fraction_of_organic_nitrogen_immobilized = HolosVar(
+            name="Fraction Of Organic Nitrogen Immobilized",
+            value=None)
+        self.fraction_of_organic_nitrogen_nitrified = HolosVar(
+            name="Fraction Of Organic Nitrogen Nitrified",
+            value=None)
+        self.fraction_of_organic_nitrogen_mineralized = HolosVar(
+            name="Fraction Of Organic Nitrogen Mineralized",
+            value=None)
+        self.manure_state_type = HolosVar(
+            name="Manure State Type",
+            value=None)
 
         self._animal_coefficient_data: AnimalCoefficientData | None = None
 
@@ -224,6 +239,15 @@ class Dairy(DairyBase):
         self.nitrogen_excretion_adjusted.value = 1
         self.gain_coefficient_a.value = 0
         self.gain_coefficient_b.value = 0
+
+        fraction_of_organic_nitrogen_mineralized_data = get_fraction_of_organic_nitrogen_mineralized_data(
+            state_type=manure_handling_system,
+            animal_type=animal_type)
+
+        self.manure_state_type.value = manure_handling_system.value
+        self.fraction_of_organic_nitrogen_immobilized.value = fraction_of_organic_nitrogen_mineralized_data.fraction_immobilized
+        self.fraction_of_organic_nitrogen_nitrified.value = fraction_of_organic_nitrogen_mineralized_data.fraction_nitrified
+        self.fraction_of_organic_nitrogen_mineralized.value = fraction_of_organic_nitrogen_mineralized_data.fraction_mineralized
 
 
 class DairyHeifers(Dairy):
