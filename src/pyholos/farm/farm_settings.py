@@ -48,15 +48,32 @@ class ParamsGeneral(ParamGeneric):
             decomposition_maximum_temperature: float = 30,
             moisture_response_function_at_saturation: float = 0.42,
             moisture_response_function_at_wilting_point: float = 0.18,
+            path_to_custom_yield_input_file: str = '',
+            use_custom_starting_soil_organic_carbon_value: bool = False,
+            starting_soc_value: float = 0.,
+            residue_input_calculation_method: str = "Default",
+            soil_data_acquisition_method: str = "Default",
             **kwargs
     ):
         super().__init__(title="General")
 
         self.yield_assignment_method = FarmSettingsVar(
             name="Yield Assignment Method", value=YieldAssignmentMethod.SmallAreaData.name)
+        self.path_to_custom_yield_input_file = FarmSettingsVar(
+            name="Path To Custom Yield Input File", value=path_to_custom_yield_input_file)
         self.polygon_number = FarmSettingsVar(name="Polygon Number", value=polygon_id)
         self.latitude = FarmSettingsVar(name="Latitude", value=latitude)
         self.Longitude = FarmSettingsVar(name="Longitude", value=longitude)
+
+        self.use_custom_starting_soil_organic_carbon_value = FarmSettingsVar(
+            name="Use Custom Starting Soil Organic Carbon Value", value=use_custom_starting_soil_organic_carbon_value)
+        self.starting_soc_value = FarmSettingsVar(
+            name="Starting SOC Value", value=starting_soc_value)
+        self.residue_input_calculation_method = FarmSettingsVar(
+            name="Residue Input Calculation Method", value=residue_input_calculation_method)
+        self.soil_data_acquisition_method = FarmSettingsVar(
+            name="Soil Data Acquisition Method", value=soil_data_acquisition_method)
+
         self.carbon_concentration = FarmSettingsVar(name="Carbon Concentration  (kg kg^-1)", value=carbon_concentration)
         self.emergence_day = FarmSettingsVar(name="Emergence Day", value=emergence_day)
         self.ripening_day = FarmSettingsVar(name="Ripening Day", value=ripening_day)
@@ -355,6 +372,12 @@ class ParamsFarmSettings:
             monthly_precipitation: list,
             monthly_potential_evapotranspiration: list,
             monthly_temperature: list,
+
+            path_to_custom_yield_input_file: str = "",
+            use_custom_starting_soil_organic_carbon_value: bool = False,
+            starting_soc_value: float = 0.,
+            residue_input_calculation_method: str = "Default",
+            soil_data_acquisition_method: str = "Default",
 
             run_in_period_years: int = Defaults.DefaultRunInPeriod,
 
