@@ -1,5 +1,6 @@
 from datetime import date
 from enum import Enum
+from uuid import UUID
 
 from pyholos import utils
 from pyholos.common import Component, HolosVar
@@ -153,6 +154,9 @@ class SheepBase(Component):
         self.total_nitrogen_kilograms_dry_matter_for_bedding = HolosVar(
             name="Total Nitrogen Kilograms Dry Matter For Bedding", value=None)
         self.moisture_content_of_bedding_material = HolosVar(name="Moisture Content Of Bedding Material", value=None)
+
+        self.pasture_location = HolosVar(name="Pasture Location", value=None)
+
         self.methane_conversion_factor_of_manure = HolosVar(name="Methane Conversion Factor Of Manure", value=None)
         self.n2o_direct_emission_factor = HolosVar(name="N2O Direct Emission Factor", value=None)
         self.emission_factor_volatilization = HolosVar(name="Emission Factor Volatilization", value=None)
@@ -217,7 +221,13 @@ class Sheep(SheepBase):
 
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+            pasture_location: UUID | None = None,
     ):
+        if pasture_location is None:
+            assert housing_type != HousingType.pasture, (
+                "Pasture location must be specified (UUID). "
+                "Ensure that the same UUID is set to an existing field data under 'Field System Component Guid'")
+
         super().__init__()
 
         # group_name = GroupNames.sheep_feedlot.value
@@ -271,6 +281,8 @@ class Sheep(SheepBase):
         self.total_nitrogen_kilograms_dry_matter_for_bedding.value = bedding.total_nitrogen_kilograms_dry_matter_for_bedding.value
         self.moisture_content_of_bedding_material.value = bedding.moisture_content_of_bedding_material.value
 
+        self.pasture_location.value = str(pasture_location) if pasture_location is not None else "N/A"
+
         self.methane_conversion_factor_of_manure.value = manure_emission_factors.MethaneConversionFactor
         self.n2o_direct_emission_factor.value = manure_emission_factors.N2ODirectEmissionFactor
         self.volatilization_fraction.value = manure_emission_factors.VolatilizationFraction
@@ -291,6 +303,7 @@ class Sheep(SheepBase):
 
 class SheepFeedlot(Sheep):
     animal_type = AnimalType.sheep_feedlot
+
     def __init__(
             self,
             management_period_name: str,
@@ -308,6 +321,7 @@ class SheepFeedlot(Sheep):
             end_weight: float = None,
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+            pasture_location: UUID | None = None,
     ):
         _group_name = GroupNames.sheep_feedlot.value
         super().__init__(
@@ -322,6 +336,7 @@ class SheepFeedlot(Sheep):
 
 class Rams(Sheep):
     animal_type = AnimalType.ram
+
     def __init__(
             self,
             management_period_name: str,
@@ -339,6 +354,7 @@ class Rams(Sheep):
             end_weight: float = None,
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+            pasture_location: UUID | None = None,
     ):
         _group_name = GroupNames.rams.value
 
@@ -372,6 +388,7 @@ class Ewes(Sheep):
             end_weight: float = None,
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+            pasture_location: UUID | None = None,
     ):
         super().__init__(
             name=GroupNames.lambs_and_ewes.value,
@@ -403,6 +420,7 @@ class Lambs(Sheep):
             end_weight: float = None,
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+            pasture_location: UUID | None = None,
     ):
         super().__init__(
             name=GroupNames.lambs_and_ewes.value,
