@@ -91,7 +91,7 @@ class DairyBase(Component):
         self.total_nitrogen_kilograms_dry_matter_for_bedding = HolosVar(
             name="Total Nitrogen Kilograms Dry Matter For Bedding", value=None)
         self.moisture_content_of_bedding_material = HolosVar(name="Moisture Content Of Bedding Material", value=None)
-        self.indoor_barn_temperature = HolosVar(name="Indoor Barn Temperature(°C)", value=25)
+        self.indoor_barn_temperature = HolosVar(name="Indoor Barn Temperature", value=25)
         self.methane_conversion_factor_of_manure = HolosVar(name="Methane Conversion Factor Of Manure", value=None)
         self.n2o_direct_emission_factor = HolosVar(name="N2O Direct Emission Factor", value=None)
         self.emission_factor_volatilization = HolosVar(name="Emission Factor Volatilization", value=None)
