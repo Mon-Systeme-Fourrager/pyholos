@@ -10,7 +10,7 @@ from pyholos.components.land_management.carbon.relative_biomass_information impo
 from pyholos.components.land_management.common import (FertilizerBlends,
                                                        HarvestMethod,
                                                        IrrigationType,
-                                                       TillageType)
+                                                       TillageType, FertilizerApplicationMethodologies)
 from pyholos.components.land_management.crop import CropType
 from pyholos.defaults import Defaults
 from pyholos.soil import SoilFunctionalCategory
@@ -303,6 +303,7 @@ class TestCropViewItem(unittest.TestCase):
                 organic_carbon_percentage=3.2,
                 soil_top_layer_thickness=230,
                 soil_functional_category=SoilFunctionalCategory.EasternCanada,
+                fertilizer_application_method=FertilizerApplicationMethodologies.IncorporatedOrPartiallyInjected,
                 fertilizer_blend=FertilizerBlends.Custom,
                 evapotranspiration=self.weather_data['Mean Daily Pet'],
                 precipitation=self.weather_data['Mean Daily Precipitation'],

@@ -22,7 +22,7 @@ from pyholos.components.land_management.common import (FertilizerBlends,
                                                        HarvestMethod,
                                                        IrrigationType,
                                                        ManureApplicationTypes,
-                                                       TillageType)
+                                                       TillageType, FertilizerApplicationMethodologies)
 from pyholos.components.land_management.crop import CropType
 from pyholos.components.land_management.field_system import CropViewItem
 from pyholos.core_constants import CoreConstants
@@ -427,6 +427,7 @@ class FieldAnnualData(BaseModel):
     tillage_type: TillageType
     harvest_method: HarvestMethod
     nitrogen_fertilizer_rate: NonNegativeFloat = Field(default=0)
+    fertilizer_application_method: FertilizerApplicationMethodologies
     fertilizer_blend: FertilizerBlends
     irrigation_type: IrrigationType = IrrigationType.RainFed
     amount_of_irrigation: NonNegativeFloat = 0
@@ -556,6 +557,7 @@ class FieldsInput(BaseModel):
             organic_carbon_percentage=organic_carbon_percentage,
             soil_top_layer_thickness=soil_top_layer_thickness,
             soil_functional_category=soil_functional_category,
+            fertilizer_application_method=field_one_year_data.fertilizer_application_method,
             fertilizer_blend=field_one_year_data.fertilizer_blend,
             evapotranspiration=weather_data.potential_evapotranspiration,
             precipitation=weather_data.precipitation,

@@ -17,7 +17,7 @@ from pyholos.components.land_management.carbon.tillage import \
 from pyholos.components.land_management.common import (
     FertilizerBlends, HarvestMethod, IrrigationType, ManureApplicationTypes,
     TillageType, TimePeriodCategory, get_fuel_energy_estimate,
-    get_herbicide_energy_estimate)
+    get_herbicide_energy_estimate, FertilizerApplicationMethodologies)
 from pyholos.components.land_management.crop import (CropType,
                                                      get_nitrogen_fixation)
 from pyholos.core_constants import CoreConstants
@@ -158,6 +158,7 @@ class LandManagementBase(Component):
         self.fuel_energy = HolosVar(name='Fuel Energy')
         self.herbicide_energy = HolosVar(name='Herbicide Energy')
         self.fertilizer_blend = HolosVar(name='Fertilizer Blend')
+        self.fertilizer_application_method = HolosVar(name='Fertilizer Application Method')
 
     def get_default_harvest_method(self) -> HarvestMethod:
         """Returns default harvest method based on the cultivated crop.
@@ -328,6 +329,7 @@ class CropViewItem(LandManagementBase):
             organic_carbon_percentage: float,
             soil_top_layer_thickness: float,
             soil_functional_category: SoilFunctionalCategory,
+            fertilizer_application_method: FertilizerApplicationMethodologies,
             fertilizer_blend: FertilizerBlends,
             evapotranspiration: list[float],
             precipitation: list[float],
@@ -430,6 +432,7 @@ class CropViewItem(LandManagementBase):
             tillage_type=tillage_type,
             crop_type=crop_type)
         self.fertilizer_blend.value = fertilizer_blend
+        self.fertilizer_application_method.value = fertilizer_application_method.value
 
         is_perennial = crop_type.is_perennial()
         self.climate_parameter.value = calculate_climate_parameter(
