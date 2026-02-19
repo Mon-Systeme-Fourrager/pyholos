@@ -75,6 +75,7 @@ class LandManagementBase(Component):
         self.percentage_of_straw_returned_to_soil = HolosVar(name='PercentageOfStrawReturnedToSoil')
         self.percentage_of_roots_returned_to_soil = HolosVar(name='PercentageOfRootsReturnedToSoil')
         self.percentage_of_product_yield_returned_to_soil = HolosVar(name='PercentageOfProductYieldReturnedToSoil')
+        self.percentage_of_extraroots_returned_to_soil = HolosVar(name='PercentageOfExtrarootsReturnedToSoil')
         self.is_pesticide_used = HolosVar(name='Is Pesticide Used')
         self.number_of_pesticide_passes = HolosVar(name='Number Of Pesticide Passes')
         self.manure_applied = HolosVar(name='Manure Applied')
@@ -338,7 +339,9 @@ class CropViewItem(LandManagementBase):
             manure_application_type: ManureApplicationTypes = ManureApplicationTypes.NotSelected,
             manure_animal_source_type: ManureAnimalSourceTypes = ManureAnimalSourceTypes.NotSelected,
             manure_state_type: ManureStateType = ManureStateType.not_selected,
-            manure_location_source_type: ManureLocationSourceType = ManureLocationSourceType.NotSelected
+            manure_location_source_type: ManureLocationSourceType = ManureLocationSourceType.NotSelected,
+
+            percentage_of_extraroots_returned_to_soil: float = 100.,
 
     ):
         """
@@ -402,6 +405,7 @@ class CropViewItem(LandManagementBase):
 
         self.moisture_content_of_crop.value = relative_biomass_information_data.moisture_content_of_product / 100
         self.set_moisture_content()
+        self.percentage_of_extraroots_returned_to_soil.value = percentage_of_extraroots_returned_to_soil
         self.set_percentage_returns()
         self.number_of_pesticide_passes.value = number_of_pesticide_passes
         self.is_pesticide_used.value = "Yes" if number_of_pesticide_passes > 0 else "No"
