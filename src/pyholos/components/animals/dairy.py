@@ -9,6 +9,7 @@ from pyholos.components.animals.common import (
     get_beef_and_dairy_cattle_feeding_activity_coefficient,
     get_default_methane_producing_capacity_of_manure,
     get_fraction_of_organic_nitrogen_mineralized_data,
+    get_ammonia_emission_factor_for_storage_of_beef_and_dairy_cattle_manure
 )
 from pyholos.config import DATE_FMT
 from pyholos.utils import convert_camel_case_to_space_delimited, get_local_args
@@ -117,6 +118,9 @@ class DairyBase(Component):
             value=None)
         self.manure_state_type = HolosVar(
             name="Manure State Type",
+            value=None)
+        self.ammonia_emission_factor_for_manure_storage = HolosVar(
+            name="Ammonia Emission Factor For Manure Storage",
             value=None)
 
         self._animal_coefficient_data: AnimalCoefficientData | None = None
@@ -248,6 +252,10 @@ class Dairy(DairyBase):
         self.fraction_of_organic_nitrogen_immobilized.value = fraction_of_organic_nitrogen_mineralized_data.fraction_immobilized
         self.fraction_of_organic_nitrogen_nitrified.value = fraction_of_organic_nitrogen_mineralized_data.fraction_nitrified
         self.fraction_of_organic_nitrogen_mineralized.value = fraction_of_organic_nitrogen_mineralized_data.fraction_mineralized
+
+        self.ammonia_emission_factor_for_manure_storage.value = (
+            get_ammonia_emission_factor_for_storage_of_beef_and_dairy_cattle_manure(
+                storage_type=manure_handling_system))
 
 
 class DairyHeifers(Dairy):
