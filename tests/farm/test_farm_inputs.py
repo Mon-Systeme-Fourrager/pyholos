@@ -15,12 +15,9 @@ from pyholos.components.animals.common import (BeddingMaterialType, Diet,
                                                ManureLocationSourceType,
                                                ManureStateType, Milk,
                                                ProductionStage)
-from pyholos.components.land_management.common import (FertilizerBlends,
-                                                       HarvestMethod,
-                                                       IrrigationType,
-                                                       ManureApplicationTypes,
-                                                       TillageType,
-                                                       FertilizerApplicationMethodologies)
+from pyholos.components.land_management.common import (
+    FertilizerApplicationMethodologies, FertilizerBlends, HarvestMethod,
+    IrrigationType, ManureApplicationTypes, TillageType)
 from pyholos.components.land_management.crop import CropType
 from pyholos.farm import farm_inputs
 from pyholos.farm.farm import create_farm
