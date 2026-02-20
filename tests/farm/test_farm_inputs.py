@@ -19,7 +19,8 @@ from pyholos.components.land_management.common import (FertilizerBlends,
                                                        HarvestMethod,
                                                        IrrigationType,
                                                        ManureApplicationTypes,
-                                                       TillageType)
+                                                       TillageType,
+                                                       FertilizerApplicationMethodologies)
 from pyholos.components.land_management.crop import CropType
 from pyholos.farm import farm_inputs
 from pyholos.farm.farm import create_farm
@@ -430,6 +431,7 @@ class TestInputBeefManagementPeriod(unittest.TestCase):
             production_stage=ProductionStage.gestating,
             number_of_young_animals=0,
             is_milk_fed_only=False,
+            diet_name='custom',
             diet=Diet(
                 crude_protein_percentage=14.8,
                 forage_percentage=80,
@@ -641,6 +643,7 @@ class TestInputDairyManagementPeriod(unittest.TestCase):
             production_stage=ProductionStage.gestating,
             number_of_young_animals=0,
             milk_data=Milk(),
+            diet_name='custom',
             diet=Diet(
                 crude_protein_percentage=16.146,
                 forage_percentage=77.8,
@@ -851,6 +854,7 @@ class TestInputSheepManagementPeriod(unittest.TestCase):
             number_of_animals=4,
             production_stage=ProductionStage.gestating,
             number_of_young_animals=0,
+            diet_name='custom',
             diet=Diet(
                 crude_protein_percentage=17.7,
                 forage_percentage=0,
@@ -1073,6 +1077,7 @@ class TestInputFieldAnnualData(unittest.TestCase):
             tillage_type=TillageType.Reduced,
             harvest_method=HarvestMethod.CashCrop,
             nitrogen_fertilizer_rate=100,
+            fertilizer_application_method=FertilizerApplicationMethodologies.IncorporatedOrPartiallyInjected,
             fertilizer_blend=FertilizerBlends.Custom,
             irrigation_type=IrrigationType.Irrigated,
             amount_of_irrigation=0,
