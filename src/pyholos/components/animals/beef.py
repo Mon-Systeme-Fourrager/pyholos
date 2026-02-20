@@ -1,4 +1,5 @@
 from datetime import date
+from uuid import UUID
 
 from pyholos import utils
 from pyholos.common import Component, EnumGeneric, HolosVar
@@ -82,6 +83,9 @@ class BeefBase(Component):
         self.milk_protein_content_as_percentage = HolosVar(
             name="Milk Protein Content As Percentage",
             value=None)
+        self.diet_name = HolosVar(
+            name="Diet Name",
+            value=None)
         self.diet_additive_type = HolosVar(
             name="Diet Additive Type",
             value=None)
@@ -150,6 +154,10 @@ class BeefBase(Component):
             name="Maintenance Coefficient",
             value=None)
         """(MJ day⁻¹ kg⁻¹) C_f_adjusted"""
+
+        self.pasture_location = HolosVar(
+            name="Pasture Location",
+            value=None)
 
         self.methane_conversion_factor_of_manure = HolosVar(
             name="Methane Conversion Factor Of Manure",
@@ -233,6 +241,7 @@ class Beef(BeefBase):
             number_of_young_animals: int,
             is_milk_fed_only: bool,
             milk_data: Milk,
+            diet_name: str,
             diet: Diet,
             housing_type: HousingType,
             manure_handling_system: ManureStateType,
@@ -241,6 +250,7 @@ class Beef(BeefBase):
             end_weight: float = None,
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+            pasture_location: UUID | None = None,
     ):
         """
 
@@ -258,6 +268,7 @@ class Beef(BeefBase):
             number_of_young_animals: number of young animals
             is_milk_fed_only: used to indicate when animals are not consuming forage but only milk (distinction needed for calculate enteric methane for beef calves)
             milk_data: class object that contains all required milk production data
+            diet_name: name of the diet simulated
             diet: class object that contains all required diet data
             housing_type: HousingType class instance
             manure_handling_system: ManureStateType class instance
@@ -266,8 +277,14 @@ class Beef(BeefBase):
             start_weight: (kg) animal weight at the beginning of the management period
             end_weight: (kg) animal weight at the end of the management period
             bedding_material_type: bedding material type
+            pasture_location: (optional) UUID class instance
 
         """
+        if pasture_location is None:
+            assert housing_type != HousingType.pasture, (
+                "Pasture location must be specified (UUID). "
+                "Ensure that the same UUID is set to an existing field data under 'Field System Component Guid'")
+
         super().__init__()
         self.update_name(name=name)
         self.update_component_type(component_type.to_str())
@@ -299,6 +316,7 @@ class Beef(BeefBase):
         self.methane_conversion_factor_adjusted.value = 0
         self.feed_intake.value = 0
 
+        self.diet_name.value = diet_name
         self.crude_protein.value = diet.crude_protein_percentage
         self.forage.value = diet.forage_percentage
         self.tdn.value = diet.total_digestible_nutrient_percentage
@@ -342,6 +360,8 @@ class Beef(BeefBase):
             get_ammonia_emission_factor_for_storage_of_beef_and_dairy_cattle_manure(
                 storage_type=manure_handling_system))
 
+        self.pasture_location.value = str(pasture_location) if pasture_location is not None else "N/A"
+
         self.methane_conversion_factor_of_manure.value = manure_emission_factors.MethaneConversionFactor
         self.n2o_direct_emission_factor.value = manure_emission_factors.N2ODirectEmissionFactor
         self.volatilization_fraction.value = manure_emission_factors.VolatilizationFraction
@@ -365,6 +385,7 @@ class Bulls(Beef):
             number_of_young_animals: int,
             is_milk_fed_only: bool,
             milk_data: Milk,
+            diet_name: str,
             diet: Diet,
             housing_type: HousingType,
             manure_handling_system: ManureStateType,
@@ -373,6 +394,7 @@ class Bulls(Beef):
             end_weight: float = None,
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+            pasture_location: UUID | None = None,
     ):
         """
 
@@ -388,9 +410,11 @@ class Bulls(Beef):
             start_weight: (kg) animal weight at the beginning of the management period
             end_weight: (kg) animal weight at the end of the management period
             milk_data: class object that contains all required milk production data
+            diet_name: name of the diet simulated
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type
+            pasture_location: (optional) UUID class instance
         """
         super().__init__(
             name='Cow-Calf',
@@ -417,6 +441,7 @@ class ReplacementHeifers(Beef):
             number_of_young_animals: int,
             is_milk_fed_only: bool,
             milk_data: Milk,
+            diet_name: str,
             diet: Diet,
             housing_type: HousingType,
             manure_handling_system: ManureStateType,
@@ -425,6 +450,7 @@ class ReplacementHeifers(Beef):
             end_weight: float = None,
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+            pasture_location: UUID | None = None,
     ):
         """
 
@@ -440,9 +466,11 @@ class ReplacementHeifers(Beef):
             start_weight: (kg) animal weight at the beginning of the management period
             end_weight: (kg) animal weight at the end of the management period
             milk_data: class object that contains all required milk production data
+            diet_name: name of the diet simulated
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type
+            pasture_location: (optional) UUID class instance
         """
         super().__init__(
             name='Cow-Calf',
@@ -469,6 +497,7 @@ class Cows(Beef):
             number_of_young_animals: int,
             is_milk_fed_only: bool,
             milk_data: Milk,
+            diet_name: str,
             diet: Diet,
             housing_type: HousingType,
             manure_handling_system: ManureStateType,
@@ -477,6 +506,7 @@ class Cows(Beef):
             end_weight: float = None,
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+            pasture_location: UUID | None = None,
     ):
         """
 
@@ -492,9 +522,11 @@ class Cows(Beef):
             start_weight: (kg) animal weight at the beginning of the management period
             end_weight: (kg) animal weight at the end of the management period
             milk_data: class object that contains all required milk production data
+            diet_name: name of the diet simulated
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type
+            pasture_location: (optional) UUID class instance
         """
         super().__init__(
             name='Cow-Calf',
@@ -521,6 +553,7 @@ class Calves(Beef):
             number_of_young_animals: int,
             is_milk_fed_only: bool,
             milk_data: Milk,
+            diet_name: str,
             diet: Diet,
             housing_type: HousingType,
             manure_handling_system: ManureStateType,
@@ -529,6 +562,7 @@ class Calves(Beef):
             end_weight: float = None,
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+            pasture_location: UUID | None = None,
     ):
         """
 
@@ -544,9 +578,11 @@ class Calves(Beef):
             start_weight: (kg) animal weight at the beginning of the management period
             end_weight: (kg) animal weight at the end of the management period
             milk_data: class object that contains all required milk production data
+            diet_name: name of the diet simulated
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type
+            pasture_location: (optional) UUID class instance
         """
         super().__init__(
             name='Cow-Calf',
@@ -573,6 +609,7 @@ class FinishingHeifers(Beef):
             number_of_young_animals: int,
             is_milk_fed_only: bool,
             milk_data: Milk,
+            diet_name: str,
             diet: Diet,
             housing_type: HousingType,
             manure_handling_system: ManureStateType,
@@ -581,6 +618,7 @@ class FinishingHeifers(Beef):
             end_weight: float = None,
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+            pasture_location: UUID | None = None,
     ):
         """
 
@@ -596,9 +634,11 @@ class FinishingHeifers(Beef):
             start_weight: (kg) animal weight at the beginning of the management period
             end_weight: (kg) animal weight at the end of the management period
             milk_data: class object that contains all required milk production data
+            diet_name: name of the diet simulated
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type
+            pasture_location: (optional) UUID class instance
         """
         super().__init__(
             name='Finisher',
@@ -625,6 +665,7 @@ class FinishingSteers(Beef):
             number_of_young_animals: int,
             is_milk_fed_only: bool,
             milk_data: Milk,
+            diet_name: str,
             diet: Diet,
             housing_type: HousingType,
             manure_handling_system: ManureStateType,
@@ -633,6 +674,7 @@ class FinishingSteers(Beef):
             end_weight: float = None,
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+            pasture_location: UUID | None = None,
     ):
         """
 
@@ -648,9 +690,11 @@ class FinishingSteers(Beef):
             start_weight: (kg) animal weight at the beginning of the management period
             end_weight: (kg) animal weight at the end of the management period
             milk_data: class object that contains all required milk production data
+            diet_name: name of the diet simulated
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type
+            pasture_location: (optional) UUID class instance
         """
         super().__init__(
             name='Finisher',
@@ -677,6 +721,7 @@ class BackgrounderHeifer(Beef):
             number_of_young_animals: int,
             is_milk_fed_only: bool,
             milk_data: Milk,
+            diet_name: str,
             diet: Diet,
             housing_type: HousingType,
             manure_handling_system: ManureStateType,
@@ -685,6 +730,7 @@ class BackgrounderHeifer(Beef):
             end_weight: float = None,
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+            pasture_location: UUID | None = None,
     ):
         """
 
@@ -700,9 +746,11 @@ class BackgrounderHeifer(Beef):
             start_weight: (kg) animal weight at the beginning of the management period
             end_weight: (kg) animal weight at the end of the management period
             milk_data: class object that contains all required milk production data
+            diet_name: name of the diet simulated
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type
+            pasture_location: (optional) UUID class instance
         """
         super().__init__(
             name='Stockers & Backgrounders',
@@ -729,6 +777,7 @@ class BackgrounderSteer(Beef):
             number_of_young_animals: int,
             is_milk_fed_only: bool,
             milk_data: Milk,
+            diet_name: str,
             diet: Diet,
             housing_type: HousingType,
             manure_handling_system: ManureStateType,
@@ -737,6 +786,7 @@ class BackgrounderSteer(Beef):
             end_weight: float = None,
             diet_additive_type: DietAdditiveType = DietAdditiveType.NONE,
             bedding_material_type: BeddingMaterialType = BeddingMaterialType.NONE,
+            pasture_location: UUID | None = None,
     ):
         """
 
@@ -752,9 +802,11 @@ class BackgrounderSteer(Beef):
             start_weight: (kg) animal weight at the beginning of the management period
             end_weight: (kg) animal weight at the end of the management period
             milk_data: class object that contains all required milk production data
+            diet_name: name of the diet simulated
             diet: class object that contains all required diet data
             diet_additive_type: type of the diet additive
             bedding_material_type: bedding material type
+            pasture_location: (optional) UUID class instance
         """
         super().__init__(
             name='Stockers & Backgrounders',

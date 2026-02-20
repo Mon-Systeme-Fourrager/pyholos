@@ -5,9 +5,11 @@ from pyholos.components.animals.common import (
     AnimalCoefficientData, AnimalType, Bedding, BeddingMaterialType, Diet,
     DietAdditiveType, HousingType, LivestockEmissionConversionFactorsData,
     ManureStateType, Milk, ProductionStage,
+    get_ammonia_emission_factor_for_storage_of_beef_and_dairy_cattle_manure,
     get_beef_and_dairy_cattle_coefficient_data,
     get_beef_and_dairy_cattle_feeding_activity_coefficient,
-    get_default_methane_producing_capacity_of_manure)
+    get_default_methane_producing_capacity_of_manure,
+    get_fraction_of_organic_nitrogen_mineralized_data)
 from pyholos.config import DATE_FMT
 from pyholos.utils import convert_camel_case_to_space_delimited, get_local_args
 
@@ -91,7 +93,7 @@ class DairyBase(Component):
         self.total_nitrogen_kilograms_dry_matter_for_bedding = HolosVar(
             name="Total Nitrogen Kilograms Dry Matter For Bedding", value=None)
         self.moisture_content_of_bedding_material = HolosVar(name="Moisture Content Of Bedding Material", value=None)
-        self.indoor_barn_temperature = HolosVar(name="Indoor Barn Temperature(°C)", value=25)
+        self.indoor_barn_temperature = HolosVar(name="Indoor Barn Temperature", value=25)
         self.methane_conversion_factor_of_manure = HolosVar(name="Methane Conversion Factor Of Manure", value=None)
         self.n2o_direct_emission_factor = HolosVar(name="N2O Direct Emission Factor", value=None)
         self.emission_factor_volatilization = HolosVar(name="Emission Factor Volatilization", value=None)
@@ -103,6 +105,26 @@ class DairyBase(Component):
         """deprecated"""
 
         self.methane_producing_capacity_of_manure = HolosVar(name="Methane Producing Capacity Of Manure", value=None)
+
+        self.fraction_of_organic_nitrogen_immobilized = HolosVar(
+            name="Fraction Of Organic Nitrogen Immobilized",
+            value=None)
+        self.fraction_of_organic_nitrogen_nitrified = HolosVar(
+            name="Fraction Of Organic Nitrogen Nitrified",
+            value=None)
+        self.fraction_of_organic_nitrogen_mineralized = HolosVar(
+            name="Fraction Of Organic Nitrogen Mineralized",
+            value=None)
+        self.manure_state_type = HolosVar(
+            name="Manure State Type",
+            value=None)
+        self.ammonia_emission_factor_for_manure_storage = HolosVar(
+            name="Ammonia Emission Factor For Manure Storage",
+            value=None)
+
+        self.use_custom_indoor_housing_temperature = HolosVar(
+            name="Use Custom Indoor Housing Temperature",
+            value=False)
 
         self._animal_coefficient_data: AnimalCoefficientData | None = None
 
@@ -224,6 +246,19 @@ class Dairy(DairyBase):
         self.nitrogen_excretion_adjusted.value = 1
         self.gain_coefficient_a.value = 0
         self.gain_coefficient_b.value = 0
+
+        fraction_of_organic_nitrogen_mineralized_data = get_fraction_of_organic_nitrogen_mineralized_data(
+            state_type=manure_handling_system,
+            animal_type=animal_type)
+
+        self.manure_state_type.value = manure_handling_system.value
+        self.fraction_of_organic_nitrogen_immobilized.value = fraction_of_organic_nitrogen_mineralized_data.fraction_immobilized
+        self.fraction_of_organic_nitrogen_nitrified.value = fraction_of_organic_nitrogen_mineralized_data.fraction_nitrified
+        self.fraction_of_organic_nitrogen_mineralized.value = fraction_of_organic_nitrogen_mineralized_data.fraction_mineralized
+
+        self.ammonia_emission_factor_for_manure_storage.value = (
+            get_ammonia_emission_factor_for_storage_of_beef_and_dairy_cattle_manure(
+                storage_type=manure_handling_system))
 
 
 class DairyHeifers(Dairy):

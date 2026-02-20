@@ -115,6 +115,12 @@ class FertilizerBlends(AutoNameEnum):
     PotassiumSulphate = auto()
 
 
+class FertilizerApplicationMethodologies(AutoNameEnum):
+    Broadcast = auto()
+    IncorporatedOrPartiallyInjected = auto()
+    FullyInjected = auto()
+
+
 def read_energy_table(path_table: Path) -> DataFrame:
     df = read_holos_resource_table(path_file=path_table, header=[0, 1, 2])
     df.index = [convert_crop_type_name(s) for s in df.pop(('Unnamed: 0_level_0', 'Unnamed: 0_level_1', 'CROP'))]

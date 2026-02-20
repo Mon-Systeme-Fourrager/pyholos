@@ -18,11 +18,9 @@ from pyholos.components.animals.common import (BeddingMaterialType, Diet,
 from pyholos.components.land_management.carbon.relative_biomass_information import (
     RelativeBiomassInformationData, get_relative_biomass_information_data,
     parse_table_7)
-from pyholos.components.land_management.common import (FertilizerBlends,
-                                                       HarvestMethod,
-                                                       IrrigationType,
-                                                       ManureApplicationTypes,
-                                                       TillageType)
+from pyholos.components.land_management.common import (
+    FertilizerApplicationMethodologies, FertilizerBlends, HarvestMethod,
+    IrrigationType, ManureApplicationTypes, TillageType)
 from pyholos.components.land_management.crop import CropType
 from pyholos.components.land_management.field_system import CropViewItem
 from pyholos.core_constants import CoreConstants
@@ -77,6 +75,7 @@ class BeefManagementPeriod(BaseModel):
     production_stage: ProductionStage
     number_of_young_animals: conint(ge=0)
     is_milk_fed_only: bool
+    diet_name: str
     diet: Diet
     housing_type: HousingType
     manure_handling_system: ManureStateType
@@ -85,6 +84,7 @@ class BeefManagementPeriod(BaseModel):
     end_weight: confloat(ge=0, allow_inf_nan=False) = None
     diet_additive_type: DietAdditiveType = DietAdditiveType.NONE
     bedding_material_type: BeddingMaterialType = BeddingMaterialType.straw
+    pasture_location: UUID | None = None
 
 
 class DairyManagementPeriod(BaseModel):
@@ -246,6 +246,7 @@ class BeefCattleInput(AnimalInputBase):
             number_of_young_animals=management_period.number_of_young_animals,
             is_milk_fed_only=management_period.is_milk_fed_only,
             milk_data=Milk(),
+            diet_name=management_period.diet_name,
             diet=management_period.diet,
             housing_type=management_period.housing_type,
             manure_handling_system=management_period.manure_handling_system,
@@ -263,7 +264,8 @@ class BeefCattleInput(AnimalInputBase):
             start_weight=management_period.start_weight,
             end_weight=management_period.end_weight,
             diet_additive_type=management_period.diet_additive_type,
-            bedding_material_type=management_period.bedding_material_type
+            bedding_material_type=management_period.bedding_material_type,
+            pasture_location=management_period.pasture_location,
         )
 
 
@@ -423,6 +425,7 @@ class FieldAnnualData(BaseModel):
     tillage_type: TillageType
     harvest_method: HarvestMethod
     nitrogen_fertilizer_rate: NonNegativeFloat = Field(default=0)
+    fertilizer_application_method: FertilizerApplicationMethodologies
     fertilizer_blend: FertilizerBlends
     irrigation_type: IrrigationType = IrrigationType.RainFed
     amount_of_irrigation: NonNegativeFloat = 0
@@ -552,6 +555,7 @@ class FieldsInput(BaseModel):
             organic_carbon_percentage=organic_carbon_percentage,
             soil_top_layer_thickness=soil_top_layer_thickness,
             soil_functional_category=soil_functional_category,
+            fertilizer_application_method=field_one_year_data.fertilizer_application_method,
             fertilizer_blend=field_one_year_data.fertilizer_blend,
             evapotranspiration=weather_data.potential_evapotranspiration,
             precipitation=weather_data.precipitation,
