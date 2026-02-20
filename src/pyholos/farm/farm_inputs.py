@@ -18,11 +18,9 @@ from pyholos.components.animals.common import (BeddingMaterialType, Diet,
 from pyholos.components.land_management.carbon.relative_biomass_information import (
     RelativeBiomassInformationData, get_relative_biomass_information_data,
     parse_table_7)
-from pyholos.components.land_management.common import (FertilizerBlends,
-                                                       HarvestMethod,
-                                                       IrrigationType,
-                                                       ManureApplicationTypes,
-                                                       TillageType, FertilizerApplicationMethodologies)
+from pyholos.components.land_management.common import (
+    FertilizerApplicationMethodologies, FertilizerBlends, HarvestMethod,
+    IrrigationType, ManureApplicationTypes, TillageType)
 from pyholos.components.land_management.crop import CropType
 from pyholos.components.land_management.field_system import CropViewItem
 from pyholos.core_constants import CoreConstants

@@ -15,9 +15,9 @@ from pyholos.components.land_management.carbon.relative_biomass_information impo
 from pyholos.components.land_management.carbon.tillage import \
     calculate_tillage_factor
 from pyholos.components.land_management.common import (
-    FertilizerBlends, HarvestMethod, IrrigationType, ManureApplicationTypes,
-    TillageType, TimePeriodCategory, get_fuel_energy_estimate,
-    get_herbicide_energy_estimate, FertilizerApplicationMethodologies)
+    FertilizerApplicationMethodologies, FertilizerBlends, HarvestMethod,
+    IrrigationType, ManureApplicationTypes, TillageType, TimePeriodCategory,
+    get_fuel_energy_estimate, get_herbicide_energy_estimate)
 from pyholos.components.land_management.crop import (CropType,
                                                      get_nitrogen_fixation)
 from pyholos.core_constants import CoreConstants

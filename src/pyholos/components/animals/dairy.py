@@ -5,12 +5,11 @@ from pyholos.components.animals.common import (
     AnimalCoefficientData, AnimalType, Bedding, BeddingMaterialType, Diet,
     DietAdditiveType, HousingType, LivestockEmissionConversionFactorsData,
     ManureStateType, Milk, ProductionStage,
+    get_ammonia_emission_factor_for_storage_of_beef_and_dairy_cattle_manure,
     get_beef_and_dairy_cattle_coefficient_data,
     get_beef_and_dairy_cattle_feeding_activity_coefficient,
     get_default_methane_producing_capacity_of_manure,
-    get_fraction_of_organic_nitrogen_mineralized_data,
-    get_ammonia_emission_factor_for_storage_of_beef_and_dairy_cattle_manure
-)
+    get_fraction_of_organic_nitrogen_mineralized_data)
 from pyholos.config import DATE_FMT
 from pyholos.utils import convert_camel_case_to_space_delimited, get_local_args
 
