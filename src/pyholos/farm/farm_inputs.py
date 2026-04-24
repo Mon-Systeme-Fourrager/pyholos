@@ -5,6 +5,7 @@ from uuid import UUID, uuid4
 from pydantic import (BaseModel, Field, NonNegativeFloat, NonNegativeInt,
                       PositiveFloat, PositiveInt, confloat, conint, conlist,
                       field_validator)
+
 from pyholos.common2 import CanadianProvince
 from pyholos.components.animals import beef, dairy, sheep
 from pyholos.components.animals.common import (BeddingMaterialType, Diet,
