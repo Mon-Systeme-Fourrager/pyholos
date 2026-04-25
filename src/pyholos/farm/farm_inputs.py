@@ -337,7 +337,11 @@ class DairyCattleInput(AnimalInputBase):
                 animal_type=component_class.animal_group.type,
                 province=province,
                 year=management_period.weather_summary.year,
-                soil_texture=soil_texture)
+                soil_texture=soil_texture),
+
+            start_weight=management_period.start_weight,
+            end_weight=management_period.end_weight,
+
         )
 
 
@@ -410,7 +414,11 @@ class SheepFlockInput(AnimalInputBase):
                 animal_type=component_class.animal_type,
                 province=province,
                 year=management_period.weather_summary.year,
-                soil_texture=soil_texture)
+                soil_texture=soil_texture),
+
+            start_weight=management_period.start_weight,
+            end_weight=management_period.end_weight,
+
         )
 
 
